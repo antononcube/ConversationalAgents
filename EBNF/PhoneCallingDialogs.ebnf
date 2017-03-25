@@ -29,6 +29,35 @@
    a pair of string quotes.
 *)
 
+(*
+
+Below is the Mathematica code for parsing the EBNF.
+
+    tokens = ToTokens[callingContacts];
+
+    res = GenerateParsersFromEBNF[tokens];
+
+    res // LeafCount
+    (* 1985 *)
+
+    stopWords = ReadList["~/Some/Path/stop_words", String];
+
+    pCONTACTNAME[xs$_] := 
+     ParseApply[ToExpression["ContactName[#]&"], 
+       ParsePredicate[StringMatchQ[#1, LetterCharacter ..] && !MemberQ[stopWords, #1] &]][xs$]
+
+    pCONTACTOCCUPATION[xs$_] := 
+     ParseApply[ToExpression["Occupation[#]&"], 
+       ParsePredicate[StringMatchQ[#1, LetterCharacter ..] && !MemberQ[stopWords, #1] &]][xs$]
+
+    pCALLFROMCOMPANY[xs$_] := 
+     ParseApply[ToExpression["FromCompany[#]&"], 
+       ParseSequentialCompositionPickRight[
+        ParseAlternativeComposition[ParseSymbol["from"], ParseSymbol["of"]], 
+        ParsePredicate[StringMatchQ[#1, LetterCharacter ..] && !  MemberQ[stopWords, #1] &]]][xs$]
+
+*)
+
 <call-contact> = <call-global> | <call-preamble> &> <contact-spec> | ( 'put' | 'get' ) &> <contact-spec> <& ( 'on' , 'the' , 'phone' ) ;
 <call-preamble> = 'call'  | 'i' , 'wanna' , 'talk' , 'to' | 'get' ;
 <contact-spec> = [ 'the' | 'a' | 'an' ] &> ( <contact-occupation> , <call-from-company> ) | <contact-name> | { <contact-name> } ;
