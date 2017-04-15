@@ -56,8 +56,12 @@ PCESM["WaitingForARequest", contextArg_, input_String] :=
         Return[{"WaitingForARequest", {"StartOver"},
           Append[DeleteCases[context, "filters" -> _], "filters" -> {}],
           "Starting over.", ""}],
+
         Length[p] > 0 && MemberQ[Flatten[p], Global["priority"]],
-        Return[{"PrioritizedList", {}, context, "", ""}]
+        Return[{"PrioritizedList", {}, context, "", ""}],
+
+        Length[p] > 0 && !Developer`EmptyQ[Cases[p, Global[___], Infinity]],
+        Return[{"WaitingForARequest", {}, context, "", "No implemented reaction for the given service input."}]
       ];
 
       p = ParseShortest[pCALLCONTACT][ToTokens[ToLowerCase[input]]]; Print[p];
