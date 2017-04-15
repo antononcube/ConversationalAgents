@@ -21,7 +21,7 @@
 *)
 
 (* :Title: PhoneDialingFSM *)
-(* :Context: PhoneDialingFSM` *)
+(* :Context: Global` *)
 (* :Author: Anton Antonov *)
 (* :Date: 2017-03-26 *)
 

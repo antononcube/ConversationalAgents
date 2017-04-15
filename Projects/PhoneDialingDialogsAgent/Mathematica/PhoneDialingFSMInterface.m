@@ -20,8 +20,8 @@
     Windermere, Florida, USA.
 *)
 
-(* :Title: PhoneDialingFSM *)
-(* :Context: PhoneDialingFSM` *)
+(* :Title: PhoneDialingFSMInterface *)
+(* :Context: Global` *)
 (* :Author: Anton Antonov *)
 (* :Date: 2017-04-15 *)
 
