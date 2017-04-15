@@ -1,3 +1,40 @@
+(*
+    Fake phone book records from movies metadata Mathematica code
+    Copyright (C) 2017  Anton Antonov
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Written by Anton Antonov,
+    antononcube @@@ gmail ... com,
+    Windermere, Florida, USA.
+*)
+
+(* :Title: AddressBookByMovieRecords *)
+(* :Context: Global` *)
+(* :Author: Anton Antonov *)
+(* :Date: 2017-03-26 *)
+
+(* :Package Version: 1.0 *)
+(* :Mathematica Version: *)
+(* :Copyright: (c) 2017 Anton Antonov *)
+(* :Keywords: *)
+(* :Discussion:
+
+   It is a good idea to include the code with which this address book records was derived.
+
+*)
+
 addressLines = {{"Bill Nighy", "Caribbean Pirates", "actor", "709-606-7259"},
      {"Geoffrey Rush", "Caribbean Pirates", "actor", "797-199-7144"}, 
      {"Jack Davenport", "Caribbean Pirates", "actor", "627-500-7919"}, 
