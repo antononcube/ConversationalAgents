@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	
 	Written by Anton Antonov,
-	antononcube @ gmail . com,
+	antononcube @@@ gmail ... com,
 	Windermere, Florida, USA.
 *)
 
@@ -25,7 +25,7 @@
 (* This grammar is intended to be parsed by the functions in the Mathematica package FunctionalParses.m at GitHub,
    see https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m .
   
-   In order to parse this grammar specification copy all of the grammar rule lines and paste them within
+   In order to parse this grammar specification the file can be imported in Mathematica copy all of the grammar rule lines and paste them within
    a pair of string quotes.
 *)
 
@@ -58,9 +58,10 @@ Below is the Mathematica code for parsing the EBNF.
 
 *)
 
+callingContacts = "
 <call-contact> = <call-global> | <call-preamble> &> <contact-spec> | ( 'put' | 'get' ) &> <contact-spec> <& ( 'on' , 'the' , 'phone' ) ;
-<call-preamble> = 'call'  | 'i' , 'wanna' , 'talk' , 'to' | 'get' ;
-<contact-spec> = [ 'the' | 'a' | 'an' ] &> ( <contact-occupation> , <call-from-company> ) | <contact-name> | { <contact-name> } ;
+<call-preamble> = 'call' | 'dial' | 'i' , 'wanna' , 'talk' , 'to' | 'get' ;
+<contact-spec> = [ 'the' | 'a' | 'an' ] &> ( <contact-occupation> , [ <call-from-company> ] ) | <contact-name> | { <contact-name> } | ( 'someone'  | [ 'a' ] , 'person' ) &>  <call-from-company> ;
 <contact-name> = '_LetterString' <@ ContactName[#]& ;
 <contact-occupation> = '_LetterString' <@ Occupation[#]& ;
 <call-filter> = <call-global> | [ <call-preamble> ] &> ( <call-list-pos-spec> | <call-filter-company> | <call-filter-occupation> , [ <call-from-company> ] | <call-filter-age> | <contact-name> | { <contact-name> } ) ;
@@ -77,3 +78,4 @@ Below is the Mathematica code for parsing the EBNF.
 <call-global-help> = 'help' <@ Global[\"help\"]& ;
 <call-global-cancel> = 'start' , 'over' | 'cancel' <@ Global[\"cancel\"]& ;
 <call-global-prioritylist> = 'priority' , ( 'order' | 'list' ) | 'order' , 'by' , 'priority' <@ Global[\"priority\"]& ;
+";
