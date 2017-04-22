@@ -101,13 +101,13 @@ If[localCodeQ,
 
 tokens = ToTokens[callingContacts];
 res = GenerateParsersFromEBNF[tokens];
-Print["LeafCount @ GenerateParsersFromEBNF @ ToTokens @ callingContacts = ", LeafCount[res] ]
+Print["LeafCount @ GenerateParsersFromEBNF @ ToTokens @ callingContacts = ", LeafCount[res] ];
 
 If[TrueQ[StringQ[stopWordsFileName] && StringLength[stopWordsFileName] > 0],
   stopWords = ReadList[stopWordsFileName, String],
   stopWords = Complement[DictionaryLookup["*"], DeleteStopwords[DictionaryLookup["*"]]]
 ];
-Print["Length[stopWords] = ", Length[stopWords]]
+Print["Length[stopWords] = ", Length[stopWords]];
 
 If[parsingByAddressBook,
   pCONTACTNAME[xs$_] :=
@@ -141,7 +141,7 @@ contactScores = Table[PDF[GeometricDistribution[0.2], i] // N, {i, Length[contac
 If[localCodeQ,
   Get[localDirectoryName <> "PhoneDialingFSM.m"],
   Import[gitHubDirectoryName <> "PhoneDialingFSM.m"]
-]
+];
 
 If[localCodeQ,
   Get[localDirectoryName <> "PhoneDialingFSMInterface.m"],
