@@ -57,10 +57,17 @@ The following FSM diagram is the basic structure of PhCA:
  The base grammar is given in the file ["./Mathematica/PhoneCallingDialogsGrammarRules.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneCallingDialogsGrammarRules.m)
  in EBNF used by \[2\].
  
- Here are parsing results of a set of test commands:
+ Here are parsing results of a set of test natural language commands:
  
- [!["PhCA-base-grammar-test-queries-125"](http://imgur.com/xTcBbbQm.png)](http://imgur.com/xTcBbbQ.png)
+ [!["PhCA-base-grammar-test-queries-125"](http://imgur.com/xTcBbbQl.png)](http://imgur.com/xTcBbbQ.png)
 
+ using the WL command:
+ 
+    ParsingTestTable[ParseJust[pCALLCONTACT\[CirclePlus]pCALLFILTER], ToLowerCase /@ queries]
+     
+ (Note that according to the [PhCA's FSM diagram](http://imgur.com/v7vCkRr.jpg) the parsing of `pCALLCONTACT` 
+ is separated from `pCALLFILTER`, hence the need to combine two parsers in the code line above.)
+     
  In the running script ["./Mathematica/PhoneDialingAgentRunScript.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m) the grammar parsers are modified to do successful parsing using data elements of the provided [fake address book](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/AddressBookByMovieRecords.m).
 
  The base grammar can be extended with the ["Time specifications grammar"](https://github.com/antononcube/MathematicaForPrediction/blob/master/EBNF/TimeSpecificationsGrammar.ebnf)
