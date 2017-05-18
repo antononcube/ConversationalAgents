@@ -68,10 +68,10 @@ FSM states.
  2. are used to switch between the FSM states.
  
  Because of the simplicity of FSM and the natural language commands only few iterations were done with the 
- []Parser-generation-by-grammars work flow](https://github.com/antononcube/ConversationalAgents/blob/master/ConceptualDiagrams/Parser-generation-by-grammars-workflow.pdf). 
+ [Parser-generation-by-grammars work flow](https://github.com/antononcube/ConversationalAgents/blob/master/ConceptualDiagrams/Parser-generation-by-grammars-workflow.pdf). 
  
  The base grammar is given in the file ["./Mathematica/PhoneCallingDialogsGrammarRules.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneCallingDialogsGrammarRules.m)
- in EBNF used by \[2\].
+ in EBNF used by \[[2](https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m)\].
  
  Here are parsing results of a set of test natural language commands:
  
@@ -96,7 +96,7 @@ FSM states.
  
 ## Running
  
- In order to experiment with the agent just run in Mathematica the command:
+ In order to experiment with the agent [just run](https://youtu.be/1sQgD9Kn0TQ) in Mathematica the command:
  
     Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m"]
  
@@ -110,6 +110,8 @@ FSM states.
  !["PhCA-1-call-someone-from-x-men""](http://i.imgur.com/ERavkTzm.png)
  !["PhCA-2-a-producer"](http://imgur.com/B2d2HDRm.png)
  !["PhCA-3-the-third-one](http://imgur.com/mWKNbVom.png)
+ 
+ See this [movie](https://youtu.be/1sQgD9Kn0TQ) demonstrating a PhCA run.
   
 ## References
 
