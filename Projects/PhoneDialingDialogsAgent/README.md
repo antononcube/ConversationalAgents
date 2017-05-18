@@ -50,11 +50,30 @@ PhCA has commands for system usage help and canceling the current contact search
 
 The following FSM diagram is the basic structure of PhCA:
 
-[!["Phone-conversational-agent-FSM-and-DB"](https://github.com/antononcube/ConversationalAgents/raw/master/ConceptualDiagrams/Phone-conversational-agent-FSM-and-DB.jpg)]
+[!["Phone-conversational-agent-FSM-and-DB"](http://imgur.com/v7vCkRrm.jpg)](http://imgur.com/v7vCkRr.jpg)
 
 ## Grammar design
  
- TBD...
+ The base grammar is given in the file ["./Mathematica/PhoneCallingDialogsGrammarRules.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneCallingDialogsGrammarRules.m)
+ in EBNF.
+ 
+ 
+## Running
+ 
+ In order to experiment with the agent just run in Mathematica the command:
+ 
+        Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m"]
+ 
+ The imported Wolfram Language file, ["./Mathematica/PhoneDialingAgentRunScript.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m), 
+ uses [a fake address book](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/AddressBookByMovieRecords.m) 
+ based on movie creators metadata. The code structure of "./Mathematica/PhoneDialingAgentRunScript.m" allows easy
+ experimentation and modification of the running steps.
+ 
+ Here are several screenshots illustrating a particular usage path:
+ 
+ !["PhCA-1-call-someone-from-x-men""](http://i.imgur.com/ERavkTzm.png)
+ !["PhCA-2-a-producer"](http://imgur.com/B2d2HDRm.png)
+ !["PhCA-3-the-third-one](http://imgur.com/mWKNbVom.png)
  
 ## References
 
