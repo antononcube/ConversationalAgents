@@ -17,6 +17,8 @@ The grammar is designed as a context free grammar rules of a Domain Specific Lan
 The (current) implementation is with Wolfram Language (WL) / Mathematica using the functional parsers package 
 \[[2](https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m),[3](https://mathematicaforprediction.wordpress.com/2014/02/13/natural-language-processing-with-functional-parsers/)\].
 
+This [movie](https://youtu.be/1sQgD9Kn0TQ) gives and overview from an end user perspective.
+
 ## General design
 
 The design of the Phone Conversational Agent (PhCA) is derived in a straightforward manner from 
@@ -55,7 +57,18 @@ The following FSM diagram gives the basic structure of PhCA:
 
 [!["Phone-conversational-agent-FSM-and-DB"](http://imgur.com/v7vCkRrl.jpg)](http://imgur.com/v7vCkRr.jpg)
 
+
+This [movie](https://youtu.be/1sQgD9Kn0TQ) demonstrates how different natural language commands switch the 
+FSM states.
+
 ## Grammar design
+ 
+ The derived grammar describes sentences that:
+ 1. fit the end user expectations, and
+ 2. are used to switch between the FSM states.
+ 
+ Because of the simplicity of FSM and the natural language commands only few iterations were done with the 
+ []Parser-generation-by-grammars work flow](https://github.com/antononcube/ConversationalAgents/blob/master/ConceptualDiagrams/Parser-generation-by-grammars-workflow.pdf). 
  
  The base grammar is given in the file ["./Mathematica/PhoneCallingDialogsGrammarRules.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneCallingDialogsGrammarRules.m)
  in EBNF used by \[2\].
