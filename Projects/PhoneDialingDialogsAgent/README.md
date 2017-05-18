@@ -11,7 +11,7 @@ providing the following functionalities:
 The design is based on a Finite State Machine (FSM) and context free grammar(s) for commands 
 that switch between the states of the FSM. 
 The grammar is designed as a context free grammar rules of a Domain Specific Language (DSL) in 
-Extended Backus-Naur Form (EBNF). (For more details on DSLs design and programming see 
+[Extended Backus-Naur Form](https://en.wikipedia.org/wiki/Extended_Backus–Naur_form) (EBNF). (For more details on DSLs design and programming see 
 \[[1](https://mathematicaforprediction.wordpress.com/2016/03/22/creating-and-programming-dsls/)\].)
 
 The (current) implementation is with Mathematica, using the functional parsers package 
@@ -55,26 +55,34 @@ The following FSM diagram is the basic structure of PhCA:
 ## Grammar design
  
  The base grammar is given in the file ["./Mathematica/PhoneCallingDialogsGrammarRules.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneCallingDialogsGrammarRules.m)
- in EBNF.
+ in EBNF used by \[2\].
  
+ Here are parsing results of a set of test commands:
+ 
+ [!["PhCA-base-grammar-test-queries-125"](http://imgur.com/xTcBbbQm.png)](http://imgur.com/xTcBbbQ.png)
+
+ In the running script ["./Mathematica/PhoneDialingAgentRunScript.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m) the grammar parsers are modified to do successful parsing using data elements of the provided [fake address book](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/AddressBookByMovieRecords.m).
+
+ The base grammar can be extended with the ["Time specifications grammar"](https://github.com/antononcube/MathematicaForPrediction/blob/master/EBNF/TimeSpecificationsGrammar.ebnf)
+ in order to include queries based on temporal commands.
  
 ## Running
  
  In order to experiment with the agent just run in Mathematica the command:
  
-        Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m"]
+    Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m"]
  
  The imported Wolfram Language file, ["./Mathematica/PhoneDialingAgentRunScript.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m), 
  uses [a fake address book](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/AddressBookByMovieRecords.m) 
  based on movie creators metadata. The code structure of "./Mathematica/PhoneDialingAgentRunScript.m" allows easy
  experimentation and modification of the running steps.
  
- Here are several screenshots illustrating a particular usage path:
+ Here are several screen-shots illustrating a particular usage path (scan left-to-right):
  
  !["PhCA-1-call-someone-from-x-men""](http://i.imgur.com/ERavkTzm.png)
  !["PhCA-2-a-producer"](http://imgur.com/B2d2HDRm.png)
  !["PhCA-3-the-third-one](http://imgur.com/mWKNbVom.png)
- 
+  
 ## References
 
 [1] Anton Antonov, ["Creating and programming domain specific languages"](https://mathematicaforprediction.wordpress.com/2016/03/22/creating-and-programming-dsls/), 
