@@ -14,23 +14,26 @@ The grammar is designed as a context free grammar rules of a Domain Specific Lan
 [Extended Backus-Naur Form](https://en.wikipedia.org/wiki/Extended_Backus–Naur_form) (EBNF). (For more details on DSLs design and programming see 
 \[[1](https://mathematicaforprediction.wordpress.com/2016/03/22/creating-and-programming-dsls/)\].)
 
-The (current) implementation is with Mathematica, using the functional parsers package 
+The (current) implementation is with Wolfram Language (WL) / Mathematica using the functional parsers package 
 \[[2](https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m),[3](https://mathematicaforprediction.wordpress.com/2014/02/13/natural-language-processing-with-functional-parsers/)\].
 
 ## General design
 
-The design of the Phone Conversational Agent (PhCA) is derived in a straightforward manner from the typical work flow and contacts queries.
+The design of the Phone Conversational Agent (PhCA) is derived in a straightforward manner from 
+the typical work flow of calling a contact (using, say, a mobile phone.)
 
 The main goals for the conversational agent are the following:
 
-1. contacts retrieval -- search, filtering, selection -- using both voice commands and manual interaction,
+1. contacts retrieval -- search, filtering, selection -- using both natural language commands and manual interaction,
 2. intuitive integration with the usual work flow of phone calling.
 
-Additional goal is to facilitate contacts retrieval by determining the most appropriate contacts in query responses. For example, while driving to work by pressing the dial button we might prefer the contacts of an up-coming meeting to be placed on top of the contacts list.
+An additional goal is to facilitate contacts retrieval by determining the most appropriate contacts in query responses. 
+For example, while driving to work by pressing the dial button we might prefer the contacts of an up-coming meeting 
+to be placed on top of the prompting contacts list.
 
-In this document we assume that the voice to text conversion is done with a existing (reliable) component.
+In this project we assume that the voice to text conversion is done with an existing (reliable) component.
 
-It is assumed that user of PhCA can react on both visual and spoken query results. 
+It is assumed that an user of PhCA can react to both visual and spoken query results. 
 
 The main algorithm is the following.
 
@@ -46,11 +49,11 @@ The main algorithm is the following.
 
 **4)** If other type of command is given act accordingly.
 
-PhCA has commands for system usage help and canceling the current contact search and starting over.
+PhCA has commands for system usage help and for canceling the current contact search and starting over.
 
-The following FSM diagram is the basic structure of PhCA:
+The following FSM diagram gives the basic structure of PhCA:
 
-[!["Phone-conversational-agent-FSM-and-DB"](http://imgur.com/v7vCkRrm.jpg)](http://imgur.com/v7vCkRr.jpg)
+[!["Phone-conversational-agent-FSM-and-DB"](http://imgur.com/v7vCkRrl.jpg)](http://imgur.com/v7vCkRr.jpg)
 
 ## Grammar design
  
@@ -68,7 +71,12 @@ The following FSM diagram is the basic structure of PhCA:
  (Note that according to the [PhCA's FSM diagram](http://imgur.com/v7vCkRr.jpg) the parsing of `pCALLCONTACT` 
  is separated from `pCALLFILTER`, hence the need to combine two parsers in the code line above.)
      
- In the running script ["./Mathematica/PhoneDialingAgentRunScript.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m) the grammar parsers are modified to do successful parsing using data elements of the provided [fake address book](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/AddressBookByMovieRecords.m).
+ PhCA's FSM implementation provides interpretation and context of the functional programming expressions
+ obtained by the parser.
+      
+ In the running script ["./Mathematica/PhoneDialingAgentRunScript.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneDialingAgentRunScript.m) 
+ the grammar parsers are modified to do successful parsing using data elements of 
+ the provided [fake address book](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/AddressBookByMovieRecords.m).
 
  The base grammar can be extended with the ["Time specifications grammar"](https://github.com/antononcube/MathematicaForPrediction/blob/master/EBNF/TimeSpecificationsGrammar.ebnf)
  in order to include queries based on temporal commands.
