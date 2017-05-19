@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Has repository designs and implementations of a phone calling conversational agent that aims at 
+This repository has designs and implementations of a phone calling conversational agent that aims at
 providing the following functionalities: 
 - contacts retrieval (querying, filtering, selection), 
 - contacts prioritization, and 
@@ -17,7 +17,7 @@ The grammar is designed as a context free grammar rules of a Domain Specific Lan
 The (current) implementation is with Wolfram Language (WL) / Mathematica using the functional parsers package 
 \[[2](https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m),[3](https://mathematicaforprediction.wordpress.com/2014/02/13/natural-language-processing-with-functional-parsers/)\].
 
-This [movie](https://youtu.be/1sQgD9Kn0TQ) gives and overview from an end user perspective.
+This [movie](https://youtu.be/1sQgD9Kn0TQ) gives an overview from an end user perspective.
 
 ## General design
 
@@ -33,7 +33,7 @@ An additional goal is to facilitate contacts retrieval by determining the most a
 For example, while driving to work by pressing the dial button we might prefer the contacts of an up-coming meeting 
 to be placed on top of the prompting contacts list.
 
-In this project we assume that the voice to text conversion is done with an existing (reliable) component.
+In this project we assume that the voice to text conversion is done with an external (reliable) component.
 
 It is assumed that an user of PhCA can react to both visual and spoken query results. 
 
@@ -64,7 +64,7 @@ FSM states.
 ## Grammar design
  
  The derived grammar describes sentences that:
- 1. fit the end user expectations, and
+ 1. fit end user expectations, and
  2. are used to switch between the FSM states.
  
  Because of the simplicity of FSM and the natural language commands only few iterations were done with the 
@@ -81,8 +81,8 @@ FSM states.
  
     ParsingTestTable[ParseJust[pCALLCONTACT\[CirclePlus]pCALLFILTER], ToLowerCase /@ queries]
      
- (Note that according to the [PhCA's FSM diagram](http://imgur.com/v7vCkRr.jpg) the parsing of `pCALLCONTACT` 
- is separated from `pCALLFILTER`, hence the need to combine two parsers in the code line above.)
+ (Note that according to [PhCA's FSM diagram](http://imgur.com/v7vCkRr.jpg) the parsing of `pCALLCONTACT` 
+ is separated from `pCALLFILTER`, hence the need to combine the two parsers in the code line above.)
      
  PhCA's FSM implementation provides interpretation and context of the functional programming expressions
  obtained by the parser.
