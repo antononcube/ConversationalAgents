@@ -119,7 +119,7 @@ FSM states.
 (2016), [MathematicaForPrediction at WordPress blog](https://mathematicaforprediction.wordpress.com). 
 
 [2] Anton Antonov, [Functional parsers, Mathematica package](https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m), 
-[MathematicaForPrediction at GitHub](ttps://github.com/antononcube/MathematicaForPrediction), 2014. 
+[MathematicaForPrediction at GitHub](https://github.com/antononcube/MathematicaForPrediction), 2014. 
 
 [3] Anton Antonov, ["Natural language processing with functional parsers"](https://mathematicaforprediction.wordpress.com/2014/02/13/natural-language-processing-with-functional-parsers/), (2014), 
 [MathematicaForPrediction at WordPress blog](https://mathematicaforprediction.wordpress.com). 
