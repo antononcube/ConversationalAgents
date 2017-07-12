@@ -68,7 +68,7 @@ FSM states.
  1. fit end user expectations, and
  2. are used to switch between the FSM states.
  
- Because of the simplicity of FSM and the natural language commands only few iterations were done with the 
+ Because of the simplicity of the FSM and the natural language commands only few iterations were done with the 
  [Parser-generation-by-grammars work flow](https://github.com/antononcube/ConversationalAgents/blob/master/ConceptualDiagrams/Parser-generation-by-grammars-workflow.pdf). 
  
  The base grammar is given in the file ["./Mathematica/PhoneCallingDialogsGrammarRules.m"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/PhoneDialingDialogsAgent/Mathematica/PhoneCallingDialogsGrammarRules.m)
