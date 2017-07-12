@@ -2,20 +2,21 @@
 
 ## Introduction
 
-This repository has designs and implementations of a phone calling conversational agent that aims at
+This repository directory has designs and implementations of a phone calling conversational agent that aims at
 providing the following functionalities: 
 - contacts retrieval (querying, filtering, selection), 
 - contacts prioritization, and 
 - phone call (work flow) handling.
 
-The design is based on a Finite State Machine (FSM) and context free grammar(s) for commands 
-that switch between the states of the FSM. 
+The design is based on a [Finite State Machine (FSM)](https://en.wikipedia.org/wiki/Finite-state_machine)
+and [context free grammar(s)](https://en.wikipedia.org/wiki/Context-free_grammar) for commands that switch between the states of the FSM. 
 The grammar is designed as a context free grammar rules of a Domain Specific Language (DSL) in 
 [Extended Backus-Naur Form](https://en.wikipedia.org/wiki/Extended_Backus–Naur_form) (EBNF). (For more details on DSLs design and programming see 
 \[[1](https://mathematicaforprediction.wordpress.com/2016/03/22/creating-and-programming-dsls/)\].)
 
 The (current) implementation is with Wolfram Language (WL) / Mathematica using the functional parsers package 
-\[[2](https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m),[3](https://mathematicaforprediction.wordpress.com/2014/02/13/natural-language-processing-with-functional-parsers/)\].
+\[[2](https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m),
+[3](https://mathematicaforprediction.wordpress.com/2014/02/13/natural-language-processing-with-functional-parsers/)\].
 
 This [movie](https://youtu.be/1sQgD9Kn0TQ) gives an overview from an end user perspective.
 
