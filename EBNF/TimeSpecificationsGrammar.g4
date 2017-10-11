@@ -20,6 +20,30 @@
 	Windermere, Florida, USA.
 */
 
+/*
+    # How to use
+
+    1. Install ANTLR (from http://www.antlr.org or https://github.com/antlr .)
+
+    2. Download this grammar file.
+
+    3. In the directory of the grammar file run:
+
+       $> antlr4 TimeSpecificationsGrammar.g4
+
+    4. Compile the generated Java files:
+
+       $> javac TimeSpecificationsGrammar*.java
+
+    5. Try out the grammar:
+
+       $> grun TimeSpecificationsGrammar time_interval -tree
+       from monday to friday
+       ^D
+       (time_interval (time_interval_spec from (time_spec (day_name (day_name_long monday))) to (time_spec (day_name (day_name_long friday)))))
+
+*/
+
 grammar TimeSpecificationsGrammar;
 
 time_interval : time_interval_spec | number_of_time_units | week_of_year | month_of_year ;
