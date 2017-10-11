@@ -84,7 +84,7 @@ day_name : day_name_long | day_name_abbr | day_name_long_plurals ;
 
 week_number : 'week' week_number_range ;
 
-week_number_range : NUMBER ;
+week_number_range : WEEKNUMBER ;
 
 week_of_year : ( 'the' )? 'week' week_number_range 'of' year ;
 
@@ -105,7 +105,7 @@ holiday_name : 'ramadan' | 'christmas' | 'thanksgiving' | 'memorial' 'day' | 'li
 
 holiday_offset : number_of_time_units 'before' | 'after' holiday_name ;
 
-hour_spec : NUMBER ( 'am' | 'pm' )? ;
+hour_spec : HOURNUMBER ( 'am' | 'pm' )? ;
 
 full_date_spec : number month_name | month_name number number ( number 'am' | 'pm' )? ;
 
@@ -113,7 +113,9 @@ number : NUMBER ;
 
 YEARNUMBER : DIGIT DIGIT DIGIT DIGIT ;
 
-HOURNUMBER : DIGIT | ( '0' | '1' ) DIGIT | '2' ( '0' | '1' | '2' ) ;
+HOURNUMBER : DIGIT | ( '0' | '1' ) DIGIT | '2' ( '0' | '1' | '2' | '3' | '4' ) ;
+
+WEEKNUMBER : DIGIT | ( '0' | '1' | '2' | '3' | '4' ) DIGIT | '5' ( '0' | '1' | '2' ) ;
 
 NUMBER : DIGIT+ ;
 
