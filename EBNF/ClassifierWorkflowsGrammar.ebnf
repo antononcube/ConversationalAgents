@@ -42,7 +42,16 @@
 
    The following sequence of commands are parsed by the parsers generated with the grammar.
 
+      Clear["ebnf*"]
+
+      Get["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/ClassifierWorkflowsGrammar.ebnf"]
       Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
+
+      Names["ebnf*"]
+
+      (* {"ebnfClassifierMaking", "ebnfClassifierTesting", "ebnfCommand",
+          "ebnfDataLoad", "ebnfDataOutliers", "ebnfDataStatistics",
+          "ebnfDataTransform", "ebnfSplitting", "ebnfVerification"} *)
 
       res =
         GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad, ebnfDataTransform,
@@ -69,9 +78,6 @@
 
 *)
 
-
-
-Clear["ebnf*"]
 
 (************************************************************)
 (* Data load                                                *)
@@ -132,7 +138,8 @@ ebnfSplitting = "
 (************************************************************)
 
 ebnfDataStatistics = "
-  <summarize-data> = 'summarize' , [ 'the' ] , 'data' | <display-directive> , [ <split-part-list> ] <& ( 'data' , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
+  <summarize-data> = 'summarize' , [ 'the' ] , 'data' | <display-directive> , [ <split-part-list> ] <&
+                     ( 'data' , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
   ";
 
 
@@ -156,7 +163,8 @@ ebnfDataOutliers = "
 (************************************************************)
 
 ebnfClassifierMaking = "
-  <classifier-algorithm-name> = 'glm' | 'random' , 'forest' | 'logistic' , 'regression' | 'nearest' , 'neighbors' | 'decision' , 'tree' | 'neural' , 'network'  <@ ClassifierAlgorithmName ;
+  <classifier-algorithm-name> = 'glm' | 'random' , 'forest' | 'logistic' , 'regression' | 'nearest' , 'neighbors' |
+                                'decision' , 'tree' | 'neural' , 'network'  <@ ClassifierAlgorithmName ;
   <library-name> = '_String' <@ LibraryName ;
   <classifier-algorithm> = <classifier-algorithm-name> , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
   <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
@@ -213,19 +221,11 @@ ebnfCommand = "
 (* Generate parsers                                         *)
 (************************************************************)
 
-(*
-Names["ebnf*"]
-
-{"ebnfClassifierMaking", "ebnfClassifierTesting", "ebnfCommand",
-  "ebnfDataLoad", "ebnfDataOutliers", "ebnfDataStatistics",
-  "ebnfDataTransform", "ebnfSplitting", "ebnfVerification"}
-*)
-
 res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad,
   ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
   ebnfClassifierMaking, ebnfClassifierTesting, ebnfVerification,
   ebnfCommand};
-LeafCount /@ res
+(* LeafCount /@ res *)
 
 
 (************************************************************)
