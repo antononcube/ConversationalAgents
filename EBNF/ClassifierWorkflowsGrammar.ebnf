@@ -1,0 +1,237 @@
+(*
+    Classifier workflows grammar in EBNF
+    Copyright (C) 2018  Anton Antonov
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	Written by Anton Antonov,
+	antononcube @@@ gmail ... com,
+	Windermere, Florida, USA.
+*)
+
+(* Version 0.8 *)
+
+(*
+   This grammar is intended to be parsed by the functions in the Mathematica package FunctionalParses.m at GitHub,
+   see https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m .
+
+   In order to parse this grammar specification the file can be imported in Mathematica copy all
+   of the grammar rule lines and paste them within a pair of string quotes.
+*)
+
+(*
+   The grammar is intended to interface the creation and testing of classifiers.
+
+
+   The grammar is partitioned into separate sub-grammars, each sub-grammar corresponding to a conceptual set of
+   functionalities. (The intent is to facilitate understanding and further development.)
+
+
+   ## Example
+
+   The following sequence of commands are parsed by the parsers generated with the grammar.
+
+      Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
+
+      res =
+        GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad, ebnfDataTransform,
+               ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers, ebnfClassifierMaking,
+               ebnfClassifierTesting, ebnfVerification, ebnfCommand};
+
+      LeafCount /@ res
+
+      queries = {
+         "load the titanic data",
+         "transform numerical columns into categorical",
+         "split data with 70 percent for training",
+         "show test data summary",
+         "find data outliers per class",
+         "show the outliers",
+         "remove the outliers",
+         "show training and test data summaries",
+         "create a logistic regression classifier",
+         "show precision and recall",
+         "show roc over the test data",
+         "verify the recall of high is larger than 0.8"};
+
+      pres = ParsingTestTable[ParseShortest[pCOMMAND], queries, "Layout" -> "Vertical"]
+
+*)
+
+
+
+Clear["ebnf*"]
+
+(************************************************************)
+(* Data load                                                *)
+(************************************************************)
+
+ebnfDataLoad = "
+  <display-directive> = 'show' | 'give' | 'display' <@ DisplayDirective ;
+  <load-data-opening> = ( 'load' | 'get' | 'consider' ) , [ 'data' ] ;
+  <load-preposition> = 'for' | 'of' | 'at' | 'from' ;
+  <load-data> = ( <load-data-opening> , [ 'the' ] ) &> <data-kind> , ( [ 'data' ] , <load-preposition> ) &> <location-specification> |
+  ( <load-data-opening> , [ 'the' ] ) &> <location-specification> <& [ 'data' ] <@ LoadData ;
+  <location-specification> = <dataset-name> | <web-address> | <database-name> <@ LocationSpec ;
+  <web-address> = '_?StringQ' <@ WebAddress ;
+  <dataset-name> = '_WordString' <@ DatasetName ;
+  <database-name> = '_WordString' <@ DatabaseName ;
+  <data-kind> = '_String' <@ DataKind ;
+  ";
+
+
+(************************************************************)
+(* Data transformation                                      *)
+(************************************************************)
+
+ebnfDataTransform = "
+  <data-spec-opening> = 'transform' ;
+  <data-type-filler> =  'data' | 'records' ;
+  <data-type> = <data-type-boolean> | <data-type-numeric> | <data-type-string> | <data-type-symbolic> | <data-type-time> ;
+  <data-type-boolean> = 'logical' | 'logic' | 'boolean' <@ TypeBoolean ;
+  <data-type-numeric> = 'numeric' | 'numerical' | 'integer' | 'double' <@ TypeNumeric ;
+  <data-type-string> = 'character' | 'string' | 'categorical' <@ TypeString ;
+  <data-type-symbolic> = 'symbolic' <@ TypeSymbolic ;
+  <data-type-time> = 'timestamp' , 'time' , 'date' , 'temporal' <@ TypeTime ;
+  <data-columns> = 'columns' | 'variables' ;
+  <data-transformation-opening> = 'transform' | 'modify' ;
+  <data-transformation-of-columns> = [ 'the' ] , ( <data-type> <& <data-columns> ) , ( 'to' | 'into' ) &> <data-type> <@ TransformColumns@*Flatten ;
+  <data-transformation> = <data-transformation-opening> &> <data-transformation-of-columns> <@ DataTransform ;
+  <number-value> = '_?NumberQ' <@ NumericValue ;
+  <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
+  <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
+  ";
+
+
+(************************************************************)
+(* Splitting                                                *)
+(************************************************************)
+
+ebnfSplitting = "
+  <split-data-opening> = ( 'split' | 'divide' ) , [ 'the' ] , [ 'data' ] ;
+  <split-part> = 'training' | 'train' | 'test' | 'testing' <@ SplitPart ;
+  <split-part-list> = <split-part> , [ { 'and' &> <split-part> } ] <@ SplitPartList@*Flatten ;
+  <split-data-spec> = <percent-value> , [ 'of' | 'for' ] &> <split-part> <& [ 'data' ];
+  <split-data> = ( [ <split-data-opening> ] , ( 'using' | 'by' | 'with' ) ) &> <split-data-spec> <@ SplitData ;
+  ";
+
+
+(************************************************************)
+(* Data summaries and statistics                            *)
+(************************************************************)
+
+ebnfDataStatistics = "
+  <summarize-data> = 'summarize' , [ 'the' ] , 'data' | <display-directive> , [ <split-part-list> ] <& ( 'data' , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
+  ";
+
+
+(************************************************************)
+(* Outlier finding and removal                              *)
+(************************************************************)
+
+ebnfDataOutliers = "
+  <data-outliers> = <find-outliers> | <remove-outliers> | <show-outliers> <@ OutlierHandling ;
+  <find-outliers> = <find-outliers-per-class> | <find-outliers-all> <@ FindOutliers ;
+  <find-outliers-all> = 'find' &> <outliers> <@ FindAllOutliers ;
+  <find-outliers-per-class> = 'find' &> <outliers> , 'per' , 'class' , [ 'label ' ] <@ FindOutliersPerClass ;
+  <remove-outliers> = 'remove' , <outliers> <@ RemoveOutliers ;
+  <show-outliers> = <display-directive> , <outliers> <@ ShowOutliers ;
+  <outliers> = ( [ 'the' ] , [ 'data' ] ) &> [ ( 'top' | 'bottom' | 'largest' | 'smallest' | 'all' ) ] , 'outliers' <@ Outliers@*Flatten ;
+  ";
+
+
+(************************************************************)
+(* Classifier making                                        *)
+(************************************************************)
+
+ebnfClassifierMaking = "
+  <classifier-algorithm-name> = 'glm' | 'random' , 'forest' | 'logistic' , 'regression' | 'nearest' , 'neighbors' | 'decision' , 'tree' | 'neural' , 'network'  <@ ClassifierAlgorithmName ;
+  <library-name> = '_String' <@ LibraryName ;
+  <classifier-algorithm> = <classifier-algorithm-name> , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
+  <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
+  <classifier-creation> = ( ( 'make' | 'create' ) , [ 'a' ] ) &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
+                                                                   'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
+                                                                 [ <using-preposition> &> <train-data-spec> ] <@ ClassifierCreation ;
+  ";
+
+
+(************************************************************)
+(* Classifier testing                                       *)
+(************************************************************)
+
+ebnfClassifierTesting = "
+  <classifier-testing> = ( 'test' , [ 'a' | 'the' ] ) &> 'classifier' <@ TestClassifier ;
+  <train-data-spec> = '_?NumberQ' , ( 'percent' | 'fraction' ) <& ( 'of' , [ 'the' ] , [ 'available' ] , ( 'records' | 'data' ) ) <@ TrainData;
+  <test-results-preamble> = ( 'show' | 'display' | 'give' | 'compute' ) , [ 'classifier' ] ;
+  <test-measure> = 'accuracy' | 'confusion' , 'matrix' | 'f-scores' | 'precision' | 'recall' | 'roc' <@ TestMeasure ;
+  <test-measure-list> = <test-measure> , { 'and' &> <test-measure> } <@ TestMeasureList ;
+  <test-classification-threshold> = 'classification' , 'threshold' , '_?NumberQ' <@ ClassThreshold ;
+  <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
+  <test-results> = <test-results-preamble> &> ( 'test' , 'results' | <test-measure> | <test-measure-list> ) ,
+                   [ 'with' , <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
+  ";
+
+
+(************************************************************)
+(* Verification                                             *)
+(************************************************************)
+
+ebnfVerification = "
+  <verify-command> = <verify-preamble> , <verify-test-spec> <@ VerifyCommand ;
+  <verify-preamble> = ( 'verify' | 'assert' ) <& [ 'that' ] <@ VerifyPreamble ;
+  <verify-test-spec> = <verify-test-spec-simple> | <verify-test-spec-label> <@ VerifyTestSpec ;
+  <verify-test-spec-simple> = [ 'the' ] &> <test-measure> , <verify-relation> , <verify-value> <@ VerifyTestSpecSimple ;
+  <verify-test-spec-label> = ( [ 'the' ] &> <test-measure> , 'of' ) &> <class-label> , <verify-relation> , <verify-value> <@ VerifyTestSpecLabel ;
+  <verify-relation> = 'is' &> ( 'greater' | 'larger' | 'smaller' | 'less' | 'greater' ) <& 'than' | 'equals' | 'is' , 'equal' , 'to' <@ VerifyRelation ;
+  <verify-value> = <percent-value> | <number-value> | <boolean-value> <@ VerifyValue ;
+  <class-label> = '_WordString' <@ ClassLabel ;
+  ";
+
+
+(************************************************************)
+(* Combination                                              *)
+(************************************************************)
+
+ebnfCommand = "
+  <command> = <load-data> | <data-transformation> | <split-data> | <summarize-data> | <data-outliers> |
+              <classifier-creation> | <classifier-testing> | <test-results> | <verify-command> ;
+  ";
+
+
+(************************************************************)
+(* Generate parsers                                         *)
+(************************************************************)
+
+(*
+Names["ebnf*"]
+
+{"ebnfClassifierMaking", "ebnfClassifierTesting", "ebnfCommand",
+  "ebnfDataLoad", "ebnfDataOutliers", "ebnfDataStatistics",
+  "ebnfDataTransform", "ebnfSplitting", "ebnfVerification"}
+*)
+
+res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad,
+  ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
+  ebnfClassifierMaking, ebnfClassifierTesting, ebnfVerification,
+  ebnfCommand};
+LeafCount /@ res
+
+
+(************************************************************)
+(* Modify parsers                                           *)
+(************************************************************)
+
+pEGRETWEBADDRESS =
+    ParseApply[WebAddress,
+      ParsePredicate[StringMatchQ[#, (DigitCharacter ..) ~~ "." ~~ (DigitCharacter ..) ~~ "." ~~ (DigitCharacter ..)] &]];
