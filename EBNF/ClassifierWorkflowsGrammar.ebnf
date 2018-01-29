@@ -23,22 +23,25 @@
 (* Version 0.8 *)
 
 (*
-   This grammar is intended to be parsed by the functions in the Mathematica package FunctionalParses.m at GitHub,
-   see https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m .
 
-   In order to parse this grammar specification the file can be imported in Mathematica copy all
-   of the grammar rule lines and paste them within a pair of string quotes.
-*)
+   # In brief
 
-(*
    The grammar is intended to interface the creation and testing of classifiers.
-
 
    The grammar is partitioned into separate sub-grammars, each sub-grammar corresponding to a conceptual set of
    functionalities. (The intent is to facilitate understanding and further development.)
 
 
-   ## Example
+   # How to use
+
+   This grammar is intended to be parsed by the functions in the Mathematica package FunctionalParses.m at GitHub,
+   see https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m .
+
+   The file although given an extension "ebnf" is in in fact a Mathematica code file.
+   (I.e. it can be run in Mathematica with Get.)
+
+
+   # Example
 
    The following sequence of commands are parsed by the parsers generated with the grammar.
 
@@ -163,10 +166,13 @@ ebnfDataOutliers = "
 (************************************************************)
 
 ebnfClassifierMaking = "
-  <classifier-algorithm-name> = 'glm' | 'random' , 'forest' | 'logistic' , 'regression' | 'nearest' , 'neighbors' |
-                                'decision' , 'tree' | 'neural' , 'network'  <@ ClassifierAlgorithmName ;
+  <classifier-method> = 'DecisionTree' | 'GradientBoostedTrees' | 'LogisticRegression' | 'NaiveBayes' |
+                        'NearestNeighbors' | 'NeuralNetwork' | 'RandomForest' | 'SupportVectorMachine' <@ ClassifierMethod ;
+  <classifier-algorithm-name> = 'decision' , 'tree' | 'gradient' , 'boosted' , 'trees' | 'logistic' , 'regression' | 'nearest' , 'neighbors' |
+                                'naive' , 'bayes' | 'neural' , 'network' | 'random' , 'forest' |
+                                'support' , 'vector' , 'machine'  <@ ClassifierAlgorithmName ;
   <library-name> = '_String' <@ LibraryName ;
-  <classifier-algorithm> = <classifier-algorithm-name> , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
+  <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
   <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
   <classifier-creation> = ( ( 'make' | 'create' ) , [ 'a' ] ) &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
                                                                    'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
