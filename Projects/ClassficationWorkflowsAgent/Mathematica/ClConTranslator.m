@@ -1,4 +1,4 @@
-((*
+(*
     ClCon translator Mathematica package
     Copyright (C) 2018  Anton Antonov
 
@@ -63,17 +63,17 @@
    1. [ ] Make a real package
    2. [ ] Complete implementation for the grammar in [1]
    3. [ ] Better explanations
-   4. [ ] Re-write \[DoubleLongRightArrow] with Fold
+   4. [ ] Re-write DoubleLongRightArrow with Fold
 *)
 
 (*BeginPackage["ClConTranslator`"]*)
-(** Exported symbols added here with SymbolName::usage *)
+(* Exported symbols added here with SymbolName::usage *)
 
 (*Begin["`Private`"]*)
 
 Clear[TGetValue]
 TGetValue[parsed_, head_] :=
-    If[FreeQ[parsed, head[___]], None, First@Cases[parsed, head[n___] :> n, {0, \[Infinity]}]];
+    If[FreeQ[parsed, head[___]], None, First@Cases[parsed, head[n___] :> n, {0, Infinity}]];
 
 
 Clear[TLoadData]
@@ -148,9 +148,9 @@ TClassifierCreation[parsed_] :=
       If[! MemberQ[clMethodNames, clName],
       (*This is redundant if the parsers for ClassifierMethod and ClassifierAlgorithmName use concrete names (not general string patterns.)*)
 
-        Echo["Unknown classifier name:" <> ToString[clName] <>
-            ". The classifier name should be one of " <> ToString[clMethodNames],
-          "TClassifierCreation"]; Return[$ClConFailure]
+        Echo["Unknown classifier name:" <> ToString[clName] <> ". The classifier name should be one of " <> ToString[clMethodNames],
+          "TClassifierCreation"];
+        Return[$ClConFailure]
       ];
 
       ClConMakeClassifier[clName]
