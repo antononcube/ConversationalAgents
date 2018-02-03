@@ -194,9 +194,10 @@ ebnfClassifierEnsembleMaking = "
                                  ( ( <classifier-ensemble-phrase> , <using-preposition> ) &> <classifier-algorithm> ) ) ;
   <ensemble-creation-num> = ( <classifier-creation-opening> , <classifier-ensemble-phrase> ) &>
                             ( <using-preposition> | 'of' ) &>
-                            <number-value> , [ 'of' ] &> <classifier-algorithm> <& [ 'classifiers' ] ;
+                            <number-of-classifiers> , [ 'of' ] &> <classifier-algorithm> <& [ 'classifiers' ] ;
   <resampling-spec> = ( [ <percent-value> ] <& ( 'resampling' | 'of' , [ 'the' ] , 'data' ) ) , [ 'with' &> <resampling-function> ]  <@ ResamplingSpec ;
   <resampling-function> = 'RandomChoice' | 'RandomSample' <@ ResamplingFunction ;
+  <number-of-classifiers> = <number-value> <@ NumberOfClassifiers ;
 ";
 
 
