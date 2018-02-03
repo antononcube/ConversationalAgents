@@ -174,10 +174,30 @@ ebnfClassifierMaking = "
   <library-name> = '_String' <@ LibraryName ;
   <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
   <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
-  <classifier-creation> = ( ( 'make' | 'create' ) , [ 'a' ] ) &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
+  <classifier-creation-opening> = ( ( 'make' | 'create' ) , [ 'a' | 'an' ] ) ;
+  <classifier-creation> = <classifier-creation-opening> &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
                                                                    'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
                                                                  [ <using-preposition> &> <train-data-spec> ] <@ ClassifierCreation ;
   ";
+
+
+(************************************************************)
+(* Classifier ensemble making                               *)
+(************************************************************)
+
+ebnfClassifierEnsembleMaking = "
+  <classifier-ensemble-creation> = ( <ensemble-creation-simple> | <ensemble-creation-num> ) ,
+                                   [ <using-preposition> &> <resampling-spec> ] <@ ClassifierEnsembleCreation ;
+  <classifier-ensemble-phrase> = ( [ 'classifier' ] , 'ensemble' ) | ( 'ensemble' , 'of' , 'classifiers' ) ;
+  <ensemble-creation-simple> = <classifier-creation-opening>  &>
+                               ( ( [ <classifier-algorithm> ] <& <classifier-ensemble-phrase> ) |
+                                 ( ( <classifier-ensemble-phrase> , <using-preposition> ) &> <classifier-algorithm> ) ) ;
+  <ensemble-creation-num> = ( <classifier-creation-opening> , <classifier-ensemble-phrase> ) &>
+                            ( <using-preposition> | 'of' ) &>
+                            <number-value> , [ 'of' ] &> <classifier-algorithm> <& [ 'classifiers' ] ;
+  <resampling-spec> = ( [ <percent-value> ] <& ( 'resampling' | 'of' , [ 'the' ] , 'data' ) ) , [ 'with' &> <resampling-function> ]  <@ ResamplingSpec ;
+  <resampling-function> = 'RandomChoice' | 'RandomSample' <@ ResamplingFunction ;
+";
 
 
 (************************************************************)
@@ -239,7 +259,8 @@ ebnfPipelineCommands = "
 
 ebnfCommand = "
   <command> = <load-data> | <data-transformation> | <split-data> | <summarize-data> | <data-outliers> |
-              <classifier-creation> | <classifier-testing> | <test-results> | <verify-command> | <pipeline-command> ;
+              <classifier-creation> | <classifier-ensemble-creation> | <classifier-testing> |
+              <test-results> | <verify-command> | <pipeline-command> ;
   ";
 
 
@@ -249,8 +270,8 @@ ebnfCommand = "
 
 res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad,
   ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
-  ebnfClassifierMaking, ebnfClassifierTesting, ebnfVerification, ebnfPipelineCommands,
-  ebnfCommand};
+  ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierTesting,
+  ebnfVerification, ebnfPipelineCommands, ebnfCommand};
 (* LeafCount /@ res *)
 
 
