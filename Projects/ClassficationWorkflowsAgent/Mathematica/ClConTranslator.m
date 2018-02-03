@@ -131,8 +131,8 @@ TSummarizeData[parsed_] :=
     ];
 
 
-Clear[TClassifierCreation]
-TClassifierCreation[parsed_] :=
+Clear[TClassifierNameRetrieval]
+TClassifierNameRetrieval[parsed_] :=
     Block[{clName, clMethodNames},
 
       clMethodNames = {"DecisionTree", "GradientBoostedTrees",
@@ -154,7 +154,43 @@ TClassifierCreation[parsed_] :=
         Return[$ClConFailure]
       ];
 
+      clName
+    ];
+
+
+Clear[TClassifierCreation]
+TClassifierCreation[parsed_] :=
+    Block[{clName, clMethodNames},
+
+      clName = TClassifierNameRetrieval[parsed];
+
       ClConMakeClassifier[clName]
+    ];
+
+
+Clear[TClassifierEnsembleCreation]
+TClassifierEnsembleCreation[parsed_] :=
+    Block[{clName, rsFraction, nClassifiers, rsFunc},
+
+      clName = TClassifierNameRetrieval[parsed];
+      If[ clName === $ClConFailure, Return[$ClConFailure]];
+
+      rsFraction = TGetValue[parsed, PercentValue];
+      If[ rsFraction === None,
+        rsFraction = 0.9,
+        rsFraction = TGetValue[rsFraction, NumericValue]
+      ];
+
+      nClassifiers = TGetValue[parsed, NumberOfClassifiers];
+      If[ nClassifiers === None,
+        nClassifiers = 3,
+        nClassifiers = TGetValue[nClassifiers, NumericValue]
+      ];
+
+      ClConMakeClassifier[{<|"method" -> clName,
+        "samplingFraction" -> rsFraction, "nClassifiers" -> nClassifiers,
+        "samplingFunction" -> RandomSample|>}]
+
     ];
 
 
@@ -177,7 +213,8 @@ TranslateToClCon[pres_] :=
       SplitData = TSplitData,
       SummarizeData = TSummarizeData,
       ClassifierCreation = TClassifierCreation,
-      TestResults = TTestResults},
+      TestResults = TTestResults,
+      ClassifierEnsembleCreation = TClassifierEnsembleCreation},
       pres
     ];
 
