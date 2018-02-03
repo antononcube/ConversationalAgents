@@ -207,6 +207,13 @@ TTestResults[parsed_] :=
 
 
 Clear[TranslateToClCon]
+
+TranslateToClCon[commands:{_String..}] :=
+    Block[{parsedSeq},
+      parsedSeq = ParseShortest[pCOMMAND][ToTokens[#]] & /@ commands;
+      TranslateToClCon[ parsedSeq ]
+    ];
+
 TranslateToClCon[pres_] :=
     Block[{
       LoadData = TLoadData,
@@ -216,6 +223,28 @@ TranslateToClCon[pres_] :=
       TestResults = TTestResults,
       ClassifierEnsembleCreation = TClassifierEnsembleCreation},
       pres
+    ];
+
+
+Clear[ToClConPipelineFunction]
+
+ToClConPipelineFunction[commands:{_String..}] :=
+    Block[{parsedSeq},
+      parsedSeq = ParseShortest[pCOMMAND][ToTokens[#]] & /@ commands;
+      ToClConPipelineFunction[ parsedSeq[[All,1,2]] ]
+    ];
+
+ToClConPipelineFunction[pres_List] :=
+    Block[{t, parsedSeq=pres},
+
+      If[ Head[First[pres]] === LoadData, parsedSeq = Rest[pres]];
+
+      t = TranslateToClCon[parsedSeq];
+
+      (* Note that we can use:
+         Fold[ClConBind[#1,#2]&,First[t],Rest[t]] *)
+      Function[{x, c},
+        Evaluate[DoubleLongRightArrow @@ Prepend[t, ClConUnit[x, c]]]]
     ];
 
 (*End[] * `Private` *)
