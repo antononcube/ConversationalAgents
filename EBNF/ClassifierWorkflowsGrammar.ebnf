@@ -214,12 +214,32 @@ ebnfVerification = "
 
 
 (************************************************************)
+(* General pipeline commands                                *)
+(************************************************************)
+
+ebnfPipelineCommands = "
+  <pipeline-command> = <get-pipeline-value> | <get-pipeline-context> |
+                       <pipeline-context-add> | <pipeline-context-retrieve> <@ PipelineCommand ;
+  <pipeline-filler> = [ 'the' ] , [ 'current' ] , [ 'pipeline' ] ;
+  <pipeline-value> = <pipeline-filler> &> 'value' <@ PipelineValue ;
+  <get-pipeline-value> = <display-directive> &> <pipeline-value> <@ GetPipelineValue ;
+  <pipeline-context> =  <pipeline-filler> &> 'context' <@ PipelineContext ;
+  <pipeline-context-keys> =  <pipeline-filler> &> 'context' , 'keys' <@ PipelineContextKeys ;
+  <context-key> = '_String' <@ ContextKey ;
+  <pipeline-context-value> = ( <pipeline-filler> , 'context' , 'value' , ( 'for' | 'of' ) ) &> <context-key> <@ PipelineContextValue ;
+  <get-pipeline-context> = <display-directive> , ( <pipeline-context> | <pipeline-context-keys> | <pipeline-context-value> ) <@ GetPipelineContext ;
+  <pipeline-context-add> = ( ( 'put' | 'add' ) , ( 'in' | 'into' | 'to' ) , 'context' , 'as' ) &> <context-key> <@ PipelineContextAdd ;
+  <pipeline-context-retrieve> = ( ( 'get' | 'retrieve' ) , 'from' , 'context' ) &> <context-key> <@ PipelineContextRetrieve ;
+  ";
+
+
+(************************************************************)
 (* Combination                                              *)
 (************************************************************)
 
 ebnfCommand = "
   <command> = <load-data> | <data-transformation> | <split-data> | <summarize-data> | <data-outliers> |
-              <classifier-creation> | <classifier-testing> | <test-results> | <verify-command> ;
+              <classifier-creation> | <classifier-testing> | <test-results> | <verify-command> | <pipeline-command> ;
   ";
 
 
@@ -229,7 +249,7 @@ ebnfCommand = "
 
 res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad,
   ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
-  ebnfClassifierMaking, ebnfClassifierTesting, ebnfVerification,
+  ebnfClassifierMaking, ebnfClassifierTesting, ebnfVerification, ebnfPipelineCommands,
   ebnfCommand};
 (* LeafCount /@ res *)
 
