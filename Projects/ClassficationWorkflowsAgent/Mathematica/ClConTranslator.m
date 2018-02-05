@@ -206,11 +206,67 @@ TTestResults[parsed_] :=
     ];
 
 
+(***********************************************************)
+(* General pipeline commands                               *)
+(***********************************************************)
+
+Clear[TPipelineCommand]
+TPipelineCommand[parsed_] := parsed;
+
+
+Clear[TGetPipelineValue]
+TGetPipelineValue[parsed_] := ClConEchoValue;
+
+
+Clear[TGetPipelineContext]
+TGetPipelineContext[parsed_] :=
+    Block[{},
+
+      Which[
+
+        !FreeQ[parsed, _PipelineContextKeys ],
+        ClConEchoFunctionContext["context keys:", Keys[#]& ],
+
+        !FreeQ[parsed, _PipelineContextValue ],
+        TPipelineContextRetrieve[parsed]
+
+      ]
+    ];
+
+
+Clear[TPipelineContextRetrieve]
+TPipelineContextRetrieve[parsed_] :=
+    Block[{cvKey},
+
+      cvKey = TGetValue[parsed, ContextKey];
+
+      With[{k=cvKey}, ClConEchoFunctionContext["context value for:", #[k]& ]]
+
+    ];
+
+
+Clear[PipelineContextAdd]
+PipelineContextAdd[parsed_] :=
+    Block[{cvKey},
+
+      cvKey = TGetValue[parsed, ContextKey];
+
+      With[{k=cvKey}, ClConContextAdd[k] ]
+
+    ];
+
+(***********************************************************)
+(* Main translation functions                              *)
+(***********************************************************)
+
 Clear[TranslateToClCon]
 
-TranslateToClCon[commands:{_String..}] :=
+TranslateToClCon[commands_String, parser_:pCOMMAND] :=
+    TranslateToClCon[ StringSplit[commands, {".", ";"}], parser ];
+
+TranslateToClCon[commands:{_String..}, parser_:pCOMMAND] :=
     Block[{parsedSeq},
-      parsedSeq = ParseShortest[pCOMMAND][ToTokens[#]] & /@ commands;
+      parsedSeq = ParseShortest[parser][ToTokens[#]] & /@ commands;
       TranslateToClCon[ parsedSeq ]
     ];
 
@@ -221,16 +277,25 @@ TranslateToClCon[pres_] :=
       SummarizeData = TSummarizeData,
       ClassifierCreation = TClassifierCreation,
       TestResults = TTestResults,
-      ClassifierEnsembleCreation = TClassifierEnsembleCreation},
+      ClassifierEnsembleCreation = TClassifierEnsembleCreation,
+      PipelineCommand = TPipelineCommand,
+      GetPipelineValue = TGetPipelineValue,
+      GetPipelineContext = TGetPipelineContext,
+      PipelineContextRetrieve = TPipelineContextRetrieve,
+      TPipelineContextAdd = PipelineContextAdd},
+
       pres
     ];
 
 
 Clear[ToClConPipelineFunction]
 
-ToClConPipelineFunction[commands:{_String..}] :=
+ToClConPipelineFunction[commands_String, parser_:pCOMMAND] :=
+    ToClConPipelineFunction[ StringSplit[commands, {".", ";"}], parser ];
+
+ToClConPipelineFunction[commands:{_String..}, parser_:pCOMMAND] :=
     Block[{parsedSeq},
-      parsedSeq = ParseShortest[pCOMMAND][ToTokens[#]] & /@ commands;
+      parsedSeq = ParseShortest[parser][ToTokens[#]] & /@ commands;
       ToClConPipelineFunction[ parsedSeq[[All,1,2]] ]
     ];
 
