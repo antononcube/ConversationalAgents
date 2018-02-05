@@ -251,7 +251,7 @@ PipelineContextAdd[parsed_] :=
 
       cvKey = TGetValue[parsed, ContextKey];
 
-      With[{k=cvKey}, ClConContextAdd[k] ]
+      With[{k=cvKey}, ClConAddToContext[k] ]
 
     ];
 
