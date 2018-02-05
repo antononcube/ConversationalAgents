@@ -247,10 +247,14 @@ ebnfPipelineCommands = "
   <pipeline-context> =  <pipeline-filler> &> 'context' <@ PipelineContext ;
   <pipeline-context-keys> =  <pipeline-filler> &> 'context' , 'keys' <@ PipelineContextKeys ;
   <context-key> = '_String' <@ ContextKey ;
-  <pipeline-context-value> = ( <pipeline-filler> , 'context' , 'value' , ( 'for' | 'of' ) ) &> <context-key> <@ PipelineContextValue ;
+  <pipeline-context-value> = ( <pipeline-filler> , 'context' , 'value' , ( 'for' | 'of' ) ) &> <context-key> |
+                             ( ( 'value' , ( 'for' | 'of' ) , [ 'the' ] , 'context' , ( 'key' | 'element' | 'variable' ) ) &> <context-key>)
+                             <@ PipelineContextValue ;
   <get-pipeline-context> = <display-directive> , ( <pipeline-context> | <pipeline-context-keys> | <pipeline-context-value> ) <@ GetPipelineContext ;
   <pipeline-context-add> = ( ( 'put' | 'add' ) , ( 'in' | 'into' | 'to' ) , 'context' , 'as' ) &> <context-key> <@ PipelineContextAdd ;
-  <pipeline-context-retrieve> = ( ( 'get' | 'retrieve' ) , 'from' , 'context' ) &> <context-key> <@ PipelineContextRetrieve ;
+  <pipeline-context-retrieve> = ( 'get' | 'retrieve' ) &>
+                                ( ( 'from' , 'context' ) &> <context-key> | <context-key> <& ( 'from' , 'context' ) )
+                                <@ PipelineContextRetrieve ;
   ";
 
 
