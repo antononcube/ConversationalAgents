@@ -218,9 +218,10 @@ ebnfClassifierTesting = "
   <test-results> = <test-results-preamble> &> ( 'test' , 'results' | <test-measure> | <test-measure-list> ) ,
                    [ 'with' , <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
   <accuracies-by-variable-shuffling> = <compute-directive> ,
-                                       ( [ 'the' ] , 'accuracies' , <with-preposition> , ( 'variable' | 'column' ) , 'shuffling' ) |
-                                       ( [ 'the' ] , [ 'variable' | 'column' ] , 'shuffling' , 'accuracies' )
-                                       <@ AccuraciesByVariableShuffling ;
+                                       ( ( [ 'the' ] , 'accuracies' , <with-preposition> , ( 'variable' | 'column' ) , 'shuffling' ) |
+                                         ( [ 'the' ] , [ 'variable' | 'column' ] , 'shuffling' , 'accuracies' ) |
+                                         ( 'variable' , 'importance' , 'estimates' )
+                                       ) <@ AccuraciesByVariableShuffling@*First ;
   <classifier-testing> = <classifier-testing-simple> | <test-results> | <accuracies-by-variable-shuffling> <@ ClassifierTesting ;
   ";
 
