@@ -88,6 +88,7 @@
 
 ebnfDataLoad = "
   <display-directive> = 'show' | 'give' | 'display' <@ DisplayDirective ;
+  <compute-directive> = 'compute' | 'calculate' <@ ComputeDirective ;
   <load-data-opening> = ( 'load' | 'get' | 'consider' ) , [ 'data' ] ;
   <load-preposition> = 'for' | 'of' | 'at' | 'from' ;
   <load-data> = ( <load-data-opening> , [ 'the' ] ) &> <data-kind> , ( [ 'data' ] , <load-preposition> ) &> <location-specification> |
@@ -132,7 +133,8 @@ ebnfSplitting = "
   <split-part> = 'training' | 'train' | 'test' | 'testing' <@ SplitPart ;
   <split-part-list> = <split-part> , [ { 'and' &> <split-part> } ] <@ SplitPartList@*Flatten ;
   <split-data-spec> = <percent-value> , [ 'of' | 'for' ] &> <split-part> <& [ 'data' ];
-  <split-data> = ( [ <split-data-opening> ] , ( 'using' | 'by' | 'with' ) ) &> <split-data-spec> <@ SplitData ;
+  <with-preposition> =  'using' | 'by' | 'with' ;
+  <split-data> = ( [ <split-data-opening> ] , <with-preposition> ) &> <split-data-spec> <@ SplitData ;
   ";
 
 
@@ -206,7 +208,7 @@ ebnfClassifierEnsembleMaking = "
 (************************************************************)
 
 ebnfClassifierTesting = "
-  <classifier-testing> = ( 'test' , [ 'a' | 'the' ] ) &> 'classifier' <@ TestClassifier ;
+  <classifier-testing-simple> = ( 'test' , [ 'a' | 'the' ] ) &> 'classifier' <@ TestClassifier ;
   <train-data-spec> = '_?NumberQ' , ( 'percent' | 'fraction' ) <& ( 'of' , [ 'the' ] , [ 'available' ] , ( 'records' | 'data' ) ) <@ TrainData;
   <test-results-preamble> = ( 'show' | 'display' | 'give' | 'compute' ) , [ 'classifier' ] ;
   <test-measure> = 'accuracy' | 'confusion' , 'matrix' | 'f-scores' | 'precision' | 'recall' | 'roc' <@ TestMeasure ;
@@ -215,6 +217,11 @@ ebnfClassifierTesting = "
   <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
   <test-results> = <test-results-preamble> &> ( 'test' , 'results' | <test-measure> | <test-measure-list> ) ,
                    [ 'with' , <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
+  <accuracies-by-variable-shuffling> = <compute-directive> ,
+                                       ( [ 'the' ] , 'accuracies' , <with-preposition> , ( 'variable' | 'column' ) , 'shuffling' ) |
+                                       ( [ 'the' ] , [ 'variable' | 'column' ] , 'shuffling' , 'accuracies' )
+                                       <@ AccuraciesByVariableShuffling ;
+  <classifier-testing> = <classifier-testing-simple> | <test-results> | <accuracies-by-variable-shuffling> <@ ClassifierTesting ;
   ";
 
 
@@ -265,7 +272,7 @@ ebnfPipelineCommands = "
 ebnfCommand = "
   <command> = <load-data> | <data-transformation> | <split-data> | <summarize-data> | <data-outliers> |
               <classifier-creation> | <classifier-ensemble-creation> | <classifier-testing> |
-              <test-results> | <verify-command> | <pipeline-command> ;
+              <verify-command> | <pipeline-command> ;
   ";
 
 
