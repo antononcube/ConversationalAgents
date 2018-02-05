@@ -194,6 +194,10 @@ TClassifierEnsembleCreation[parsed_] :=
     ];
 
 
+Clear[TClassifierTesting]
+TClassifierTesting[parsed_] := parsed;
+
+
 Clear[TTestResults]
 TTestResults[parsed_] :=
     Block[{tms},
@@ -203,6 +207,14 @@ TTestResults[parsed_] :=
       tms = TGetValue[parsed, TestMeasureList];
       Function[{x, c},
         ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurements[{"Accuracy", "Precision", "Recall"}]\[DoubleLongRightArrow]ClConEchoValue]
+    ];
+
+
+Clear[TAccuraciesByVariableShuffling]
+TAccuraciesByVariableShuffling[parsed_] :=
+    Block[{},
+      Function[{x, c},
+        ClConUnit[x,c]\[DoubleLongRightArrow]ClConAccuracyByVariableShuffling[]\[DoubleLongRightArrow]ClConEchoValue]
     ];
 
 
@@ -276,7 +288,9 @@ TranslateToClCon[pres_] :=
       SplitData = TSplitData,
       SummarizeData = TSummarizeData,
       ClassifierCreation = TClassifierCreation,
+      ClassifierTesting = TClassifierTesting,
       TestResults = TTestResults,
+      AccuraciesByVariableShuffling = TAccuraciesByVariableShuffling,
       ClassifierEnsembleCreation = TClassifierEnsembleCreation,
       PipelineCommand = TPipelineCommand,
       GetPipelineValue = TGetPipelineValue,
