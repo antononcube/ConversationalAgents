@@ -257,8 +257,8 @@ TPipelineContextRetrieve[parsed_] :=
     ];
 
 
-Clear[PipelineContextAdd]
-PipelineContextAdd[parsed_] :=
+Clear[TPipelineContextAdd]
+TPipelineContextAdd[parsed_] :=
     Block[{cvKey},
 
       cvKey = TGetValue[parsed, ContextKey];
@@ -273,10 +273,10 @@ PipelineContextAdd[parsed_] :=
 
 Clear[TranslateToClCon]
 
-TranslateToClCon[commands_String, parser_:pCOMMAND] :=
+TranslateToClCon[commands_String, parser_Symbol:pCOMMAND] :=
     TranslateToClCon[ StringSplit[commands, {".", ";"}], parser ];
 
-TranslateToClCon[commands:{_String..}, parser_:pCOMMAND] :=
+TranslateToClCon[commands:{_String..}, parser_Symbol:pCOMMAND] :=
     Block[{parsedSeq},
       parsedSeq = ParseShortest[parser][ToTokens[#]] & /@ commands;
       TranslateToClCon[ parsedSeq ]
@@ -296,7 +296,7 @@ TranslateToClCon[pres_] :=
       GetPipelineValue = TGetPipelineValue,
       GetPipelineContext = TGetPipelineContext,
       PipelineContextRetrieve = TPipelineContextRetrieve,
-      TPipelineContextAdd = PipelineContextAdd},
+      PipelineContextAdd = TPipelineContextAdd},
 
       pres
     ];
@@ -304,13 +304,22 @@ TranslateToClCon[pres_] :=
 
 Clear[ToClConPipelineFunction]
 
-ToClConPipelineFunction[commands_String, parser_:pCOMMAND] :=
-    ToClConPipelineFunction[ StringSplit[commands, {".", ";"}], parser ];
+Options[ToClConPipelineFunction] = { "Trace"-> False };
 
-ToClConPipelineFunction[commands:{_String..}, parser_:pCOMMAND] :=
+ToClConPipelineFunction[commands_String, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
+    ToClConPipelineFunction[ StringSplit[commands, {".", ";"}], parser, opts ];
+
+ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
     Block[{parsedSeq},
+
       parsedSeq = ParseShortest[parser][ToTokens[#]] & /@ commands;
-      ToClConPipelineFunction[ parsedSeq[[All,1,2]] ]
+
+      If[ TrueQ[OptionValue[ToClConPipelineFunction, "Trace"]],
+
+        ToClConPipelineFunction[ AssociationThread[ commands, parsedSeq[[All,1,2]] ] ],
+
+        ToClConPipelineFunction[ parsedSeq[[All,1,2]] ]
+      ]
     ];
 
 ToClConPipelineFunction[pres_List] :=
@@ -324,6 +333,22 @@ ToClConPipelineFunction[pres_List] :=
          Fold[ClConBind[#1,#2]&,First[t],Rest[t]] *)
       Function[{x, c},
         Evaluate[DoubleLongRightArrow @@ Prepend[t, ClConUnit[x, c]]]]
+    ];
+
+ToClConPipelineFunction[pres_Association] :=
+    Block[{t, parsedSeq=Values[pres], comments = Keys[pres]},
+
+      If[ Head[First[pres]] === LoadData, parsedSeq = Rest[parsedSeq]; comments = Rest[comments] ];
+
+      t = TranslateToClCon[parsedSeq];
+
+      (* Note that we can use:
+         Fold[ClConBind[#1,#2]&,First[t],Rest[t]] *)
+      Function[{x, c},
+        Evaluate[
+          DoubleLongRightArrow @@
+            Prepend[Riffle[t,comments], TraceMonadUnit[ClConUnit[x, c]]]]
+      ]
     ];
 
 (*End[] * `Private` *)
