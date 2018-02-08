@@ -131,6 +131,10 @@ TSummarizeData[parsed_] :=
     ];
 
 
+(***********************************************************)
+(* Classifier creation                                     *)
+(***********************************************************)
+
 Clear[TClassifierNameRetrieval]
 TClassifierNameRetrieval[parsed_] :=
     Block[{clName, clMethodNames},
@@ -193,6 +197,26 @@ TClassifierEnsembleCreation[parsed_] :=
 
     ];
 
+
+(***********************************************************)
+(* Classifier queries                                      *)
+(***********************************************************)
+
+Clear[TClassifierQuery]
+TClassifierQuery[parsed_] := parsed;
+
+Clear[TClassifierInfo]
+TClassifierInfo[parsed_]:=
+    Block[{},
+      ClConEchoFunctionContext["classifier info:",
+        If[ AssociationQ[#["classifier"]],
+          Map[ClassifierInformation, #["classifier"] ],
+          ClassifierInformation[ #["classifier"] ]] &]
+    ];
+
+(***********************************************************)
+(* Classifier testing                                      *)
+(***********************************************************)
 
 Clear[TClassifierTesting]
 TClassifierTesting[parsed_] := parsed;
@@ -292,6 +316,8 @@ TranslateToClCon[pres_] :=
       TestResults = TTestResults,
       AccuraciesByVariableShuffling = TAccuraciesByVariableShuffling,
       ClassifierEnsembleCreation = TClassifierEnsembleCreation,
+      ClassifierQuery = TClassifierQuery,
+      ClassifierInfo = TClassifierInfo,
       PipelineCommand = TPipelineCommand,
       GetPipelineValue = TGetPipelineValue,
       GetPipelineContext = TGetPipelineContext,

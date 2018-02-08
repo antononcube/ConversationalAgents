@@ -205,6 +205,16 @@ ebnfClassifierEnsembleMaking = "
 
 
 (************************************************************)
+(* Classifier queries                                       *)
+(************************************************************)
+
+ebnfClassifierQuery = "
+  <classifier-query> =  <classifier-info> | <classifier-counts> <@ ClassifierQuery ;
+  <classifier-info> = [ <display-directive>  ] , 'classifier' , ( 'info' | 'information' | 'stats' ) <@ ClassifierInfo ;
+  <classifier-counts> = ( 'how' , 'many' | 'what' , 'number', 'of' ) , 'classifiers' , 'classifiers?' <@ ClassifierCounts ;
+";
+
+(************************************************************)
 (* Classifier testing                                       *)
 (************************************************************)
 
@@ -274,7 +284,7 @@ ebnfPipelineCommands = "
 
 ebnfCommand = "
   <command> = <load-data> | <data-transformation> | <split-data> | <summarize-data> | <data-outliers> |
-              <classifier-creation> | <classifier-ensemble-creation> | <classifier-testing> |
+              <classifier-creation> | <classifier-ensemble-creation> | <classifier-query> | <classifier-testing> |
               <verify-command> | <pipeline-command> ;
   ";
 
@@ -285,7 +295,7 @@ ebnfCommand = "
 
 res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad,
   ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
-  ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierTesting,
+  ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
   ebnfVerification, ebnfPipelineCommands, ebnfCommand};
 (* LeafCount /@ res *)
 
