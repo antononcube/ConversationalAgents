@@ -177,7 +177,7 @@ ebnfClassifierMaking = "
   <library-name> = '_String' <@ LibraryName ;
   <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
   <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
-  <classifier-creation-opening> = ( ( 'make' | 'create' ) , [ 'a' | 'an' ] ) ;
+  <classifier-creation-opening> = ( ( 'make' | 'create' | 'train' ) , [ 'a' | 'an' ] ) ;
   <classifier-creation> = <classifier-creation-opening> &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
                                                                    'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
                                                                  [ <using-preposition> &> <train-data-spec> ] <@ ClassifierCreation ;
@@ -213,7 +213,8 @@ ebnfClassifierTesting = "
   <train-data-spec> = '_?NumberQ' , ( 'percent' | 'fraction' ) <& ( 'of' , [ 'the' ] , [ 'available' ] , ( 'records' | 'data' ) ) <@ TrainData;
   <test-results-preamble> = ( 'show' | 'display' | 'give' | 'compute' ) , [ 'classifier' ] ;
   <test-measure> = 'accuracy' | 'confusion' , 'matrix' | 'f-scores' | 'precision' | 'recall' | 'roc' <@ TestMeasure ;
-  <test-measure-list> = <test-measure> , { 'and' &> <test-measure> } <@ TestMeasureList ;
+  <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
+  <test-measure-list> = <test-measure> , { <list-delimiter> &> <test-measure> } <@ TestMeasureList@*Flatten ;
   <test-classification-threshold> = 'classification' , 'threshold' , '_?NumberQ' <@ ClassThreshold ;
   <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
   <test-results> = <test-results-preamble> &> ( 'test' , 'results' | <test-measure> | <test-measure-list> ) ,
