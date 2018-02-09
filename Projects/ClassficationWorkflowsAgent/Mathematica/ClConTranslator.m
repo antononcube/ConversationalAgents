@@ -214,6 +214,53 @@ TClassifierInfo[parsed_]:=
           ClassifierInformation[ #["classifier"] ]] &]
     ];
 
+
+Clear[TClassifierPropertyNameRetrieval]
+TClassifierPropertyNameRetrieval[parsed_] :=
+    Block[{propName, clPropNames},
+
+      clPropNames = {"Accuracy", "Classes", "ClassNumber", "EvaluationTime",
+      "ExampleNumber", "FeatureNumber", "FunctionMemory",
+      "FunctionProperties", "LearningCurve", "MaxTrainingMemory",
+      "MeanCrossEntropy", "MethodDescription", "MethodOption",
+      "Properties", "TrainingClassPriors", "TrainingTime", "ClassPriors",
+      "FeatureNames", "FeatureTypes", "IndeterminateThreshold", "Method",
+      "PerformanceGoal", "UtilityFunction"};
+
+      propName = TGetValue[parsed, ClassifierInfoPropertyName];
+
+      If[propName === None,
+        propName = TGetValue[parsed, ClassifierInfoProperty],
+        propName = StringJoin@StringReplace[propName, WordBoundary ~~ x_ :> ToUpperCase[x]]
+      ];
+
+      If[! MemberQ[clPropNames, propName],
+      (*This is redundant if the parsers for ClassifierMethod and ClassifierAlgorithmName use concrete names (not general string patterns.)*)
+
+        Echo["Unknown classifier property name:" <> ToString[propName] <> ". The classifier property name should be one of " <> ToString[clPropNames],
+          "TClassifierGetInfoProperty"];
+        Return[$ClConFailure]
+      ];
+
+      propName
+    ];
+
+Clear[TClassifierGetInfoProperty]
+TClassifierGetInfoProperty[parsed_] :=
+    Block[{propName},
+
+      propName = TClassifierPropertyNameRetrieval[parsed];
+
+      With[{pn=propName},
+        ClConEchoFunctionContext["classifier property \"" <> propName <>"\" :",
+        If[ AssociationQ[#["classifier"]],
+          Map[ClassifierInformation[#,pn]&, #["classifier"] ],
+          ClassifierInformation[ #["classifier"], pn ] ] &]
+      ]
+
+    ];
+
+
 (***********************************************************)
 (* Classifier testing                                      *)
 (***********************************************************)
@@ -318,6 +365,7 @@ TranslateToClCon[pres_] :=
       ClassifierEnsembleCreation = TClassifierEnsembleCreation,
       ClassifierQuery = TClassifierQuery,
       ClassifierInfo = TClassifierInfo,
+      ClassifierGetInfoProperty = TClassifierGetInfoProperty,
       PipelineCommand = TPipelineCommand,
       GetPipelineValue = TGetPipelineValue,
       GetPipelineContext = TGetPipelineContext,

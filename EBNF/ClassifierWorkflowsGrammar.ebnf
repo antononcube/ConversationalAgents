@@ -209,9 +209,20 @@ ebnfClassifierEnsembleMaking = "
 (************************************************************)
 
 ebnfClassifierQuery = "
-  <classifier-query> =  <classifier-info> | <classifier-counts> <@ ClassifierQuery ;
+  <classifier-query> =  <classifier-get-info-property> | <classifier-info> | <classifier-counts> <@ ClassifierQuery ;
+  <classifier-info-property> = 'Accuracy' | 'Classes' | 'ClassNumber' | 'EvaluationTime' | 'ExampleNumber' |
+                               'FeatureNumber' | 'FunctionMemory' | 'FunctionProperties' | 'LearningCurve' |
+                               'MaxTrainingMemory' | 'MeanCrossEntropy' | 'MethodDescription' | 'MethodOption' |
+                               'Properties' | 'TrainingClassPriors' | 'TrainingTime' | 'ClassPriors' |
+                               'FeatureNames' | 'FeatureTypes' | 'IndeterminateThreshold' | 'Method' |
+                               'PerformanceGoal' | 'UtilityFunction' <@ ClassifierInfoProperty ;
+  <classifier-info-property-name> = ( 'accuracy' | 'classes' | 'class' , 'number' | 'training' , 'time' )
+                                     <@ ClassifierInfoPropertyName ;
+  <classifier-get-info-property> = <display-directive> , 'classifier' &>
+                                   ( <classifier-info-property> | <classifier-info-property-name> )
+                                   <@ ClassifierGetInfoProperty ;
   <classifier-info> = [ <display-directive>  ] , 'classifier' , ( 'info' | 'information' | 'stats' ) <@ ClassifierInfo ;
-  <classifier-counts> = ( 'how' , 'many' | 'what' , 'number', 'of' ) , 'classifiers' , 'classifiers?' <@ ClassifierCounts ;
+  <classifier-counts> = ( 'how' , 'many' | 'what' , 'number', 'of' ) , ( 'classifiers' | 'classifiers?' ) <@ ClassifierCounts ;
 ";
 
 (************************************************************)
