@@ -146,6 +146,17 @@ ebnfSplitting = "
 ebnfDataStatistics = "
   <summarize-data> = 'summarize' , [ 'the' ] , 'data' | <display-directive> , [ <split-part-list> ] <&
                      ( 'data' , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
+  <cross-tabulate-data> = <cross-tabulate-data-simple> | <cross-tabulate-vars> <@ CrossTabulateData ;
+  <cross-tabulate> = 'cross-tabulate' | 'cross' , 'tabulate' | 'xtabs' , [ 'for' ] <@ CrossTabulate ;
+  <cross-tabulate-data-simple> = <cross-tabulate> , [ <split-part> ] , [ 'data' ] <@ CrossTabulateDataSimple ;
+  <cross-tabulate-vars> = <cross-tabulate> , <var-spec> , ( 'vs' | 'against' ) &> <var-spec> ,
+                          [ 'in' ] , [ <split-part> ] , [ 'data' ] <@ CrossTabulateVars@*Flatten ;
+  <var-spec> = <feature-var> | <dependent-var> | ( <var-position> <& [ <variable> ] ) <@ VarSpec ;
+  <variable> = 'variable' | 'column' ;
+  <dependent-var> = ( 'dependent' | [ 'class' ] , 'label' ) <& <variable> <@ DependentVar ;
+  <feature-var> = ( 'feature' | 'input' ) <& <variable> <@ FeatureVar ;
+  <var-name> = '_String' <@ VarName ;
+  <var-position> = 'last' | ( '_?IntegerQ' <& [ 'st' | 'nd' | 'rd' | 'th' ] ) <@ VarPosition ;
   ";
 
 
@@ -294,7 +305,8 @@ ebnfPipelineCommands = "
 (************************************************************)
 
 ebnfCommand = "
-  <command> = <load-data> | <data-transformation> | <split-data> | <summarize-data> | <data-outliers> |
+  <command> = <load-data> | <data-transformation> | <split-data> |
+              <summarize-data> | <cross-tabulate-data> | <data-outliers> |
               <classifier-creation> | <classifier-ensemble-creation> | <classifier-query> | <classifier-testing> |
               <verify-command> | <pipeline-command> ;
   ";

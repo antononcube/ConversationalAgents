@@ -378,15 +378,17 @@ TranslateToClCon[pres_] :=
 
 Clear[ToClConPipelineFunction]
 
-Options[ToClConPipelineFunction] = { "Trace"-> False };
+Options[ToClConPipelineFunction] = { "Trace"-> False, "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&) };
 
 ToClConPipelineFunction[commands_String, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
     ToClConPipelineFunction[ StringSplit[commands, {".", ";"}], parser, opts ];
 
 ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
-    Block[{parsedSeq},
+    Block[{parsedSeq, tokenizerFunc},
 
-      parsedSeq = ParseShortest[parser][ToTokens[#]] & /@ commands;
+      tokenizerFunc = OptionValue[ToClConPipelineFunction, "TokenizerFunction"];
+
+      parsedSeq = ParseShortest[parser][tokenizerFunc[#]] & /@ commands;
 
       If[ TrueQ[OptionValue[ToClConPipelineFunction, "Trace"]],
 
