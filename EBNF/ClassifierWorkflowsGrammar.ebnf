@@ -244,12 +244,31 @@ ebnfClassifierTesting = "
   <classifier-testing-simple> = ( 'test' , [ 'a' | 'the' ] ) &> 'classifier' <@ TestClassifier ;
   <train-data-spec> = '_?NumberQ' , ( 'percent' | 'fraction' ) <& ( 'of' , [ 'the' ] , [ 'available' ] , ( 'records' | 'data' ) ) <@ TrainData;
   <test-results-preamble> = ( 'show' | 'display' | 'give' | 'compute' ) , [ 'classifier' ] ;
-  <test-measure> = 'accuracy' | 'confusion' , 'matrix' | 'f-scores' | 'precision' | 'recall' | 'roc' <@ TestMeasure ;
+  <test-measure> = 'Accuracy' | 'AccuracyRejectionPlot' | 'AreaUnderROCCurve' |
+                   'BestClassifiedExamples' | 'ClassifierFunction' |
+                   'ClassMeanCrossEntropy' | 'ClassRejectionRate' | 'CohenKappa' |
+                   'ConfusionFunction' | 'ConfusionMatrix' | 'ConfusionMatrixPlot' |
+                   'CorrectlyClassifiedExamples' | 'DecisionUtilities' | 'Error' |
+                   'Examples' | 'F1Score' | 'FalseDiscoveryRate' |
+                   'FalseNegativeExamples' | 'FalseNegativeRate' |
+                   'FalsePositiveExamples' | 'FalsePositiveRate' |
+                   'GeometricMeanProbability' | 'IndeterminateExamples' |
+                   'LeastCertainExamples' | 'Likelihood' | 'LogLikelihood' |
+                   'MatthewsCorrelationCoefficient' | 'MeanCrossEntropy' |
+                   'MeanDecisionUtility' | 'MisclassifiedExamples' |
+                   'MostCertainExamples' | 'NegativePredictedValue' | 'Perplexity' |
+                   'Precision' | 'Probabilities' | 'ProbabilityHistogram' | 'Properties' |
+                   'Recall' | 'RejectionRate' | 'ROCCurve' | 'ScottPi' | 'Specificity' |
+                   'TopConfusions' | 'TrueNegativeExamples' | 'TruePositiveExamples' |
+                   'WorstClassifiedExamples' <@ TestMeasure ;
+  <test-measure-name> = 'accuracy' | 'confusion' , 'matrix' | 'confusion' , 'matrix' , 'plot' | 'f-scores' |
+                        'precision' | 'recall' | 'roc'
+                        <@ TestMeasureName@*Flatten@*List ;
   <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
-  <test-measure-list> = <test-measure> , { <list-delimiter> &> <test-measure> } <@ TestMeasureList@*Flatten ;
+  <test-measure-list> = ( <test-measure> | <test-measure-name> ) , [ { <list-delimiter> &> ( <test-measure> | <test-measure-name> ) } ] <@ TestMeasureList@*Flatten ;
   <test-classification-threshold> = 'classification' , 'threshold' , '_?NumberQ' <@ ClassThreshold ;
   <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
-  <test-results> = <test-results-preamble> &> ( 'test' , 'results' | <test-measure> | <test-measure-list> ) ,
+  <test-results> = <test-results-preamble> &> ( 'test' , 'results' | <test-measure-list> ) ,
                    [ 'with' , <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
   <accuracies-by-variable-shuffling> = <compute-and-display> ,
                                        ( ( [ 'the' ] , 'accuracies' , <with-preposition> , ( 'variable' | 'column' ) , 'shuffling' ) |
