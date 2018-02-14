@@ -119,6 +119,10 @@ TSplitData[parsed_] :=
     ];
 
 
+(***********************************************************)
+(* Data statistics                                         *)
+(***********************************************************)
+
 Clear[TSummarizeData]
 TSummarizeData[parsed_] :=
     Block[{},
@@ -130,6 +134,19 @@ TSummarizeData[parsed_] :=
       ]
     ];
 
+
+Clear[TCrossTabulateData]
+TCrossTabulateData[parsed_] := parsed;
+
+
+Clear[TCrossTabulateVars]
+TCrossTabulateVars[parsed_] :=
+    Block[{},
+
+      Echo["TCrossTabulateVars is not implemented yet"];
+      $ClConFailure
+
+    ];
 
 (***********************************************************)
 (* Classifier creation                                     *)
@@ -265,21 +282,81 @@ TClassifierGetInfoProperty[parsed_] :=
 (* Classifier testing                                      *)
 (***********************************************************)
 
+Clear[TTestMeasureNameRetrieval]
+TTestMeasureNameRetrieval[parsed_] :=
+    Block[{propName, clmPropNames},
+
+      clmPropNames = {"Accuracy", "AccuracyRejectionPlot", "AreaUnderROCCurve",
+        "BestClassifiedExamples", "ClassifierFunction",
+        "ClassMeanCrossEntropy", "ClassRejectionRate", "CohenKappa",
+        "ConfusionFunction", "ConfusionMatrix", "ConfusionMatrixPlot",
+        "CorrectlyClassifiedExamples", "DecisionUtilities", "Error",
+        "Examples", "F1Score", "FalseDiscoveryRate", "FalseNegativeExamples",
+        "FalseNegativeRate", "FalsePositiveExamples", "FalsePositiveRate",
+        "GeometricMeanProbability", "IndeterminateExamples",
+        "LeastCertainExamples", "Likelihood", "LogLikelihood",
+        "MatthewsCorrelationCoefficient", "MeanCrossEntropy",
+        "MeanDecisionUtility", "MisclassifiedExamples",
+        "MostCertainExamples", "NegativePredictedValue", "Perplexity",
+        "Precision", "Probabilities", "ProbabilityHistogram", "Properties",
+        "Recall", "RejectionRate", "ROCCurve", "ScottPi", "Specificity",
+        "TopConfusions", "TrueNegativeExamples", "TruePositiveExamples",
+        "WorstClassifiedExamples"};
+
+      propName = TGetValue[parsed, TestMeasureName];
+
+      If[propName === None,
+        propName = TGetValue[parsed, TestMeasure],
+        propName = StringJoin@StringReplace[propName, WordBoundary ~~ x_ :> ToUpperCase[x]]
+      ];
+
+      If[! MemberQ[clmPropNames, propName],
+      (*This is redundant if the parsers for ClassifierMethod and ClassifierAlgorithmName use concrete names (not general string patterns.)*)
+
+        Echo["Unknown classifier measurements property name:" <> ToString[propName] <>
+             ". The classifier measurements property name should be one of " <> ToString[clmPropNames],
+             "TTestMeasureNameRetrieval"];
+        Return[$ClConFailure]
+      ];
+
+      propName
+    ];
+
 Clear[TClassifierTesting]
 TClassifierTesting[parsed_] := parsed;
 
 
 Clear[TTestResults]
 TTestResults[parsed_] :=
-    Block[{tms},
+    Block[{propNames},
+
       If[FreeQ[parsed, TestMeasureList],
         Echo["No implementation for the given test specification.", "TTestResults:"]
       ];
-      tms = TGetValue[parsed, TestMeasureList];
-      Function[{x, c},
-        ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurements[{"Accuracy", "Precision", "Recall"}]\[DoubleLongRightArrow]ClConEchoValue]
+
+      propNames = TGetValue[parsed, TestMeasureList];
+      propNames = TTestMeasureNameRetrieval[#] & /@ propNames;
+
+      With[{cmArg = propNames},
+        Function[{x, c},
+          ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurements[cmArg]\[DoubleLongRightArrow]ClConEchoValue]
+      ]
     ];
 
+Clear[TClassifierGetInfoProperty]
+TClassifierGetInfoProperty[parsed_] :=
+    Block[{propName},
+
+      propName = TClassifierPropertyNameRetrieval[parsed];
+
+      With[{pn=propName},
+        ClConEchoFunctionContext["classifier property \"" <> propName <>"\" :",
+          If[ AssociationQ[#["classifier"]],
+            Map[ClassifierInformation[#,pn]&, #["classifier"] ],
+            ClassifierInformation[ #["classifier"], pn ] ] &]
+      ]
+
+    ];
 
 Clear[TAccuraciesByVariableShuffling]
 TAccuraciesByVariableShuffling[parsed_] :=
