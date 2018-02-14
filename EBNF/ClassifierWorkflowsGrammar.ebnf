@@ -261,8 +261,24 @@ ebnfClassifierTesting = "
                    'Recall' | 'RejectionRate' | 'ROCCurve' | 'ScottPi' | 'Specificity' |
                    'TopConfusions' | 'TrueNegativeExamples' | 'TruePositiveExamples' |
                    'WorstClassifiedExamples' <@ TestMeasure ;
-  <test-measure-name> = 'accuracy' | 'confusion' , 'matrix' | 'confusion' , 'matrix' , 'plot' | 'f-scores' |
-                        'precision' | 'recall' | 'roc'
+  <test-measure-name> = 'accuracy' | 'accuracy' , 'rejection' , 'plot' | 'area' , 'under' , 'curve' |
+                        'best' , 'classified' , 'examples' | 'classifier' , 'function' |
+                        'class' , 'mean' , 'cross' , 'entropy' | 'class' , 'rejection' , 'rate' |
+                        'cohen' , 'kappa' |
+                        'confusion' , 'function' | 'confusion' , 'matrix' | 'confusion' , 'matrix' , 'plot' |
+                        'correctly' , 'classified' , 'examples' | 'decision' , 'utilities' |
+                        'error' | 'examples' | 'score' | 'false' , 'discovery' , 'rate' |
+                        'false' , 'negative' , 'examples' | 'false' , 'negative' , 'rate' |
+                        'false' , 'positive' , 'examples' | 'false' , 'positive' , 'rate' |
+                        'geometric' , 'mean' , 'probability' | 'indeterminate' , 'examples' |
+                        'least' , 'certain' , 'examples' | 'likelihood' | 'log' , 'likelihood' |
+                        'matthews' , 'correlation' , 'coefficient' | 'mean' , 'cross' , 'entropy' |
+                        'mean' , 'decision' , 'utility' | 'misclassified' , 'examples' | 'most' , 'certain' , 'examples' |
+                        'negative' , 'predicted' , 'value' | 'perplexity' | 'precision' |
+                        'probabilities' | 'probability' , 'histogram' | 'properties' |
+                        'recall' | 'rejection' , 'rate' | 'curve' | 'scott' , 'pi' |
+                        'specificity' | 'top' , 'confusions' | 'true' , 'negative' , 'examples' |
+                        'true' , 'positive' , 'examples' | 'worst' , 'classified' , 'examples'
                         <@ TestMeasureName@*Flatten@*List ;
   <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
   <test-measure-list> = ( <test-measure> | <test-measure-name> ) , [ { <list-delimiter> &> ( <test-measure> | <test-measure-name> ) } ] <@ TestMeasureList@*Flatten ;
