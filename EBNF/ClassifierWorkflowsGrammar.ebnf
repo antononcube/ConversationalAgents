@@ -289,7 +289,7 @@ ebnfClassifierTesting = "
   <accuracies-by-variable-shuffling> = <compute-and-display> ,
                                        ( ( [ 'the' ] , 'accuracies' , <with-preposition> , ( 'variable' | 'column' ) , 'shuffling' ) |
                                          ( [ 'the' ] , [ 'variable' | 'column' ] , 'shuffling' , 'accuracies' ) |
-                                         ( 'variable' , 'importance' , 'estimates' )
+                                         ( [ 'the' ] , 'variable' , 'importance' , [ 'estimates' ] )
                                        ) <@ AccuraciesByVariableShuffling@*First ;
   <classifier-testing> = <classifier-testing-simple> | <test-results> | <accuracies-by-variable-shuffling> <@ ClassifierTesting ;
   ";
