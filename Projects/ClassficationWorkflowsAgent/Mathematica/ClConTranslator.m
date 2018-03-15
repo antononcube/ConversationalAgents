@@ -284,7 +284,7 @@ TClassifierGetInfoProperty[parsed_] :=
 
 Clear[TTestMeasureNameRetrieval]
 TTestMeasureNameRetrieval[parsed_] :=
-    Block[{propName, clmPropNames},
+    Block[{clmPropNames, propName, origPropName},
 
       clmPropNames = {"Accuracy", "AccuracyRejectionPlot", "AreaUnderROCCurve",
         "BestClassifiedExamples", "ClassifierFunction",
@@ -307,10 +307,14 @@ TTestMeasureNameRetrieval[parsed_] :=
 
       If[propName === None,
         propName = TGetValue[parsed, TestMeasure],
-        propName = StringJoin@StringReplace[propName, WordBoundary ~~ x_ :> ToUpperCase[x]]
+        (*ELSE*)
+        origPropName = propName;
+        propName = StringJoin@StringReplace[propName, WordBoundary ~~ x_ :> ToUpperCase[x]];
+        propName = Pick[ clmPropNames, # == ToLowerCase[propName] & /@ ToLowerCase[clmPropNames] ];
+        propName = If[ Length[propName] == 0, origPropName, First[propName] ]
       ];
 
-      If[! MemberQ[clmPropNames, propName],
+      If[! MemberQ[ clmPropNames, propName ],
       (*This is redundant if the parsers for ClassifierMethod and ClassifierAlgorithmName use concrete names (not general string patterns.)*)
 
         Echo["Unknown classifier measurements property name:" <> ToString[propName] <>

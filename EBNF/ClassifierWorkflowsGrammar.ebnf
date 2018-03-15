@@ -261,7 +261,7 @@ ebnfClassifierTesting = "
                    'Recall' | 'RejectionRate' | 'ROCCurve' | 'ScottPi' | 'Specificity' |
                    'TopConfusions' | 'TrueNegativeExamples' | 'TruePositiveExamples' |
                    'WorstClassifiedExamples' <@ TestMeasure ;
-  <test-measure-name> = 'accuracy' | 'accuracy' , 'rejection' , 'plot' | 'area' , 'under' , 'curve' |
+  <test-measure-name> = 'accuracy' | 'accuracy' , 'rejection' , 'plot' | 'area' , 'under' , 'roc' , 'curve' |
                         'best' , 'classified' , 'examples' | 'classifier' , 'function' |
                         'class' , 'mean' , 'cross' , 'entropy' | 'class' , 'rejection' , 'rate' |
                         'cohen' , 'kappa' |
