@@ -52,7 +52,7 @@ VerificationTest[(* 1 *)
   CompoundExpression[
     Get["~/MathematicaForPrediction/FunctionalParsers.m"],
     Clear["ebnf*"],
-    Get["~/ConversationalAgents/EBNF/ClassifierWorkflowsGrammar.ebnf"],
+    Get["~/ConversationalAgents/EBNF/ClassifierWorkflowsGrammar.m"],
     And @@ Map[# > 400 || # == 24 &, LeafCount /@ res]
   ]
   ,
