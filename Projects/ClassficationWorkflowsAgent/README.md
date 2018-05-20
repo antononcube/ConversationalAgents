@@ -7,7 +7,7 @@ and described in
 \[[AA1](https://github.com/antononcube/MathematicaForPrediction/blob/master/MarkdownDocuments/A-monad-for-classification-workflows.md)\].
 
 The EBNF grammar file 
-["ClassifierWorkflowsGrammar.ebnf"](https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/ClassifierWorkflowsGrammar.ebnf)
+["ClassifierWorkflowsGrammar.m"](https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/ClassifierWorkflowsGrammar.m)
 is put in [repository's EBNF folder](https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/).
 
 
