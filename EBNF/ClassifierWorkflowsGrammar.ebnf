@@ -294,6 +294,25 @@ ebnfClassifierTesting = "
   <classifier-testing> = <classifier-testing-simple> | <test-results> | <accuracies-by-variable-shuffling> <@ ClassifierTesting ;
   ";
 
+(************************************************************)
+(* ROC plots                                                *)
+(************************************************************)
+
+ebnfROCPlot = "
+  <roc-plot-command> = <display-directive> , <roc-diagram>, [ ( 'over' | 'with' | 'using' | 'for' ) &> <roc-functions-list> ] <@ ROCPlot;
+  <roc-curve> = ( 'roc' | 'receiver' , 'operating' , 'characteristic' ) <& [ 'curve' | 'curves' ];
+  <diagram> = ( 'plot' | 'plots' | 'graph' | 'chart' ) <@ Diagram ;
+  <list-line-diagram> = [ 'list' ] , 'line' , <diagram> | 'ListLinePlot' <@ ListLineDiagram@*Flatten ;
+  <list-line-roc-diagram> = [ 'list' ] , 'line' , <roc-curve> , <diagram>  <@ ListLineDiagram@*Flatten ;
+  <roc-diagram> = <list-line-roc-diagram> | ( <roc-curve> &> ( <list-line-diagram> | <diagram> ) ) <@ ROCDiagram ;
+  <roc-functions-list> = <roc-function> , { (',' | 'and' ) &> <roc-function> } <@ ROCFunctionsList@*Flatten ;
+  <roc-function> = 'tpr' | 'tnr' | 'spc' | 'ppv' | 'npv' | 'fpr' | 'fdr' | 'fnr' |
+                   'acc' | 'auroc' | 'for' | 'f1' | 'recall' | 'sensitivity' |
+                   'precision' | 'accuracy' | 'specificity' |
+                   'false' , 'positive' , 'rate' | 'true' , 'positive' , 'rate' | 'false' , 'negative' , 'rate' |
+                   'true' , 'negative', 'rate' | 'false' , 'discovery' , 'rate' | 'false' , 'omission' , 'rate' |
+                   'f1' , 'score' | 'area' , 'under' , 'roc' , 'curve' <@ ROCFunction ;
+";
 
 (************************************************************)
 (* Verification                                             *)
@@ -343,7 +362,7 @@ ebnfCommand = "
   <command> = <load-data> | <data-transformation> | <split-data> |
               <summarize-data> | <cross-tabulate-data> | <data-outliers> |
               <classifier-creation> | <classifier-ensemble-creation> | <classifier-query> | <classifier-testing> |
-              <verify-command> | <pipeline-command> ;
+               <roc-plot-command> | <verify-command> | <pipeline-command> ;
   ";
 
 
@@ -351,10 +370,12 @@ ebnfCommand = "
 (* Generate parsers                                         *)
 (************************************************************)
 
-res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad,
-  ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
-  ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
-  ebnfVerification, ebnfPipelineCommands, ebnfCommand};
+res =
+    GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
+        {ebnfDataLoad,
+          ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
+          ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
+          ebnfROCPlot, ebnfVerification, ebnfPipelineCommands, ebnfCommand};
 (* LeafCount /@ res *)
 
 
@@ -362,6 +383,3 @@ res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad,
 (* Modify parsers                                           *)
 (************************************************************)
 
-pEGRETWEBADDRESS =
-    ParseApply[WebAddress,
-      ParsePredicate[StringMatchQ[#, (DigitCharacter ..) ~~ "." ~~ (DigitCharacter ..) ~~ "." ~~ (DigitCharacter ..)] &]];
