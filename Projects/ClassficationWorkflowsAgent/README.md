@@ -11,7 +11,7 @@ The EBNF grammar file
 is put in [repository's EBNF folder](https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/).
 
 
-## Example
+## Cursory example
 
 This code produces a `ClCon` pipeline for a sequence of natural commands:
 
@@ -50,6 +50,9 @@ This code produces a `ClCon` pipeline for a sequence of natural commands:
                   ClConUnit[x, c]⟹
                   ClConAccuracyByVariableShuffling[]⟹ClConEchoValue]] 
      *)
+
+For details of getting the required code and data see the document 
+["ClassificationWorkflowsAgent-example-runs.pdf"](https://github.com/antononcube/ConversationalAgents/blob/master/Projects/ClassficationWorkflowsAgent/Documents/ClassificationWorkflowsAgent-example-runs.pdf).
 
 ## References
 
