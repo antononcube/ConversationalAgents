@@ -45,7 +45,7 @@
    # References
 
    [1] Anton Antonov, Classifier workflows grammar in EBNF, 2018, ConversationalAgents at GitHub,
-       https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/ClassifierWorkflowsGrammar.ebnf
+       https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/ClassifierWorkflowsGrammar.m
 
    [2] Anton Antonov, Monadic contextual classification Mathematica package, 2017, MathematicaForPrediction at GitHub,
        https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicContextualClassification.m
@@ -386,29 +386,17 @@ TROCFunctionNameRetrieval[parsed_] :=
       funcName
     ];
 
-TROCPlot[parsed_] :=
-    Block[{},
-      Which[
-
-        !FreeQ[ parsed, ListLineDiagram[__]],
-
-
-
-        True,
-        Echo["Cannot translate ROC plot command.", "TROCPlot:"];
-        Return[$ClConFailure]
-      ];
-    ];
-
+ClearAll[TROCPlot]
 TROCPlot[parsed_] :=
     Block[{rocFuncNames},
 
       If[FreeQ[parsed, ROCFunctionList],
-        Echo["No implementation for the given ROC specification.", "TROCPlot:"]
+        (*Echo["No implementation for the given ROC specification.", "TROCPlot:"]*)
+        rocFuncNames = { "FPR", "TPR"},
+      (*ELSE*)
+        rocFuncNames = TGetValue[parsed, ROCFunctionList];
+        rocFuncNames = TROCFunctionNameRetrieval[#] & /@ rocFuncNames;
       ];
-
-      rocFuncNames = TGetValue[parsed, ROCFunctionList];
-      rocFuncNames = TROCFunctionNameRetrieval[#] & /@ rocFuncNames;
 
       Which[
 
@@ -510,14 +498,20 @@ TPipelineContextAdd[parsed_] :=
 (* Main translation functions                              *)
 (***********************************************************)
 
-Clear[TranslateToClCon]
+ClearAll[TranslateToClCon]
 
-TranslateToClCon[commands_String, parser_Symbol:pCOMMAND] :=
-    TranslateToClCon[ StringSplit[commands, {".", ";"}], parser ];
+Options[TranslateToClCon] = { "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&) };
 
-TranslateToClCon[commands:{_String..}, parser_Symbol:pCOMMAND] :=
-    Block[{parsedSeq},
-      parsedSeq = ParseShortest[parser][ToTokens[#]] & /@ commands;
+TranslateToClCon[commands_String, parser_Symbol:pCOMMAND, opts:OptionsPattern[]] :=
+    TranslateToClCon[ StringSplit[commands, {".", ";"}], parser, opts ];
+
+TranslateToClCon[commands:{_String..}, parser_Symbol:pCOMMAND, opts:OptionsPattern[]] :=
+    Block[{parsedSeq, tokenizerFunc },
+
+      tokenizerFunc = OptionValue[ToClConPipelineFunction, "TokenizerFunction"];
+
+      parsedSeq = ParseShortest[parser][tokenizerFunc[#]] & /@ commands;
+
       TranslateToClCon[ parsedSeq ]
     ];
 
@@ -545,7 +539,7 @@ TranslateToClCon[pres_] :=
     ];
 
 
-Clear[ToClConPipelineFunction]
+ClearAll[ToClConPipelineFunction]
 
 Options[ToClConPipelineFunction] =
     { "Trace" -> False,
