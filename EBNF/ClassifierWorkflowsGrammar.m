@@ -299,7 +299,7 @@ ebnfClassifierTesting = "
 (************************************************************)
 
 ebnfROCPlot = "
-  <roc-plot-command> = <display-directive> , <roc-diagram>, [ ( 'over' | 'with' | 'using' | 'for' | 'of' ) &> <roc-function-list> ] <@ ROCPlot;
+  <roc-plot-command> = <display-directive> , <roc-diagram>, [ ( 'over' | 'with' | 'using' | 'for' | 'of' ) &> <roc-function-list> ] <@ ROCCurvesPlot;
   <roc-curve> = ( 'roc' | 'receiver' , 'operating' , 'characteristic' ) <& [ 'curve' | 'curves' ];
   <diagram> = ( 'plot' | 'plots' | 'graph' | 'chart' ) <@ Diagram ;
   <list-line-diagram> = [ 'list' ] , 'line' , <diagram> | 'ListLinePlot' <@ ListLineDiagram@*Flatten ;

@@ -386,12 +386,12 @@ TROCFunctionNameRetrieval[parsed_] :=
       funcName
     ];
 
-ClearAll[TROCPlot]
-TROCPlot[parsed_] :=
+ClearAll[TROCCurvesPlot]
+TROCCurvesPlot[parsed_] :=
     Block[{rocFuncNames},
 
       If[FreeQ[parsed, ROCFunctionList],
-        (*Echo["No implementation for the given ROC specification.", "TROCPlot:"]*)
+        (*Echo["No implementation for the given ROC specification.", "TROCCurvesPlot:"]*)
         rocFuncNames = { "FPR", "TPR"},
       (*ELSE*)
         rocFuncNames = TGetValue[parsed, ROCFunctionList];
@@ -407,7 +407,7 @@ TROCPlot[parsed_] :=
         ClConROCPlot[Sequence @@ Take[rocFuncNames, 2] ],
 
         True,
-        Echo["Cannot translate ROC plot command.", "TROCPlot:"];
+        Echo["Cannot translate ROC plot command.", "TROCCurvesPlot:"];
         Return[$ClConFailure]
       ]
 ];
@@ -523,7 +523,7 @@ TranslateToClCon[pres_] :=
       ClassifierCreation = TClassifierCreation,
       ClassifierTesting = TClassifierTesting,
       TestResults = TTestResults,
-      ROCPlot = TROCPlot,
+      ROCCurvesPlot = TROCCurvesPlot,
       AccuraciesByVariableShuffling = TAccuraciesByVariableShuffling,
       ClassifierEnsembleCreation = TClassifierEnsembleCreation,
       ClassifierQuery = TClassifierQuery,
