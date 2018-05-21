@@ -299,19 +299,23 @@ ebnfClassifierTesting = "
 (************************************************************)
 
 ebnfROCPlot = "
-  <roc-plot-command> = <display-directive> , <roc-diagram>, [ ( 'over' | 'with' | 'using' | 'for' ) &> <roc-functions-list> ] <@ ROCPlot;
+  <roc-plot-command> = <display-directive> , <roc-diagram>, [ ( 'over' | 'with' | 'using' | 'for' | 'of' ) &> <roc-function-list> ] <@ ROCPlot;
   <roc-curve> = ( 'roc' | 'receiver' , 'operating' , 'characteristic' ) <& [ 'curve' | 'curves' ];
   <diagram> = ( 'plot' | 'plots' | 'graph' | 'chart' ) <@ Diagram ;
   <list-line-diagram> = [ 'list' ] , 'line' , <diagram> | 'ListLinePlot' <@ ListLineDiagram@*Flatten ;
   <list-line-roc-diagram> = [ 'list' ] , 'line' , <roc-curve> , <diagram>  <@ ListLineDiagram@*Flatten ;
   <roc-diagram> = <list-line-roc-diagram> | ( <roc-curve> &> ( <list-line-diagram> | <diagram> ) ) <@ ROCDiagram ;
-  <roc-functions-list> = <roc-function> , { (',' | 'and' ) &> <roc-function> } <@ ROCFunctionsList@*Flatten ;
-  <roc-function> = 'tpr' | 'tnr' | 'spc' | 'ppv' | 'npv' | 'fpr' | 'fdr' | 'fnr' |
-                   'acc' | 'auroc' | 'for' | 'f1' | 'recall' | 'sensitivity' |
-                   'precision' | 'accuracy' | 'specificity' |
-                   'false' , 'positive' , 'rate' | 'true' , 'positive' , 'rate' | 'false' , 'negative' , 'rate' |
-                   'true' , 'negative', 'rate' | 'false' , 'discovery' , 'rate' | 'false' , 'omission' , 'rate' |
-                   'f1' , 'score' | 'area' , 'under' , 'roc' , 'curve' <@ ROCFunction ;
+  <roc-function-list> = ( <roc-function> | <roc-function-name> ) , [ { <list-delimiter> &> ( <roc-function> | <roc-function-name> ) } ] <@ ROCFunctionList@*Flatten ;
+  <roc-function> =  'TPR' | 'TNR' | 'SPC' | 'PPV' | 'NPV' | 'FPR' | 'FDR' | 'FNR' | 'ACC' | 'AUROC' | 'FOR' | 'F1' |
+                    'Recall' | 'Sensitivity' | 'Precision' | 'Accuracy' | 'Specificity' |
+                    'FalsePositiveRate' | 'TruePositiveRate' | 'FalseNegativeRate' | 'TrueNegativeRate' |
+                    'FalseDiscoveryRate' | 'FalseOmissionRate' | 'F1Score' | 'AreaUnderROCCurve' <@ ROCFunction ;
+  <roc-function-name> = 'tpr' | 'tnr' | 'spc' | 'ppv' | 'npv' | 'fpr' | 'fdr' | 'fnr' | 'acc' | 'auroc' | 'for' | 'f1' |
+                        'recall' | 'sensitivity' | 'precision' | 'accuracy' | 'specificity' |
+                        'false' , 'positive' , 'rate' | 'true' , 'positive' , 'rate' | 'false' , 'negative' , 'rate' |
+                        'true' , 'negative', 'rate' | 'false' , 'discovery' , 'rate' | 'false' , 'omission' , 'rate' |
+                        'f1' , 'score' | 'area' , 'under' , 'roc' , 'curve' <@ ROCFunctionName ;
+
 ";
 
 (************************************************************)

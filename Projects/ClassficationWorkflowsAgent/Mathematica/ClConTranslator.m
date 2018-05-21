@@ -209,7 +209,7 @@ TClassifierEnsembleCreation[parsed_] :=
       ];
 
       ClConMakeClassifier[{<|"method" -> clName,
-        "samplingFraction" -> rsFraction, "nClassifiers" -> nClassifiers,
+        "sampleFraction" -> rsFraction, "numberOfClassifiers" -> nClassifiers,
         "samplingFunction" -> RandomSample|>}]
 
     ];
@@ -347,6 +347,88 @@ TTestResults[parsed_] :=
       ]
     ];
 
+
+(***********************************************************)
+(* ROC plots                                               *)
+(***********************************************************)
+
+(* Note that this code is very similar / almost the same as the code of TTestMeasureNameRetrieval (above.) *)
+Clear[TROCFunctionNameRetrieval]
+TROCFunctionNameRetrieval[parsed_] :=
+    Block[{rocFuncNames, funcName, origFuncName},
+
+      rocFuncNames = {
+        "TPR", "TNR", "SPC", "PPV", "NPV", "FPR", "FDR", "FNR", "ACC", "AUROC", "FOR", "F1",
+        "Recall", "Sensitivity", "Precision", "Accuracy", "Specificity",
+        "FalsePositiveRate", "TruePositiveRate", "FalseNegativeRate", "TrueNegativeRate", "FalseDiscoveryRate",
+        "FalseOmissionRate", "F1Score", "AreaUnderROCCurve"};
+
+      funcName = TGetValue[parsed, ROCFunctionName];
+
+      If[funcName === None,
+        funcName = TGetValue[parsed, ROCFunction],
+      (*ELSE*)
+        origFuncName = funcName;
+        funcName = StringJoin@StringReplace[funcName, WordBoundary ~~ x_ :> ToUpperCase[x]];
+        funcName = Pick[ rocFuncNames, # == ToLowerCase[funcName] & /@ ToLowerCase[rocFuncNames] ];
+        funcName = If[ Length[funcName] == 0, origFuncName, First[funcName] ]
+      ];
+
+      If[! MemberQ[ rocFuncNames, funcName ],
+      (*This is redundant if the parsers for ClassifierMethod and ClassifierAlgorithmName use concrete names (not general string patterns.)*)
+
+        Echo["Unknown ROC function name:" <> ToString[funcName] <>
+            ". The ROC function name should be one of " <> ToString[rocFuncNames],
+          "TTestMeasureNameRetrieval"];
+        Return[$ClConFailure]
+      ];
+
+      funcName
+    ];
+
+TROCPlot[parsed_] :=
+    Block[{},
+      Which[
+
+        !FreeQ[ parsed, ListLineDiagram[__]],
+
+
+
+        True,
+        Echo["Cannot translate ROC plot command.", "TROCPlot:"];
+        Return[$ClConFailure]
+      ];
+    ];
+
+TROCPlot[parsed_] :=
+    Block[{rocFuncNames},
+
+      If[FreeQ[parsed, ROCFunctionList],
+        Echo["No implementation for the given ROC specification.", "TROCPlot:"]
+      ];
+
+      rocFuncNames = TGetValue[parsed, ROCFunctionList];
+      rocFuncNames = TROCFunctionNameRetrieval[#] & /@ rocFuncNames;
+
+      Which[
+
+        !FreeQ[ parsed, ListLineDiagram[__]],
+        ClConROCListLinePlot[rocFuncNames],
+
+        !FreeQ[ parsed, Diagram[__]] && Length[rocFuncNames] >= 2,
+        ClConROCPlot[Sequence @@ Take[rocFuncNames, 2] ],
+
+        True,
+        Echo["Cannot translate ROC plot command.", "TROCPlot:"];
+        Return[$ClConFailure]
+      ]
+];
+
+
+(***********************************************************)
+(* Classifier information                                  *)
+(***********************************************************)
+
 Clear[TClassifierGetInfoProperty]
 TClassifierGetInfoProperty[parsed_] :=
     Block[{propName},
@@ -361,6 +443,11 @@ TClassifierGetInfoProperty[parsed_] :=
       ]
 
     ];
+
+
+(***********************************************************)
+(* Importance of variables                                 *)
+(***********************************************************)
 
 Clear[TAccuraciesByVariableShuffling]
 TAccuraciesByVariableShuffling[parsed_] :=
@@ -442,6 +529,7 @@ TranslateToClCon[pres_] :=
       ClassifierCreation = TClassifierCreation,
       ClassifierTesting = TClassifierTesting,
       TestResults = TTestResults,
+      ROCPlot = TROCPlot,
       AccuraciesByVariableShuffling = TAccuraciesByVariableShuffling,
       ClassifierEnsembleCreation = TClassifierEnsembleCreation,
       ClassifierQuery = TClassifierQuery,
