@@ -357,6 +357,19 @@ ebnfPipelineCommands = "
                                 <@ PipelineContextRetrieve ;
   ";
 
+(************************************************************)
+(* Second order commands                                    *)
+(************************************************************)
+
+ebnfGeneratePipeline = "
+  <generate-pipeline> = <generate-pipeline-phrase> , [ <using-preposition> &> <classifier-algorithm> ] <@ GeneratePipeline ;
+  <generate-verb> = 'make' | 'create' | 'generate' ;
+  <generate-pipeline-phrase> = <generate-verb> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ 'classification' ] , 'pipeline' <@ Flatten ;
+";
+
+ebnfSecondOrderCommand = "
+   <second-order-command> = <generate-pipeline>  <@ SecondOrderCommand ;
+";
 
 (************************************************************)
 (* Combination                                              *)
@@ -366,7 +379,8 @@ ebnfCommand = "
   <command> = <load-data> | <data-transformation> | <split-data> |
               <summarize-data> | <cross-tabulate-data> | <data-outliers> |
               <classifier-creation> | <classifier-ensemble-creation> | <classifier-query> | <classifier-testing> |
-               <roc-plot-command> | <verify-command> | <pipeline-command> ;
+              <roc-plot-command> | <verify-command> | <pipeline-command> |
+              <second-order-command> ;
   ";
 
 
@@ -379,7 +393,8 @@ res =
         {ebnfDataLoad,
           ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
           ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
-          ebnfROCPlot, ebnfVerification, ebnfPipelineCommands, ebnfCommand};
+          ebnfROCPlot, ebnfVerification, ebnfPipelineCommands,
+          ebnfGeneratePipeline, ebnfSecondOrderCommand, ebnfCommand};
 (* LeafCount /@ res *)
 
 
