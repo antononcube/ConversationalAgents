@@ -53,7 +53,7 @@ VerificationTest[(* 1 *)
     Get["~/MathematicaForPrediction/FunctionalParsers.m"],
     Clear["ebnf*"],
     Get["~/ConversationalAgents/EBNF/ClassifierWorkflowsGrammar.m"],
-    And @@ Map[# > 400 || # == 24 &, LeafCount /@ res]
+    And @@ Map[# > 400 || # == 25 &, LeafCount /@ res]
   ]
   ,
   True
@@ -62,7 +62,8 @@ VerificationTest[(* 1 *)
 ]
 
 VerificationTest[(* 2 *)
-  CompoundExpression[Set[TestFunc, Function[ParseShortest[pCOMMAND][ToTokens[Slot[1]]]]], Null]
+  TClConTokenizer = (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}] &);
+  TestFunc = ParseShortest[pCOMMAND][TClConTokenizer[#]] &;
   ,
   Null
   ,
@@ -141,5 +142,53 @@ VerificationTest[(* 11 *)
   TestID->"RemoveOutliers-1"
 ]
 
+VerificationTest[
+  TestFunc["show roc plots"],
+
+  {{{}, ROCCurvesPlot[{DisplayDirective["show"], {ROCDiagram[Diagram["plots"]], {}}}]}},
+
+  TestID -> "show-roc-plots"
+]
+
+VerificationTest[
+  TestFunc["display roc plots over tpr and fpr"],
+
+  {{{},
+    ROCCurvesPlot[{DisplayDirective["display"], {ROCDiagram[Diagram["plots"]],ROCFunctionList[{ROCFunctionName["tpr"],ROCFunctionName["fpr"]}]}}]}},
+
+  TestID -> "display-roc-plots-over-tpr-and-fpr"]
+
+
+VerificationTest[
+
+  TestFunc["display roc plots over SPC and FOR"],
+
+  {{{},
+    ROCCurvesPlot[{DisplayDirective["display"], {ROCDiagram[Diagram["plots"]], ROCFunctionList[{ROCFunction["SPC"], ROCFunction["FOR"]}]}}]}},
+
+  TestID -> "display-roc-plots-over-SPC-and-FOR"]
+
+VerificationTest[
+
+  TestFunc["display roc list line plot for tpr, fpr and accuracy"],
+
+  {{{}, ROCCurvesPlot[{DisplayDirective["display"],
+    {ROCDiagram[ListLineDiagram[{"list", "line", Diagram["plot"]}]],
+      ROCFunctionList[{ROCFunctionName["tpr"], ROCFunctionName["fpr"], ROCFunctionName["accuracy"]}]}}]}},
+
+  TestID -> "display-roc-list-line-plot-for-tpr--fpr-and-accuracy"
+]
+
+VerificationTest[
+
+  TestFunc["show list line roc plot for tpr, fpr, accuracy"],
+
+  {{{},
+    ROCCurvesPlot[{DisplayDirective["show"], {ROCDiagram[ListLineDiagram[{"list", "line", "roc", Diagram["plot"]}]],
+      ROCFunctionList[{ROCFunctionName["tpr"], ROCFunctionName["fpr"],
+        ROCFunctionName["accuracy"]}]}}]}},
+
+  TestID -> "show-list-line-roc-plot-for-tpr--fpr--accuracy"
+]
 
 EndTestSection[]
