@@ -494,6 +494,42 @@ TPipelineContextAdd[parsed_] :=
 
     ];
 
+
+(***********************************************************)
+(* Generate pipeline commands                              *)
+(***********************************************************)
+
+TGeneratePipeline[parsed_] :=
+    Block[{clName},
+
+      clName = TGetValue[parsed, ClassifierAlgorithmName];
+
+      If[clName === None,
+        clName = TGetValue[parsed, ClassifierMethod],
+        clName = StringJoin@StringReplace[clName, WordBoundary ~~ x_ :> ToUpperCase[x]]
+      ];
+
+      If[clName === None, clName = "logistic regression"];
+
+      ToClConPipelineFunction[{
+        "split data with 70 percent for training",
+        "show data summary",
+        "create a " <> clName <> " classifier",
+        "show classifier classes",
+        "show classifier training time",
+        "show accuracy and precision and recall",
+        "show roc plot of FPR and TPR"
+      }]
+
+    ];
+
+
+(***********************************************************)
+(* Second order commands                                   *)
+(***********************************************************)
+
+TSecondOrderCommand[parsed_] := parsed;
+
 (***********************************************************)
 (* Main translation functions                              *)
 (***********************************************************)
@@ -533,7 +569,9 @@ TranslateToClCon[pres_] :=
       GetPipelineValue = TGetPipelineValue,
       GetPipelineContext = TGetPipelineContext,
       PipelineContextRetrieve = TPipelineContextRetrieve,
-      PipelineContextAdd = TPipelineContextAdd},
+      PipelineContextAdd = TPipelineContextAdd,
+      GeneratePipeline = TGeneratePipeline,
+      SecondOrderCommand = TSecondOrderCommand},
 
       pres
     ];
