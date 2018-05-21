@@ -547,23 +547,33 @@ TranslateToClCon[pres_] :=
 
 Clear[ToClConPipelineFunction]
 
-Options[ToClConPipelineFunction] = { "Trace"-> False, "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&) };
+Options[ToClConPipelineFunction] =
+    { "Trace" -> False,
+      "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&),
+      "Flatten" -> True };
 
 ToClConPipelineFunction[commands_String, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
     ToClConPipelineFunction[ StringSplit[commands, {".", ";"}], parser, opts ];
 
 ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
-    Block[{parsedSeq, tokenizerFunc},
+    Block[{parsedSeq, tokenizerFunc, res},
 
       tokenizerFunc = OptionValue[ToClConPipelineFunction, "TokenizerFunction"];
 
       parsedSeq = ParseShortest[parser][tokenizerFunc[#]] & /@ commands;
 
-      If[ TrueQ[OptionValue[ToClConPipelineFunction, "Trace"]],
+      res =
+          If[ TrueQ[OptionValue[ToClConPipelineFunction, "Trace"]],
 
-        ToClConPipelineFunction[ AssociationThread[ commands, parsedSeq[[All,1,2]] ] ],
+            ToClConPipelineFunction[ AssociationThread[ commands, parsedSeq[[All,1,2]] ] ],
+          (*ELSE*)
+            ToClConPipelineFunction[ parsedSeq[[All,1,2]] ]
+          ];
 
-        ToClConPipelineFunction[ parsedSeq[[All,1,2]] ]
+      If[ TrueQ[OptionValue[ToClConPipelineFunction, "Flatten"] ],
+        res //. DoubleLongRightArrow[DoubleLongRightArrow[x__], y__] :> DoubleLongRightArrow[x, y],
+      (*ELSE*)
+        res
       ]
     ];
 
