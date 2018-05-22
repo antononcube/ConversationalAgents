@@ -37,8 +37,7 @@
    This grammar is intended to be parsed by the functions in the Mathematica package FunctionalParses.m at GitHub,
    see https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m .
 
-   The file although given an extension "ebnf" is in in fact a Mathematica code file.
-   (I.e. it can be run in Mathematica with Get.)
+   (The file can be run in Mathematica with Get or Import.)
 
 
    # Example
@@ -47,7 +46,7 @@
 
       Clear["ebnf*"]
 
-      Get["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/ClassifierWorkflowsGrammar.ebnf"]
+      Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/ClassifierWorkflowsGrammar.m"]
       Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 
       Names["ebnf*"]
