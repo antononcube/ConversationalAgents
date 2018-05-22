@@ -26,7 +26,7 @@ This code produces a `ClCon` pipeline for a sequence of natural commands:
       "show classifier training time", 
       "show precision and recall", 
       "show roc plot of FPR and TPR", 
-      "show list line roc plot for FPR , TPR , ACC , SPC and PPV", 
+      "show list line roc plot for FPR, TPR, ACC, SPC and PPV", 
       "compute the column shuffling accuracies"};
     pl = ToClConPipelineFunction[clCommands]
     
