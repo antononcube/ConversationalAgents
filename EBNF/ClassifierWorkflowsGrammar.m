@@ -80,6 +80,18 @@
 
 *)
 
+If[Length[DownValues[FunctionalParsers`ToTokens]] == 0,
+  Echo["FunctionalParsers.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
+];
+
+BeginPackage["ClassifierWorkflowsGrammar`"]
+
+pCLCONCOMMAND::usage = "Parses natural language commands for classification workflows."
+
+Begin["`Private`"]
+
+Needs["FunctionalParsers`"]
 
 (************************************************************)
 (* Data load                                                *)
@@ -375,7 +387,7 @@ ebnfSecondOrderCommand = "
 (************************************************************)
 
 ebnfCommand = "
-  <command> = <load-data> | <data-transformation> | <split-data> |
+  <clcon-command> = <load-data> | <data-transformation> | <split-data> |
               <summarize-data> | <cross-tabulate-data> | <data-outliers> |
               <classifier-creation> | <classifier-ensemble-creation> | <classifier-query> | <classifier-testing> |
               <roc-plot-command> | <verify-command> | <pipeline-command> |
@@ -401,3 +413,6 @@ res =
 (* Modify parsers                                           *)
 (************************************************************)
 
+End[] (* `Private` *)
+
+EndPackage[]

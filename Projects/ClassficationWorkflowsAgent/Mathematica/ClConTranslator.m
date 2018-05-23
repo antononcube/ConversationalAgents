@@ -36,7 +36,7 @@
    # In brief
 
    This package has functions for translation of natural language commands of the grammar [1]
-   to monadic pipelines or the monad [2].
+   to monadic pipelines of the monad [2].
 
    The translation process is fairly direct (simple) -- a natural language command is translated to pipeline operator(s).
 
@@ -67,10 +67,22 @@
 
 *)
 
-(*BeginPackage["ClConTranslator`"]*)
-(* Exported symbols added here with SymbolName::usage *)
 
-(*Begin["`Private`"]*)
+If[Length[DownValues[ClassifierWorkflowsGrammar`pCLCONCOMMAND]] == 0,
+  Echo["ClassifierWorkflowsGrammar.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/ClassifierWorkflowsGrammar.m"]
+];
+
+BeginPackage["ClConTranslator`"]
+
+TranslateToClCon::usage = "Translates an expression with parsing outcomes by giving implementations to function heads."
+
+ToClConPipelineFunction::usage = "Translates a string or a sequence of strings to a ClCon pipeline."
+
+Begin["`Private`"]
+
+Needs["FunctionalParsers`"]
+Needs["ClassifierWorkflowsGrammar`"]
 
 Clear[TGetValue]
 TGetValue[parsed_, head_] :=
@@ -538,10 +550,10 @@ ClearAll[TranslateToClCon]
 
 Options[TranslateToClCon] = { "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&) };
 
-TranslateToClCon[commands_String, parser_Symbol:pCOMMAND, opts:OptionsPattern[]] :=
+TranslateToClCon[commands_String, parser_Symbol:pCLCONCOMMAND, opts:OptionsPattern[]] :=
     TranslateToClCon[ StringSplit[commands, {".", ";"}], parser, opts ];
 
-TranslateToClCon[commands:{_String..}, parser_Symbol:pCOMMAND, opts:OptionsPattern[]] :=
+TranslateToClCon[commands:{_String..}, parser_Symbol:pCLCONCOMMAND, opts:OptionsPattern[]] :=
     Block[{parsedSeq, tokenizerFunc },
 
       tokenizerFunc = OptionValue[ToClConPipelineFunction, "TokenizerFunction"];
@@ -584,10 +596,10 @@ Options[ToClConPipelineFunction] =
       "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&),
       "Flatten" -> True };
 
-ToClConPipelineFunction[commands_String, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
+ToClConPipelineFunction[commands_String, parser_Symbol:pCLCONCOMMAND, opts:OptionsPattern[] ] :=
     ToClConPipelineFunction[ StringSplit[commands, {".", ";"}], parser, opts ];
 
-ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCOMMAND, opts:OptionsPattern[] ] :=
+ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCLCONCOMMAND, opts:OptionsPattern[] ] :=
     Block[{parsedSeq, tokenizerFunc, res},
 
       tokenizerFunc = OptionValue[ToClConPipelineFunction, "TokenizerFunction"];
@@ -610,7 +622,7 @@ ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCOMMAND, opts:Optio
     ];
 
 ToClConPipelineFunction[pres_List] :=
-    Block[{t, parsedSeq=pres},
+    Block[{t, parsedSeq=pres, x=Global`x, c=Global`c},
 
       If[ Head[First[pres]] === LoadData, parsedSeq = Rest[pres]];
 
@@ -623,7 +635,7 @@ ToClConPipelineFunction[pres_List] :=
     ];
 
 ToClConPipelineFunction[pres_Association] :=
-    Block[{t, parsedSeq=Values[pres], comments = Keys[pres]},
+    Block[{t, parsedSeq=Values[pres], comments = Keys[pres], x=Global`x, c=Global`c},
 
       If[ Head[First[pres]] === LoadData, parsedSeq = Rest[parsedSeq]; comments = Rest[comments] ];
 
@@ -638,6 +650,6 @@ ToClConPipelineFunction[pres_Association] :=
       ]
     ];
 
-(*End[] * `Private` *)
+End[] (* `Private` *)
 
-(*EndPackage[]*)
+EndPackage[]
