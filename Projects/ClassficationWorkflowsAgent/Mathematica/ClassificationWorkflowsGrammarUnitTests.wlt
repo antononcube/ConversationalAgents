@@ -50,10 +50,8 @@ BeginTestSection["ClassificationWorkflowsGrammarUnitTests.wlt"]
 
 VerificationTest[(* 1 *)
   CompoundExpression[
-    Get["~/MathematicaForPrediction/FunctionalParsers.m"],
-    Clear["ebnf*"],
     Get["~/ConversationalAgents/EBNF/ClassifierWorkflowsGrammar.m"],
-    And @@ Map[# > 400 || # == 25 &, LeafCount /@ res]
+    And @@ Map[# > 400&, Take[ LeafCount /@ ClassifierWorkflowsGrammar`Private`res, {1, -4}] ]
   ]
   ,
   True
@@ -63,7 +61,7 @@ VerificationTest[(* 1 *)
 
 VerificationTest[(* 2 *)
   TClConTokenizer = (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}] &);
-  TestFunc = ParseShortest[pCOMMAND][TClConTokenizer[#]] &;
+  TestFunc = ParseShortest[pCLCONCOMMAND][TClConTokenizer[#]] &;
   ,
   Null
   ,
