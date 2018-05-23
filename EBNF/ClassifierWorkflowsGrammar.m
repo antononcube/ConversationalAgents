@@ -80,7 +80,7 @@
 
 *)
 
-If[Length[DownValues[FunctionalParsers`ToTokens]] == 0,
+If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
   Echo["FunctionalParsers.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 ];
