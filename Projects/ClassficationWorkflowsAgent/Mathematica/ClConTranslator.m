@@ -73,16 +73,22 @@ If[Length[DownValues[ClassifierWorkflowsGrammar`pCLCONCOMMAND]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/ClassifierWorkflowsGrammar.m"]
 ];
 
-BeginPackage["ClConTranslator`"]
+(*
+If I want all these functions to be in a package, I have to explicitly state the (global) context of the
+ClassifierWorkflowsGrammar function heads given in parsing. Or pass it as an argument.
+I decided I am fine with this not being a package.
+*)
 
-TranslateToClCon::usage = "Translates an expression with parsing outcomes by giving implementations to function heads."
+(*BeginPackage["ClConTranslator`"]*)
 
-ToClConPipelineFunction::usage = "Translates a string or a sequence of strings to a ClCon pipeline."
+(*TranslateToClCon::usage = "Translates an expression with parsing outcomes by giving implementations to function heads."*)
 
-Begin["`Private`"]
+(*ToClConPipelineFunction::usage = "Translates a string or a sequence of strings to a ClCon pipeline."*)
 
-Needs["FunctionalParsers`"]
-Needs["ClassifierWorkflowsGrammar`"]
+(*Begin["`Private`"]*)
+
+(*Needs["FunctionalParsers`"]*)
+(*Needs["ClassifierWorkflowsGrammar`"]*)
 
 Clear[TGetValue]
 TGetValue[parsed_, head_] :=
@@ -650,6 +656,6 @@ ToClConPipelineFunction[pres_Association] :=
       ]
     ];
 
-End[] (* `Private` *)
+(*End[] * `Private` *)
 
-EndPackage[]
+(*EndPackage[]*)
