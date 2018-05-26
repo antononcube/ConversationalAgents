@@ -94,6 +94,19 @@ Begin["`Private`"]
 Needs["FunctionalParsers`"]
 
 (************************************************************)
+(* Common parts                                             *)
+(************************************************************)
+
+ebnfCommonParts = "
+  <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
+  <with-preposition> =  'using' | 'by' | 'with' ;
+  <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
+  <number-value> = '_?NumberQ' <@ NumericValue ;
+  <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
+  <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
+";
+
+(************************************************************)
 (* Data load                                                *)
 (************************************************************)
 
@@ -130,9 +143,6 @@ ebnfDataTransform = "
   <data-transformation-opening> = 'transform' | 'modify' ;
   <data-transformation-of-columns> = [ 'the' ] , ( <data-type> <& <data-columns> ) , ( 'to' | 'into' ) &> <data-type> <@ TransformColumns@*Flatten ;
   <data-transformation> = <data-transformation-opening> &> <data-transformation-of-columns> <@ DataTransform ;
-  <number-value> = '_?NumberQ' <@ NumericValue ;
-  <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
-  <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
   ";
 
 
@@ -141,12 +151,14 @@ ebnfDataTransform = "
 (************************************************************)
 
 ebnfSplitting = "
-  <split-data-opening> = ( 'split' | 'divide' ) , [ 'the' ] , [ 'data' ] ;
-  <split-part> = 'training' | 'train' | 'test' | 'testing' <@ SplitPart ;
-  <split-part-list> = <split-part> , [ { 'and' &> <split-part> } ] <@ SplitPartList@*Flatten ;
-  <split-data-spec> = <percent-value> , [ 'of' | 'for' ] &> <split-part> <& [ 'data' ];
-  <with-preposition> =  'using' | 'by' | 'with' ;
-  <split-data> = ( [ <split-data-opening> ] , <with-preposition> ) &> <split-data-spec> <@ SplitData ;
+  <split-data> = ( [ <split-data-opening> ] , ( 'into' | <with-preposition> ) ) &> ( <split-data-spec-list> | <split-data-ratio-spec> ) |
+                 <split-data-opening> <@ SplitData ;
+  <split-data-opening> = ( 'split' | 'divide' ) , [ 'the' ] , [ 'data' | 'dataset' ] ;
+  <split-part> = ( 'training' | 'train' | 'test' | 'testing' | 'validating' | 'validation' ) <& [ 'data' ] <@ SplitPart ;
+  <split-part-list> = <split-part> , [ { <list-delimiter> &> <split-part> } ] <@ SplitPartList@*Flatten ;
+  <split-data-spec> = <percent-value> , [ 'of' | 'for' ] &> <split-part> <@ SplitDataSpec ;
+  <split-data-spec-list> = <split-data-spec> , [ { <list-delimiter> &> <split-data-spec> } ] <@ Flatten ;
+  <split-data-ratio-spec> = <number-value> , [ ( '-' | '/' ) ] &> <number-value> <& [ 'parts' | 'ratio' ] <@ SplitDataRatioSpec ;
   ";
 
 
@@ -156,7 +168,7 @@ ebnfSplitting = "
 
 ebnfDataStatistics = "
   <summarize-data> = 'summarize' , [ 'the' ] , 'data' | <display-directive> , [ <split-part-list> ] <&
-                     ( 'data' , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
+                     ( [ 'data' ] , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
   <cross-tabulate-data> = <cross-tabulate-data-simple> | <cross-tabulate-vars> <@ CrossTabulateData ;
   <cross-tabulate> = 'cross-tabulate' | 'cross' , 'tabulate' | 'xtabs' , [ 'for' ] <@ CrossTabulate ;
   <cross-tabulate-data-simple> = <cross-tabulate> , [ <split-part> ] , [ 'data' ] <@ CrossTabulateDataSimple ;
@@ -198,7 +210,6 @@ ebnfClassifierMaking = "
                                 'support' , 'vector' , 'machine'  <@ ClassifierAlgorithmName ;
   <library-name> = '_String' <@ LibraryName ;
   <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
-  <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
   <classifier-creation-opening> = ( ( 'make' | 'create' | 'train' ) , [ 'a' | 'an' ] ) ;
   <classifier-creation> = <classifier-creation-opening> &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
                                                                    'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
@@ -247,6 +258,7 @@ ebnfClassifierQuery = "
   <classifier-counts> = ( 'how' , 'many' | 'what' , 'number', 'of' ) , ( 'classifiers' | 'classifiers?' ) <@ ClassifierCounts ;
 ";
 
+
 (************************************************************)
 (* Classifier testing                                       *)
 (************************************************************)
@@ -291,7 +303,6 @@ ebnfClassifierTesting = "
                         'specificity' | 'top' , 'confusions' | 'true' , 'negative' , 'examples' |
                         'true' , 'positive' , 'examples' | 'worst' , 'classified' , 'examples'
                         <@ TestMeasureName@*Flatten@*List ;
-  <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
   <test-measure-list> = ( <test-measure> | <test-measure-name> ) , [ { <list-delimiter> &> ( <test-measure> | <test-measure-name> ) } ] <@ TestMeasureList@*Flatten ;
   <test-classification-threshold> = 'classification' , 'threshold' , '_?NumberQ' <@ ClassThreshold ;
   <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
@@ -305,12 +316,13 @@ ebnfClassifierTesting = "
   <classifier-testing> = <classifier-testing-simple> | <test-results> | <accuracies-by-variable-shuffling> <@ ClassifierTesting ;
   ";
 
+
 (************************************************************)
 (* ROC plots                                                *)
 (************************************************************)
 
 ebnfROCPlot = "
-  <roc-plot-command> = <display-directive> , <roc-diagram>, [ ( 'over' | 'with' | 'using' | 'for' | 'of' ) &> <roc-function-list> ] <@ ROCCurvesPlot;
+  <roc-plot-command> = <display-directive> , <roc-diagram>, [ ( <using-preposition> | 'of' ) &> <roc-function-list> ] <@ ROCCurvesPlot;
   <roc-curve> = ( 'roc' | 'receiver' , 'operating' , 'characteristic' ) <& [ 'curve' | 'curves' ];
   <diagram> = ( 'plot' | 'plots' | 'graph' | 'chart' ) <@ Diagram ;
   <list-line-diagram> = [ 'list' ] , 'line' , <diagram> | 'ListLinePlot' <@ ListLineDiagram@*Flatten ;
@@ -326,8 +338,8 @@ ebnfROCPlot = "
                         'false' , 'positive' , 'rate' | 'true' , 'positive' , 'rate' | 'false' , 'negative' , 'rate' |
                         'true' , 'negative', 'rate' | 'false' , 'discovery' , 'rate' | 'false' , 'omission' , 'rate' |
                         'f1' , 'score' | 'area' , 'under' , 'roc' , 'curve' <@ ROCFunctionName ;
-
 ";
+
 
 (************************************************************)
 (* Verification                                             *)
@@ -368,6 +380,7 @@ ebnfPipelineCommands = "
                                 <@ PipelineContextRetrieve ;
   ";
 
+
 (************************************************************)
 (* Second order commands                                    *)
 (************************************************************)
@@ -381,6 +394,7 @@ ebnfGeneratePipeline = "
 ebnfSecondOrderCommand = "
    <second-order-command> = <generate-pipeline>  <@ SecondOrderCommand ;
 ";
+
 
 (************************************************************)
 (* Combination                                              *)
@@ -401,8 +415,8 @@ ebnfCommand = "
 
 res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
-        {ebnfDataLoad,
-          ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
+        {ebnfCommonParts,
+          ebnfDataLoad, ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
           ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
           ebnfROCPlot, ebnfVerification, ebnfPipelineCommands,
           ebnfGeneratePipeline, ebnfSecondOrderCommand, ebnfCommand};

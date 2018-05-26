@@ -130,10 +130,36 @@ TLoadData[parsed_] :=
 
 Clear[TSplitData]
 TSplitData[parsed_] :=
-    Block[{pctVal = None, splitPart = None},
-      pctVal = TGetValue[TGetValue[parsed, PercentValue], NumericValue];
-      splitPart = TGetValue[parsed, SplitPart];
-      ClConSplitData[pctVal/100.]
+    Block[{pctVal = None, valPctVal = None, splitPart = None},
+
+      Which[
+        FreeQ[parsed, NumericValue],
+        { pctVal, valPctVal } = { 75, 10 },
+
+        !FreeQ[parsed, SplitDataRatioSpec],
+        pctVal = TGetValue[First@TGetValue[parsed, SplitDataRatioSpec], NumericValue],
+
+        True,
+        pctVal = TGetValue[TGetValue[parsed, PercentValue], NumericValue];
+        splitPart = TGetValue[parsed, SplitPart];
+        If[ splitPart == "testing", pctVal = 100 - pctVal]
+
+      ];
+
+      If[ !FreeQ[parsed, SplitPart["validation"]],
+        valPctVal = Cases[parsed, SplitDataSpec[{PercentValue[NumericValue[x_]], SplitPart["validation"]}] :> x, Infinity];
+        If[ Length[valPctVal] == 0,
+          Echo["Unexpected specification of validation part.", "TSplitData:"];
+          valPctVal = 0,
+          (*ELSE*)
+          valPctVal = First[valPctVal]
+        ]
+      ];
+
+      If[ TrueQ[valPctVal === None],
+        ClConSplitData[pctVal/100.],
+        ClConSplitData[pctVal/100., valPctVal/100.]
+      ]
     ];
 
 
@@ -365,6 +391,9 @@ TTestResults[parsed_] :=
       ]
     ];
 
+Clear[TTestClassifier]
+TTestClassifier[parsed_] :=
+    ToClConPipelineFunction[ {"compute accuracy, precision, and recall", "show roc plots"} ];
 
 (***********************************************************)
 (* ROC plots                                               *)
@@ -577,6 +606,7 @@ TranslateToClCon[pres_] :=
       ClassifierCreation = TClassifierCreation,
       ClassifierTesting = TClassifierTesting,
       TestResults = TTestResults,
+      TestClassifier = TTestClassifier,
       ROCCurvesPlot = TROCCurvesPlot,
       AccuraciesByVariableShuffling = TAccuraciesByVariableShuffling,
       ClassifierEnsembleCreation = TClassifierEnsembleCreation,
@@ -599,7 +629,7 @@ ClearAll[ToClConPipelineFunction]
 
 Options[ToClConPipelineFunction] =
     { "Trace" -> False,
-      "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&),
+      "TokenizerFunction" -> (ParseToTokens[#, {",", "'", "%", "-", "/"}, {" ", "\t", "\n"}]&),
       "Flatten" -> True };
 
 ToClConPipelineFunction[commands_String, parser_Symbol:pCLCONCOMMAND, opts:OptionsPattern[] ] :=
