@@ -55,12 +55,15 @@ Needs["FunctionalParsers`"];
 (************************************************************)
 
 ebnfCommand = "
-    <list-management-command> = <assignment> | <position-query> | <position-spec> <@ ListManagementCommand ;
+    <list-management-command> = <replace-part> |<drop> | <take> | <assignment> | <position-query> | <position-spec> <@ ListManagementCommand ;
     <assignment> = ( 'set' &> <variable-name> , ( 'to' | 'as' ) &> <value> ) | ( 'assign' &> <value> , 'to' &> <variable-name> ) <@ ListAssignment ;
-    <variable-name> = '_WordString' <@ ListVariable ;
-    <value> = '_String' <@ ListValue ;
+    <take> = ( 'take' | 'get' ) &> ( <position-query> | <position-spec> ) <@ ListTake ;
+    <drop> = ( 'drop' | 'delete' | 'erase' ) &> ( <position-query> | <position-spec> ) <@ ListDrop ;
+    <replace-part> = 'replace' &> <position-spec> , ( 'with' | 'by' ) &> ( <position-spec> | [ 'the' ] &> <value> ) <@ ListReplacePart ;
+    <variable-name> = [ 'variable' ] &> '_WordString' <@ ListVariable ;
+    <value> = [ 'value' ] &> '_String' <@ ListValue ;
     <position-query> = ( 'element' &> <position-index> | [ 'the' ] &> <position-word> <&  ( 'element' | 'one' ) ) ,
-                       ('in' | 'of' ) &> ( <position-query> | <variable-name> ) <@ ListPositionQuery ;
+                       ('in' | 'of' ) &> ( <position-query> | [ 'the' ] &> <variable-name> ) <@ ListPositionQuery ;
     <position-index> = 'Range[0,1000]' <@ ListPositionIndex ;
     <position-word> =  <position-ordinal> | <position-reference> <@ ListPositionWord ;
     <position-reference> = 'head' | 'rest' | 'last' | 'one' , 'before' , [ 'the' ] , 'last' | 'former' | 'later' <@ ListPositionReference ;
