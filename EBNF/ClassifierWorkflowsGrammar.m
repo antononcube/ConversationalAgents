@@ -26,7 +26,10 @@
 
    # In brief
 
-   The grammar is intended to interface the creation and testing of classifiers.
+   The Extended Backus-Naur Form (EBNF) grammar in this file is intended to be used in a natural language commands
+   interface for the creation and testing of classifiers using the monad ClCon:
+
+     https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicContextualClassification.m
 
    The grammar is partitioned into separate sub-grammars, each sub-grammar corresponding to a conceptual set of
    functionalities. (The intent is to facilitate understanding and further development.)
@@ -44,23 +47,31 @@
 
    The following sequence of commands are parsed by the parsers generated with the grammar.
 
-      Clear["ebnf*"]
-
       Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/ClassifierWorkflowsGrammar.m"]
       Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 
-      Names["ebnf*"]
+      Keys[ClConCommandsSubGrammars[]]
 
-      (* {"ebnfClassifierMaking", "ebnfClassifierTesting", "ebnfCommand",
-          "ebnfDataLoad", "ebnfDataOutliers", "ebnfDataStatistics",
-          "ebnfDataTransform", "ebnfSplitting", "ebnfVerification"} *)
+      (* {"ebnfClassifierEnsembleMaking", "ebnfClassifierMaking", \
+          "ebnfClassifierQuery", "ebnfClassifierTesting", "ebnfCommand", \
+          "ebnfCommonParts", "ebnfDataLoad", "ebnfDataOutliers", \
+          "ebnfDataStatistics", "ebnfDataTransform", "ebnfDataType", \
+          "ebnfGeneratePipeline", "ebnfPipelineCommands", "ebnfROCPlot", \
+          "ebnfSecondOrderCommand", "ebnfSplitting", "ebnfVerification"} *)
 
-      res =
-        GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ {ebnfDataLoad, ebnfDataTransform,
-               ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers, ebnfClassifierMaking,
-               ebnfClassifierTesting, ebnfVerification, ebnfCommand};
 
+      res = GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@ ClConCommandsSubGrammars[];
       LeafCount /@ res
+
+      (* <|"ebnfClassifierEnsembleMaking" -> 531,
+           "ebnfClassifierMaking" -> 875, "ebnfClassifierQuery" -> 905,
+           "ebnfClassifierTesting" -> 4336, "ebnfCommand" -> 26,
+           "ebnfCommonParts" -> 618, "ebnfDataLoad" -> 446,
+           "ebnfDataOutliers" -> 424, "ebnfDataStatistics" -> 915,
+           "ebnfDataTransform" -> 267, "ebnfDataType" -> 353,
+           "ebnfGeneratePipeline" -> 287, "ebnfPipelineCommands" -> 843,
+           "ebnfROCPlot" -> 1847, "ebnfSecondOrderCommand" -> 14,
+           "ebnfSplitting" -> 629, "ebnfVerification" -> 491|> *)
 
       queries = {
          "load the titanic data",
