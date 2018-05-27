@@ -89,6 +89,12 @@ BeginPackage["ClassifierWorkflowsGrammar`"]
 
 pCLCONCOMMAND::usage = "Parses natural language commands for classification workflows."
 
+ClConCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
+specifying ClCon pipelines construction."
+
+ClConCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
+specifying ClCon pipelines construction."
+
 Begin["`Private`"]
 
 Needs["FunctionalParsers`"]
@@ -104,6 +110,9 @@ ebnfCommonParts = "
   <number-value> = '_?NumberQ' <@ NumericValue ;
   <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
   <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
+  <display-directive> = 'show' | 'give' | 'display' <@ DisplayDirective ;
+  <compute-directive> = 'compute' | 'calculate' | 'find' <@ ComputeDirective ;
+  <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
 ";
 
 (************************************************************)
@@ -111,9 +120,6 @@ ebnfCommonParts = "
 (************************************************************)
 
 ebnfDataLoad = "
-  <display-directive> = 'show' | 'give' | 'display' <@ DisplayDirective ;
-  <compute-directive> = 'compute' | 'calculate' | 'find' <@ ComputeDirective ;
-  <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
   <load-data-opening> = ( 'load' | 'get' | 'consider' ) , [ 'data' ] ;
   <load-preposition> = 'for' | 'of' | 'at' | 'from' ;
   <load-data> = ( <load-data-opening> , [ 'the' ] ) &> <data-kind> , ( [ 'data' ] , <load-preposition> ) &> <location-specification> |
@@ -127,18 +133,26 @@ ebnfDataLoad = "
 
 
 (************************************************************)
-(* Data transformation                                      *)
+(* Data type                                                *)
 (************************************************************)
 
-ebnfDataTransform = "
-  <data-spec-opening> = 'transform' ;
-  <data-type-filler> =  'data' | 'records' ;
+ebnfDataType = "
   <data-type> = <data-type-boolean> | <data-type-numeric> | <data-type-string> | <data-type-symbolic> | <data-type-time> ;
   <data-type-boolean> = 'logical' | 'logic' | 'boolean' <@ TypeBoolean ;
   <data-type-numeric> = 'numeric' | 'numerical' | 'integer' | 'double' <@ TypeNumeric ;
   <data-type-string> = 'character' | 'string' | 'categorical' <@ TypeString ;
   <data-type-symbolic> = 'symbolic' <@ TypeSymbolic ;
   <data-type-time> = 'timestamp' , 'time' , 'date' , 'temporal' <@ TypeTime ;
+";
+
+
+(************************************************************)
+(* Data transformation                                      *)
+(************************************************************)
+
+ebnfDataTransform = "
+  <data-spec-opening> = 'transform' ;
+  <data-type-filler> =  'data' | 'records' ;
   <data-columns> = 'columns' | 'variables' ;
   <data-transformation-opening> = 'transform' | 'modify' ;
   <data-transformation-of-columns> = [ 'the' ] , ( <data-type> <& <data-columns> ) , ( 'to' | 'into' ) &> <data-type> <@ TransformColumns@*Flatten ;
@@ -416,7 +430,7 @@ ebnfCommand = "
 res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
         {ebnfCommonParts,
-          ebnfDataLoad, ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
+          ebnfDataLoad, ebnfDataType, ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
           ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
           ebnfROCPlot, ebnfVerification, ebnfPipelineCommands,
           ebnfGeneratePipeline, ebnfSecondOrderCommand, ebnfCommand};
@@ -426,6 +440,55 @@ res =
 (************************************************************)
 (* Modify parsers                                           *)
 (************************************************************)
+
+(* No parser modification. *)
+
+(************************************************************)
+(* Grammar exposing functions                               *)
+(************************************************************)
+
+Clear[ClConCommandsSubGrammars]
+
+Options[ClConCommandsSubGrammars] = { "Normalize" -> False };
+
+ClConCommandsSubGrammars[opts:OptionsPattern[]] :=
+    Block[{ normalizeQ = TrueQ[OptionValue[ClConCommandsSubGrammars, "Normalize"]], res},
+
+      res =
+          Association[
+            Map[
+              StringReplace[#, "ClassifierWorkflowsGrammar`Private`"->"" ] -> ToExpression[#] &,
+              Names["ClassifierWorkflowsGrammar`Private`ebnf*"]
+            ]
+          ];
+
+      If[ normalizeQ,
+        Map[StringReplace[#, {"&>" -> ",", "<&" -> ",", ("<@" ~~ (Except[{">", "<"}] ..) ~~ ";") :> ";"}]&, res],
+        res
+      ]
+    ];
+
+
+Clear[ClConCommandsGrammar]
+
+Options[ClConCommandsGrammar] = Options[ClConCommandsSubGrammars];
+
+ClConCommandsGrammar[opts:OptionsPattern[]] :=
+    Block[{ normalizeQ = TrueQ[OptionValue[ClConCommandsGrammar, "Normalize"]], res},
+
+      res = ClConCommandsSubGrammars[ opts ];
+
+      res =
+          StringRiffle[
+            Prepend[ Values[KeyDrop[res, "ebnfCommand"]], res["ebnfCommand"]],
+            "\n"
+          ];
+
+      If[ normalizeQ,
+        StringReplace[res, {"&>" -> ",", "<&" -> ",", ("<@" ~~ (Except[{">", "<"}] ..) ~~ ";") :> ";"}],
+        res
+      ]
+    ];
 
 End[] (* `Private` *)
 

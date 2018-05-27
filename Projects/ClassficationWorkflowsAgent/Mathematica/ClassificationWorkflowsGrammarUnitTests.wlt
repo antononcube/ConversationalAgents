@@ -51,7 +51,7 @@ BeginTestSection["ClassificationWorkflowsGrammarUnitTests.wlt"]
 VerificationTest[(* 1 *)
   CompoundExpression[
     Get["~/ConversationalAgents/EBNF/ClassifierWorkflowsGrammar.m"],
-    And @@ Map[# > 400&, Take[ LeafCount /@ ClassifierWorkflowsGrammar`Private`res, {1, -4}] ]
+    StringQ[ClConCommandsGrammar[]] && StringLength[ClConCommandsGrammar[]] > 15000
   ]
   ,
   True
@@ -60,7 +60,7 @@ VerificationTest[(* 1 *)
 ]
 
 VerificationTest[(* 2 *)
-  TClConTokenizer = (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}] &);
+  TClConTokenizer = (ParseToTokens[#, {",", "'", "%", "-", "/"}, {" ", "\t", "\n"}] &);
   TestFunc = ParseShortest[pCLCONCOMMAND][TClConTokenizer[#]] &;
   ,
   Null
@@ -95,9 +95,17 @@ VerificationTest[(* 5 *)
 VerificationTest[(* 6 *)
   TestFunc["split data with 70 percent for training"]
   ,
-  List[List[List[], SplitData[List[PercentValue[NumericValue[70]], SplitPart["training"]]]]]
+  {{{}, SplitData[{SplitDataSpec[{PercentValue[NumericValue[70]], SplitPart["training"]}]}]}}
   ,
   TestID->"SplitData-1"
+]
+
+VerificationTest[(* 6 *)
+  TestFunc["split data with 40% for testing"]
+  ,
+  {{{}, SplitData[{SplitDataSpec[{PercentValue[NumericValue[40]], SplitPart["testing"]}]}]}}
+  ,
+  TestID->"SplitData-2"
 ]
 
 VerificationTest[(* 7 *)
