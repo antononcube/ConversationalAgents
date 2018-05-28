@@ -124,6 +124,7 @@ ebnfCommonParts = "
   <display-directive> = 'show' | 'give' | 'display' <@ DisplayDirective ;
   <compute-directive> = 'compute' | 'calculate' | 'find' <@ ComputeDirective ;
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
+  <class-label> = '_String' <@ ClassLabel ;
 ";
 
 (************************************************************)
@@ -293,9 +294,9 @@ ebnfClassifierTesting = "
   <classifier-testing-simple> = ( 'test' , [ 'a' | 'the' ] ) &> 'classifier' <@ TestClassifier ;
   <train-data-spec> = '_?NumberQ' , ( 'percent' | 'fraction' ) <& ( 'of' , [ 'the' ] , [ 'available' ] , ( 'records' | 'data' ) ) <@ TrainData;
   <test-results> = <test-results-preamble> , ( 'test' , 'results' | <test-measure-list> ) ,
-                   [ [ ( 'with' | 'for' ), [ 'the' ] ] &> <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
+                   [ [ ( 'with' | 'for' | 'by' ), [ 'the' ] ] &> <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
   <test-results-preamble> = ( <compute-and-display> | <display-directive> | <compute-directive> ) , [ 'classifier' ] ;
-  <test-classification-threshold> = ( [ 'classification' ] , 'threshold' ) &> '_?NumberQ' <@ ClassificationThreshold ;
+  <test-classification-threshold> = ( [ 'classification' ] , 'threshold' ) &> <number-value> , ( 'of' | 'for' ) &>  <class-label> <@ ClassificationThreshold ;
   <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
   <test-measure-list> = ( <test-measure> | <test-measure-name> ) , [ { <list-delimiter> &> ( <test-measure> | <test-measure-name> ) } ] <@ TestMeasureList@*Flatten ;
   <test-measure> = 'Accuracy' | 'AccuracyRejectionPlot' | 'AreaUnderROCCurve' |

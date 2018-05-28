@@ -370,13 +370,14 @@ TTestMeasureNameRetrieval[parsed_] :=
       propName
     ];
 
+
 Clear[TClassifierTesting]
 TClassifierTesting[parsed_] := parsed;
 
 
 Clear[TTestResults]
 TTestResults[parsed_] :=
-    Block[{propNames},
+    Block[{propNames, clTh, clLbl},
 
       If[FreeQ[parsed, TestMeasureList],
         Echo["No implementation for the given test specification.", "TTestResults:"]
@@ -385,15 +386,37 @@ TTestResults[parsed_] :=
       propNames = TGetValue[parsed, TestMeasureList];
       propNames = TTestMeasureNameRetrieval[#] & /@ propNames;
 
-      With[{cmArg = propNames},
-        Function[{x, c},
-          ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurements[cmArg]\[DoubleLongRightArrow]ClConEchoValue]
+      clTh = TGetValue[parsed, ClassificationThreshold ];
+      clLbl= TGetValue[clTh, ClassLabel ];
+      clTh = TGetValue[clTh, NumericValue ];
+
+      Which[
+
+        FreeQ[parsed, DisplayDirective ] && FreeQ[ parsed, ClassificationThreshold ],
+        ClConClassifierMeasurements[propNames],
+
+        FreeQ[parsed, DisplayDirective ],
+        ClConClassifierMeasurementsByThreshold[propNames, clLbl -> clTh],
+
+        FreeQ[ parsed, ClassificationThreshold ],
+        With[{cmArg = propNames},
+          Function[{x, c},
+            ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurements[cmArg]\[DoubleLongRightArrow]ClConEchoValue]
+        ],
+
+        True,
+        With[{cmArg = propNames, thArg = clTh, lblArg = clLbl },
+          Function[{x, c},
+            ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurementsByThreshold[cmArg, lblArg -> thArg]\[DoubleLongRightArrow]ClConEchoValue]
+        ]
       ]
     ];
+
 
 Clear[TTestClassifier]
 TTestClassifier[parsed_] :=
     ToClConPipelineFunction[ {"compute accuracy, precision, and recall", "show roc plots"} ];
+
 
 (***********************************************************)
 (* ROC plots                                               *)
@@ -633,7 +656,7 @@ Options[ToClConPipelineFunction] =
       "Flatten" -> True };
 
 ToClConPipelineFunction[commands_String, parser_Symbol:pCLCONCOMMAND, opts:OptionsPattern[] ] :=
-    ToClConPipelineFunction[ StringSplit[commands, {".", ";"}], parser, opts ];
+    ToClConPipelineFunction[ StringSplit[commands, {";"}], parser, opts ];
 
 ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCLCONCOMMAND, opts:OptionsPattern[] ] :=
     Block[{parsedSeq, tokenizerFunc, res},
@@ -641,6 +664,13 @@ ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCLCONCOMMAND, opts:
       tokenizerFunc = OptionValue[ToClConPipelineFunction, "TokenizerFunction"];
 
       parsedSeq = ParseShortest[parser][tokenizerFunc[#]] & /@ commands;
+
+      parsedSeq = Select[parsedSeq, Length[#] > 0& ];
+
+      If[ Length[parsedSeq] == 0,
+        Echo["Cannot parse command(s).", "ToClConPipelineFunction:"];
+        Return[$ClConFailure]
+      ];
 
       res =
           If[ TrueQ[OptionValue[ToClConPipelineFunction, "Trace"]],
@@ -658,7 +688,7 @@ ToClConPipelineFunction[commands:{_String..}, parser_Symbol:pCLCONCOMMAND, opts:
     ];
 
 ToClConPipelineFunction[pres_List] :=
-    Block[{t, parsedSeq=pres, x=Global`x, c=Global`c},
+    Block[{t, parsedSeq=pres},
 
       If[ Head[First[pres]] === LoadData, parsedSeq = Rest[pres]];
 
@@ -671,7 +701,7 @@ ToClConPipelineFunction[pres_List] :=
     ];
 
 ToClConPipelineFunction[pres_Association] :=
-    Block[{t, parsedSeq=Values[pres], comments = Keys[pres], x=Global`x, c=Global`c},
+    Block[{t, parsedSeq=Values[pres], comments = Keys[pres]},
 
       If[ Head[First[pres]] === LoadData, parsedSeq = Rest[parsedSeq]; comments = Rest[comments] ];
 
