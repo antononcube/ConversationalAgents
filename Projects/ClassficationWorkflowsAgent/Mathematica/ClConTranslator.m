@@ -370,6 +370,7 @@ TTestMeasureNameRetrieval[parsed_] :=
       propName
     ];
 
+
 Clear[TClassifierTesting]
 TClassifierTesting[parsed_] := parsed;
 
@@ -385,15 +386,21 @@ TTestResults[parsed_] :=
       propNames = TGetValue[parsed, TestMeasureList];
       propNames = TTestMeasureNameRetrieval[#] & /@ propNames;
 
-      With[{cmArg = propNames},
-        Function[{x, c},
-          ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurements[cmArg]\[DoubleLongRightArrow]ClConEchoValue]
+      If[ FreeQ[parsed, DisplayDirective ],
+        ClConClassifierMeasurements[propNames],
+        (* ELSE *)
+        With[{cmArg = propNames},
+          Function[{x, c},
+            ClConUnit[x,c]\[DoubleLongRightArrow]ClConClassifierMeasurements[cmArg]\[DoubleLongRightArrow]ClConEchoValue]
+        ]
       ]
     ];
+
 
 Clear[TTestClassifier]
 TTestClassifier[parsed_] :=
     ToClConPipelineFunction[ {"compute accuracy, precision, and recall", "show roc plots"} ];
+
 
 (***********************************************************)
 (* ROC plots                                               *)
