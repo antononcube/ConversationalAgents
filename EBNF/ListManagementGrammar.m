@@ -55,23 +55,29 @@ Needs["FunctionalParsers`"];
 (************************************************************)
 
 ebnfCommand = "
-    <list-management-command> = <replace-part> |<drop> | <take> | <assignment> | <position-query> | <position-spec> <@ ListManagementCommand ;
+    <list-management-command> = <replace-part> |<drop> | <take> | <assignment> | <clear> |
+                                <position-query> | <position-spec> <@ ListManagementCommand ;
     <assignment> = ( 'set' &> <variable-name> , ( 'to' | 'as' ) &> <value> ) | ( 'assign' &> <value> , 'to' &> <variable-name> ) <@ ListAssignment ;
     <take> = ( 'take' | 'get' ) &> ( <position-query> | <position-spec> ) <@ ListTake ;
     <drop> = ( 'drop' | 'delete' | 'erase' ) &> ( <position-query> | <position-spec> ) <@ ListDrop ;
     <replace-part> = 'replace' &> <position-spec> , ( 'with' | 'by' ) &> ( <position-spec> | [ 'the' ] &> <value> ) <@ ListReplacePart ;
+    <clear> = ( 'clear' | 'empty' ) , [ 'list' ] |
+              ( 'drop' | 'delete' ), 'all' , [ 'list' ] , [ 'elements' ] , [ <list-phrase> ] <@ ListClear ;
     <variable-name> = [ 'variable' ] &> '_WordString' <@ ListVariable ;
     <value> = [ 'value' ] &> '_String' <@ ListValue ;
-    <position-query> = ( 'element' &> <position-index> | [ 'the' ] &> <position-word> <&  ( 'element' | 'one' ) ) ,
+    <list-phrase> = ( 'in' | 'of' ) , 'the' , 'list' ;
+    <position-query> = ( 'element' &> <position-index> |
+                         [ 'the' ] &> <position-ordinal> <& ( 'element' | 'one' ) |
+                         [ 'the' ] &> <position-reference> <& [ 'element' | 'one' ] ) ,
                        ('in' | 'of' ) &> ( <position-query> | [ 'the' ] &> <variable-name> ) <@ ListPositionQuery ;
+    <position-spec> = ( [ 'the' ] , [ 'element' ] ) &> ( <position-index> | <position-word> ) <&
+                      ( [ 'one' | 'element' ] , [ <list-phrase> ] ) <@ ListPositionSpec ;
     <position-index> = 'Range[0,1000]' <@ ListPositionIndex ;
     <position-word> =  <position-ordinal> | <position-reference> <@ ListPositionWord ;
     <position-reference> = 'head' | 'rest' | 'last' | 'one' , 'before' , [ 'the' ] , 'last' | 'former' | 'later' <@ ListPositionReference ;
     <position-ordinal> = 'first' | 'second' | 'third' | 'fourth' | 'fifth' | 'sixth' | 'seventh' | 'eight' | 'ninth' | 'tenth' |
                          '1st' | '2nd' | '3rd' | '4th' | '5th' | '6th' | '7th' | '8th' | '9th' | '10th' |
                           ( <position-index> <& ( 'st' | 'nd' | 'rd' | 'th' ) ) <@ ListPositionOrdinal ;
-    <position-spec> = ( [ 'the' ] , [ 'element' ] ) &> ( <position-index> | <position-word> ) <&
-                      ( [ 'one' | 'element' ] , [ ( 'in' | 'of' ) , 'the' , 'list' ] ) <@ ListPositionSpec ;
 ";
 
 
