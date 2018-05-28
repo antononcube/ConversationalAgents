@@ -289,9 +289,15 @@ ebnfClassifierQuery = "
 (************************************************************)
 
 ebnfClassifierTesting = "
+  <classifier-testing> = <classifier-testing-simple> | <test-results> | <accuracies-by-variable-shuffling> <@ ClassifierTesting ;
   <classifier-testing-simple> = ( 'test' , [ 'a' | 'the' ] ) &> 'classifier' <@ TestClassifier ;
   <train-data-spec> = '_?NumberQ' , ( 'percent' | 'fraction' ) <& ( 'of' , [ 'the' ] , [ 'available' ] , ( 'records' | 'data' ) ) <@ TrainData;
-  <test-results-preamble> = ( 'show' | 'display' | 'give' | 'compute' ) , [ 'classifier' ] ;
+  <test-results> = <test-results-preamble> , ( 'test' , 'results' | <test-measure-list> ) ,
+                   [ [ ( 'with' | 'for' ), [ 'the' ] ] &> <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
+  <test-results-preamble> = ( <compute-and-display> | <display-directive> | <compute-directive> ) , [ 'classifier' ] ;
+  <test-classification-threshold> = ( [ 'classification' ] , 'threshold' ) &> '_?NumberQ' <@ ClassificationThreshold ;
+  <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
+  <test-measure-list> = ( <test-measure> | <test-measure-name> ) , [ { <list-delimiter> &> ( <test-measure> | <test-measure-name> ) } ] <@ TestMeasureList@*Flatten ;
   <test-measure> = 'Accuracy' | 'AccuracyRejectionPlot' | 'AreaUnderROCCurve' |
                    'BestClassifiedExamples' | 'ClassifierFunction' |
                    'ClassMeanCrossEntropy' | 'ClassRejectionRate' | 'CohenKappa' |
@@ -328,17 +334,11 @@ ebnfClassifierTesting = "
                         'specificity' | 'top' , 'confusions' | 'true' , 'negative' , 'examples' |
                         'true' , 'positive' , 'examples' | 'worst' , 'classified' , 'examples'
                         <@ TestMeasureName@*Flatten@*List ;
-  <test-measure-list> = ( <test-measure> | <test-measure-name> ) , [ { <list-delimiter> &> ( <test-measure> | <test-measure-name> ) } ] <@ TestMeasureList@*Flatten ;
-  <test-classification-threshold> = 'classification' , 'threshold' , '_?NumberQ' <@ ClassThreshold ;
-  <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
-  <test-results> = <test-results-preamble> &> ( 'test' , 'results' | <test-measure-list> ) ,
-                   [ 'with' , <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
   <accuracies-by-variable-shuffling> = <compute-and-display> ,
                                        ( ( [ 'the' ] , 'accuracies' , <with-preposition> , ( 'variable' | 'column' ) , 'shuffling' ) |
                                          ( [ 'the' ] , [ 'variable' | 'column' ] , 'shuffling' , 'accuracies' ) |
                                          ( [ 'the' ] , 'variable' , 'importance' , [ 'estimates' ] )
                                        ) <@ AccuraciesByVariableShuffling@*First ;
-  <classifier-testing> = <classifier-testing-simple> | <test-results> | <accuracies-by-variable-shuffling> <@ ClassifierTesting ;
   ";
 
 
