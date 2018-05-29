@@ -163,19 +163,19 @@ ebnfDocTermMat = "
 (************************************************************)
 
 ebnfLSIApplyFuncs = "
-  <lsi-apply-command> = <lsi-apply-phrase> , <lsi-funcs-list> <@ LSICommand ;
+  <lsi-apply-command> = <lsi-apply-phrase> &> <lsi-funcs-list> <@ LSICommand ;
   <lsi-apply-verb> = ( 'apply' , 'to' | 'transform' ) ;
   <lsi-apply-phrase> = <lsi-apply-verb> , [ 'the' ] , [ ( 'matrix' | <doc-term-mat> ) , 'entries' ] ,
                        [ 'the' ] , [ 'lsi' ] , [ 'functions' ] ;
-  <lsi-funcs-list> = <lsi-func> , [ { <list-delimiter> , <lsi-func> } ] <@ LSIFuncsList ;
+  <lsi-funcs-list> = <lsi-func> , [ { <list-delimiter> &> <lsi-func> } ] <@ LSIFuncsList@*Flatten ;
   <lsi-func> = <lsi-global-func> | <lsi-local-func> | <lsi-normal-func> ;
   <lsi-global-func> = <lsi-global-func-idf> | <lsi-global-func-entropy> <@ LSIGlobalFunc ;
   <lsi-global-func-idf> = 'IDF' | 'idf' | 'inverse' , 'document' , 'frequency' <@ LSIGlobalFuncIDF ;
   <lsi-global-func-entropy> = 'Entropy' | 'entropy' <@ LSIGlobalFuncEntropy ;
   <lsi-local-func> = <lsi-local-func-frequency> | <lsi-local-func-binary> <@ LSILocalFunc;
   <lsi-local-func-frequency> = 'frequency' <@ LSILocalFuncFrequency ;
-  <lsi-local-func-binary> = 'frequency' <@ LSILocalFuncBinary ;
-  <lsi-normal-func> = <lsi-normal-func-sum> | <lsi-normal-func-max> | <lsi-normal-func-cosine> <@ LSINormalFunc ;
+  <lsi-local-func-binary> = 'binary' <& [ 'frequency' ] <@ LSILocalFuncBinary@*Flatten ;
+  <lsi-normal-func> = ( <lsi-normal-func-sum> | <lsi-normal-func-max> | <lsi-normal-func-cosine> ) <& [ 'normalization' ] <@ LSINormalFunc@*Flatten ;
   <lsi-normal-func-sum> = 'sum' <@ LSILocalFuncSum ;
   <lsi-normal-func-max> = 'cosine' <@ LSILocalFuncMax ;
   <lsi-normal-func-cosine> = 'cosine' <@ LSILocalFuncCosine ;
@@ -240,7 +240,7 @@ ebnfSecondOrderCommand = "
 
 ebnfCommand = "
   <lsamon-command> = <load-data> | <data-transformation> |
-              <make-doc-term-mat> | <statistics-command> |
+              <make-doc-term-mat> | <statistics-command> | <lsi-apply-command> |
               <topics-extraction-command> | <topics-extraction-command> |
               <pipeline-command> | <second-order-command> ;
   ";
