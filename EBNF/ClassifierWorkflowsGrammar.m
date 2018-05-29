@@ -124,6 +124,7 @@ ebnfCommonParts = "
   <display-directive> = 'show' | 'give' | 'display' <@ DisplayDirective ;
   <compute-directive> = 'compute' | 'calculate' | 'find' <@ ComputeDirective ;
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
+  <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
   <class-label> = '_String' <@ ClassLabel ;
 ";
 
@@ -413,8 +414,7 @@ ebnfPipelineCommands = "
 
 ebnfGeneratePipeline = "
   <generate-pipeline> = <generate-pipeline-phrase> , [ <using-preposition> &> <classifier-algorithm> ] <@ GeneratePipeline ;
-  <generate-verb> = 'make' | 'create' | 'generate' ;
-  <generate-pipeline-phrase> = <generate-verb> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ 'classification' ] , 'pipeline' <@ Flatten ;
+  <generate-pipeline-phrase> = <generate-directive> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ 'classification' ] , 'pipeline' <@ Flatten ;
 ";
 
 ebnfSecondOrderCommand = "
