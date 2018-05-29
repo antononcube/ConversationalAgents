@@ -388,7 +388,7 @@ ebnfVerification = "
 (* General pipeline commands                                *)
 (************************************************************)
 
-ebnfPipelineCommands = "
+ebnfPipelineCommand = "
   <pipeline-command> = <get-pipeline-value> | <get-pipeline-context> |
                        <pipeline-context-add> | <pipeline-context-retrieve> <@ PipelineCommand ;
   <pipeline-filler> = [ 'the' ] , [ 'current' ] , [ 'pipeline' ] ;
@@ -444,7 +444,7 @@ res =
         {ebnfCommonParts,
           ebnfDataLoad, ebnfDataType, ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
           ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
-          ebnfROCPlot, ebnfVerification, ebnfPipelineCommands,
+          ebnfROCPlot, ebnfVerification, ebnfPipelineCommand,
           ebnfGeneratePipeline, ebnfSecondOrderCommand, ebnfCommand};
 (* LeafCount /@ res *)
 
