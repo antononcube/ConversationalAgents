@@ -90,11 +90,15 @@ Needs["FunctionalParsers`"];
 (************************************************************)
 
 ebnfCommand = "
-  <agent-common-command> = <help> | <start-over> | <clear-state> | <load-file> | <random-sentences> <@ AgentCommonCommand ;
+  <agent-common-command> = <help> | <start-over> | <forget> | <clear-state> | <load-file> | <random-sentences> <@ AgentCommonCommand ;
   <load-file> = ( 'load' , [ 'data' ] , 'file'  ) &> ( '_String' ) <@ CommonCommandLoadFile ;
   <start-over> = 'start' , 'over' | 'clear' , 'all' | 'cancel' <@ CommonCommandStartOver@*Flatten@*List ;
   <clear-graphics> = ( 'clear' | 'clean' ) , ( 'plots' | 'plots' | 'graphics' ) <@ CommonCommandClearGraphics ;
   <clear-state> = ( 'clear' | 'clean' ) , ( 'state' | 'plots' | 'graphics' ) <@ CommonCommandClearState ;
+  <forget-verb> = 'forget' | 'drop' | 'delete' | 'ignore' ;
+  <command> = 'command' | 'order' | 'thing' , 'i' , 'said' ;
+  <forget> = ( <forget-verb> , [ 'the' ] ) &>  <forget-spec> <& [ <command> ] <@ CommonCommandForget ;
+  <forget-spec> =  { '_String' } <@ CommonCommandForgetSpec ;
   <operations> = 'operations' | 'commands' ;
   <operation> = 'operation' | 'command' ;
   <what-operations> = 'what' , ( ( <operations> , 'are'  |  [ 'are' ] , [ 'the' ] , <operations> ) , [ 'implemented' | 'in' ] ) |
