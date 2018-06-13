@@ -122,15 +122,15 @@ ebnfRepositoryQuery = "
 (* Network training                                         *)
 (************************************************************)
 
-enbfNetTraining = "
-  <training-command> = <training-opening> &> <training-spec-list> <@ NetTrainingCommand ;
-  <training-opening> = 'train' , [ 'the' ] , <neural-net> ;
+ebnfNetTraining = "
+  <net-training-command> = <training-opening> &> <training-spec-list> <@ NetTrainingCommand ;
+  <training-opening> = 'train' , [ 'the' ] , <neural-network> ;
   <training-spec-list> = <training-spec> , { [ <list-delimiter> ] &> <training-spec> } <@ NetTrainingSpecList ;
   <training-spec> = <training-epochs-spec> | <training-time-spec> | <training-batch-spec> ;
-  <training-epochs-spec> =  [ <with-preposition> ] &> '_?IntegerQ' , ( 'epochs' | 'rounds' ) <@ NetTrainingEpochsSpec ;
-  <training-time-spec> =  [ <using-preposition> ] &> '_?NumberQ' , <training-time-unit> <@ NetTrainingTimeSpec ;
-  <time-unit> = 'second' | 'seconds' | 'minute' | 'minutes' | 'hour' | hours' | 'day' | 'days' <@ TimeUnit ;
-  <training-batch-spec> = [ <with-preposition> ] , 'batch' , 'size' , '_?IntegerQ' <@ NetTrainingBatchSize ;
+  <training-epochs-spec> =  [ <using-preposition> ] &> '_?IntegerQ' , ( 'epochs' | 'rounds' ) <@ NetTrainingEpochsSpec ;
+  <training-time-spec> = [ <using-preposition> ] &> '_?NumberQ' , <training-time-unit> <@ NetTrainingTimeSpec ;
+  <training-time-unit> =  'second' | 'seconds' | 'minute' | 'minutes' | 'hour' | 'hours' | 'day' | 'days'  <@ NetTrainingTimeUnit ;
+  <training-batch-spec> = ( [ <with-preposition> ] , 'batch' , 'size' ) &> '_?IntegerQ' <@ NetTrainingBatchSize ;
 ";
 
 (************************************************************)
@@ -196,7 +196,7 @@ ebnfNetLayerChain = "
 (************************************************************)
 
 ebnfCommand = "
-  <netmon-command> = <repository-query> | <net-layer-chain> | <training-command> <@ ;
+  <netmon-command> = <repository-query> | <net-layer-chain> | <net-training-command> ;
 ";
 
 (************************************************************)
@@ -206,7 +206,7 @@ ebnfCommand = "
 res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
         {ebnfCommonParts, ebnfRepositoryQuery,
-          enbfNetTraining, ebnfNetLayerChain,
+          ebnfNetTraining, ebnfNetLayerChain,
           ebnfCommand};
 (* LeafCount /@ res *)
 
