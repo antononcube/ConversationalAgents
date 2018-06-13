@@ -140,12 +140,13 @@ enbfNetTraining = "
 ebnfNetLayerChain = "
   <net-layer-chain> = [ <net-layer-chain-opening> ] &> <layer-list> <@ NetLayerChain ;
   <net-layer-chain-opening> = [ 'net' ] , 'chain' , <with-preposition> ;
-  <layer-list> = <layer-spec> , [ { <layer-list-delimiter> &> <layer-spec> } ]
+  <layer-list> = ( <layer-spec> | <layer-name-spec> ), [ { <layer-list-delimiter> &> ( <layer-spec> | <layer-name-spec> ) } ]
                  <@ LayerList@*Flatten@*List ;
   <layer-list-delimiter> = <list-delimiter> | 'then' | '->' ;
-  <layer-spec> = [ <determiner> ] &> ( <layer> | <layer-name> ) ,
-                 [ <using-preposition> &> ( <layer-func-name> | <layer-common-func> ) ]
-                 <@ LayerSpec@*Flatten ;
+  <layer-spec> = <layer> , [ '[' , ']' | '[' &> ( <layer-func-name> | <layer-common-func> | '_String' ) <& ']' ] <@ LayerSpec ;
+  <layer-name-spec> = [ <determiner> ] &> ( <layer-name> ) ,
+                      [ <using-preposition> &> ( <layer-func-name> | <layer-common-func> ) ]
+                      <@ LayerNameSpec@*Flatten ;
   <layer> =  'AggregationLayer' | 'AppendLayer' | 'BasicRecurrentLayer' |
              'BatchNormalizationLayer' | 'CatenateLayer' | 'ConstantArrayLayer' |
              'ConstantPlusLayer' | 'ConstantTimesLayer' | 'ContrastiveLossLayer' |
