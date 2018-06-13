@@ -110,7 +110,7 @@ TNetLayerChain[parsed_List] := NetChain[parsed];
 (***********************************************************)
 
 Clear[TNetMonTokenizer];
-TNetMonTokenizer = (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "\[DoubleLongRightArrow]", "->"}, {" ", "\t", "\n"}] &)
+TNetMonTokenizer = (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "⟹", "->"}, {" ", "\t", "\n"}] &)
 
 ClearAll[TranslateToNetMon]
 
