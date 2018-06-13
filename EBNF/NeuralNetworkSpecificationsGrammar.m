@@ -143,7 +143,8 @@ ebnfNetLayerChain = "
   <layer-list> = ( <layer-spec> | <layer-name-spec> ), [ { <layer-list-delimiter> &> ( <layer-spec> | <layer-name-spec> ) } ]
                  <@ LayerList@*Flatten@*List ;
   <layer-list-delimiter> = <list-delimiter> | 'then' | '->' ;
-  <layer-spec> = <layer> , [ '[' , ']' | '[' &> ( <layer-func-name> | <layer-common-func> | '_String' ) <& ']' ] <@ LayerSpec ;
+  <layer-spec> = <layer> , [ '[' , ']' | '[' &> ( <layer-func-name> | <layer-common-func> | '_String' ) <& ']' ]
+                 <@ LayerSpec ;
   <layer-name-spec> = [ <determiner> ] &> ( <layer-name> ) ,
                       [ <using-preposition> &> ( <layer-func-name> | <layer-common-func> ) ]
                       <@ LayerNameSpec@*Flatten ;
@@ -187,7 +188,7 @@ ebnfNetLayerChain = "
   <layer-func-name> = 'RectifiedLinearUnit' | 'ReLU' | 'ExponentialLinearUnit' | 'ELU' |
                       'ScaledExponentialLinearUnit' | 'SELU' | 'SoftSign' | 'SoftPlus' |
                       'HardTanh' | 'HardSigmoid' | 'Sigmoid' <@ LayerFuncName ;
-  <layer-common-func> = 'Tanh' | 'Total' <@ LayerCommonFunc ;
+  <layer-common-func> = 'Tanh' | 'Ramp' | 'Total' <@ LayerCommonFunc ;
 ";
 
 
