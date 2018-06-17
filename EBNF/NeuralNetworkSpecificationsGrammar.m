@@ -59,6 +59,11 @@
 
       Keys[NetMonCommandsSubGrammars[]]
 
+      TNetMonTokenizer = (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "\[DoubleLongRightArrow]", "->"}, {" ", "\t", "\n"}] &);
+
+   Anton Antonov
+   Oxford, UK
+   2018-06-14
 *)
 
 If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
@@ -91,6 +96,7 @@ ebnfCommonParts = "
   <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
   <with-preposition> =  'using' | 'by' | 'with' ;
   <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
+  <for-preposition> = 'for' | 'of' ;
   <number-value> = '_?NumberQ' <@ NumericValue ;
   <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
   <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
@@ -132,6 +138,20 @@ ebnfNetTraining = "
   <training-time-unit> =  'second' | 'seconds' | 'minute' | 'minutes' | 'hour' | 'hours' | 'day' | 'days'  <@ NetTrainingTimeUnit ;
   <training-batch-spec> = ( [ <with-preposition> ] , 'batch' , 'size' ) &> '_?IntegerQ' <@ NetTrainingBatchSize ;
 ";
+
+
+(************************************************************)
+(* Net state                                                *)
+(************************************************************)
+
+ebnfNetOperationCommand = "
+  <net-operation-command> = <net-state-command> | <net-initialize-command> ;
+  <net-state-command> = ( <generate-directive> &> [ 'the' ] , <neural-network> , 'state' , [ 'object' ] , <for-preposition> )
+                        &>  <net-reference> <@ NetStateCommand ;
+  <net-initialize-command> = ( 'initialize' , [ 'the' ] , <neural-network> ) &> <net-reference> <@ NetInitializeCommand ;
+  <net-reference> = '_String' <@ NetReference ;
+";
+
 
 (************************************************************)
 (* Net layer chain                                          *)
@@ -192,12 +212,20 @@ ebnfNetLayerChain = "
 ";
 
 
+
+(************************************************************)
+(* Net surgery                                              *)
+(************************************************************)
+
+
+
+
 (************************************************************)
 (* Combination                                              *)
 (************************************************************)
 
 ebnfCommand = "
-  <netmon-command> = <repository-query> | <net-layer-chain> | <net-training-command> ;
+  <netmon-command> = <repository-query> | <net-layer-chain> | <net-training-command> | <net-operation-command> ;
 ";
 
 (************************************************************)
@@ -208,6 +236,7 @@ res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
         {ebnfCommonParts, ebnfRepositoryQuery,
           ebnfNetTraining, ebnfNetLayerChain,
+          ebnfNetOperationCommand,
           ebnfCommand};
 (* LeafCount /@ res *)
 
