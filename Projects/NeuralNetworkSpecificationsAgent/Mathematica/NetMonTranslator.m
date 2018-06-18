@@ -122,7 +122,7 @@ TranslateToNetMon[commands_String, parser_Symbol:pNETMONCOMMAND, opts:OptionsPat
 TranslateToNetMon[commands:{_String..}, parser_Symbol:pNETMONCOMMAND, opts:OptionsPattern[]] :=
     Block[{parsedSeq, tokenizerFunc },
 
-      tokenizerFunc = OptionValue[ToNetMonPipelineFunction, "TokenizerFunction"];
+      tokenizerFunc = OptionValue[TranslateToNetMon, "TokenizerFunction"];
 
       parsedSeq = ParseShortest[parser][tokenizerFunc[#]] & /@ commands;
 
