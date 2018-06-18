@@ -1,5 +1,5 @@
 (*
-    Classifier workflows grammar in EBNF
+    Neural networks specifications grammar in EBNF
     Copyright (C) 2018  Anton Antonov
 
     This program is free software: you can redistribute it and/or modify
