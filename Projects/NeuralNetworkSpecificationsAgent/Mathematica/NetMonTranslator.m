@@ -114,7 +114,7 @@ TNetMonTokenizer = (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "⟹", 
 
 ClearAll[TranslateToNetMon]
 
-Options[TranslateToNetMon] = { "TokenizerFunction" -> TNetMonTokenizer };
+Options[TranslateToNetMon] = { "TokenizerFunction" -> (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "⟹", "->"}, {" ", "\t", "\n"}] &) };
 
 TranslateToNetMon[commands_String, parser_Symbol:pNETMONCOMMAND, opts:OptionsPattern[]] :=
     TranslateToNetMon[ StringSplit[commands, {".", ";"}], parser, opts ];
@@ -140,4 +140,75 @@ TranslateToNetMon[pres_] :=
       LayerList = TLayerList,
       NetLayerChain = TNetLayerChain},
       pres
+    ];
+
+
+(* This code is very similar / same as the one for ToClConPipelineFunction. *)
+
+ClearAll[ToNetMonPipelineFunction]
+
+Options[ToNetMonPipelineFunction] =
+    { "Trace" -> False,
+      "TokenizerFunction" -> (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "⟹", "->"}, {" ", "\t", "\n"}] &),
+      "Flatten" -> True };
+
+ToNetMonPipelineFunction[commands_String, parser_Symbol:pNETMONCOMMAND, opts:OptionsPattern[] ] :=
+    ToNetMonPipelineFunction[ StringSplit[commands, {";"}], parser, opts ];
+
+ToNetMonPipelineFunction[commands:{_String..}, parser_Symbol:pNETMONCOMMAND, opts:OptionsPattern[] ] :=
+    Block[{parsedSeq, tokenizerFunc, res},
+
+      tokenizerFunc = OptionValue[ToNetMonPipelineFunction, "TokenizerFunction"];
+
+      parsedSeq = ParseShortest[parser][tokenizerFunc[#]] & /@ commands;
+
+      parsedSeq = Select[parsedSeq, Length[#] > 0& ];
+
+      If[ Length[parsedSeq] == 0,
+        Echo["Cannot parse command(s).", "ToNetMonPipelineFunction:"];
+        Return[$ClConFailure]
+      ];
+
+      res =
+          If[ TrueQ[OptionValue[ToNetMonPipelineFunction, "Trace"]],
+
+            ToNetMonPipelineFunction[ AssociationThread[ commands, parsedSeq[[All,1,2]] ] ],
+          (*ELSE*)
+            ToNetMonPipelineFunction[ parsedSeq[[All,1,2]] ]
+          ];
+
+      If[ TrueQ[OptionValue[ToNetMonPipelineFunction, "Flatten"] ],
+        res //. DoubleLongRightArrow[DoubleLongRightArrow[x__], y__] :> DoubleLongRightArrow[x, y],
+      (*ELSE*)
+        res
+      ]
+    ];
+
+ToNetMonPipelineFunction[pres_List] :=
+    Block[{t, parsedSeq=pres},
+
+      If[ Head[First[pres]] === LoadData, parsedSeq = Rest[pres]];
+
+      t = TranslateToNetMon[parsedSeq];
+
+      (* Note that we can use:
+         Fold[ClConBind[#1,#2]&,First[t],Rest[t]] *)
+      Function[{x, c},
+        Evaluate[DoubleLongRightArrow @@ Prepend[t, NetMonUnit[x, c]]]]
+    ];
+
+ToNetMonPipelineFunction[pres_Association] :=
+    Block[{t, parsedSeq=Values[pres], comments = Keys[pres]},
+
+      If[ Head[First[pres]] === LoadData, parsedSeq = Rest[parsedSeq]; comments = Rest[comments] ];
+
+      t = TranslateToNetMon[parsedSeq];
+
+      (* Note that we can use:
+         Fold[ClConBind[#1,#2]&,First[t],Rest[t]] *)
+      Function[{x, c},
+        Evaluate[
+          DoubleLongRightArrow @@
+              Prepend[Riffle[t,comments], TraceMonadUnit[ClConUnit[x, c]]]]
+      ]
     ];
