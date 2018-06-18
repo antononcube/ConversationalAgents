@@ -105,9 +105,13 @@ ebnfCommonParts = "
   <compute-directive> = 'compute' | 'calculate' | 'find' <@ ComputeDirective ;
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
   <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
+  <train-directive> = 'train' | 'drill' ;
   <class-label> = '_String' <@ ClassLabel ;
   <neural-network> = [ 'neural' ] , ( 'net' | 'network' | 'model' ) ;
   <neural-networks> = [ 'neural' ] , ( 'nets' | 'networks' | 'models' ) ;
+  <neural-network-chain> = [ <neural-network> ] , 'chain' <@ NeuralNetworkChain ;
+  <neural-network-graph> = [ <neural-network> ] , 'graph' <@ NeuralNetworkGraph ;
+  <filler> = { '_String' } <@ Filler ;
 ";
 
 
@@ -129,7 +133,12 @@ ebnfRepositoryQuery = "
 (************************************************************)
 
 ebnfNetTraining = "
-  <net-training-command> = <training-opening> &> <training-spec-list> <@ NetTrainingCommand ;
+  <net-training-command> = <net-train-it> | <net-training-spec-command> <@ NetTrainingCommand ;
+  <net-train-it> = <train-directive> , [ 'it' |
+                                         [ 'the' ] , ( <neural-network> | <neural-network-chain> | <neural-network-graph> )
+                                       ]
+                   <@ NetTrainIt ;
+  <net-training-spec-command> = <training-opening> &> <training-spec-list> <@ NetTrainingSpecCommand ;
   <training-opening> = 'train' , [ 'the' ] , <neural-network> ;
   <training-spec-list> = <training-spec> , { [ <list-delimiter> ] &> <training-spec> } <@ NetTrainingSpecList ;
   <training-spec> = <training-epochs-spec> | <training-time-spec> | <training-batch-spec> ;
