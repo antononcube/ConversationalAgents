@@ -133,16 +133,16 @@ ebnfCommonParts = "
 (************************************************************)
 
 ebnfDataLoad = "
+  <load-data> = ( <load-data-opening> , [ 'the' ] ) &> <data-kind> , ( [ 'data' ] , <load-preposition> ) &> <location-specification> |
+                ( <load-data-opening> , [ 'the' ] ) &> <location-specification> <& [ 'data' ] <@ LoadData ;
   <load-data-opening> = ( 'load' | 'get' | 'consider' ) , [ 'data' ] ;
   <load-preposition> = 'for' | 'of' | 'at' | 'from' ;
-  <load-data> = ( <load-data-opening> , [ 'the' ] ) &> <data-kind> , ( [ 'data' ] , <load-preposition> ) &> <location-specification> |
-  ( <load-data-opening> , [ 'the' ] ) &> <location-specification> <& [ 'data' ] <@ LoadData ;
   <location-specification> = <dataset-name> | <web-address> | <database-name> <@ LocationSpec ;
   <web-address> = '_?StringQ' <@ WebAddress ;
   <dataset-name> = '_WordString' <@ DatasetName ;
   <database-name> = '_WordString' <@ DatabaseName ;
   <data-kind> = '_String' <@ DataKind ;
-  ";
+";
 
 
 (************************************************************)
@@ -164,12 +164,12 @@ ebnfDataType = "
 (************************************************************)
 
 ebnfDataTransform = "
+  <data-transformation> = <data-transformation-opening> &> <data-transformation-of-columns> <@ DataTransform ;
+  <data-transformation-opening> = 'transform' | 'modify' ;
   <data-spec-opening> = 'transform' ;
   <data-type-filler> =  'data' | 'records' ;
   <data-columns> = 'columns' | 'variables' ;
-  <data-transformation-opening> = 'transform' | 'modify' ;
   <data-transformation-of-columns> = [ 'the' ] , ( <data-type> <& <data-columns> ) , ( 'to' | 'into' ) &> <data-type> <@ TransformColumns@*Flatten ;
-  <data-transformation> = <data-transformation-opening> &> <data-transformation-of-columns> <@ DataTransform ;
   ";
 
 
@@ -230,17 +230,17 @@ ebnfDataOutliers = "
 (************************************************************)
 
 ebnfClassifierMaking = "
+  <classifier-creation> = <classifier-creation-opening> &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
+                                                                   'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
+                                                                 [ <using-preposition> &> <train-data-spec> ] <@ ClassifierCreation ;
+  <classifier-creation-opening> = ( ( 'make' | 'create' | 'train' ) , [ 'a' | 'an' ] ) ;
   <classifier-method> = 'DecisionTree' | 'GradientBoostedTrees' | 'LogisticRegression' | 'NaiveBayes' |
                         'NearestNeighbors' | 'NeuralNetwork' | 'RandomForest' | 'SupportVectorMachine' <@ ClassifierMethod ;
+  <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
   <classifier-algorithm-name> = 'decision' , 'tree' | 'gradient' , 'boosted' , 'trees' | 'logistic' , 'regression' | 'nearest' , 'neighbors' |
                                 'naive' , 'bayes' | 'neural' , 'network' | 'random' , 'forest' |
                                 'support' , 'vector' , 'machine'  <@ ClassifierAlgorithmName ;
   <library-name> = '_String' <@ LibraryName ;
-  <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
-  <classifier-creation-opening> = ( ( 'make' | 'create' | 'train' ) , [ 'a' | 'an' ] ) ;
-  <classifier-creation> = <classifier-creation-opening> &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
-                                                                   'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
-                                                                 [ <using-preposition> &> <train-data-spec> ] <@ ClassifierCreation ;
   ";
 
 
@@ -414,7 +414,7 @@ ebnfPipelineCommand = "
 
 ebnfGeneratePipeline = "
   <generate-pipeline> = <generate-pipeline-phrase> , [ <using-preposition> &> <classifier-algorithm> ] <@ GeneratePipeline ;
-  <generate-pipeline-phrase> = <generate-directive> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ 'classification' ] , 'pipeline' <@ Flatten ;
+  <generate-pipeline-phrase> = <generate-directive> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ 'classification' ] , ( 'pipeline' | 'workflow' ) <@ Flatten ;
 ";
 
 ebnfSecondOrderCommand = "
