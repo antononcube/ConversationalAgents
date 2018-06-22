@@ -118,6 +118,8 @@ ebnfCommonParts = "
   <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
   <with-preposition> =  'using' | 'by' | 'with' ;
   <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
+  <to-preposition> = 'to' | 'into' ;
+  <by-preposition> = 'by' | 'through' | 'via' ;
   <number-value> = '_?NumberQ' <@ NumericValue ;
   <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
   <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
@@ -208,6 +210,24 @@ ebnfDataStatistics = "
   <var-name> = '_String' <@ VarName ;
   <var-position> = 'last' | ( '_?IntegerQ' <& [ 'st' | 'nd' | 'rd' | 'th' ] ) <@ VarPosition ;
   ";
+
+
+(************************************************************)
+(* Dimension reduction                                      *)
+(************************************************************)
+
+ebnfReduceDimension = "
+  <reduce-dimension> = ( <reduce-dimension-opening> , ( <to-preposition> | <using-preposition> ) ) &> <number-value> , [ <reduce-dimension-axes> ] ,
+                       [ ( <using-preposition> | <by-preposition> ) &> <reduce-dimension-method> ] <@ ReduceDimension@*Flatten ;
+  <reduce-dimension-opening> = 'reduce' , [ 'the' ] , 'dimension' | 'dimension' , 'reduction' ;
+  <reduce-dimension-axes> = 'topics' | 'variables' | 'columns' | 'axes' ;
+  <reduce-dimension-method> =  <reduce-dimension-svd> | <reduce-dimension-nnmf> <@ ReduceDimensionMethod ;
+  <reduce-dimension-svd> =  'SVD' | 'svd' | 'singular' , 'value' , 'decomposition' | 'SingularValueDecomposition' <@ ReduceDimensionSVD ;
+  <reduce-dimension-nnmf> = 'NNMF' | 'nnmf' | 'NMF' | 'nmf' |
+                            ( 'non' , 'negative' | 'non-negative' ) , 'matrix' , ( 'decomposition' | 'factorization' ) |
+                            'NonNegativeMatrixDecomposition'
+                            <@ ReduceDimensionNNMF ;
+";
 
 
 (************************************************************)
@@ -427,8 +447,8 @@ ebnfSecondOrderCommand = "
 (************************************************************)
 
 ebnfCommand = "
-  <clcon-command> = <load-data> | <data-transformation> | <split-data> |
-              <summarize-data> | <cross-tabulate-data> | <data-outliers> |
+  <clcon-command> = <load-data> | <data-transformation> | <reduce-dimension> |
+              <split-data> | <summarize-data> | <cross-tabulate-data> | <data-outliers> |
               <classifier-creation> | <classifier-ensemble-creation> | <classifier-query> | <classifier-testing> |
               <roc-plot-command> | <verify-command> | <pipeline-command> |
               <second-order-command> ;
@@ -442,7 +462,8 @@ ebnfCommand = "
 res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
         {ebnfCommonParts,
-          ebnfDataLoad, ebnfDataType, ebnfDataTransform, ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
+          ebnfDataLoad, ebnfDataType, ebnfDataTransform, ebnfReduceDimension,
+          ebnfDataStatistics, ebnfSplitting, ebnfDataOutliers,
           ebnfClassifierMaking, ebnfClassifierEnsembleMaking, ebnfClassifierQuery, ebnfClassifierTesting,
           ebnfROCPlot, ebnfVerification, ebnfPipelineCommand,
           ebnfGeneratePipeline, ebnfSecondOrderCommand, ebnfCommand};
