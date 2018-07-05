@@ -1,5 +1,5 @@
 (*
-    Latent semantic analysis workflows grammar in EBNF
+    Agent common commands grammar in EBNF
     Copyright (C) 2018  Anton Antonov
 
     This program is free software: you can redistribute it and/or modify
