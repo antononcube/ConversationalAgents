@@ -217,7 +217,7 @@ ebnfDataStatistics = "
 (************************************************************)
 
 ebnfReduceDimension = "
-  <reduce-dimension> = ( <reduce-dimension-opening> , ( <to-preposition> | <using-preposition> ) ) &> <number-value> , [ <reduce-dimension-axes> ] ,
+  <reduce-dimension> = ( <reduce-dimension-opening> , ( <to-preposition> | <using-preposition> ) ) &> ( <number-value> <& [ <reduce-dimension-axes> ] ) ,
                        [ ( <using-preposition> | <by-preposition> ) &> <reduce-dimension-method> ] <@ ReduceDimension@*Flatten ;
   <reduce-dimension-opening> = 'reduce' , [ 'the' ] , 'dimension' | 'dimension' , 'reduction' ;
   <reduce-dimension-axes> = 'topics' | 'variables' | 'columns' | 'axes' ;
