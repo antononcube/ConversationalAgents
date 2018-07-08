@@ -93,6 +93,23 @@ ebnfCommonParts = "
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
   <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
   <time-series-data> = 'time' , 'series' , [ 'data' ] <@ TimeSeriesData ;
+  <error> = 'error' ;
+  <outliers> = 'outliers' | 'outlier' ;
+  <ingest> = 'ingest' | 'load' | 'use' | 'get' ;
+  <data> = 'data' | 'dataset' | 'time' , 'series' ;
+  <range-spec> = ( 'from' &> <number-value> ) , ( 'to' &> <number-value> ) ,
+                 ( <with-preposition> | [ <with-preposition> ] , 'step' ) &> <number-value> <@ RangeSpec@*Flatten ;
+  <number-value-list> = <number-value> , [ { <list-delimiter> &> <number-value> } ] <@ NumberValueList@*Flatten ;
+";
+
+(************************************************************)
+(* Transform data                                           *)
+(************************************************************)
+
+ebnfDataLoad = "
+  <load-data> = <ingest> , <data> , ( 'with' | 'that' , 'has' ) , 'id' , <data-id> |
+                <ingest> , [ 'the' ] , <data-id> , <data> <@ DataLoad ;
+  <data-id> = '_WordString' <@ DataID ;
 ";
 
 
@@ -106,7 +123,7 @@ ebnfDataTransform = "
   <rescale-axis> = 'rescale' , [ 'the' ] , [ 'x' | 'y' ] , 'axis' <@ RescaleAxis ;
   <rescale-both-axes> = 'rescale' , [ 'the' | 'both' ] , 'axes' <@ RescaleBothAxes ;
   <resample-command> = 'resample' , [ 'the' ] , <time-series-data> ,
-                       [ <using-preposition> &> <interpolation-spec> ] ,
+                       [ <using-preposition> &> <resampling-method-spec> ] ,
                        [ <using-preposition> &> <sampling-step-spec> ] <@ ResampleCommand ;
   <sampling-step-spec> = <default-sampling-step> | 'step' , '_?NumberQ' <@ SamplingStepSpec ;
   <default-sampling-step> = ( 'smallest' , 'difference' | 'default' | 'automatic' ) , 'step' <@ DefaultSamplingStep ;
@@ -114,6 +131,121 @@ ebnfDataTransform = "
   <resampling-method> = 'LinearInterpolation' | 'HoldValueFromLeft' ;
   <resampling-method-name> =  'linear' , 'interpolation' | 'hold' , 'value' , 'from' , 'left' ;
 ";
+
+
+(************************************************************)
+(* Data summaries and statistics                            *)
+(************************************************************)
+
+ebnfDataStatistics = "
+  <data-statistics-command> = <summarize-data> | <cross-tabulate-data> <@ DataStatisticsCommand ;
+  <summarize-data> = 'summarize' , [ 'the' ] , 'data' | <display-directive>  <&
+                     ( [ 'data' ] , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
+  <cross-tabulate-data> = <cross-tabulate-data-simple> | <cross-tabulate-vars> <@ CrossTabulateData ;
+  <cross-tabulate> = 'cross-tabulate' | 'cross' , 'tabulate' | 'xtabs' , [ 'for' ] <@ CrossTabulate ;
+  <cross-tabulate-data-simple> = <cross-tabulate> , [ <split-part> ] , [ 'data' ] <@ CrossTabulateDataSimple ;
+  <cross-tabulate-vars> = <cross-tabulate> , <var-spec> , ( 'vs' | 'against' ) &> <var-spec> ,
+                          [ 'in' ] , [ <split-part> ] , [ 'data' ] <@ CrossTabulateVars@*Flatten ;
+  <var-spec> = <feature-var> | <dependent-var> | ( <var-position> <& [ <variable> ] ) <@ VarSpec ;
+  <variable> = 'variable' | 'column' ;
+  <dependent-var> = ( 'dependent' ) <& <variable> <@ DependentVar ;
+  <feature-var> = ( 'time' | 'input' | 'explaining' ) <& <variable> <@ FeatureVar ;
+  <var-name> = '_String' <@ VarName ;
+  <var-position> = 'last' | ( '_?IntegerQ' <& [ 'st' | 'nd' | 'rd' | 'th' ] ) <@ VarPosition ;
+ ";
+
+
+
+(************************************************************)
+(* Regression                                               *)
+(************************************************************)
+
+ebnfRegression = "
+  <regression-command> = ( <compute-directive> | 'do' ) &> <quantile-regression-spec> <@ ComputeRegression ;
+  <quantile-regression> = 'quantile' , 'regression' | 'QuantileRegression' ;
+  <quantile-regression-spec> = <quantile-regression> ,
+                               [ ( <using-preposition> , [ 'the' ] , [ 'quantiles' ] ) &>  <quantiles-spec> ]
+                               <@ QuantileRegressionSpec ;
+  <quantiles-spec> = { '_?NumberQ' } | <number-value-list> | <range-spec> <@ QuantilesSpec ;
+";
+
+
+(************************************************************)
+(* Regression fit                                           *)
+(************************************************************)
+
+ebnfRegressionFit = "
+  <regression-fit-command> = ( <compute-directive> | 'do' ) &> ( <quantile-regression-fit-spec> | <least-squares-fit> ) <@ ComputeRegression ;
+  <least-squares-fit> = 'least' , 'squares' , [ 'regression' | 'fit' ] | 'LeastSquares' | 'Fit' ;
+  <least-squares-fit-spec> = <least-squares-fit> , <using-preposition> , <basis-functions-spec> <@ LeastSquaresFitSpec ;
+  <quantile-regression-fit> = 'quantile' , 'regression' , 'fit' | 'QuantileRegressionFit' ;
+  <using-basis-functions-phrase> = ( <using-preposition> , [ 'the' ] , [ 'basis' ] , [ 'functions' ] ) &> <basis-functions-spec> ;
+  <using-quantiles-phrase> = ( <using-preposition> , [ 'the' ] , [ 'quantiles' ] ) &> <quantiles-spec> ;
+  <quantile-regression-fit-spec> = <quantile-regression-fit> &>
+                                   ( <using-basis-functions-phrase> , [ 'and' ] , [ <using-quantiles-phrase> ] |
+                                     <using-quantiles-phrase> , [ 'and' ] , [ <using-basis-functions-phrase> ] )
+                                   <@ QuantileRegressionFitSpec ;
+  <basis-functions-spec> = { '_String' } <@ BasisFunctionsSpec@*Flatten@*List ;
+";
+
+
+(************************************************************)
+(* Find outliers                                            *)
+(************************************************************)
+
+ebnfFindOutliers = "
+  <find-outliers-command> = <find-outliers-simple> | <find-type-outliers> | <find-outliers-spec> <@ FindOutliersCommand ;
+  <outliers-phrase> = [ 'the' ] , [ <data> ] , 'outliers' ;
+  <find-outliers-simple> = <compute-and-display> <& <outliers-phrase> <@ FindOutliersSimple ;
+  <outlier-type> = ( [ 'the' ] , [ <data> ] ) &> ( 'top' | 'bottom' ) <@ OutlierType ;
+  <find-type-outliers> = <compute-and-display> , ( <outlier-type> <& <outliers-phrase> ) ,
+                         [ ( <with-preposition> , [ [ 'the' ] , 'quantile' ] ) &> <number-value> , [ 'quantile' ] ]
+                         <@ FindTypeOutliers@*Flatten ;
+  <find-outliers-spec> = <compute-and-display> , <outliers-phrase> , <with-preposition> ,
+                         [ ( [ 'the' ] , 'quantiles' ] ) &> <quantiles-spec> , [ 'quantiles' ] <@ FindTypeOutliers@Flatten ;
+";
+
+
+(************************************************************)
+(* Data and regression functions plot                       *)
+(************************************************************)
+
+ebnfPlot = "
+  <plot-command> = <display-directive> , [ <diagram-type> ] , <diagram>  <@ DataAndRegressionFunctionsPlot;
+  <diagram-type> = <regression-curve-spec> | <error> | <outliers> <@ DiagramType ;
+  <regression-curve-spec> = [ 'fitted' ] , ( <regression-function> | <regression-function-name> ) <& [ 'curve' | 'curves' | 'function' | 'functions' ] ;
+  <diagram> = ( 'plot' | 'plots' | 'graph' | 'chart' ) <@ Diagram ;
+  <regression-function-list> = ( <regression-function> | <regression-function-name> ) ,
+                               [ { <list-delimiter> &> ( <regression-function> | <regression-function-name> ) } ] <@ RegressionFunctionList@*Flatten ;
+  <regression-function> =  'QuantileRegression' | 'LeastSquares'  <@ RegressionFunction ;
+  <regression-function-name> = 'quantile' , [ 'regression' ] | 'least' , 'squares' , [ 'regression' ] <@ RegressionFunctionName ;
+";
+
+
+
+(************************************************************)
+(* General pipeline commands                                *)
+(************************************************************)
+(* This has to be refactored at some point since it is used in other workflow grammars. *)
+
+ebnfPipelineCommand = "
+  <pipeline-command> = <get-pipeline-value> | <get-pipeline-context> |
+                       <pipeline-context-add> | <pipeline-context-retrieve> <@ PipelineCommand ;
+  <pipeline-filler> = [ 'the' ] , [ 'current' ] , [ 'pipeline' ] ;
+  <pipeline-value> = <pipeline-filler> &> 'value' <@ PipelineValue ;
+  <get-pipeline-value> = <display-directive> &> <pipeline-value> <@ GetPipelineValue ;
+  <pipeline-context> =  <pipeline-filler> &> 'context' <@ PipelineContext ;
+  <pipeline-context-keys> =  <pipeline-filler> &> 'context' , 'keys' <@ PipelineContextKeys ;
+  <context-key> = '_String' <@ ContextKey ;
+  <pipeline-context-value> = ( <pipeline-filler> , 'context' , 'value' , ( 'for' | 'of' ) ) &> <context-key> |
+                             ( ( 'value' , ( 'for' | 'of' ) , [ 'the' ] , 'context' , ( 'key' | 'element' | 'variable' ) ) &> <context-key>)
+                             <@ PipelineContextValue ;
+  <get-pipeline-context> = <display-directive> , ( <pipeline-context> | <pipeline-context-keys> | <pipeline-context-value> ) <@ GetPipelineContext ;
+  <pipeline-context-add> = ( ( 'put' | 'add' ) , ( 'in' | 'into' | 'to' ) , 'context' , 'as' ) &> <context-key> <@ PipelineContextAdd ;
+  <pipeline-context-retrieve> = ( 'get' | 'retrieve' ) &>
+                                ( ( 'from' , 'context' ) &> <context-key> | <context-key> <& ( 'from' , 'context' ) )
+                                <@ PipelineContextRetrieve ;
+  ";
 
 
 (************************************************************)
@@ -135,10 +267,9 @@ ebnfSecondOrderCommand = "
 (************************************************************)
 
 ebnfCommand = "
-  <qrmon-command> = <load-data> |  <data-transformation-command> | <data-summary-command> |
-              <regression> | <regression-fit> | <outliers> |
-              <plot-command> | <error-plot-command> | <outliers-plot-command> |
-              <pipeline-command> | <second-order-command> ;
+  <qrmon-command> = <load-data> |  <data-transformation-command> | <data-statistics-command> |
+                    <regression-command> | <regression-fit-command> | <find-outliers-command> |
+                    <plot-command> |  <pipeline-command> | <second-order-command> ;
   ";
 
 
@@ -152,7 +283,7 @@ res =
           ebnfDataLoad, ebnfDataTransform,
           ebnfDataStatistics, ebnfFindOutliers,
           ebnfRegression, ebnfRegressionFit,
-          ebnfOutliersPlot, ebnfRegressionPlot, ebnfErrorPlot,
+          ebnfPlot,
           ebnfPipelineCommand, ebnfGeneratePipeline, ebnfSecondOrderCommand,
           ebnfCommand};
 (* LeafCount /@ res *)
@@ -178,8 +309,8 @@ QRMonCommandsSubGrammars[opts:OptionsPattern[]] :=
       res =
           Association[
             Map[
-              StringReplace[#, "ClassifierWorkflowsGrammar`Private`"->"" ] -> ToExpression[#] &,
-              Names["ClassifierWorkflowsGrammar`Private`ebnf*"]
+              StringReplace[#, "TimeSeriesWorkflowsGrammar`Private`"->"" ] -> ToExpression[#] &,
+              Names["TimeSeriesWorkflowsGrammar`Private`ebnf*"]
             ]
           ];
 
