@@ -122,14 +122,14 @@ ebnfDataTransform = "
   <rescale-command> = <rescale-axis> | <rescale-both-axes> ;
   <rescale-axis> = 'rescale' , [ 'the' ] , [ 'x' | 'y' ] , 'axis' <@ RescaleAxis ;
   <rescale-both-axes> = 'rescale' , [ 'the' | 'both' ] , 'axes' <@ RescaleBothAxes ;
-  <resample-command> = 'resample' , [ 'the' ] , <time-series-data> ,
+  <resample-command> = 'resample' , [ 'the' ] , [ <time-series-data> ] ,
                        [ <using-preposition> &> <resampling-method-spec> ] ,
-                       [ <using-preposition> &> <sampling-step-spec> ] <@ ResampleCommand ;
+                       [ <using-preposition> &> <sampling-step-spec> ] <@ ResampleCommand@Flatten ;
   <sampling-step-spec> = <default-sampling-step> | 'step' , '_?NumberQ' <@ SamplingStepSpec ;
   <default-sampling-step> = ( 'smallest' , 'difference' | 'default' | 'automatic' ) , 'step' <@ DefaultSamplingStep ;
-  <resampling-method-spec> = '<resampling-method> | <resampling-method-name> ;
-  <resampling-method> = 'LinearInterpolation' | 'HoldValueFromLeft' ;
-  <resampling-method-name> =  'linear' , 'interpolation' | 'hold' , 'value' , 'from' , 'left' ;
+  <resampling-method-spec> = <resampling-method> | <resampling-method-name> ;
+  <resampling-method> = 'LinearInterpolation' | 'HoldValueFromLeft' <@ ResamplingMethod@*Flatten ;
+  <resampling-method-name> =  'linear' , 'interpolation' | 'hold' , 'value' , 'from' , 'left' <@ ResamplingMethodName@*Flatten ;
 ";
 
 
@@ -164,9 +164,20 @@ ebnfRegression = "
   <regression-command> = ( <compute-directive> | 'do' ) &> <quantile-regression-spec> <@ ComputeRegression ;
   <quantile-regression> = 'quantile' , 'regression' | 'QuantileRegression' ;
   <quantile-regression-spec> = <quantile-regression> ,
-                               [ ( <using-preposition> , [ 'the' ] , [ 'quantiles' ] ) &>  <quantiles-spec> ]
+                               [ <using-preposition>  &>  <quantile-regression-spec-element-list> ]
                                <@ QuantileRegressionSpec ;
+  <quantile-regression-spec-element> = <quantiles-spec-phrase> | <knots-spec-phrase> | <interpolation-order-spec-phrase> ;
+  <quantile-regression-spec-element-list> = <quantile-regression-spec-element> ,
+                                            [ { ( <list-delimiter> , [ <using-preposition> ] ) &> <quantile-regression-spec-element> } ]
+                                            <@ QuantileRegressionSpecElementList@*Flatten ;
+  <quantiles-spec-phrase> = ( [ 'the' ] , ( 'quantiles' | 'quantile' , [ 'list' ] ) ) &> <quantiles-spec> |
+                               [ 'the' ] &> <quantiles-spec> <& ( 'quantiles' | 'quantile' , [ 'list' ] ) ;
   <quantiles-spec> = { '_?NumberQ' } | <number-value-list> | <range-spec> <@ QuantilesSpec ;
+  <knots-spec-phrase> = ( [ 'the' ] , 'knots' ) &> <knots-spec> | <knots-spec> <& 'knots' ;
+  <knots-spec> = '_?IntegerQ' | <number-value-list> | <range-spec> <@ KnotsSpec ;
+  <interpolation-order-spec-phrase> = ( [ 'interpolation' ] , ( 'order' | 'degree' ) ) &> <interpolation-order-spec> |
+                                      <interpolation-order-spec> <& ( [ 'interpolation' ] , ( 'order' | 'degree' ) );
+  <interpolation-order-spec> = '_?IntegerQ' <@ InterpolationOrderSpec ;
 ";
 
 
