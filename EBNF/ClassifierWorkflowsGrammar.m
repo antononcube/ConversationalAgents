@@ -407,6 +407,7 @@ ebnfVerification = "
 (************************************************************)
 (* General pipeline commands                                *)
 (************************************************************)
+(* This has to be refactored at some point since it is used in other workflow grammars. *)
 
 ebnfPipelineCommand = "
   <pipeline-command> = <get-pipeline-value> | <get-pipeline-context> |

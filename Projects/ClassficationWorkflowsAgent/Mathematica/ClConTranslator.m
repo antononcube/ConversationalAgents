@@ -26,8 +26,8 @@
 (* :Author: Anton Antonov *)
 (* :Date: 2018-01-30 *)
 
-(* :Package Version: 0.1 *)
-(* :Mathematica Version: *)
+(* :Package Version: 0.5 *)
+(* :Mathematica Version: 11.3 *)
 (* :Copyright: (c) 2018 Anton Antonov *)
 (* :Keywords: *)
 (* :Discussion:
