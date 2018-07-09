@@ -103,13 +103,14 @@ ebnfCommonParts = "
 ";
 
 (************************************************************)
-(* Transform data                                           *)
+(* Data load                                                *)
 (************************************************************)
 
 ebnfDataLoad = "
   <load-data> = <ingest> , <data> , ( 'with' | 'that' , 'has' ) , 'id' , <data-id> |
                 <ingest> , [ 'the' ] , <data-id> , <data> <@ DataLoad ;
   <data-id> = '_WordString' <@ DataID ;
+  <load-cloud-data> = <load-data> , 'from' , [ 'the' ] , 'cloud' <@ CloudDataLoad ;
 ";
 
 
@@ -124,11 +125,11 @@ ebnfDataTransform = "
   <rescale-both-axes> = 'rescale' , [ 'the' | 'both' ] , 'axes' <@ RescaleBothAxes ;
   <resample-command> = 'resample' , [ 'the' ] , [ <time-series-data> ] ,
                        [ <using-preposition> &> <resampling-method-spec> ] ,
-                       [ <using-preposition> &> <sampling-step-spec> ] <@ ResampleCommand@Flatten ;
-  <sampling-step-spec> = <default-sampling-step> | 'step' , '_?NumberQ' <@ SamplingStepSpec ;
+                       [ <using-preposition> &> <sampling-step-spec> ] <@ ResampleCommand@*Flatten ;
+  <sampling-step-spec> = <default-sampling-step> | 'step' &> <number-value> <@ SamplingStepSpec ;
   <default-sampling-step> = ( 'smallest' , 'difference' | 'default' | 'automatic' ) , 'step' <@ DefaultSamplingStep ;
   <resampling-method-spec> = <resampling-method> | <resampling-method-name> ;
-  <resampling-method> = 'LinearInterpolation' | 'HoldValueFromLeft' <@ ResamplingMethod@*Flatten ;
+  <resampling-method> = 'LinearInterpolation' | 'HoldValueFromLeft' <@ ResamplingMethod ;
   <resampling-method-name> =  'linear' , 'interpolation' | 'hold' , 'value' , 'from' , 'left' <@ ResamplingMethodName@*Flatten ;
 ";
 
@@ -143,9 +144,9 @@ ebnfDataStatistics = "
                      ( [ 'data' ] , ( 'summary' | 'summaries' ) ) <@ SummarizeData ;
   <cross-tabulate-data> = <cross-tabulate-data-simple> | <cross-tabulate-vars> <@ CrossTabulateData ;
   <cross-tabulate> = 'cross-tabulate' | 'cross' , 'tabulate' | 'xtabs' , [ 'for' ] <@ CrossTabulate ;
-  <cross-tabulate-data-simple> = <cross-tabulate> , [ <split-part> ] , [ 'data' ] <@ CrossTabulateDataSimple ;
-  <cross-tabulate-vars> = <cross-tabulate> , <var-spec> , ( 'vs' | 'against' ) &> <var-spec> ,
-                          [ 'in' ] , [ <split-part> ] , [ 'data' ] <@ CrossTabulateVars@*Flatten ;
+  <cross-tabulate-data-simple> = <cross-tabulate> , [ [ 'the' ] , <data> ] <@ CrossTabulateDataSimple ;
+  <cross-tabulate-vars> = <cross-tabulate> , <var-spec> , ( 'vs' | 'against' ) &> <var-spec>
+                          <@ CrossTabulateVars@*Flatten ;
   <var-spec> = <feature-var> | <dependent-var> | ( <var-position> <& [ <variable> ] ) <@ VarSpec ;
   <variable> = 'variable' | 'column' ;
   <dependent-var> = ( 'dependent' ) <& <variable> <@ DependentVar ;
