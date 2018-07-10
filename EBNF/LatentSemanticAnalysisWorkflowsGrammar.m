@@ -174,17 +174,17 @@ ebnfLSIApplyFuncs = "
   <lsi-global-func-entropy> = 'Entropy' | 'entropy' <@ LSIGlobalFuncEntropy ;
   <lsi-local-func> = <lsi-local-func-frequency> | <lsi-local-func-binary> <@ LSILocalFunc;
   <lsi-local-func-frequency> = 'frequency' <@ LSILocalFuncFrequency ;
-  <lsi-local-func-binary> = 'binary' <& [ 'frequency' ] <@ LSILocalFuncBinary@*Flatten ;
+  <lsi-local-func-binary> = 'binary' <& [ 'frequency' ] <@ LSILocalFuncBinary ;
   <lsi-normal-func> = ( <lsi-normal-func-sum> | <lsi-normal-func-max> | <lsi-normal-func-cosine> ) <& [ 'normalization' ] <@ LSINormalFunc@*Flatten ;
   <lsi-normal-func-sum> = 'sum' <@ LSILocalFuncSum ;
   <lsi-normal-func-max> = 'cosine' <@ LSILocalFuncMax ;
   <lsi-normal-func-cosine> = 'cosine' <@ LSILocalFuncCosine ;
   ";
 
+
 (************************************************************)
 (* LSI topics extraction commands                           *)
 (************************************************************)
-
 
 ebnfTopicsExtraction = "
   <topics-extraction-command> = ( <compute-directive> | 'extract' ) &> <topics-spec> <@ TopicsExtractionCommand ;
@@ -193,6 +193,7 @@ ebnfTopicsExtraction = "
   <topics-max-iterations> = ( 'max' | 'maximum' ) , ( 'iterations' | 'steps' ) , <number-value> ;
   <topics-initialization> = [ <with-preposition> ] , [ 'random' ] , <number-value> , 'columns' , 'clusters' ;
   ";
+
 
 (************************************************************)
 (* General pipeline commands                                *)

@@ -90,7 +90,6 @@ week_of_year : ( 'the' )? 'week' week_number_range 'of' year ;
 
 month_name_long : 'january' | 'february' | 'march' | 'april' | 'may' | 'june' | 'july' | 'august' | 'september' | 'october' | 'november' | 'december' ;
 
-
 month_name_abbr : 'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec' ;
 
 month_name : month_name_long | month_name_abbr ;
