@@ -61,6 +61,11 @@
 
 *)
 
+If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
+  Echo["FunctionalParsers.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
+];
+
 BeginPackage["TimeSeriesWorkflowsGrammar`"]
 
 pQRMONCOMMAND::usage = "Parses natural language commands for time series workflows."
@@ -93,7 +98,7 @@ ebnfCommonParts = "
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
   <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
   <time-series-data> = 'time' , 'series' , [ 'data' ] <@ TimeSeriesData ;
-  <error> = 'error' ;
+  <error> = 'error' | 'errors' ;
   <outliers> = 'outliers' | 'outlier' ;
   <ingest> = 'ingest' | 'load' | 'use' | 'get' ;
   <data> = 'data' | 'dataset' | 'time' , 'series' ;
@@ -214,7 +219,7 @@ ebnfFindOutliers = "
                          [ ( <with-preposition> , [ [ 'the' ] , 'quantile' ] ) &> <number-value> , [ 'quantile' ] ]
                          <@ FindTypeOutliers@*Flatten ;
   <find-outliers-spec> = <compute-and-display> , <outliers-phrase> , <with-preposition> ,
-                         [ ( [ 'the' ] , 'quantiles' ] ) &> <quantiles-spec> , [ 'quantiles' ] <@ FindTypeOutliers@Flatten ;
+                         ( [ [ 'the' ] , 'quantiles' ] ) &> <quantiles-spec> , [ 'quantiles' ] <@ FindTypeOutliers@Flatten ;
 ";
 
 
@@ -223,10 +228,13 @@ ebnfFindOutliers = "
 (************************************************************)
 
 ebnfPlot = "
-  <plot-command> = <display-directive> , [ <diagram-type> ] , <diagram>  <@ DataAndRegressionFunctionsPlot;
+  <plot-command> = <display-directive> , [ <plot-elements-list> ] , ( <date-list-diagram> | <diagram> )  <@ DataAndRegressionFunctionsPlot;
+  <plot-elements-list> = ( <diagram-type> | <data> ) , { <list-delimiter> &> ( <diagram-type> | <data> ) } <@ Flatten ;
   <diagram-type> = <regression-curve-spec> | <error> | <outliers> <@ DiagramType ;
   <regression-curve-spec> = [ 'fitted' ] , ( <regression-function> | <regression-function-name> ) <& [ 'curve' | 'curves' | 'function' | 'functions' ] ;
-  <diagram> = ( 'plot' | 'plots' | 'graph' | 'chart' ) <@ Diagram ;
+  <date-list> = ( 'date' | 'dates') , [ 'list' ] ;
+  <date-list-diagram> = ( <date-list> &>  <diagram> ) | <diagram> <& ( <with-preposition> , ( 'dates' | 'date' , 'axis' ) ) <@ DateListDiagram;
+  <diagram> =  ( 'plot' | 'plots' | 'graph' | 'chart' ) <@ Diagram ;
   <regression-function-list> = ( <regression-function> | <regression-function-name> ) ,
                                [ { <list-delimiter> &> ( <regression-function> | <regression-function-name> ) } ] <@ RegressionFunctionList@*Flatten ;
   <regression-function> =  'QuantileRegression' | 'LeastSquares'  <@ RegressionFunction ;
