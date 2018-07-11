@@ -54,15 +54,15 @@ TGetValue[parsed_, head_] :=
 (* Data statistics                                         *)
 (***********************************************************)
 
+Clear[TDataStatisticsCommand]
+TDataStatisticsCommand[parsed_] := parsed;
+
 Clear[TSummarizeData]
 TSummarizeData[parsed_] :=
     Block[{},
-      If[FreeQ[parsed, _SplitPartList | _SplitPart],
-        QRMonEchoFunctionValue["summaries:",
-          Multicolumn[#, 5] & /@ (RecordsSummary /@ #) &],
-        QRMonEchoFunctionValue["summaries:",
-          Multicolumn[#, 5] & /@ (RecordsSummary /@ #) &]
-      ]
+      (*Fold[ QRMonBind, QRMonUnit[##], {QRMonGetData, QRMonEchoDataSummary}]&*)
+      Function[{x, c},
+        QRMonUnit[x,c]\[DoubleLongRightArrow]QRMonGetData\[DoubleLongRightArrow]QRMonEchoDataSummary]
     ];
 
 
@@ -79,6 +79,81 @@ TCrossTabulateVars[parsed_] :=
 
     ];
 
+
+(***********************************************************)
+(* Regression                                              *)
+(***********************************************************)
+
+ClearAll[TNumberValueList]
+TNumberValueList[parsed_] :=
+    Map[TGetValue[#,NumericValue]&, parsed];
+
+ClearAll[TRangeSpec]
+TRangeSpec[parsed_] :=
+    Range @@ Map[TGetValue[#,NumericValue]&, parsed];
+
+ClearAll[ComputeRegression,TComputeRegression]
+TComputeRegression[parsed_] :=
+    Block[{knots=6, intOrder=2, qs = {0.25, 0.5, 0.75} },
+
+      If[!FreeQ[parsed, KnotsSpec],
+        knots = TGetValue[ parsed, KnotsSpec]
+      ];
+
+      If[!FreeQ[parsed, InterpolationOrderSpec],
+        intOrder = TGetValue[ parsed, InterpolationOrderSpec]
+      ];
+
+      If[!FreeQ[parsed, QuantilesSpec],
+        qs = TGetValue[ parsed, QuantilesSpec];
+      ];
+
+      QRMonQuantileRegression[ knots, qs, InterpolationOrder->intOrder]
+
+    ];
+
+
+(***********************************************************)
+(* Data and regression functions plot                      *)
+(***********************************************************)
+
+ClearAll[TDataAndRegressionFunctionsPlot]
+TDataAndRegressionFunctionsPlot[parsed_] :=
+    Block[{diagramType = None, dateListPlotQ = False},
+
+      If[!FreeQ[parsed, DiagramType],
+        diagramType = TGetValue[parsed, DiagramType];
+      ];
+
+      If[!FreeQ[parsed, DateListDiagram],
+        dateListPlotQ = True;
+      ];
+
+      Which[
+
+        diagramType === None && !dateListPlotQ,
+        QRMonPlot,
+
+        diagramType === None && dateListPlotQ,
+        QRMonDateListPlot,
+
+        ( diagramType == "error" || diagramType == "errors" ) && !dateListPlotQ,
+        QRMonErrorPlots,
+
+        ( diagramType == "error" || diagramType == "errors" ) && dateListPlotQ,
+        QRMonErrorPlots["DateListPlot" -> True],
+
+        ( diagramType == "outlier" || diagramType == "outliers" ) && !dateListPlotQ,
+        QRMonOutliersPlot,
+
+        ( diagramType == "outlier" || diagramType == "outliers" ) && dateListPlotQ,
+        QRMonOutliersPlot["DateListPlot" -> True],
+
+        True,
+        Echo["Cannot translate data and regression functions plot command.", "TDataAndRegressionFunctionsPlot:"];
+        Return[$QRMonFailure]
+      ]
+    ];
 
 
 (***********************************************************)
@@ -186,7 +261,12 @@ TranslateToQRMon[commands:{_String..}, parser_Symbol:pQRMONCOMMAND, opts:Options
 TranslateToQRMon[pres_] :=
     Block[{
       LoadData = TLoadData,
+      DataStatisticsCommand = TDataStatisticsCommand,
       SummarizeData = TSummarizeData,
+      DataAndRegressionFunctionsPlot = TDataAndRegressionFunctionsPlot,
+      NumberValueList = TNumberValueList,
+      RangeSpec = TRangeSpec,
+      ComputeRegression = TComputeRegression,
       PipelineCommand = TPipelineCommand,
       GetPipelineValue = TGetPipelineValue,
       GetPipelineContext = TGetPipelineContext,
