@@ -105,6 +105,7 @@ ebnfCommonParts = "
   <range-spec> = ( 'from' &> <number-value> ) , ( 'to' &> <number-value> ) ,
                  ( <with-preposition> | [ <with-preposition> ] , 'step' ) &> <number-value> <@ RangeSpec@*Flatten ;
   <number-value-list> = <number-value> , [ { <list-delimiter> &> <number-value> } ] <@ NumberValueList@*Flatten ;
+  <wl-expr> = '_String' <@ WLExpression ;
 ";
 
 (************************************************************)
@@ -124,7 +125,7 @@ ebnfDataLoad = "
 (************************************************************)
 
 ebnfDataTransform = "
-  <data-transformation-command> = <rescale-command> | <resample-command> ;
+  <data-transformation-command> = <rescale-command> | <resample-command> | <moving-func-command> ;
   <rescale-command> = <rescale-axis> | <rescale-both-axes> ;
   <rescale-axis> = 'rescale' , [ 'the' ] , [ 'x' | 'y' ] , 'axis' <@ RescaleAxis ;
   <rescale-both-axes> = 'rescale' , [ 'the' | 'both' ] , 'axes' <@ RescaleBothAxes ;
@@ -136,6 +137,12 @@ ebnfDataTransform = "
   <resampling-method-spec> = <resampling-method> | <resampling-method-name> ;
   <resampling-method> = 'LinearInterpolation' | 'HoldValueFromLeft' <@ ResamplingMethod ;
   <resampling-method-name> =  'linear' , 'interpolation' | 'hold' , 'value' , 'from' , 'left' <@ ResamplingMethodName@*Flatten ;
+  <moving-func-name> = 'moving' &> ( 'average' | 'median' | 'Mean' | 'Median' ) <@ MovingFunctionName ;
+  <moving-map-func> = ( 'moving' , 'map' ) &> <wl-expr> <@ MovingMapFunction ;
+  <moving-func-spec> = <moving-func-name> | <moving-map-func> <@ MovingFunctionSpec ;
+  <moving-func-command> = ( [ <compute-directive> ] &> <moving-func-spec> <& <using-preposition> ) ,
+                             ( <number-value> <& [ 'elements' ] | ( [ 'the' ] , [ 'weights' ] ) &> <number-value-list> <& [ 'weights' ] )
+                             <@ MovingFunctionCommand ;
 ";
 
 
@@ -314,6 +321,8 @@ res =
 (************************************************************)
 
 (* No parser modification. *)
+
+pWLEXPR = ParseApply[ ToExpression, ParsePredicate[SyntaxQ[#]&] ];
 
 (************************************************************)
 (* Grammar exposing functions                               *)
