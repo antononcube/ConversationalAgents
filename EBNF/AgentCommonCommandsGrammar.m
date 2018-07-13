@@ -34,11 +34,7 @@
 
    # In brief
 
-   The grammar is intended to interface the creation and testing of text latent semantic analysis workflows.
-
-   The grammar is partitioned into separate sub-grammars, each sub-grammar corresponding to a conceptual set of
-   functionalities. (The intent is to facilitate understanding and further development.)
-
+   The grammar is intended to interface the parsing of common conversational agent commands.
 
    # How to use
 

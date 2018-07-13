@@ -1,5 +1,5 @@
 (*
-    Agent common commands grammar in EBNF
+    Date-time specifications grammar in EBNF
     Copyright (C) 2018  Anton Antonov
 
     This program is free software: you can redistribute it and/or modify
@@ -25,20 +25,16 @@
 (* :Author: Anton Antonov *)
 (* :Date: 2018-03-13 *)
 
-(* :Package Version: 0.1 *)
+(* :Package Version: 0.8 *)
 (* :Mathematica Version: 11.3 *)
 (* :Copyright: (c) 2018 Anton Antonov *)
-(* :Keywords: common command, functional parsers, EBNF *)
+(* :Keywords: date-time, datetime, functional parsers, EBNF *)
 (* :Discussion:
 
 
    # In brief
 
-   The grammar is intended to interface the creation and testing of text latent semantic analysis workflows.
-
-   The grammar is partitioned into separate sub-grammars, each sub-grammar corresponding to a conceptual set of
-   functionalities. (The intent is to facilitate understanding and further development.)
-
+   The grammar is intended to facilitate parsing of common date and date-time specifications.
 
    # How to use
 
