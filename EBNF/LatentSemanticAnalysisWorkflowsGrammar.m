@@ -285,10 +285,7 @@ LSAMonCommandsSubGrammars[opts:OptionsPattern[]] :=
             ]
           ];
 
-      If[ normalizeQ,
-        Map[StringReplace[#, {"&>" -> ",", "<&" -> ",", ("<@" ~~ (Except[{">", "<"}] ..) ~~ ";") :> ";"}]&, res],
-        res
-      ]
+      If[ normalizeQ, Map[GrammarNormalize, res], res ]
     ];
 
 
@@ -307,10 +304,7 @@ LSAMonCommandsGrammar[opts:OptionsPattern[]] :=
             "\n"
           ];
 
-      If[ normalizeQ,
-        StringReplace[res, {"&>" -> ",", "<&" -> ",", ("<@" ~~ (Except[{">", "<"}] ..) ~~ ";") :> ";"}],
-        res
-      ]
+      If[ normalizeQ, GrammarNormalize[res], res ]
     ];
 
 End[] (* `Private` *)
