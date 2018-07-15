@@ -25,16 +25,17 @@
 (* :Author: Anton Antonov *)
 (* :Date: 2018-07-15 *)
 
-(* :Package Version: 0.1 *)
+(* :Package Version: 0.7 *)
 (* :Mathematica Version: *)
 (* :Copyright: (c) 2018 Anton Antonov *)
 (* :Keywords: *)
 (* :Discussion: *)
 
-(*BeginPackage["DateTimeSpecTranslator`"]*)
-(** Exported symbols added here with SymbolName::usage *)
+BeginPackage["DateTimeSpecTranslator`"]
 
-(*Begin["`Private`"]*)
+ToDateObject::usage = "Converts parsing results of date-time specifications into DateObject."
+
+Begin["`Private`"]
 
 Clear[TDateTimeSpec]
 TDateTimeSpec[parsed_] :=
@@ -47,26 +48,22 @@ TDateTimeSpec[parsed_] :=
 Clear[TDateFull]
 TDateFull[parsed_] := parsed;
 
-Select[
-  StringSplit[
-    "'january' | 'february' | 'march' | 'april' | 'may' | 'june' | 'july' | 'august' | 'september' | 'october' | 'november' | 'december'",
-    {"|", "'"}], StringLength[#] > 2 &]
-
-
 aMonthNameToInteger =
     Join[
       AssociationThread[{"january", "february", "march", "april", "may",
         "june", "july", "august", "september", "october", "november",
-        "december"}, Range[12]],
-      AssociationThread[{"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"}, Range[12]]
+        "december"},
+        Range[12]],
+      AssociationThread[
+        {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"},
+        Range[12]]
     ];
 
 Clear[TMonthName]
 TMonthName[parsed_] := Month[aMonthNameToInteger[parsed]];
 
 Clear[TTimeSpec]
-TTimeSpec[parsed_] :=
-    AssociationThread[Map[ToString@*Head, parsed], Map[First, parsed]];
+TTimeSpec[parsed_] := AssociationThread[Map[ToString@*Head, parsed], Map[First, parsed]];
 
 Clear[TDateSpec]
 TDateSpec[parsed_] :=
@@ -89,16 +86,24 @@ TDateSpec[parsed_] :=
     ];
 
 Clear[ToDateObject]
-ToDateObject[pres_]:=
-    Block[{
-      DateTimeSpec = TDateTimeSpec,
-      MonthName = TMonthName,
-      DateFull = TDateFull,
-      TimeSpec = TTimeSpec,
-      DateSpec = TDateSpec},
-      pres
-    ]
+ToDateObject[pres_, context_String:"Global`"]:=
+    With[{
+      DateTimeSpec = ToExpression[context<>"DateTimeSpec"],
+      MonthName = ToExpression[context<>"MonthName"],
+      DateFull = ToExpression[context<>"DateFull"],
+      TimeSpec = ToExpression[context<>"TimeSpec"],
+      DateSpec = ToExpression[context<>"DateSpec"]
+    },
+      Block[{
+        DateTimeSpec = TDateTimeSpec,
+        MonthName = TMonthName,
+        DateFull = TDateFull,
+        TimeSpec = TTimeSpec,
+        DateSpec = TDateSpec},
+        pres
+      ]
+    ];
 
-(*End[] * `Private` *)
+End[] (* `Private` *)
 
-(*EndPackage[]*)
+EndPackage[]
