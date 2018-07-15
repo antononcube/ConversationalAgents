@@ -40,7 +40,7 @@ Clear[TDateTimeSpec]
 TDateTimeSpec[parsed_] :=
     Block[{keys, aSpec},
       keys = {"Year", "Month", "Day", "Hour", "Minute", "Second"};
-      aSpec = Join[Join @@ parsed, AssociationThread[keys, Date[]]];
+      aSpec = Join[AssociationThread[keys, Date[]], Join @@ parsed];
       DateObject[Map[aSpec[#] &, Most[keys]]]
     ];
 
@@ -49,20 +49,16 @@ TDateFull[parsed_] := parsed;
 
 Select[
   StringSplit[
-    "'january' | 'february' | 'march' | 'april' | 'may' | 'june' | \
-'july' | 'august' | 'september' | 'october' | 'november' | \
-'december'", {"|", "'"}], StringLength[#] > 2 &]
+    "'january' | 'february' | 'march' | 'april' | 'may' | 'june' | 'july' | 'august' | 'september' | 'october' | 'november' | 'december'",
+    {"|", "'"}], StringLength[#] > 2 &]
 
-Out[47]= {"january", "february", "march", "april", "may", "june",
-  "july", "august", "september", "october", "november", "december"}
 
-In[48]:= aMonthNameToInteger =
+aMonthNameToInteger =
     Join[
       AssociationThread[{"january", "february", "march", "april", "may",
         "june", "july", "august", "september", "october", "november",
         "december"}, Range[12]],
-      AssociationThread[{"jan", "feb", "mar", "apr", "may", "jun", "jul",
-        "aug", "sep", "oct", "nov", "dec"}, Range[12]]
+      AssociationThread[{"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"}, Range[12]]
     ];
 
 Clear[TMonthName]
