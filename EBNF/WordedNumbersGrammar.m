@@ -116,12 +116,12 @@ ebnfWordedNumberRule = "
   <worded-number-up-to-100> = <name-up-to-19> | <name-of-10s> , [ '\[Hyphen]' ] &> [ <name-1-to-10> ] <@ TotalFlatten ;
   <worded-number-1000s> = <worded-number-up-to-1000> , <name-of-1000> <@ TimesFlatten ;
   <worded-number-up-to-1000> = <worded-number-up-to-100> |
-                                <worded-number-100s> , [ [ 'and' ] &> <worded-number-up-to-100> ] <@ TotalFlatten ;
+                                <worded-number-100s> , [ [ 'and' | ',' ] &> <worded-number-up-to-100> ] <@ TotalFlatten ;
   <worded-number-up-to-1000000> = <worded-number-up-to-1000> |
-                                   <worded-number-1000s> , [ [ 'and' ] &> <worded-number-up-to-1000> ] <@ TotalFlatten ;
+                                   <worded-number-1000s> , [ [ 'and' | ',' ] &> <worded-number-up-to-1000> ] <@ TotalFlatten ;
   <worded-number-1000000s> = <worded-number-up-to-1000000> , <name-of-1000000> <@ TimesFlatten ;
   <worded-number-up-to-bil> = <worded-number-up-to-1000000> |
-                               <worded-number-1000000s> , [ <worded-number-up-to-1000000> ] <@ TotalFlatten ;
+                               <worded-number-1000000s> , [ [ 'and' | ',' ] &> <worded-number-up-to-1000000> ] <@ TotalFlatten ;
   ";
 
 allRules =
