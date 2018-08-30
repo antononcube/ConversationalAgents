@@ -92,7 +92,7 @@ ClearAll[TRangeSpec]
 TRangeSpec[parsed_] :=
     Range @@ Map[TGetValue[#,NumericValue]&, parsed];
 
-ClearAll[ComputeRegression,TComputeRegression]
+ClearAll[TComputeRegression]
 TComputeRegression[parsed_] :=
     Block[{knots=6, intOrder=2, qs = {0.25, 0.5, 0.75} },
 
