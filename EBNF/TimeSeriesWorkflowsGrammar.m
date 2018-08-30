@@ -57,7 +57,7 @@
 
    Anton Antonov
    Windermere, FL, USA
-   2017-07-07
+   2018-07-07
 
 *)
 
@@ -235,7 +235,7 @@ ebnfFindOutliers = "
 (************************************************************)
 
 ebnfPlot = "
-  <plot-command> = <display-directive> , [ <plot-elements-list> ] , ( <date-list-diagram> | <diagram> )  <@ DataAndRegressionFunctionsPlot;
+  <plot-command> = <display-directive> , [ <plot-elements-list> ] , ( <date-list-diagram> | <diagram> ) | <diagram>  <@ DataAndRegressionFunctionsPlot;
   <plot-elements-list> = ( <diagram-type> | <data> ) , { <list-delimiter> &> ( <diagram-type> | <data> ) } <@ Flatten ;
   <diagram-type> = <regression-curve-spec> | <error> | <outliers> <@ DiagramType ;
   <regression-curve-spec> = [ 'fitted' ] , ( <regression-function> | <regression-function-name> ) <& [ 'curve' | 'curves' | 'function' | 'functions' ] ;
@@ -261,8 +261,8 @@ ebnfPipelineCommand = "
   <pipeline-filler> = [ 'the' ] , [ 'current' ] , [ 'pipeline' ] ;
   <pipeline-value> = <pipeline-filler> &> 'value' <@ PipelineValue ;
   <get-pipeline-value> = <display-directive> &> <pipeline-value> <@ GetPipelineValue ;
-  <pipeline-context> =  <pipeline-filler> &> 'context' <@ PipelineContext ;
-  <pipeline-context-keys> =  <pipeline-filler> &> 'context' , 'keys' <@ PipelineContextKeys ;
+  <pipeline-context> = <pipeline-filler> &> 'context' <@ PipelineContext ;
+  <pipeline-context-keys> = <pipeline-filler> &> 'context' , 'keys' <@ PipelineContextKeys ;
   <context-key> = '_String' <@ ContextKey ;
   <pipeline-context-value> = ( <pipeline-filler> , 'context' , 'value' , ( 'for' | 'of' ) ) &> <context-key> |
                              ( ( 'value' , ( 'for' | 'of' ) , [ 'the' ] , 'context' , ( 'key' | 'element' | 'variable' ) ) &> <context-key>)
