@@ -111,64 +111,131 @@ ebnfCommonParts = "
   <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
   <recommend-directive> = 'recommend' | 'suggest' <@ RecommendDirective ;
   <recommendation-matrix>  = [ 'recommendation' ] , 'matrix' <@ RecommendationMatrix ;
-  <number-of> = [ 'the' ] , ( 'number' | 'count' ) , 'of' <@ NumberOf ;
+  <number-of> = ( 'number' | 'count' ) , 'of' <@ NumberOf ;
   <score-association-symbol> = '->' | ':' <@ ScoreAssociationSymbol ;
   <consumption-profile> = [ 'consumption' ] , 'profile' <@ ConsumptionProfile ;
+  <consumption-history> = [ 'consumption' ] , 'history' <@ ConsumptionHistory ;
+  <recommended-items> = 'recommended' , 'items' | ( 'recommendations' | 'recommendation' ) , [ 'results' ]  <@ RecommendedItems ;
+  <recommender> = 'recommender' , [ 'object' | 'system' ] <@ Recommender ;
 ";
+
 
 (************************************************************)
 (* SMR create command                                       *)
 (************************************************************)
 
 ebnfCreateCommand = "
-  <create-command> = <generate-directive> , <using-preposition> , <smr-dataset-spec> [ <with-proposition> , <id-column-spec> ] <@ SMRCreateCommand ;
+  <create-command> = <create-by-dataset> | <create-by-matrices> | <create-simple> <@ SMRCreateCommand ;
+  <create-simple> = <generate-directive> <& [ [ 'the' ] , <recommender>  ] <@ SMRCreateSimple ;
+  <create-by-dataset> = <create-simple> ,
+                        ( <using-preposition> , [ 'the' ] , [ 'dataset' ] ) &> <smr-dataset-spec> ,
+                        ( [ ( <with-preposition> , [ 'the' ] , [ 'id' , 'column' ] ) &> <id-column-spec> ] )
+                        <@ SMRCreateByDataset ;
+  <create-by-matrices> = ( <create-simple> <& <with-preposition> ) ,
+                         ( [ 'the' ] , [ 'matrices' ] ) &> <smr-matrix-association-spec>
+                         <@ SMRCreateByMatrices ;
   <smr-dataset-spec> = '_String' <@ SMRDatasetSpec ;
   <smr-matrix-association-spec> = '_String' <@ SMRMatrixAssociation ;
   <id-column-spec> = '_String' <@ SMRIDColumnSpec ;
 ";
+
 
 (************************************************************)
 (* SMR object properties queries                            *)
 (************************************************************)
 
 ebnfSMRQuery = "
-  <smr-property-query> = <display-directive> , [ 'the' ] , <smr-property-spec> <@ SMRPropertyQuery ;
+  <smr-query-command> = <display-directive> , [ 'the' ] , <smr-property-spec> <@ SMRPropertyQuery ;
   <smr-property-spec> = <smr-context-property> | <smr-matrix-property> <@ SMRPropertySpec ;
   <smr-context-property> = 'tag' , 'types' | 'tags' | [ 'sparse' ] , 'matrices' | <recommendation-matrix> <@ SMRContextProperty@*Flatten@*List ;
   <smr-matrix-property> = <smr-matrix-columns> | <smr-matrix-rows> | <smr-matrix-dimensions> | <smr-matrix-density> <@ SMRMatrixProperty ;
-  <smr-matrix-columns> = <recommendation-matrix> , <number-of> , 'columns' <@ SMRMatrixColumns ;
-  <smr-matrix-rows> = <recommendation-matrix> , <number-of> , 'rows' <@ SMRMatrixRows ;
+  <smr-matrix-columns> = ( [ 'the' ] , [ <recommendation-matrix> ] , <number-of> ) &> 'columns' <@ SMRMatrixColumns ;
+  <smr-matrix-rows> = ( [ 'the' ] , [ <recommendation-matrix> ] , <number-of> ) , 'rows' <@ SMRMatrixRows ;
   <smr-matrix-dimensions> = <recommendation-matrix> , 'dimensions' <@ SMRMatrixDimensions ;
   <smr-matrix-density> = <recommendation-matrix> , 'density' <@ SMRMatrixDensity ;
 ";
+
 
 (************************************************************)
 (* Recommendations                                          *)
 (************************************************************)
 
 ebnfRecommend = "
-  <recommend-by-history-command> = <recommend-directive> , <using-preposition> , <history-spec> ;
-  <recommend-by-history-command> = <recommend-directive> , <using-preposition> , [ 'the' ] , <consumption-profile> , <profile-spec> ;
+  <recommend-by-history-command> = <recommend-directive> , ( <using-preposition> | <by-preposition> ),
+                                   [ [ 'the' ] , 'history' ] , <history-spec>
+                                   <@ SMRRecommendByHistory ;
+  <recommend-by-profile-command> = <recommend-directive> , ( <using-preposition> | <by-preposition> ) ,
+                                   [ 'the' ] , <consumption-profile> , <profile-spec>
+                                   <@ SMRRecommendByProfile ;
 ";
 
 ebnfHistorySpec = "
   <history-spec> = <items-list> | <scored-items-list> ;
   <item> = '_String' <@ SMRItem ;
   <items-list> = <item> , [ { <list-delimiter> , <item> } ] <@ SMRItemsList ;
-  <scored-item> = <item> , <score-association-symbol> , <number-value> <@ SMRScoredItem ;
-  <scored-items-list> = <scored-item> , [ { <list-delimiter> , <scored-item> } ] <@ SMRScoredItemsList ;
+  <scored-item> = <item> , <score-association-symbol> &> <number-value> <@ SMRScoredItem ;
+  <scored-items-list> = <scored-item> , [ { <list-delimiter> &> <scored-item> } ] <@ SMRScoredItemsList ;
+  <scored-items-list> = <scored-item> , [ { <list-delimiter> &> <scored-item> } ] <@ SMRScoredItemsList ;
 ";
 
 ebnfProfileSpec = "
   <profile-spec> = <items-list> | <scored-items-list> ;
 ";
 
+
 (************************************************************)
 (* Additional SMR commands                                  *)
 (************************************************************)
 
 ebnfMakeProfile = "
-  <make-profile> = <compute-directive> , [ 'the' ] , <consumption-profile> , <using-preposition> , <item-history-spec> <@ SMRMakeProfile ;
+  <make-profile-command> = <compute-directive> , [ 'the' ] , <consumption-profile> , <using-preposition> , <item-history-spec> <@ SMRMakeProfile ;
+";
+
+ebnfProofs = "
+  <proof-command> = <history-proof-command> | <profile-proof-command> | <explain-recommendations> <@ SMRProofCommand ;
+  <explain-recommendations> = ( 'explain' , [ 'the' ] ) &> <recommended-items> <@ SMRExplainRecommendations ;
+  <history-proof-command> = ( <explain-recommendations> , <with-preposition> , [ 'the' ] ) &> <consumption-history> <@ SMRHistoryProof ;
+  <profile-proof-command> = ( <explain-recommendations> , <with-preposition> , [ 'the' ] ) &> <consumption-profile> <@ SMRProfileProof ;
+";
+
+
+
+(************************************************************)
+(* General pipeline commands                                *)
+(************************************************************)
+(* This has to be refactored at some point since it is used in other workflow grammars. *)
+
+ebnfPipelineCommand = "
+  <pipeline-command> = <get-pipeline-value> | <get-pipeline-context> |
+                       <pipeline-context-add> | <pipeline-context-retrieve> <@ PipelineCommand ;
+  <pipeline-filler> = [ 'the' ] , [ 'current' ] , [ 'pipeline' ] ;
+  <pipeline-value> = <pipeline-filler> &> 'value' <@ PipelineValue ;
+  <get-pipeline-value> = <display-directive> &> <pipeline-value> <@ GetPipelineValue ;
+  <pipeline-context> =  <pipeline-filler> &> 'context' <@ PipelineContext ;
+  <pipeline-context-keys> =  <pipeline-filler> &> 'context' , 'keys' <@ PipelineContextKeys ;
+  <context-key> = '_String' <@ ContextKey ;
+  <pipeline-context-value> = ( <pipeline-filler> , 'context' , 'value' , ( 'for' | 'of' ) ) &> <context-key> |
+                             ( ( 'value' , ( 'for' | 'of' ) , [ 'the' ] , 'context' , ( 'key' | 'element' | 'variable' ) ) &> <context-key>)
+                             <@ PipelineContextValue ;
+  <get-pipeline-context> = <display-directive> , ( <pipeline-context> | <pipeline-context-keys> | <pipeline-context-value> ) <@ GetPipelineContext ;
+  <pipeline-context-add> = ( ( 'put' | 'add' ) , ( 'in' | 'into' | 'to' ) , 'context' , 'as' ) &> <context-key> <@ PipelineContextAdd ;
+  <pipeline-context-retrieve> = ( 'get' | 'retrieve' ) &>
+                                ( ( 'from' , 'context' ) &> <context-key> | <context-key> <& ( 'from' , 'context' ) )
+                                <@ PipelineContextRetrieve ;
+  ";
+
+
+(************************************************************)
+(* Second order commands                                    *)
+(************************************************************)
+
+ebnfGeneratePipeline = "
+  <generate-pipeline> = <generate-pipeline-phrase> , [ <using-preposition> &> <classifier-algorithm> ] <@ GeneratePipeline ;
+  <generate-pipeline-phrase> = <generate-directive> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ 'classification' ] , ( 'pipeline' | 'workflow' ) <@ Flatten ;
+";
+
+ebnfSecondOrderCommand = "
+   <second-order-command> = <generate-pipeline>  <@ SecondOrderCommand ;
 ";
 
 
@@ -176,16 +243,24 @@ ebnfMakeProfile = "
 (* Combination                                              *)
 (************************************************************)
 
+(*ebnfCommand = "*)
+  (*<smrmon-command> =*)
+     (*<create-command> | <summarize-data> |*)
+     (*<apply-term-weight-functions> |*)
+     (*<apply-global-term-weight-function> | <apply-local-term-weight-function> | <apply-term-normalizer-function> |*)
+     (*<recommend-by-history-command> | <recommend-by-profile-command> |*)
+     (*<set-tag-type-weights> | <set-tags-weight> |*)
+     (*<pipeline-command> | <second-order-command> ;*)
+  (*";*)
+
 ebnfCommand = "
   <smrmon-command> =
-     <create-command> | <summarize-data> |
-     <apply-term-weight-functions> |
-     <apply-global-term-weight-function> | <apply-local-term-weight-function> | <apply-term-normalizer-function> |
-     <recommender-creation> | <recommend-by-history> | <recommend-by-profile> |
-     <set-tag-type-weights> | <set-tags-weight> |
+     <create-command> |
+     <smr-query-command> |
+     <recommend-by-history-command> | <recommend-by-profile-command> | <proof-command> |
+     <make-profile-command> |
      <pipeline-command> | <second-order-command> ;
   ";
-
 
 (************************************************************)
 (* Generate parsers                                         *)
@@ -193,11 +268,12 @@ ebnfCommand = "
 
 res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
-        {ebnfCommonParts,
+        {ebnfCommand,
+          ebnfCommonParts,
           ebnfCreateCommand, ebnfSMRQuery,
           ebnfRecommend, ebnfHistorySpec, ebnfProfileSpec,
-          ebnfMakeProfile,
-          ebnfPipelineCommand, ebnfGeneratePipeline, ebnfSecondOrderCommand, ebnfCommand};
+          ebnfMakeProfile, ebnfProofs,
+          ebnfPipelineCommand, ebnfGeneratePipeline, ebnfSecondOrderCommand};
 (* LeafCount /@ res *)
 
 
@@ -211,11 +287,11 @@ res =
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[SMRConCommandsSubGrammars]
+Clear[SMRMonCommandsSubGrammars]
 
-Options[SMRConCommandsSubGrammars] = { "Normalize" -> False };
+Options[SMRMonCommandsSubGrammars] = { "Normalize" -> False };
 
-SMRConCommandsSubGrammars[opts:OptionsPattern[]] :=
+SMRMonCommandsSubGrammars[opts:OptionsPattern[]] :=
     Block[{ normalizeQ = TrueQ[OptionValue[SMRMonCommandsSubGrammars, "Normalize"]], res},
 
       res =
