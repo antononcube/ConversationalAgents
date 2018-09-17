@@ -129,8 +129,8 @@ ebnfCreateCommand = "
   <create-simple> = <generate-directive> <& [ [ 'the' ] , <recommender>  ] <@ SMRCreateSimple ;
   <create-by-dataset> = <create-simple> ,
                         ( <using-preposition> , [ 'the' ] , [ 'dataset' ] ) &> <smr-dataset-spec> ,
-                        ( [ ( <with-preposition> , [ 'the' ] , [ 'id' , 'column' ] ) &> <id-column-spec> ] )
-                        <@ SMRCreateByDataset ;
+                        ( [ ( <with-preposition> , [ 'the' , [ 'id' ] , 'column' ] ) &> <id-column-spec> ] )
+                        <@ SMRCreateByDataset@*Flatten ;
   <create-by-matrices> = ( <create-simple> <& <with-preposition> ) ,
                          ( [ 'the' ] , [ 'matrices' ] ) &> <smr-matrix-association-spec>
                          <@ SMRCreateByMatrices ;
@@ -145,12 +145,12 @@ ebnfCreateCommand = "
 (************************************************************)
 
 ebnfSMRQuery = "
-  <smr-query-command> = <display-directive> , [ 'the' ] , <smr-property-spec> <@ SMRPropertyQuery ;
+  <smr-query-command> = <display-directive> , [ 'the' ] , <smr-property-spec> <@ SMRPropertyQuery@*Flatten ;
   <smr-property-spec> = <smr-context-property> | <smr-matrix-property> <@ SMRPropertySpec ;
   <smr-context-property> = 'tag' , 'types' | 'tags' | [ 'sparse' ] , 'matrices' | <recommendation-matrix> <@ SMRContextProperty@*Flatten@*List ;
   <smr-matrix-property> = <smr-matrix-columns> | <smr-matrix-rows> | <smr-matrix-dimensions> | <smr-matrix-density> <@ SMRMatrixProperty ;
-  <smr-matrix-columns> = ( [ 'the' ] , [ <recommendation-matrix> ] , <number-of> ) &> 'columns' <@ SMRMatrixColumns ;
-  <smr-matrix-rows> = ( [ 'the' ] , [ <recommendation-matrix> ] , <number-of> ) , 'rows' <@ SMRMatrixRows ;
+  <smr-matrix-columns> = ( [ 'the' ] , [ <recommendation-matrix> ] , <number-of> ) &> 'columns' <@ SMRMatrixColumns@*Flatten ;
+  <smr-matrix-rows> = ( [ 'the' ] , [ <recommendation-matrix> ] , <number-of> ) , 'rows' <@ SMRMatrixRows@*Flatten ;
   <smr-matrix-dimensions> = <recommendation-matrix> , 'dimensions' <@ SMRMatrixDimensions ;
   <smr-matrix-density> = <recommendation-matrix> , 'density' <@ SMRMatrixDensity ;
 ";
@@ -163,23 +163,26 @@ ebnfSMRQuery = "
 ebnfRecommend = "
   <recommend-by-history-command> = <recommend-directive> , ( <using-preposition> | <by-preposition> ),
                                    [ [ 'the' ] , 'history' ] , <history-spec>
-                                   <@ SMRRecommendByHistory ;
+                                   <@ SMRRecommendByHistory@*Flatten ;
   <recommend-by-profile-command> = <recommend-directive> , ( <using-preposition> | <by-preposition> ) ,
                                    [ 'the' ] , <consumption-profile> , <profile-spec>
-                                   <@ SMRRecommendByProfile ;
+                                   <@ SMRRecommendByProfile@*Flatten ;
 ";
 
 ebnfHistorySpec = "
   <history-spec> = <items-list> | <scored-items-list> ;
   <item> = '_String' <@ SMRItem ;
-  <items-list> = <item> , [ { <list-delimiter> , <item> } ] <@ SMRItemsList ;
+  <items-list> = <item> , [ { <list-delimiter> &> <item> } ] <@ SMRItemsList@*Flatten@*List ;
   <scored-item> = <item> , <score-association-symbol> &> <number-value> <@ SMRScoredItem ;
-  <scored-items-list> = <scored-item> , [ { <list-delimiter> &> <scored-item> } ] <@ SMRScoredItemsList ;
-  <scored-items-list> = <scored-item> , [ { <list-delimiter> &> <scored-item> } ] <@ SMRScoredItemsList ;
+  <scored-items-list> = <scored-item> , [ { <list-delimiter> &> <scored-item> } ] <@ SMRScoredItemsList@*Flatten@*List ;
 ";
 
 ebnfProfileSpec = "
-  <profile-spec> = <items-list> | <scored-items-list> ;
+  <profile-spec> = <tags-list> | <scored-tags-list> ;
+  <tag> = '_String' <@ SMRTag ;
+  <tags-list> = <tag> , [ { <list-delimiter> &> <tag> } ] <@ SMRTagsList@*Flatten@*List ;
+  <scored-tag> = <tag> , <score-association-symbol> &> <number-value> <@ SMRScoredTag ;
+  <scored-tags-list> = <scored-tag> , [ { <list-delimiter> &> <scored-tag> } ] <@ SMRScoredTagsList@*Flatten@*List ;
 ";
 
 
@@ -188,7 +191,9 @@ ebnfProfileSpec = "
 (************************************************************)
 
 ebnfMakeProfile = "
-  <make-profile-command> = <compute-directive> , [ 'the' ] , <consumption-profile> , <using-preposition> , <item-history-spec> <@ SMRMakeProfile ;
+  <make-profile-command> = ( <compute-directive> | <generate-directive> ) , [ 'the' ] , <consumption-profile> , <using-preposition> ,
+                           [ <consumption-history> ] , <history-spec>
+                           <@ SMRMakeProfile ;
 ";
 
 ebnfProofs = "
@@ -198,6 +203,16 @@ ebnfProofs = "
   <profile-proof-command> = ( <explain-recommendations> , <with-preposition> , [ 'the' ] ) &> <consumption-profile> <@ SMRProfileProof ;
 ";
 
+ebnfRecommendationsProcessing = "
+  <extend-recommendations-command> = ( ( 'extend' | 'join' ) , [ 'the' ] , <recommended-items> ,
+                                       <using-preposition> , [ 'the' ] , [ 'dataset' ] ) &>
+                                     <dataset-spec> , [ ( <by-preposition> , [ 'the' ] , 'column' ) &> <column-name-spec> ]
+                                     <@ SMRExtendRecommendationsCommand ;
+  <filter-recommendations-command> = ( 'filter' , [ 'the' ] , <recommended-items> , <with-preposition> ) &> <tags-list>
+                                     <@ SMRFilterRecommendationsCommand ;
+  <dataset-spec>  = '_String' <@ SMRDatasetSpec ;
+  <column-name-spec> = '_String' <@ SMRColumnNameSpec ;
+"
 
 
 (************************************************************)
@@ -259,8 +274,10 @@ ebnfCommand = "
      <smr-query-command> |
      <recommend-by-history-command> | <recommend-by-profile-command> | <proof-command> |
      <make-profile-command> |
+     <extend-recommendations-command> | <filter-recommendations-command> |
      <pipeline-command> | <second-order-command> ;
   ";
+
 
 (************************************************************)
 (* Generate parsers                                         *)
@@ -272,7 +289,7 @@ res =
           ebnfCommonParts,
           ebnfCreateCommand, ebnfSMRQuery,
           ebnfRecommend, ebnfHistorySpec, ebnfProfileSpec,
-          ebnfMakeProfile, ebnfProofs,
+          ebnfMakeProfile, ebnfProofs, ebnfRecommendationsProcessing,
           ebnfPipelineCommand, ebnfGeneratePipeline, ebnfSecondOrderCommand};
 (* LeafCount /@ res *)
 
