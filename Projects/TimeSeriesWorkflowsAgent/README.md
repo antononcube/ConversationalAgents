@@ -1,7 +1,7 @@
 # Time series workflows conversational agent
 
 This folder has code and descriptions for the making of a conversational agent
-that generates classification workflows using the monad `QRMon` coded in 
+that generates time series workflows using the monad `QRMon` coded in 
 \[[AA1](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicQuantileRegression.m)\] 
 and described in
 \[[AA2]()\]
@@ -23,5 +23,5 @@ is put in [repository's EBNF folder](https://github.com/antononcube/Conversation
 \[AA1\] Anton Antonov, [Monadic Quantile Regression Mathematica package](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicQuantileRegression.m),
 (2018), MathematicaForPrediction at GitHub.
  
-\[AA2\] Anton Antonov, [A monad for Quantile Regression workflows](), 
-(2018), MathematicaForPrediction at GitHub.                            
+\[AA2\] Anton Antonov, [A monad for Quantile Regression workflows](https://mathematicaforprediction.wordpress.com/2018/08/01/a-monad-for-quantile-regression-workflows/), 
+(2018), MathematicaForPrediction at WordPress.                            
