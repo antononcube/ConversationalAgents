@@ -37,7 +37,7 @@
 
 *)
 
-{viWidth} = {600};
+{viWidth} = {450};
 {textOffset, rx, ry} = {0.01, 0.01, 0.004};
 Magnify[
   DynamicModule[{input = "", fsmState = "WaitingForARequest",

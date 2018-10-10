@@ -29,8 +29,26 @@
 (* :Mathematica Version: *)
 (* :Copyright: (c) 2017 Anton Antonov *)
 (* :Keywords: *)
-(* :Discussion: *)
+(* :Discussion:
 
+  This code is not made into a package due to global variables utilization:
+
+    pCALLGLOBAL, pCALLCONTACT, pCALLFILTER, addressLines .
+
+*)
+
+
+(*BeginPackage["PhoneDialingFSM`"]*)
+
+(*PCESM::usage = "Phone calling engine state machine."*)
+
+(*PCESMFilterContactScores::usage = "Filter for contact scores."*)
+
+(*PCESMFilterContacts::usage = "Filtering contacts."*)
+
+(*Begin["`Private`"]*)
+
+(*Needs["FunctionalParsers`"]*)
 
 states = Sort@{"WaitingForARequest", "ListOfContactsForAQuery",
   "DialPhoneNumber", "WaitingForAFilter", "PrioritizedList"}
@@ -222,6 +240,12 @@ PCESM["PrioritizedList", contextArg_, input_String] :=
 
 PCESM[state_, context_, input_String] :=
     Block[{},
+
       Print["nothing to do for: ", state];
       {"WaitingForARequest", {}, {}, "", ""}
     ];
+
+
+(*End[]*)
+
+(*EndPackage[]*)
