@@ -245,8 +245,9 @@ ebnfPipelineCommand = "
 (************************************************************)
 
 ebnfGeneratePipeline = "
-  <generate-pipeline> = <generate-pipeline-phrase> , [ <using-preposition> &> <classifier-algorithm> ] <@ GeneratePipeline ;
-  <generate-pipeline-phrase> = <generate-directive> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ 'classification' ] , ( 'pipeline' | 'workflow' ) <@ Flatten ;
+  <generate-pipeline> = <generate-pipeline-phrase> , [ <using-preposition> &> <smr-lsi-spec> ] <@ GeneratePipeline ;
+  <generate-pipeline-phrase> = <generate-directive> , [ 'an' | 'a' | 'the' ] , [ 'standard' ] , [ <recommender> ] , ( 'pipeline' | 'workflow' ) <@ Flatten ;
+  <smr-lsi-spec> = '_String' <@ SMRLSISpec ;
 ";
 
 ebnfSecondOrderCommand = "
