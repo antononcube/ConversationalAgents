@@ -123,7 +123,7 @@ ebnfCommonParts = "
   <number-value> = '_?NumberQ' <@ NumericValue ;
   <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
   <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
-  <display-directive> = 'show' | 'give' | 'display' <@ DisplayDirective ;
+  <display-directive> = 'show' | 'give' | 'display' | 'echo' <@ DisplayDirective ;
   <compute-directive> = 'compute' | 'calculate' | 'find' <@ ComputeDirective ;
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
   <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
@@ -257,9 +257,14 @@ ebnfClassifierMaking = "
   <classifier-method> = 'DecisionTree' | 'GradientBoostedTrees' | 'LogisticRegression' | 'NaiveBayes' |
                         'NearestNeighbors' | 'NeuralNetwork' | 'RandomForest' | 'SupportVectorMachine' <@ ClassifierMethod ;
   <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
-  <classifier-algorithm-name> = 'decision' , 'tree' | 'gradient' , 'boosted' , 'trees' | 'logistic' , 'regression' | 'nearest' , 'neighbors' |
-                                'naive' , 'bayes' | 'neural' , 'network' | 'random' , 'forest' |
-                                'support' , 'vector' , 'machine'  <@ ClassifierAlgorithmName ;
+  <classifier-algorithm-name> = 'decision' , 'tree' |
+                                'gradient' , 'boosted' , 'trees' |
+                                'logistic' , 'regression' |
+                                'nearest' , 'neighbors' |
+                                'naive' , 'bayes' |
+                                'neural' , 'network' |
+                                'random' , 'forest' |
+                                'support' , 'vector' , 'machine'  <@ ClassifierAlgorithmName@*Flatten@*List ;
   <library-name> = '_String' <@ LibraryName ;
   ";
 
@@ -315,8 +320,9 @@ ebnfClassifierTesting = "
   <classifier-testing-simple> = ( 'test' , [ 'a' | 'the' ] ) &> 'classifier' <@ TestClassifier ;
   <train-data-spec> = '_?NumberQ' , ( 'percent' | 'fraction' ) <& ( 'of' , [ 'the' ] , [ 'available' ] , ( 'records' | 'data' ) ) <@ TrainData;
   <test-results> = <test-results-preamble> , ( 'test' , 'results' | <test-measure-list> ) ,
-                   [ [ ( 'with' | 'for' | 'by' ), [ 'the' ] ] &> <test-classification-threshold> ] <& [ <test-results-filler> ] <@ TestResults@*Flatten ;
-  <test-results-preamble> = ( <compute-and-display> | <display-directive> | <compute-directive> ) , [ 'classifier' ] ;
+                   [ [ ( 'with' | 'for' | 'by' ), [ 'the' ] ] &> <test-classification-threshold> ] <& [ <test-results-filler> ]
+                   <@ TestResults@*Flatten ;
+  <test-results-preamble> = ( <compute-and-display> | <display-directive> | <compute-directive> ) , [ 'classifier' ] , [ 'measurement' | 'measurements' ] ;
   <test-classification-threshold> = ( [ 'classification' ] , 'threshold' ) &> <number-value> , ( 'of' | 'for' ) &>  <class-label> <@ ClassificationThreshold ;
   <test-results-filler> = ( 'for' , [ 'the' ] , 'classifier' | 'over' , [ 'the' ] , 'available' , [ 'test' ] , 'data' );
   <test-measure-list> = ( <test-measure> | <test-measure-name> ) , [ { <list-delimiter> &> ( <test-measure> | <test-measure-name> ) } ] <@ TestMeasureList@*Flatten ;

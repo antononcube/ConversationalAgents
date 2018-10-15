@@ -197,4 +197,14 @@ VerificationTest[
   TestID -> "show-list-line-roc-plot-for-tpr--fpr--accuracy"
 ]
 
+VerificationTest[
+
+  t = Cases[TestFunc["train a gradient boosted trees classifier"], ClassifierAlgorithmName[x_] :> x, Infinity];
+  Length[t] > 0 && Length[First@t] == 3,
+
+  True,
+
+  TestID -> "parse-longer-classifier-names"
+]
+
 EndTestSection[]
