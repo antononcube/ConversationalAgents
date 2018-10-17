@@ -234,21 +234,24 @@ ebnfNetLayerChain = "
 (************************************************************)
 
 ebnfNetCoderCommand = "
-  <net-coder-command> = <set-directive> , ( <coder-type> , <coder-spec> | <coder-spec> , <coder-type> ) <@ NetCoderCommand ;
-  <coder-type> = 'decoder' | 'encoder' <@ CoderType ;
-  <coder-spec> = <decoder-spec> | <encoder-spec> ;
-  <decoder-spec> = ( <decoder> | <decoder-name> ) , [ <parameters-list> ] <@ DecoderSpec ;
+  <net-coder-command> = <set-directive> &>
+                        ( <encoder-type> , <encoder-spec> | <encoder-spec> , <encoder-type> |
+                          <decoder-type> , <decoder-spec> | <decoder-spec> , <decoder-type>  )
+                        <@ NetCoderCommand@*Flatten ;
+  <decoder-type> = 'decoder' <@ DecoderType ;
+  <decoder-spec> = ( <decoder> | <decoder-name> ) , [ <with-preposition> &> <parameters-list> ] <@ DecoderSpec ;
   <decoder> = 'Boolean' | 'Characters' | 'Class' | 'CTCBeamSearch' | 'Image' | 'Image3D' |
               'Scalar' | 'Tokens' <@ NetMonDecoder ;
   <decoder-name> = 'boolean' | 'characters' | 'class' | 'ctc' , 'beam' , 'search' | 'image' | 'image' , '3d' |
-              'scalar' | 'tokens' <@ NetMonDecoderName ;
-  <encoder-spec> = <encoder> | <encoder-name> , [ <parameters-list> ] <@ EncoderSpec ;
+              'scalar' | 'tokens' <@ NetMonDecoderName@*Flatten@*List ;
+  <encoder-type> = 'encoder' <@ EncoderType ;
+  <encoder-spec> = ( <encoder> | <encoder-name> ) , [ <with-preposition> &> <parameters-list> ] <@ EncoderSpec ;
   <encoder> = 'Audio' | 'AudioMelSpectrogram' | 'AudioMFCC' | 'AudioSpectrogram' |
               'AudioSTFT' | 'Boolean' | 'Characters' | 'Class' | 'Function' |
               'Image' | 'Image3D' | 'Scalar' | 'Tokens' | 'UTF8' <@ NetMonEncoder ;
   <encoder-name> = 'audio' | 'audio' , 'mel' , 'spectrogram' | 'audio' , 'mfcc' | 'audio' , 'spectrogram' |
               'audio' , 'stft' | 'boolean' | 'characters' | 'class' | 'function' |
-              'image' | 'image' , '3d' | 'scalar' | 'tokens' | 'utf8' <@ NetMonEncoderName ;
+              'image' | 'image' , '3d' | 'scalar' | 'tokens' | 'utf8' <@ NetMonEncoderName@*Flatten@*List ;
   <parameters-list> = { <parameter> } <@ ParametersList ;
   <parameter> = '_String' ;
 ";
