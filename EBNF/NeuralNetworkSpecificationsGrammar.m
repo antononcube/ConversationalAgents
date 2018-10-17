@@ -227,11 +227,59 @@ ebnfNetLayerChain = "
 (* Net surgery                                              *)
 (************************************************************)
 
+(************************************************************)
+(* Net information                                          *)
+(************************************************************)
 
+ebnfNetInfoCommand = "
+  <net-info-command> = ( <display-directive> ) , <net-info-spec> <@ NetMonInfo ;
+  <net-info-spec> = <net-info-property> | <net-info-property-name> <@ NetMonInfoSpec ;
+  <net-info-property> = 'Arrays' | 'ArraysByteCounts' | 'ArraysCount' | 'ArraysDimensions' |
+                        'ArraysElementCounts' | 'ArraysList' | 'ArraysPositionList' |
+                        'ArraysSizes' | 'ArraysTotalByteCount' | 'ArraysTotalElementCount' |
+                        'ArraysTotalSize' | 'FullSummaryGraphic' | 'InputForm' |
+                        'InputPortNames' | 'InputPorts' | 'Layers' | 'LayersCount' |
+                        'LayersGraph' | 'LayersList' | 'LayerTypeCounts' | 'MXNetNodeGraph' |
+                        'MXNetNodeGraphPlot' | 'OutputPortNames' | 'OutputPorts' |
+                        'Properties' | 'RecurrentStatesCount' | 'RecurrentStatesPositionList' |
+                        'SharedArraysCount' | 'SummaryGraphic' | 'TopologyHash' <@ NetMonInfoProperty ;
+  <net-info-property-name> = 'Arrays' | 'Arrays' , 'Byte' , 'Counts' | 'Arrays' , Count' |
+                             'Arrays' , 'Dimensions' | 'Arrays' , 'Element' , 'Counts' | 'Arrays' , List' |
+                             'Arrays' , 'Position' , 'List' | 'Arrays' , 'Sizes' | 'Arrays' , 'Total' , 'Byte' , 'Count' |
+                             'Arrays' , 'Total' , 'Element' , 'Count' | 'Arrays' , 'Total' , 'Size' |
+                             'Full' , 'Summary' , 'Graphic' | 'Input' , 'Form' | 'Input , 'Port' , 'Names' |
+                             'Input' , Ports' | 'Layers' | 'Layers' , 'Count' | 'Layers' , 'Graph' |
+                             'Layers' , 'List' | 'Layer' , 'Type' , 'Counts' | 'Net' , 'Node' , 'Graph' |
+                             'Net' , 'Node' , 'Graph' , 'Plot' | 'Output' , 'Port' , 'Names' |
+                             'Output' , 'Ports' | 'Properties' | 'Recurrent' , 'States' , 'Count' |
+                             'Recurrent' , 'States' , 'Position' , 'List' | 'Shared' , 'Arrays' , 'Count' |
+                             'Summary' , 'Graphic' | 'Topology , 'Hash' <@ NetMonInfoPropertyName ;
+";
+
+(************************************************************)
+(* Loss functions                                           *)
+(************************************************************)
+
+ebnfNetLossFuncCommand = "
+  <net-loss-func-command> = ( <set-directive> , [ <loss-function-phrase> ] ) &> <loss-func-spec> <@ NetMonLossFunc ;
+  <loss-function-phrase> = 'loss' , 'function' ;
+  <loss-func-spec> = <loss-func> | <loss-func-name> <@ NetMonLossFuncSpec ;
+  <loss-func> = 'MeanAbsoluteLossLayer' | 'MeanSquaredLossLayer' | 'CrossEntropyLossLayer' |
+                'CTCLossLayer' | 'ContrastiveLossLayer'
+                <@ NetMonLossFunc ;
+  <loss-func-name> = 'mean' , 'absolute' , 'loss' , 'layer' |
+                     'mean' , 'squared' , 'loss' , 'layer' |
+                     'cross' , 'entropy' , 'loss' , 'layer' |
+                     'ctc' , 'loss' , 'layer' |
+                     'contrastive' , 'loss' , 'layer'
+                     <@ NetMonLossFuncName ;
+";
 
 (************************************************************)
 (* Encoders/decoders                                        *)
 (************************************************************)
+
+(* Auto-Encoder application? *)
 
 ebnfNetCoderCommand = "
   <net-coder-command> = <set-directive> &>
@@ -256,13 +304,15 @@ ebnfNetCoderCommand = "
   <parameter> = '_String' ;
 ";
 
+
 (************************************************************)
 (* Combination                                              *)
 (************************************************************)
 
 ebnfCommand = "
   <netmon-command> = <repository-query> | <net-layer-chain> | <net-training-command> |
-                     <net-operation-command> | <net-coder-command> ;
+                     <net-operation-command> | <net-coder-command> | <net-loss-func-command> |
+                     <net-info-command> ;
 ";
 
 (************************************************************)
@@ -274,6 +324,7 @@ res =
         {ebnfCommonParts, ebnfRepositoryQuery,
           ebnfNetTraining, ebnfNetLayerChain,
           ebnfNetOperationCommand, ebnfNetCoderCommand,
+          ebnfNetLossFuncCommand, ebnfNetInfoCommand,
           ebnfCommand};
 (* LeafCount /@ res *)
 
