@@ -243,17 +243,20 @@ ebnfNetInfoCommand = "
                         'MXNetNodeGraphPlot' | 'OutputPortNames' | 'OutputPorts' |
                         'Properties' | 'RecurrentStatesCount' | 'RecurrentStatesPositionList' |
                         'SharedArraysCount' | 'SummaryGraphic' | 'TopologyHash' <@ NetMonInfoProperty ;
-  <net-info-property-name> = 'Arrays' | 'Arrays' , 'Byte' , 'Counts' | 'Arrays' , Count' |
-                             'Arrays' , 'Dimensions' | 'Arrays' , 'Element' , 'Counts' | 'Arrays' , List' |
-                             'Arrays' , 'Position' , 'List' | 'Arrays' , 'Sizes' | 'Arrays' , 'Total' , 'Byte' , 'Count' |
-                             'Arrays' , 'Total' , 'Element' , 'Count' | 'Arrays' , 'Total' , 'Size' |
-                             'Full' , 'Summary' , 'Graphic' | 'Input' , 'Form' | 'Input , 'Port' , 'Names' |
-                             'Input' , Ports' | 'Layers' | 'Layers' , 'Count' | 'Layers' , 'Graph' |
-                             'Layers' , 'List' | 'Layer' , 'Type' , 'Counts' | 'Net' , 'Node' , 'Graph' |
-                             'Net' , 'Node' , 'Graph' , 'Plot' | 'Output' , 'Port' , 'Names' |
-                             'Output' , 'Ports' | 'Properties' | 'Recurrent' , 'States' , 'Count' |
-                             'Recurrent' , 'States' , 'Position' , 'List' | 'Shared' , 'Arrays' , 'Count' |
-                             'Summary' , 'Graphic' | 'Topology , 'Hash' <@ NetMonInfoPropertyName ;
+  <net-info-property-name> = 'arrays' | 'arrays' , 'byte' , 'counts' | 'arrays' , 'count' |
+                             'arrays' , 'dimensions' | 'arrays' , 'element' , 'counts' | 'arrays' , 'list' |
+                             'arrays' , 'position' , 'list' | 'arrays' , 'sizes' |
+                             'arrays' , 'total' , 'byte' , 'count' |
+                             'arrays' , 'total' , 'element' , 'count' |
+                             'arrays' , 'total' , 'size' | 'full' , 'summary' , 'graphic' |
+                             'input' , 'form' | 'input', 'port' , 'names' |
+                             'input' , 'ports' | 'layers' | 'layers' , 'count' | 'layers' , 'graph' |
+                             'layers' , 'list' | 'layer' , 'type' , 'counts' | 'net' , 'node' , 'graph' |
+                             'net' , 'node' , 'graph' , 'plot' | 'output' , 'port' , 'names' |
+                             'output' , 'ports' | 'properties' | 'recurrent' , 'states' , 'count' |
+                             'recurrent' , 'states' , 'position' , 'list' | 'shared' , 'arrays' , 'count' |
+                             'summary' , 'graphic' | 'topology' , 'hash'
+                             <@ NetMonInfoPropertyName ;
 ";
 
 (************************************************************)
