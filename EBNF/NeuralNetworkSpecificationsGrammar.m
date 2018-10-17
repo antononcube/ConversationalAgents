@@ -106,6 +106,7 @@ ebnfCommonParts = "
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
   <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
   <train-directive> = 'train' | 'drill' ;
+  <set-directive> = 'set' | 'assign' ;
   <class-label> = '_String' <@ ClassLabel ;
   <neural-network> = [ 'neural' ] , ( 'net' | 'network' | 'model' ) ;
   <neural-networks> = [ 'neural' ] , ( 'nets' | 'networks' | 'models' ) ;
@@ -228,13 +229,37 @@ ebnfNetLayerChain = "
 
 
 
+(************************************************************)
+(* Encoders/decoders                                        *)
+(************************************************************)
+
+ebnfNetCoderCommand = "
+  <net-coder-command> = <set-directive> , ( <coder-type> , <coder-spec> | <coder-spec> , <coder-type> ) <@ NetCoderCommand ;
+  <coder-type> = 'decoder' | 'encoder' <@ CoderType ;
+  <coder-spec> = <decoder-spec> | <encoder-spec> ;
+  <decoder-spec> = ( <decoder> | <decoder-name> ) , [ <parameters-list> ] <@ DecoderSpec ;
+  <decoder> = 'Boolean' | 'Characters' | 'Class' | 'CTCBeamSearch' | 'Image' | 'Image3D' |
+              'Scalar' | 'Tokens' <@ NetMonDecoder ;
+  <decoder-name> = 'boolean' | 'characters' | 'class' | 'ctc' , 'beam' , 'search' | 'image' | 'image' , '3d' |
+              'scalar' | 'tokens' <@ NetMonDecoderName ;
+  <encoder-spec> = <encoder> | <encoder-name> , [ <parameters-list> ] <@ EncoderSpec ;
+  <encoder> = 'Audio' | 'AudioMelSpectrogram' | 'AudioMFCC' | 'AudioSpectrogram' |
+              'AudioSTFT' | 'Boolean' | 'Characters' | 'Class' | 'Function' |
+              'Image' | 'Image3D' | 'Scalar' | 'Tokens' | 'UTF8' <@ NetMonEncoder ;
+  <encoder-name> = 'audio' | 'audio' , 'mel' , 'spectrogram' | 'audio' , 'mfcc' | 'audio' , 'spectrogram' |
+              'audio' , 'stft' | 'boolean' | 'characters' | 'class' | 'function' |
+              'image' | 'image' , '3d' | 'scalar' | 'tokens' | 'utf8' <@ NetMonEncoderName ;
+  <parameters-list> = { <parameter> } <@ ParametersList ;
+  <parameter> = '_String' ;
+";
 
 (************************************************************)
 (* Combination                                              *)
 (************************************************************)
 
 ebnfCommand = "
-  <netmon-command> = <repository-query> | <net-layer-chain> | <net-training-command> | <net-operation-command> ;
+  <netmon-command> = <repository-query> | <net-layer-chain> | <net-training-command> |
+                     <net-operation-command> | <net-coder-command> ;
 ";
 
 (************************************************************)
@@ -245,7 +270,7 @@ res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
         {ebnfCommonParts, ebnfRepositoryQuery,
           ebnfNetTraining, ebnfNetLayerChain,
-          ebnfNetOperationCommand,
+          ebnfNetOperationCommand, ebnfNetCoderCommand,
           ebnfCommand};
 (* LeafCount /@ res *)
 
