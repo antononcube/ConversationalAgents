@@ -138,7 +138,8 @@ TranslateToNetMon[pres_] :=
       LayerNameSpec = TLayerNameSpec,
       LayerSpec = TLayerSpec,
       LayerList = TLayerList,
-      NetLayerChain = TNetLayerChain},
+      NetLayerChain = TNetLayerChain,
+      NumericValue = Identity},
       pres
     ];
 
