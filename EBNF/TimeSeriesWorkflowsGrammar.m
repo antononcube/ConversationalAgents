@@ -91,6 +91,7 @@ ebnfCommonParts = "
   <to-preposition> = 'to' | 'into' ;
   <by-preposition> = 'by' | 'through' | 'via' ;
   <number-value> = '_?NumberQ' <@ NumericValue ;
+  <integer-value> = '_?IntegerQ' <@ IntegerValue ;
   <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
   <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
   <display-directive> = 'show' | 'give' | 'display' | 'echo' <@ DisplayDirective ;
@@ -223,10 +224,10 @@ ebnfNetRegression = "
   <net-regression> = 'net' , 'regression' | 'NetRegression' ;
   <training-spec-list> = <training-spec> , { [ <list-delimiter> ] &> <training-spec> } <@ NetTrainingSpecList ;
   <training-spec> = <training-epochs-spec> | <training-time-spec> | <training-batch-spec> ;
-  <training-epochs-spec> =  [ <using-preposition> ] &> '_?IntegerQ' , ( 'epochs' | 'rounds' ) <@ NetTrainingEpochsSpec ;
-  <training-time-spec> = [ <using-preposition> ] &> '_?NumberQ' , <training-time-unit> <@ NetTrainingTimeSpec ;
+  <training-epochs-spec> =  [ <using-preposition> ] &> ( <number-value> <& ( 'epochs' | 'rounds' ) ) <@ NetTrainingEpochsSpec ;
+  <training-time-spec> = [ <using-preposition> ] &> <number-value> , <training-time-unit> <@ NetTrainingTimeSpec ;
   <training-time-unit> =  'second' | 'seconds' | 'minute' | 'minutes' | 'hour' | 'hours' | 'day' | 'days'  <@ NetTrainingTimeUnit ;
-  <training-batch-spec> = ( [ <with-preposition> ] , 'batch' , 'size' ) &> '_?IntegerQ' <@ NetTrainingBatchSize ;
+  <training-batch-spec> = ( [ <with-preposition> ] , 'batch' , 'size' ) &> <number-value> <@ NetTrainingBatchSize ;
 ";
 
 

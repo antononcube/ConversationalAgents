@@ -102,7 +102,7 @@ Clear[TLayerList]
 TLayerList[parsed_] := parsed;
 
 Clear[TNetLayerChain]
-TNetLayerChain[parsed_List] := NetChain[parsed];
+TNetLayerChain[parsed_List] := NetMonSetNet[ NetChain[parsed] ];
 
 
 (***********************************************************)
@@ -144,7 +144,7 @@ TranslateToNetMon[pres_] :=
     ];
 
 
-(* This code is very similar / same as the one for ToClConPipelineFunction. *)
+(* This code is very similar / same as the one for ToNetMonPipelineFunction. *)
 
 ClearAll[ToNetMonPipelineFunction]
 
@@ -167,7 +167,7 @@ ToNetMonPipelineFunction[commands:{_String..}, parser_Symbol:pNETMONCOMMAND, opt
 
       If[ Length[parsedSeq] == 0,
         Echo["Cannot parse command(s).", "ToNetMonPipelineFunction:"];
-        Return[$ClConFailure]
+        Return[$NetMonFailure]
       ];
 
       res =
@@ -193,7 +193,7 @@ ToNetMonPipelineFunction[pres_List] :=
       t = TranslateToNetMon[parsedSeq];
 
       (* Note that we can use:
-         Fold[ClConBind[#1,#2]&,First[t],Rest[t]] *)
+         Fold[NetMonBind[#1,#2]&,First[t],Rest[t]] *)
       Function[{x, c},
         Evaluate[DoubleLongRightArrow @@ Prepend[t, NetMonUnit[x, c]]]]
     ];
@@ -206,10 +206,10 @@ ToNetMonPipelineFunction[pres_Association] :=
       t = TranslateToNetMon[parsedSeq];
 
       (* Note that we can use:
-         Fold[ClConBind[#1,#2]&,First[t],Rest[t]] *)
+         Fold[NetMonBind[#1,#2]&,First[t],Rest[t]] *)
       Function[{x, c},
         Evaluate[
           DoubleLongRightArrow @@
-              Prepend[Riffle[t,comments], TraceMonadUnit[ClConUnit[x, c]]]]
+              Prepend[Riffle[t,comments], TraceMonadUnit[NetMonUnit[x, c]]]]
       ]
     ];

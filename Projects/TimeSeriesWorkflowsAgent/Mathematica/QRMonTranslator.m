@@ -38,6 +38,11 @@ If[Length[DownValues[TimeSeriesWorkflowsGrammar`pQRMONCOMMAND]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/TimeSeriesWorkflowsGrammar.m"]
 ];
 
+If[Length[DownValues[ToNetMonPipelineFunction]] == 0,
+  Echo["NetMonTranslator.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/NeuralNetworkSpecificationsAgent/Mathematica/NetMonTranslator.m"]
+];
+
 
 (*BeginPackage["QRMonTranslator`"]*)
 (* Exported symbols added here with SymbolName::usage *)
@@ -109,6 +114,35 @@ TComputeRegression[parsed_] :=
       ];
 
       QRMonQuantileRegression[ knots, qs, InterpolationOrder->intOrder]
+
+    ];
+
+
+(***********************************************************)
+(* NetRegression                                           *)
+(***********************************************************)
+
+(*ClearAll[TNetTrainingEpochsSpec]*)
+(*TNetTrainingEpochsSpec[parsed_] :=*)
+    (*Round[TGetValue[parsed,NumericValue]];*)
+
+(*ClearAll[TNetTrainingTimeSpec]*)
+(*TNetTrainingTimeSpec[parsed_] :=*)
+    (*Round[TGetValue[parsed,NumericValue]];*)
+
+ClearAll[TComputeNetRegression]
+TComputeNetRegression[parsed_] :=
+    Block[{splitRatio = 0.75, epochs = Automatic, timeGoal = Automatic},
+
+      If[!FreeQ[parsed, NetTrainingEpochsSpec],
+        epochs = TGetValue[ TGetValue[ parsed, NetTrainingEpochsSpec], NumericValue]
+      ];
+
+      If[!FreeQ[parsed, NetTrainingTimeSpec],
+        timeGoal = TGetValue[ TGetValue[ parsed, NetTrainingTimeSpec], NumericValue]
+      ];
+
+      QRMonNetRegression[ splitRatio, MaxTrainingRounds->epochs, TimeGoal->timeGoal ]
 
     ];
 
@@ -267,6 +301,7 @@ TranslateToQRMon[pres_] :=
       NumberValueList = TNumberValueList,
       RangeSpec = TRangeSpec,
       ComputeRegression = TComputeRegression,
+      ComputeNetRegression = TComputeNetRegression,
       PipelineCommand = TPipelineCommand,
       GetPipelineValue = TGetPipelineValue,
       GetPipelineContext = TGetPipelineContext,
