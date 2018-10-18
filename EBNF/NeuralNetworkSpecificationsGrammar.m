@@ -173,7 +173,7 @@ ebnfNetLayerChain = "
   <layer-list> = ( <layer-spec> | <layer-name-spec> ), [ { <layer-list-delimiter> &> ( <layer-spec> | <layer-name-spec> ) } ]
                  <@ LayerList@*Flatten@*List ;
   <layer-list-delimiter> = <list-delimiter> | 'then' | '->' | '\[DoubleLongRightArrow]' ;
-  <layer-spec> = <layer> , [ '[' , ']' | '[' &> ( <layer-func-name> | <layer-common-func> | '_String' ) <& ']' ]
+  <layer-spec> = <layer> , [ '[' , ']' | '[' &> ( <layer-func-name> | <layer-common-func> | <number-value>  ) <& ']' ]
                  <@ LayerSpec ;
   <layer-name-spec> = [ <determiner> ] &> ( <layer-name> ) ,
                       [ <using-preposition> &> ( <layer-func-name> | <layer-common-func> ) ]
