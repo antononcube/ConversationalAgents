@@ -456,7 +456,7 @@ ebnfSecondOrderCommand = "
 ebnfCommand = "
   <clcon-command> = <load-data> | <data-transformation> | <reduce-dimension> |
               <split-data> | <summarize-data> | <cross-tabulate-data> | <data-outliers> |
-              <classifier-creation> | <classifier-ensemble-creation> | <classifier-query> | <classifier-testing> |
+              <classifier-ensemble-creation> | <classifier-creation> | <classifier-query> | <classifier-testing> |
               <roc-plot-command> | <verify-command> | <pipeline-command> |
               <second-order-command> ;
   ";

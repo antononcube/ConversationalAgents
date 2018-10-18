@@ -31,8 +31,8 @@
     Mathematica is a registered trademark of Wolfram Research, Inc.
 *)
 
-(* :Title: GeneratedStateMonadTests *)
-(* :Context: GeneratedStateMonadTests` *)
+(* :Title: ClassificationWorkflowsGrammarUnitTests *)
+(* :Context: ClassificationWorkflowsGrammarUnitTests` *)
 (* :Author: Anton Antonov *)
 (* :Date: 2018-02-05 *)
 
@@ -205,6 +205,17 @@ VerificationTest[
   True,
 
   TestID -> "parse-longer-classifier-names"
+]
+
+VerificationTest[
+
+  TestFunc["train an ensemble of 3 logistic regression classifiers"],
+
+  {{{}, ClassifierEnsembleCreation[{{NumberOfClassifiers[
+    NumericValue[3]],
+    ClassifierAlgorithm[{ClassifierAlgorithmName[{"logistic", "regression"}], {}}]}, {}}]}},
+
+  TestID -> "parse-classifier-ensemble"
 ]
 
 EndTestSection[]
