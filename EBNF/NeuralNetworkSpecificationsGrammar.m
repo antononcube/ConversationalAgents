@@ -282,21 +282,23 @@ ebnfNetLossFuncCommand = "
 (* Encoders/decoders                                        *)
 (************************************************************)
 
+(* FeatureSpacePlot *)
 (* Auto-Encoder application? *)
 
 ebnfNetCoderCommand = "
-  <net-coder-command> = <set-directive> &>
-                        ( <encoder-type> , <encoder-spec> | <encoder-spec> , <encoder-type> |
-                          <decoder-type> , <decoder-spec> | <decoder-spec> , <decoder-type>  )
-                        <@ NetCoderCommand@*Flatten ;
+  <net-coder-command> = <set-directive> &> ( <encoder-spec> | <decoder-spec> ) <@ NetCoderCommand@*Flatten ;
   <decoder-type> = 'decoder' <@ DecoderType ;
-  <decoder-spec> = ( <decoder> | <decoder-name> ) , [ <with-preposition> &> <parameters-list> ] <@ DecoderSpec ;
+  <decoder-spec> = ( <decoder-type> , ( <decoder> | <decoder-name> ) |
+                     ( <decoder> | <decoder-name> ) , <decoder-type> ) ,
+                   [ <with-preposition> &> <parameters-list> ] <@ DecoderSpec ;
   <decoder> = 'Boolean' | 'Characters' | 'Class' | 'CTCBeamSearch' | 'Image' | 'Image3D' |
               'Scalar' | 'Tokens' <@ NetMonDecoder ;
   <decoder-name> = 'boolean' | 'characters' | 'class' | 'ctc' , 'beam' , 'search' | 'image' | 'image' , '3d' |
               'scalar' | 'tokens' <@ NetMonDecoderName@*Flatten@*List ;
   <encoder-type> = 'encoder' <@ EncoderType ;
-  <encoder-spec> = ( <encoder> | <encoder-name> ) , [ <with-preposition> &> <parameters-list> ] <@ EncoderSpec ;
+  <encoder-spec> = ( <encoder-type> , ( <encoder> | <encoder-name> ) |
+                     ( <encoder> | <encoder-name> ) , <encoder-type> ) ,
+                   [ <with-preposition> &> <parameters-list> ] <@ EncoderSpec ;
   <encoder> = 'Audio' | 'AudioMelSpectrogram' | 'AudioMFCC' | 'AudioSpectrogram' |
               'AudioSTFT' | 'Boolean' | 'Characters' | 'Class' | 'Function' |
               'Image' | 'Image3D' | 'Scalar' | 'Tokens' | 'UTF8' <@ NetMonEncoder ;
