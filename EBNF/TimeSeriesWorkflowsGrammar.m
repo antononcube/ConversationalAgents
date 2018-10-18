@@ -214,6 +214,24 @@ ebnfRegressionFit = "
 
 
 (************************************************************)
+(* Net regression                                           *)
+(************************************************************)
+
+ebnfNetRegression = "
+  <net-regression-command> = <net-training-opening> &> [ <training-spec-list> ] <@ ComputeNetRegression ;
+  <net-training-opening> = [ ( <compute-directive> | 'do' ) ] , <net-regression> ;
+  <net-regression> = 'net' , 'regression' | 'NetRegression' ;
+  <training-spec-list> = <training-spec> , { [ <list-delimiter> ] &> <training-spec> } <@ NetTrainingSpecList ;
+  <training-spec> = <training-epochs-spec> | <training-time-spec> | <training-batch-spec> ;
+  <training-epochs-spec> =  [ <using-preposition> ] &> '_?IntegerQ' , ( 'epochs' | 'rounds' ) <@ NetTrainingEpochsSpec ;
+  <training-time-spec> = [ <using-preposition> ] &> '_?NumberQ' , <training-time-unit> <@ NetTrainingTimeSpec ;
+  <training-time-unit> =  'second' | 'seconds' | 'minute' | 'minutes' | 'hour' | 'hours' | 'day' | 'days'  <@ NetTrainingTimeUnit ;
+  <training-batch-spec> = ( [ <with-preposition> ] , 'batch' , 'size' ) &> '_?IntegerQ' <@ NetTrainingBatchSize ;
+";
+
+
+
+(************************************************************)
 (* Find outliers                                            *)
 (************************************************************)
 
@@ -295,8 +313,9 @@ ebnfSecondOrderCommand = "
 
 ebnfCommand = "
   <qrmon-command> = <load-data> |  <data-transformation-command> | <data-statistics-command> |
-                    <regression-command> | <regression-fit-command> | <find-outliers-command> |
-                    <plot-command> |  <pipeline-command> | <second-order-command> ;
+                    <regression-command> | <regression-fit-command> | <net-regression-command> |
+                    <find-outliers-command> |
+                    <plot-command> | <pipeline-command> | <second-order-command> ;
   ";
 
 
@@ -309,7 +328,7 @@ res =
         {ebnfCommonParts,
           ebnfDataLoad, ebnfDataTransform,
           ebnfDataStatistics, ebnfFindOutliers,
-          ebnfRegression, ebnfRegressionFit,
+          ebnfRegression, ebnfRegressionFit, ebnfNetRegression,
           ebnfPlot,
           ebnfPipelineCommand, ebnfGeneratePipeline, ebnfSecondOrderCommand,
           ebnfCommand};
