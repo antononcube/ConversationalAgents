@@ -55,7 +55,7 @@ Needs["FunctionalParsers`"];
 (************************************************************)
 
 ebnfCommand = "
-    <list-management-command> = <replace-part> |<drop> | <take> | <assignment> | <clear> |
+    <list-management-command> = <replace-part> | <drop> | <take> | <assignment> | <clear> |
                                 <position-query> | <position-spec> <@ ListManagementCommand ;
     <assignment> = ( 'set' &> <variable-name> , ( 'to' | 'as' ) &> <value> ) | ( 'assign' &> <value> , 'to' &> <variable-name> ) <@ ListAssignment ;
     <take> = ( 'take' | 'get' ) &> ( <position-query> | <position-spec> ) <@ ListTake ;
