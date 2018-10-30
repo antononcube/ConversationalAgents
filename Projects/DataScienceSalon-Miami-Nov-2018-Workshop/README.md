@@ -41,7 +41,7 @@ and
 
    - "Fake news maker"
    
-     - *Bombastic and "free form".*
+     - *Bombastic and "free form"...*
   
    - "Will they kill me?"
    
@@ -49,7 +49,7 @@ and
   
    - "Personal banking data obfuscation"
    
-     - *Should be interesting to data analysts.*
+     - *Should be of interest to data analysts.*
    
    - "Regression workflows"
    
@@ -65,7 +65,7 @@ and
 
 5. Making grammars. (*45 min.*)
 
-6. Wrap up / Putting it all together. (*15 min.*) 
+6. Wrap up / putting it all together. (*15 min.*) 
  
    - What is next?
    
@@ -77,11 +77,11 @@ and
 Here are links to the projects that have the examples to be discussed in the first part of the workshop.
 
 - Fully worked example: 
-["Phone Dialing Dialogs Agent"]()
+["Phone Dialing Dialogs Agent"](https://github.com/antononcube/ConversationalAgents/tree/master/Projects/PhoneDialingDialogsAgent)
 .
 
 - 90% design complete example:
-["Glukoza"]()
+["Glukoza"](https://github.com/antononcube/ConversationalAgents/tree/master/Projects/Glukoza)
 .
 
 ## Code examples guide
