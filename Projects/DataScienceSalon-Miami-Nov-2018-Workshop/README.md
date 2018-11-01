@@ -53,7 +53,7 @@ and
    
    - "Regression workflows"
    
-      - *Simple enough and good for overview learning.*
+     - *Simple enough and good for overview learning.*
    
    - "Neural networks construction and training"
    
@@ -76,13 +76,17 @@ and
 
 Here are links to the projects that have the examples to be discussed in the first part of the workshop.
 
-- Fully worked example: 
+- Fully worked out example (*short/small size*):
+["I love to eat"](https://mathematica.stackexchange.com/a/110129/34008).
+
+- Fully worked out example (*small-to-medium*): 
 ["Phone Dialing Dialogs Agent"](https://github.com/antononcube/ConversationalAgents/tree/master/Projects/PhoneDialingDialogsAgent)
 .
 
-- 90% design complete example:
+- 90% design complete example (*large and complex*):
 ["Glukoza"](https://github.com/antononcube/ConversationalAgents/tree/master/Projects/Glukoza)
 .
+
 
 ## Code examples guide
 
