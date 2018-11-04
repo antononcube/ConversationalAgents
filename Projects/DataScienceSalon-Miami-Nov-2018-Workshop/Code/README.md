@@ -36,6 +36,10 @@ For the purposes of this workshop I think it is better to use
 
 ### Perl6
 
+If you **do not want to install** Perl6 just use this online interpreter:
+https://glot.io/new/perl6 .   
+(Make sure you save a copy your code periodically...)
+
 You can follow the installation instructions in
 ["Perl 6 Introduction"](https://perl6intro.com/#_installing_perl_6)
 , or can follow the steps below.
