@@ -30,7 +30,7 @@ Generate parses from EBNF string:
 GenerateParsersFromEBNF[ToTokens@ebnfCode];
 
 (*
-Test the parser pLOVEFOOD for the highest level rule ( ) with a list of sentences:
+Test the parser pLOVEFOOD for the highest level rule <lovefood> with a list of sentences:
 *)
 
 sentences = {"I love milk", "We demand 2 ice creams",
