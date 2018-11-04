@@ -1,0 +1,72 @@
+---
+title: "Love food parsers"
+author: Anton Antonov
+date: "`r Sys.Date()`"
+output: html_notebook
+---
+
+# Introduction
+
+This notebook is to be used for demonstrations and explanations in the workshop:
+["Conversational agents design and programming"](https://github.com/antononcube/ConversationalAgents/tree/master/Projects/DataScienceSalon-Miami-Nov-2018-Workshop)
+to be given at 
+[Data Science Salon MiamiNovember 6-7 2018](https://datascience.salon/miami11-18/).
+
+# Load the FunctionalParsers package/code
+
+```{r}
+library(devtools)
+source_url("https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/R/FunctionalParsers/FunctionalParsers.R")
+```
+
+# Programming the parsers
+
+Here is a direct programming with functional parsers:
+
+```{r}
+pSUBJECT <- p.alt( c(p.symbol("i"), p.symbol("we"), p.symbol("you")))
+pLOVE.VERB <- p.alt( c(p.symbol("love"), p.symbol("crave"), p.symbol("demand"), p.symbol("want"))) 
+pLOVE.FOOD <- p.seq( c(pSUBJECT, pLOVE.VERB))
+```
+
+This might be considered as more clear:
+
+```{r}
+pSUBJECT <- p.symbol("i") %|% p.symbol("we") %|% p.symbol("you")
+pLOVE.VERB <- p.symbol("love") %|% p.symbol("crave") %|% p.symbol("demand") %|% p.symbol("want")
+pLOVE.FOOD <- pSUBJECT %&% pLOVE.VERB 
+```
+
+Let us proceed with rest of the definitions.
+
+```{r}
+pOBJECT <- p.symbol("sushi") %|% p.symbol("ice") %&% p.symbol("cream") %|% p.symbol("chocolate")
+pOBJECTS <- p.symbol("sushi") %|% p.symbol("ice") %&% p.symbol("creams") %|% p.symbol("chocolates")
+pOBJECTS <- p.symbol("sushi") %|% p.symbol("milks") %|% p.symbol("chocolates")
+pINTEGER <- p.apply( as.integer, p.satisfy( function(x) grepl("^\\d.*$", x)) )
+pOBJECTS.MULT <- pINTEGER %&% pOBJECTS
+pOBJECT.LIST.ELEM <- pOBJECT %|% pOBJECTS %|% pOBJECTS.MULT
+pOBJECT.LIST <- p.listof( p = pOBJECT.LIST.ELEM, sepParser = p.symbol("and") )
+pOBJECT.SPEC <- p.shortest( pOBJECT.LIST.ELEM )
+```
+
+We have to redefine `pLOVE.FOOD` to take the last part of the sentense, the object specification:
+
+```{r}
+pLOVE.FOOD <- pSUBJECT %&% pLOVE.VERB %&% pOBJECT.SPEC
+```
+
+
+# Experiments
+
+
+```{r}
+code <- "we want 4 sushi"
+tokens <- strsplit(code, split = "\\W")[[1]]
+pLOVE.FOOD(tokens)
+```
+
+```{r}
+ListToString( pLOVE.FOOD(tokens) )
+```
+
