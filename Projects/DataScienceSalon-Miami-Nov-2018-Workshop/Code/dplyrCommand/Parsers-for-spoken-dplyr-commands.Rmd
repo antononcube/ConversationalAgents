@@ -1,0 +1,73 @@
+---
+title: "Parsers for spoken dplyr commands"
+author: Anton Antonov
+date: "`r Sys.Date()`"
+output: html_notebook
+---
+
+# Introduction
+
+This notebook is to be used for demonstrations and explanations in the workshop:
+["Conversational agents design and programming"](https://github.com/antononcube/ConversationalAgents/tree/master/Projects/DataScienceSalon-Miami-Nov-2018-Workshop)
+to be given at 
+[Data Science Salon MiamiNovember 6-7 2018](https://datascience.salon/miami11-18/).
+
+# Getting some data
+
+Here we load and use the data from the dplyr's tutorial: https://dplyr.tidyverse.org .
+
+```{r}
+# The easiest way to get dplyr is to install the whole tidyverse:
+#install.packages("tidyverse")
+library(dplyr)
+
+starwars %>% 
+  filter(species == "Droid")
+```
+
+# Parsing and interpretation functions
+
+```{r}
+DPLYRParse <- 
+  function(cmd) { 
+    Perl6Parse(command = cmd, 
+           moduleDirectory = "/Users/antonov/R/DataScienceSalon-Miami-Nov2018", 
+           moduleName = "DPLYRCommand",
+           grammarClassName = "DPLYR-command",
+           actionsClassName = NULL)
+  }
+```
+
+```{r}
+DPLYRInterpret <- 
+  function(cmd) { 
+    Perl6Parse(command = cmd, 
+           moduleDirectory = "/Users/antonov/R/DataScienceSalon-Miami-Nov2018", 
+           moduleName = "DPLYRCommand",
+           grammarClassName = "DPLYR-command",
+           actionsClassName = "DPLYR-command-actions")
+  }
+```
+
+# Experiments
+
+```{r}
+DPLYRParse( "select the variable mass, height, hair_color")
+```
+
+```{r}
+pipeline <-
+  paste( DPLYRInterpret("load data"), 
+         DPLYRInterpret("keep only the variables mass, height & hair_color"),
+         DPLYRInterpret("mutate mass1 := mass, const <- 100"),
+         DPLYRInterpret("group over mass1 & const"),
+         DPLYRInterpret("find the counts"),
+         DPLYRInterpret("arrange by n"),
+         sep = " %>% ")
+pipeline
+```
+
+```{r}
+eval( parse( text = pipeline) )
+```
+
