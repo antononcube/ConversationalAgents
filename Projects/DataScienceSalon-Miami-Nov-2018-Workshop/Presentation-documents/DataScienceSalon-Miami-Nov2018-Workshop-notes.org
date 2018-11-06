@@ -46,7 +46,28 @@
   - /accounting data handling and cash flow prediction/
 - QiO Technologies
   - /predictions and recommendations in Industry 4.0/
-* GitHub project for the workshow and installations required
+* In case you hear things you not like
+- I guarantee you many of the employers I engage(d) with would not like
+  everything I plan to say.
+- It is like eating vegetables:
+  - even if you do not like them they are good for you.
+- If you do not like what you hear please write me an (extensive) email about how
+  wrong I am:
+  - antononcube@gmail.com
+* Managing expectations 
+- You are not going to learn how to make a complete, say, Alexa skill in 2 hours.
+  - Or 20 it this is the first time you see this kind of expositions.
+- In this workshop we only sketch making of complete Alexa skills or Google Home apps/skills.
+  - Note that there are a lot of other conversational platforms.
+- What are you going to see is a particular type of conversational agent making based on grammars and finite state machines.
+- Because of what Amazon, Apple, Google, Nuance, and others developments of speech-to-text recognition frameworks we are taking for granted to be easily able to hook-up with a certain speech-to-text module (or two, or five.)
+  - Same for text-to-speech.
+- Note that there are a plenty of dialog system design paradigms / approaches.
+- I have a script for only 40 min, the rest of the workshop is unscripted.
+  - What we are going to do would depend on:
+    - what kind of background the audience has, and
+    - what kind of agents the audience wants to design.
+* GitHub project for the workshop and installations required
 - The GitHub project:
   - https://github.com/antononcube/ConversationalAgents/tree/master/Projects/DataScienceSalon-Miami-Nov-2018-Workshop
   - Or just find it in:
@@ -61,19 +82,12 @@
   - Mathematica (used, but not needed.)
   - ANTLR (listed, but not needed.)
     - /I would rather use Perl6 at this point./
-* Managing expectations 
-- You are not going to learn how to make a complete, say, Alexa skill in 2 hours.
-  - Or 20 it this is the first time you see this kind of expositions.
-- In this workshop we only sketch making of complete Alexa skills or Google Home apps/skills.
-  - Note that there are a lot of other conversational platforms.
-- What are you going to see is a particular type of conversational agent making based on grammars and finite state machines.
-- Because of what Amazon, Apple, Google, Nuance, and others developments of speech-to-text recognition frameworks we are taking for granted to be easily able to hook-up with a certain speech-to-text module (or two, or five.)
-  - Same for text-to-speech.
-- Note that there are a plenty of dialog system design paradigms / approaches.
-- I have a script for only 40 min, the rest of the workshop is unscripted.
-  - What we are going to do would depend on:
-    - what kind of background the audience has, and
-    - what kind of agents the audience wants to design.
+* The screen set-up
+- Four screens:
+  - Mind-map,
+  - The main presentation,
+  - The Atom editor/IDE,
+  - RStudio.
 * Opening examples
 ** Didactic
 - [X] Phone Dialogs Conversational Agent.
@@ -84,9 +98,9 @@
 - [X] Regression workflows
   - QRMon main workflow example.
   - Note the three-four regression methods presented:
-    - quantile regression;
-    - linear regression;
-    - neural nets regression.
+    - Quantile Regression;
+    - Linear Regression;
+    - Neural Networks regression.
 - [ ] Classification workflows.
   - ClCon main workflow.
   - Rapid creation of classification workflows.
@@ -108,6 +122,15 @@
   7) Refine with initial feedback.
   8) Decide when to stop.
 - [[https://github.com/antononcube/ConversationalAgents/blob/master/ConceptualDiagrams/Monadic-making-of-ML-conversational-agents.pdf][The use of monadic DSL's big picture]].
+* MAYBE "Why not?" discussion points
+- It is very important to know the limitations of your tools.
+- /In case the audience is interested to hear this and we have time./
+** Why not Java?
+** Why not JavaScript?
+** Why not Mathematica?
+** Why not Perl6?
+** Why not Python?
+** Why not R? 
 * Introduction to EBNF
 - [[https://en.wikipedia.org/wiki/Context-free_grammar][Context free grammars]].
   - A set of production rules.
@@ -117,7 +140,7 @@
 * Introduction to parser programming 
 - This is not that important to follow.
 - Actual parser programming in R.
-- Should we do it /also/ in Perl6? (comming up next...)
+- Should we do it /also/ in Perl6? (coming up next...)
   - I think yes.
 - Contrasting the two approaches.
   - Functional parsers vs
@@ -185,4 +208,7 @@
 ** Why keep learning about this?
 ** Where to go next?
 * References
- 1) Anton Antonov, [[https://mathematicaforprediction.wordpress.com/2016/03/22/creating-and-programming-dsls/][Creating and programming domain specific languages]], (2016), [[https://mathematicaforprediction.wordpress.com][MathematicaForPrediction at WordPress]].
+ 1) Anton Antonov, [[https://mathematicaforprediction.wordpress.com/2016/03/22/creating-and-programming-dsls/][Creating and programming domain specific languages]],
+    (2016), [[https://mathematicaforprediction.wordpress.com][MathematicaForPrediction at WordPress]].
+ 2) Lars Dieckow, [[https://www.youtube.com/watch?v=lFBEf0o-4sY]["Parsing with grammars shoot-out"]], (2017), The Perl Conference.
+
