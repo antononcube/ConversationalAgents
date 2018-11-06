@@ -1,6 +1,8 @@
 (* Food-love example *)
 
 (* Below is the code from: https://mathematica.stackexchange.com/a/110129/34008 .*)
+(* Note that WolframAlpha is prevented from evaluation in order LoveObjectsCalories,
+   in order the evaluation results faster. *)
 
 (*
 Load the package:
@@ -20,14 +22,14 @@ ebnfCode = "
   <object> = 'sushi' | [ 'a' ] , 'chocolate' | 'milk' | [ 'an' , 'ice' ] , 'cream' | 'a' , 'tangerine' ;
   <objects> = 'sushi' | 'chocolates' | 'milks' | 'ice' , 'creams' | 'ice-creams' | 'tangerines' ;
   <objects-mult> = 'Range[2,100]' , <objects> <@ Mult ;
-  <object-list> = ( <object> | <objects> | <objects-mult> ) , { 'and' \[RightTriangle] ( <object> | <objects> | <objects-mult> ) } ; ";
+  <object-list> = ( <object> | <objects> | <objects-mult> ) , { 'and' &> ( <object> | <objects> | <objects-mult> ) } ; ";
 
 
 (*
 Generate parses from EBNF string:
 *)
 
-GenerateParsersFromEBNF[ToTokens@ebnfCode];
+GenerateParsersFromEBNF[ParseToTokens@ebnfCode];
 
 (*
 Test the parser pLOVEFOOD for the highest level rule <lovefood> with a list of sentences:
@@ -47,7 +49,7 @@ I gave up figuring out how to use EntityValue["Food",___], etc.
 
 Clear[LoveObjectsCalories]
 LoveObjectsCalories[parsed_] :=
-    Block[{res, wares(*,WolframAlpha={}&*)},
+    Block[{res, wares, WolframAlpha={}&},
       res = (StringJoin @@
           Flatten[Riffle[parsed, " and "] /.
               Mult[{x_, y_}] :> (StringJoin @@ Riffle[Flatten[{ToString[x], y}], " "])]);
