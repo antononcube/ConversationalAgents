@@ -60,7 +60,7 @@
 
 If[Length[DownValues[NeuralNetworkSpecificationsGrammar`pNETMONCOMMAND]] == 0,
   Echo["NeuralNetworkSpecificationsGrammar.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/NeuralNetworkSpecificationsGrammar.m"]
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/English/Mathematica/NeuralNetworkSpecificationsGrammar.m"]
 ];
 
 (***********************************************************)

@@ -35,7 +35,7 @@
 
 If[Length[DownValues[RecommenderWorkflowsGrammar`pSMRMONCOMMAND]] == 0,
   Echo["RecommenderWorkflowsGrammar.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/RecommenderWorkflowsGrammar.m"]
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/English/Mathematica/RecommenderWorkflowsGrammar.m"]
 ];
 
 

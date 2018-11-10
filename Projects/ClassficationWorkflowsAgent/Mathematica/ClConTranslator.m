@@ -70,7 +70,7 @@
 
 If[Length[DownValues[ClassifierWorkflowsGrammar`pCLCONCOMMAND]] == 0,
   Echo["ClassifierWorkflowsGrammar.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/ClassifierWorkflowsGrammar.m"]
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/English/Mathematica/ClassifierWorkflowsGrammar.m"]
 ];
 
 (*

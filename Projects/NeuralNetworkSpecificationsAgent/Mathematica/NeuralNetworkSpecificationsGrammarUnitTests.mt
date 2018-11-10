@@ -50,8 +50,8 @@ BeginTestSection["NeuralNetworkSpecificationsGrammarUnitTests.wlt"]
 
 VerificationTest[(* 1 *)
   CompoundExpression[
-    Import["~/ConversationalAgents/EBNF/NeuralNetworkSpecificationsGrammar.m"],
-    StringQ[NetMonCommandsGrammar[]] && StringLength[NetMonCommandsGrammar[]] > 15000
+    Import["~/ConversationalAgents/EBNF/English/Mathematica/NeuralNetworkSpecificationsGrammar.m"],
+    StringQ[NetMonCommandsGrammar[]] && StringLength[NetMonCommandsGrammar[]] > 1500
   ]
   ,
   True

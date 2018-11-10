@@ -50,7 +50,7 @@ BeginTestSection["ClassificationWorkflowsGrammarUnitTests.wlt"]
 
 VerificationTest[(* 1 *)
   CompoundExpression[
-    Import["~/ConversationalAgents/EBNF/ClassifierWorkflowsGrammar.m"],
+    Import["~/ConversationalAgents/EBNF/English/Mathematica/ClassifierWorkflowsGrammar.m"],
     StringQ[ClConCommandsGrammar[]] && StringLength[ClConCommandsGrammar[]] > 15000
   ]
   ,

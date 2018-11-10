@@ -35,7 +35,7 @@
 
 If[Length[DownValues[TimeSeriesWorkflowsGrammar`pQRMONCOMMAND]] == 0,
   Echo["TimeSeriesWorkflowsGrammar.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/TimeSeriesWorkflowsGrammar.m"]
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/EBNF/English/Mathematica/TimeSeriesWorkflowsGrammar.m"]
 ];
 
 If[Length[DownValues[ToNetMonPipelineFunction]] == 0,

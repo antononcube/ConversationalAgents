@@ -35,7 +35,7 @@ BeginTestSection["WordedNumbersGrammarUnitTests.wlt"]
 
 VerificationTest[(* 1 *)
   CompoundExpression[
-    Import["~/ConversationalAgents/EBNF/WordedNumbersGrammar.m"],
+    Import["~/ConversationalAgents/EBNF/English/Mathematica/WordedNumbersGrammar.m"],
     StringQ[WordedNumbersGrammar[]] && StringLength[WordedNumbersGrammar[]] > 3000
   ]
   ,
