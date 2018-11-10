@@ -3,7 +3,9 @@ from lark import Lark
 LoveFood_parser = Lark(r"""
     lovefood : subject loveverb objectspec
 
-    loveverb : "love"
+    love : "love"
+    
+    loveverb : love
              | "crave"
              | "demand"
              | "want"

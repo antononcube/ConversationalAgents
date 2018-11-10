@@ -42,7 +42,7 @@ my $match = LoveFood.parse(lc("I demand 2 ice creams"), actions => LoveFood-acti
 say $match.made;
 
 say "\n==================";
-$match = LoveFood.parse(lc("we want 30 chocolates and 2 ice creams"), actions => LoveFood-actions);
+$match = LoveFood.parse(lc("we want 30 chocolates and 2 ice creams"), actions => LoveFood-actions.new);
 say $match.made;
 
 # say "\n==================";
