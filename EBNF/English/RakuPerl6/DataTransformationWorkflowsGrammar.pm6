@@ -52,8 +52,9 @@ role DataTransformationWorkflowGrammar::CommonParts {
   token ascending { 'ascending' }
   token descending { 'descending' }
   token variables { 'variable' | 'variables' }
-  token list-separator { <.ws>? ',' <.ws>? | <.ws>? '&' <.ws>? }
-  token variable-name { [\w | '_' | '.']+ }
+  token list-separator-symbol { ',' | '&' | 'and' }
+  token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
+  token variable-name { ([\w | '_' | '.']+) <!{ $0 eq 'and' }> }
   rule variable-names-list { <variable-name>+ % <list-separator> }
   token assign-to-symbol { '=' | ':=' | '<-' }
 }

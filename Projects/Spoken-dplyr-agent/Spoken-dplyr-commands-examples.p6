@@ -43,7 +43,7 @@ say "============";
 say DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("select the variable mass");
 
 say "============";
-say DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("select mass, height & skin_color");
+say DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("select mass, height and skin_color");
 
 say "============";
 say DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("keep only the variables mass & height");
