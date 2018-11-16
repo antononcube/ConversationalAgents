@@ -35,12 +35,12 @@
 
 use v6;
 use lib '.';
-use lib '../../../Projects/Spoken-dplyr-agent';
+#use lib '../../../Projects/Spoken-dplyr-agent/';
 use DataTransformationWorkflowsGrammar;
 use Spoken-dplyr-actions;
 
 say "============";
-say DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("select the variable mass");
+say DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("arrange by the variable mass & height desc");
 
 say "============";
 say DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("select mass, height and skin_color");
@@ -65,3 +65,8 @@ say "=Actions============";
 my $match2 =
 DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("group over mass", actions => Spoken-dplyr-actions::Spoken-dplyr-actions.new );
 say $match2.made;
+
+say "=Actions============";
+my $match3 =
+DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse("arrange by mass, height descending", actions => Spoken-dplyr-actions::Spoken-dplyr-actions.new );
+say $match3.made;

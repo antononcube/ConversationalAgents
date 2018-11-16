@@ -38,30 +38,40 @@
 
 
 use v6;
-# use lib '.';
-# use lib '../../../English/RakuPerl6/';
+#use lib '.';
+#use lib '../../../EBNF/English/RakuPerl6/';
 use DataTransformationWorkflowsGrammar;
 
 unit module Spoken-dplyr-actions;
 
 class Spoken-dplyr-actions::Spoken-dplyr-actions {
   method TOP($/) { make $/.values[0].made; }
+
   # General
   method variable-name($/) { make $/; }
   method list-separator($/) { make ','; }
   method variable-names-list($/) { make $<variable-name>>>.made.join(", "); }
+
   # Load data
   method load-data($/) { make "starwars"; }
+
   # Select command
   method select-command($/) { make "dplyr::select(" ~ $<variable-names-list>.made ~ ")"; }
+
   # Mutate command
   method mutate-command($/) { make "dplyr::mutate(" ~ $<assign-pairs-list>.made ~ ") "; }
   method assign-pairs-list($/) { make $<assign-pair>>>.made.join(", "); }
   method assign-pair($/) { make $/.values[0].made ~ " = " ~ $/.values[1].made; }
+
   # Group command
   method group-command($/) { make "dplyr::group_by(" ~ $<variable-names-list>.made ~ ")"; }
+
   # Arrange command
-  method arrange-command($/) { make "dplyr::arrange(desc(" ~ $<variable-names-list>.made ~ "))"; }
+  method arrange-command($/) { make $/.values[0].made; }
+  method arrange-command-simple($/) { make $<variable-names-list>.made; }
+  method arrange-command-ascending($/) { make "dplyr::arrange(" ~ $<arrange-command-simple>.made ~ ")"; }
+  method arrange-command-descending($/) { make "dplyr::arrange(desc(" ~ $<arrange-command-simple>.made ~ "))"; }
+
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }
   method count-command($/) { make "dplyr::count()"; }

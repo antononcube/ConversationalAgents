@@ -48,9 +48,9 @@ role DataTransformationWorkflowGrammar::CommonParts {
   rule select { 'select' | 'keep' 'only'? }
   token mutate { 'mutate' }
   rule group-by { 'group' ( <by-preposition> | <using-preposition> ) }
-  rule arrange { ( 'arrange' | 'order' ) <by-preposition>? }
-  token ascending { 'ascending' }
-  token descending { 'descending' }
+  rule arrange { ( 'arrange' | 'order' | 'sort' ) ( <by-preposition> | <using-preposition> )? }
+  token ascending { 'ascending' | 'asc' }
+  token descending { 'descending' | 'desc' }
   token variables { 'variable' | 'variables' }
   token list-separator-symbol { ',' | '&' | 'and' }
   token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
@@ -82,8 +82,10 @@ grammar DataTransformationWorkflowGrammar::Spoken-dplyr-command does CommonParts
   rule group-command { <group-by> <variable-names-list> }
 
   # Arrange command
-  rule arrange-command { <arrange> <variable-names-list> <arrange-direction>? }
-  rule arrange-direction { <ascending> | <descending> }
+  rule arrange-command { <arrange-command-descending> | <arrange-command-ascending> }
+  rule arrange-command-simple { <arrange> <.the-determiner>? <.variables>? <variable-names-list> }
+  rule arrange-command-ascending { <arrange-command-simple> <.ascending>? }
+  rule arrange-command-descending { <arrange-command-simple> <descending> }
 
   # Statistics command
   rule statistics-command { <count-command> | <summarize-all-command> }
