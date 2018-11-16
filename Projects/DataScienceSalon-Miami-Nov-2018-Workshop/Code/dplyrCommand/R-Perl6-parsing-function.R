@@ -6,12 +6,14 @@
 # Date: 2018-11-03
 #---
 
-#' @description 
+#' @description Parses a string with a given Raku Perl 6 module directory, module name,
+#' grammar class, and grammar actions class.
 #' @param command command to be parsed
 #' @param moduleDirectory the directory for the parsing module
 #' @param grammarClassName the name of the grammar class
 #' @param actionsClassName the name of the actions class; if NULL just parsing is done
 #' @param perl6Location location of perl6
+#' @details Most likely this function is going to be used inside a function with a simpler signature.
 Perl6Parse <- function(command, 
                        moduleDirectory,
                        moduleName,
