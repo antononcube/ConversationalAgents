@@ -1,8 +1,6 @@
 # Spoken data transformations
 
-### *aka Data transformations spoken commands interpreter*
-
-### *aka Spoken dplyr commands* 
+...*aka* **"Spoken dplyr commands"** 
 
 ## In brief
 
@@ -15,6 +13,16 @@ programming languages: R, Mathematica, Python, etc.
 
 ## Examples
 
+Change the 'use' line with the proper location of the package.
+
+    #use lib './lib';
+    use SpokenDataTransformations;
+
+    say to-dplyr("select mass & height");
+    # dplyr::select(mass, height) 
+    
+    say to-dplyr("select mass & height; mutate mass1 = mass; arrange by the variable mass & height descending");
+    # dplyr::select(mass, height) %>% dplyr::mutate(mass1 = mass)  %>% dplyr::arrange(desc(mass, height))
 
 
 
