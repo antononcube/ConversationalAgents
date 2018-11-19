@@ -42,21 +42,35 @@ role DataTransformationWorkflowsGrammar::CommonParts {
   token assign { 'assign' | 'set' }
   token a-determiner { 'a' | 'an'}
   token the-determiner { 'the' }
+  token rows { 'rows' | 'records' }
+  rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
 
   # True dplyr; see comments below.
   rule data { 'the'? 'data' }
   rule select { 'select' | 'keep' 'only'? }
+  rule filter { 'filter' | <select> }
   token mutate { 'mutate' }
   rule group-by { 'group' ( <by-preposition> | <using-preposition> ) }
   rule arrange { ( 'arrange' | 'order' | 'sort' ) ( <by-preposition> | <using-preposition> )? }
   token ascending { 'ascending' | 'asc' }
   token descending { 'descending' | 'desc' }
   token variables { 'variable' | 'variables' }
+
+  # Variable list
   token list-separator-symbol { ',' | '&' | 'and' }
   token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
   token variable-name { ([\w | '_' | '.']+) <!{ $0 eq 'and' }> }
   rule variable-names-list { <variable-name>+ % <list-separator> }
   token assign-to-symbol { '=' | ':=' | '<-' }
+
+  # Predicates
+  rule predicates-list { <predicate>+ % <list-separator> }
+  rule predicate { <variable-name> <predicate-symbol> <predicate-value> }
+  token predicate-symbol { "==" | "<" | "<=" | ">" | ">=" }
+  rule predicate-value { <variable-name> }
+  # rule predicate-value { <number> | <string> | <variable-name> }
+  # token number { (\d*) }
+  # token string { "'" \w* "'" }
 }
 
 # Here we model the transformation natural language commands after R/RStudio's library "dplyr".
@@ -64,7 +78,8 @@ role DataTransformationWorkflowsGrammar::CommonParts {
 grammar DataTransformationWorkflowsGrammar::Spoken-dplyr-command does CommonParts {
 
   # TOP
-  rule TOP { <load-data> | <select-command> | <mutate-command> | <group-command> | <statistics-command> | <arrange-command> }
+  rule TOP { <load-data> | <select-command> | <filter-command> | <mutate-command> |
+             <group-command> | <statistics-command> | <arrange-command> }
 
   # Load data
   rule load-data { <.load-data-directive> <data-location-spec> }
@@ -72,6 +87,10 @@ grammar DataTransformationWorkflowsGrammar::Spoken-dplyr-command does CommonPart
 
   # Select command
   rule select-command { <select> <.the-determiner>? <.variables>? <variable-names-list> }
+
+  # Filter command
+  rule filter-command { <filter> <.the-determiner>? <.rows>? ( <.for-which-phrase>? | <by-preposition> )  <filter-spec> }
+  rule filter-spec { <predicates-list> }
 
   # Mutate command
   rule mutate-command { ( <mutate> | <assign> ) <.by-preposition>? <assign-pairs-list> }

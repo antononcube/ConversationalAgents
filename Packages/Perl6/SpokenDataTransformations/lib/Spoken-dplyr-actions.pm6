@@ -53,13 +53,21 @@ class Spoken-dplyr-actions::Spoken-dplyr-actions {
   method variable-names-list($/) { make $<variable-name>>>.made.join(", "); }
 
   # Load data
-  method load-data($/) { make "starwars"; }
+  method load-data($/) { make "loadData(" ~ $<data-location-spec>.made ~")"; }
+  method data-location-spec($/) { make "\'" ~ $/ ~ "\'"; }
 
   # Select command
   method select-command($/) { make "dplyr::select(" ~ $<variable-names-list>.made ~ ")"; }
 
+  # Filter commands
+  method filter-command($/) { make "dplyr::filter(" ~ $<filter-spec> ~ ")"; }
+  method filter-spec($/) { make $<predicates-list>.made; }
+  method predicate($/) { make $/>>.made.join(" "); }
+  method predicate-symbol($/) { make $/; }
+  method predicate-value($/) { make $/.values[0].made; }
+
   # Mutate command
-  method mutate-command($/) { make "dplyr::mutate(" ~ $<assign-pairs-list>.made ~ ") "; }
+  method mutate-command($/) { make "dplyr::mutate(" ~ $<assign-pairs-list>.made ~ ")"; }
   method assign-pairs-list($/) { make $<assign-pair>>>.made.join(", "); }
   method assign-pair($/) { make $/.values[0].made ~ " = " ~ $/.values[1].made; }
 
