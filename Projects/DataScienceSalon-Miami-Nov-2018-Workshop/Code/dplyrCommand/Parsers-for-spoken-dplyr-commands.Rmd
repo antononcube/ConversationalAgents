@@ -27,11 +27,27 @@ starwars %>%
 
 # Parsing and interpretation functions
 
+
+```{r}
+library(devtools)
+source_url("https://raw.githubusercontent.com/antononcube/ConversationalAgents/24f02ece28ef130ff7b52430787b2d48c5118718/Projects/Spoken-dplyr-agent/R/Perl6-command-functions.R")
+```
+
+Change the directory names with the correct paths.
+The paths below assume Mac OS X and the GitHub repository ConversationalAgents being 
+in the current user directory.
+
+```{r}
+localUserDirName <- file.path( "/", "Users", Sys.info()["user"])
+perl6ParsingLib <- file.path( localUserDirName, "ConversationalAgents", "Projects", "DataScienceSalon-Miami-Nov-2018-Workshop", "Code", "dplyrCommand") 
+```
+
+
 ```{r}
 DPLYRParse <- 
   function(cmd) { 
     Perl6Parse(command = cmd, 
-           moduleDirectory = "/Users/antonov/R/DataScienceSalon-Miami-Nov2018", 
+           moduleDirectory = perl6ParsingLib, 
            moduleName = "DPLYRCommand",
            grammarClassName = "DPLYR-command",
            actionsClassName = NULL)
@@ -42,7 +58,7 @@ DPLYRParse <-
 DPLYRInterpret <- 
   function(cmd) { 
     Perl6Parse(command = cmd, 
-           moduleDirectory = "/Users/antonov/R/DataScienceSalon-Miami-Nov2018", 
+           moduleDirectory = perl6ParsingLib, 
            moduleName = "DPLYRCommand",
            grammarClassName = "DPLYR-command",
            actionsClassName = "DPLYR-command-actions")
