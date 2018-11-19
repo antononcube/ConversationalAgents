@@ -27,10 +27,10 @@
 #==============================================================================
 
 use v6;
-unit module DataTransformationWorkflowGrammar;
+unit module DataTransformationWorkflowsGrammar;
 
 # This role class has common command parts.
-role DataTransformationWorkflowGrammar::CommonParts {
+role DataTransformationWorkflowsGrammar::CommonParts {
 
   rule load-data-directive { 'load' 'data' }
   token create-directive { 'create' | 'make' }
@@ -61,7 +61,7 @@ role DataTransformationWorkflowGrammar::CommonParts {
 
 # Here we model the transformation natural language commands after R/RStudio's library "dplyr".
 # For more details see: https://dplyr.tidyverse.org/ .
-grammar DataTransformationWorkflowGrammar::Spoken-dplyr-command does CommonParts {
+grammar DataTransformationWorkflowsGrammar::Spoken-dplyr-command does CommonParts {
 
   # TOP
   rule TOP { <load-data> | <select-command> | <mutate-command> | <group-command> | <statistics-command> | <arrange-command> }

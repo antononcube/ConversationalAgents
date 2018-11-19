@@ -22,21 +22,21 @@ sub has-semicolon (Str $word) {
     return defined index $word, ";";
 }
 
-proto to-dplyr($) is export {*}
+proto to_dplyr($) is export {*}
 
-multi to-dplyr ( Str $command where not has-semicolon($command) ) {
+multi to_dplyr ( Str $command where not has-semicolon($command) ) {
   #say DataTransformationWorkflowsGrammar::Spoken-dplyr-command.parse($command);
-  my $match = DataTransformationWorkflowGrammar::Spoken-dplyr-command.parse($command, actions => Spoken-dplyr-actions::Spoken-dplyr-actions );
+  my $match = DataTransformationWorkflowsGrammar::Spoken-dplyr-command.parse($command, actions => Spoken-dplyr-actions::Spoken-dplyr-actions );
   die "Cannot parse input given command." unless $match;
   return $match.made;
 }
 
-multi to-dplyr ( Str $command where has-semicolon($command) ) {
+multi to_dplyr ( Str $command where has-semicolon($command) ) {
 
-  my @commandLines = $command.split(/ ';' \s* /); say map { "'" ~ $_ ~ "'" }, @commandLines;
+  my @commandLines = $command.split(/ ';' \s* /);
 
   my @dplyrLines =
-  map { to-dplyr($_) }, @commandLines;
+  map { to_dplyr($_) }, @commandLines;
 
-  return @dplyrLines.join(" %>% ");
+  return @dplyrLines.join(" %>%\n");
 }

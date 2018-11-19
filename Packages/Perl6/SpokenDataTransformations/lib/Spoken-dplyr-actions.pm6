@@ -40,7 +40,7 @@
 use v6;
 #use lib '.';
 #use lib '../../../EBNF/English/RakuPerl6/';
-#use DataTransformationWorkflowsGrammar;
+use DataTransformationWorkflowsGrammar;
 
 unit module Spoken-dplyr-actions;
 
