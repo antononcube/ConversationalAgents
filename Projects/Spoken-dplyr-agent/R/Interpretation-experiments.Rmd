@@ -1,0 +1,36 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r, echo=FALSE}
+source("./Load-libraries-and-sources.R")
+```
+
+# Introduction
+
+# Interpretation examples
+
+```{r}
+to_dplyr_command("select mass & height")
+```
+
+```{r}
+res <- to_dplyr_command("load data starwars; select mass & height; mutate mass1 = mass; sort by height, mass descending", parse = T)
+res
+```
+
+```{r}
+eval(res)
+```
+
+
+```{r}
+res <- to_dplyr_command("load data iris; filter rows by Petal.Length > 1.4; group by Species; find counts; sort by n", parse = T)
+res
+```
+
+```{r}
+eval(res)
+```
+
