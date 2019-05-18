@@ -5,13 +5,13 @@
 \alias{DPLYRInterpret}
 \title{Interpret dplyr natural speech command.}
 \usage{
-DPLYRInterpret(cmd)
+DPLYRInterpret(command)
 }
 \arguments{
 \item{cmd}{A natural language command.}
 }
 \value{
-A string
+A character vector
 }
 \description{
 Parses and interprets a command by directly invoking a pair of Raku Perl6 parser and actions classes.

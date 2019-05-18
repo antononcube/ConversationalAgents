@@ -5,13 +5,13 @@
 \alias{DPLYRParse}
 \title{Parse dplyr natural speech command.}
 \usage{
-DPLYRParse(cmd)
+DPLYRParse(command)
 }
 \arguments{
-\item{cmd}{A natural language command.}
+\item{command}{A natural language command.}
 }
 \value{
-A string
+A character vector
 }
 \description{
 Parses a command by directly invoking a Raku Perl6 parser class.

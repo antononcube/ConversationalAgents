@@ -5,10 +5,10 @@
 \alias{to_dplyr_command}
 \title{Interpret a dplyr spoken command.}
 \usage{
-to_dplyr_command(cmd, parse = TRUE)
+to_dplyr_command(command, parse = TRUE)
 }
 \arguments{
-\item{cmd}{A string with a command or a list of commands separated with ";".}
+\item{command}{A string with a command or a list of commands separated with ";".}
 
 \item{parse}{A boolean should the result be parsed as an R expression.}
 }

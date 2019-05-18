@@ -65,13 +65,13 @@ Perl6ParsingLib <- function() { file.path( LocalUserDirName(), "ConversationalAg
 
 #' Parse dplyr natural speech command.
 #' @description Parses a command by directly invoking a Raku Perl6 parser class.
-#' @param cmd A natural language command.
-#' @return A string
+#' @param command A natural language command.
+#' @return A character vector
 #' @family Spoken dplyr
 #' @export
 DPLYRParse <-
-  function(cmd) {
-    Perl6Parse(command = cmd,
+  function(command) {
+    Perl6Parse(command = command,
                moduleDirectory = Perl6ParsingLib(),
                moduleName = "DataTransformationWorkflowsGrammar",
                grammarClassName = "Spoken-dplyr-command",
@@ -81,14 +81,14 @@ DPLYRParse <-
 #' Interpret dplyr natural speech command.
 #' @description Parses and interprets a command by directly invoking a pair of Raku Perl6 parser and actions classes.
 #' @param cmd A natural language command.
-#' @return A string
+#' @return A character vector
 #' @family Spoken dplyr
 #' @export
 DPLYRInterpret <-
-  function(cmd) {
-    Perl6Parse(command = cmd,
+  function(command) {
+    Perl6Parse(command = command,
                moduleDirectory = Perl6ParsingLib(),
-               moduleName = "Spoken-dplyr-actions",
+               moduleName = "SpokenDataTransformations",
                grammarClassName = "DataTransformationWorkflowsGrammar",
                actionsClassName = "Spoken-dplyr-actions")
   }
@@ -96,13 +96,13 @@ DPLYRInterpret <-
 #' Interpret a dplyr spoken command.
 #' @description Calls Raku Perl 6 module function `to_dplyr` in order to get
 #' interpretation of a spoken command or a list spoken commands separated with ";".
-#' @param cmd A string with a command or a list of commands separated with ";".
+#' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A boolean should the result be parsed as an R expression.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-to_dplyr_command <- function(cmd, parse=TRUE) {
+to_dplyr_command <- function(command, parse=TRUE) {
   pres <- Perl6Command( command = paste0( "say to_dplyr(\"", cmd, "\")"),
                         moduleDirectory = Perl6ParsingLib(),
                         moduleName = "SpokenDataTransformations" )
