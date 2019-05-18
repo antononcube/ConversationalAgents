@@ -2,8 +2,8 @@
 
 export(DPLYRInterpret)
 export(DPLYRParse)
+export(LocalUserDirName)
 export(Perl6Command)
 export(Perl6Parse)
-export(localUserDirName)
-export(perl6ParsingLib)
+export(Perl6ParsingLib)
 export(to_dplyr_command)

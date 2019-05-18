@@ -54,12 +54,14 @@
 ## in the current user directory.
 
 #' Local user directory name
+#' @return A string
 #' @export
-localUserDirName <- file.path( "/", "Users", Sys.info()["user"])
+LocalUserDirName <- function() { file.path( "/", "Users", Sys.info()["user"]) }
 
 #' Raku Perl 6 parser library
+#' @return A string
 #' @export
-perl6ParsingLib <- file.path( localUserDirName, "ConversationalAgents", "Packages", "Perl6", "SpokenDataTransformations", "lib")
+Perl6ParsingLib <- function() { file.path( LocalUserDirName(), "ConversationalAgents", "Packages", "Perl6", "SpokenDataTransformations", "lib") }
 
 #' Parse dplyr natural speech command.
 #' @description Parses a command by directly invoking a Raku Perl6 parser class.
@@ -70,7 +72,7 @@ perl6ParsingLib <- file.path( localUserDirName, "ConversationalAgents", "Package
 DPLYRParse <-
   function(cmd) {
     Perl6Parse(command = cmd,
-               moduleDirectory = perl6ParsingLib,
+               moduleDirectory = Perl6ParsingLib(),
                moduleName = "DataTransformationWorkflowsGrammar",
                grammarClassName = "Spoken-dplyr-command",
                actionsClassName = NULL)
@@ -85,7 +87,7 @@ DPLYRParse <-
 DPLYRInterpret <-
   function(cmd) {
     Perl6Parse(command = cmd,
-               moduleDirectory = perl6ParsingLib,
+               moduleDirectory = Perl6ParsingLib(),
                moduleName = "Spoken-dplyr-actions",
                grammarClassName = "DataTransformationWorkflowsGrammar",
                actionsClassName = "Spoken-dplyr-actions")
@@ -102,7 +104,7 @@ DPLYRInterpret <-
 #' @export
 to_dplyr_command <- function(cmd, parse=TRUE) {
   pres <- Perl6Command( command = paste0( "say to_dplyr(\"", cmd, "\")"),
-                        moduleDirectory = perl6ParsingLib,
+                        moduleDirectory = Perl6ParsingLib(),
                         moduleName = "SpokenDataTransformations" )
   if(parse) { parse(text = pres) }
   else { pres }
