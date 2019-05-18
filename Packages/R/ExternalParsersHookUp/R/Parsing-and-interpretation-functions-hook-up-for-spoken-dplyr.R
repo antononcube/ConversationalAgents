@@ -103,7 +103,7 @@ DPLYRInterpret <-
 #' @family Spoken dplyr
 #' @export
 to_dplyr_command <- function(command, parse=TRUE) {
-  pres <- Perl6Command( command = paste0( "say to_dplyr(\"", cmd, "\")"),
+  pres <- Perl6Command( command = paste0( "say to_dplyr(\"", command, "\")"),
                         moduleDirectory = Perl6ParsingLib(),
                         moduleName = "SpokenDataTransformations" )
   if(parse) { parse(text = pres) }
