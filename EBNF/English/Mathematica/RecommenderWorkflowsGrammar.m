@@ -100,13 +100,14 @@ ebnfCommonParts = "
   <list-delimiter> = 'and' | ',' | ',' , 'and' | 'together' , 'with' <@ ListDelimiter ;
   <with-preposition> =  'using' | 'by' | 'with' ;
   <using-preposition> = 'using' | 'with' | 'over' | 'for' ;
+  <of-preposition> = 'of' ;
   <to-preposition> = 'to' | 'into' ;
   <by-preposition> = 'by' | 'through' | 'via' ;
   <number-value> = '_?NumberQ' <@ NumericValue ;
   <percent-value> = <number-value> <& ( '%' | 'percent' ) <@ PercentValue ;
   <boolean-value> = 'True' | 'False' | 'true' | 'false' <@ BooleanValue ;
   <display-directive> = 'show' | 'give' | 'display' | 'echo' <@ DisplayDirective ;
-  <compute-directive> = 'compute' | 'calculate' | 'find' <@ ComputeDirective ;
+  <compute-directive> = 'compute' | 'calculate' | 'find' | 'what' , 'is' <@ ComputeDirective ;
   <compute-and-display> = <compute-directive> , [ 'and' &> <display-directive> ] <@ ComputeAndDisplay ;
   <generate-directive> = 'make' | 'create' | 'generate' <@ GenerateDirective ;
   <recommend-directive> = 'recommend' | 'suggest' <@ RecommendDirective ;
@@ -117,6 +118,7 @@ ebnfCommonParts = "
   <consumption-history> = [ 'consumption' ] , 'history' <@ ConsumptionHistory ;
   <recommended-items> = 'recommended' , 'items' | ( 'recommendations' | 'recommendation' ) , [ 'results' ]  <@ RecommendedItems ;
   <recommender> = 'recommender' , [ 'object' | 'system' ] <@ Recommender ;
+  <item> = 'item' <@ Item ;
 ";
 
 
@@ -170,18 +172,18 @@ ebnfRecommend = "
 ";
 
 ebnfHistorySpec = "
-  <history-spec> = <items-list> | <scored-items-list> ;
-  <item> = '_String' <@ SMRItem ;
-  <items-list> = <item> , [ { <list-delimiter> &> <item> } ] <@ SMRItemsList@*Flatten@*List ;
-  <scored-item> = <item> , <score-association-symbol> &> <number-value> <@ SMRScoredItem ;
-  <scored-items-list> = <scored-item> , [ { <list-delimiter> &> <scored-item> } ] <@ SMRScoredItemsList@*Flatten@*List ;
+  <history-spec> = <item-ids-list> | <scored-item-ids-list> ;
+  <item-id> = '_String' <@ SMRItemID ;
+  <item-ids-list> = <item-id> , [ { <list-delimiter> &> <item-id> } ] <@ SMRItemIDsList@*Flatten@*List ;
+  <scored-item-id> = <item-id> , <score-association-symbol> &> <number-value> <@ SMRScoredItemID ;
+  <scored-item-ids-list> = <scored-item-id> , [ { <list-delimiter> &> <scored-item-id> } ] <@ SMRScoredItemIDsList@*Flatten@*List ;
 ";
 
 ebnfProfileSpec = "
-  <profile-spec> = <tags-list> | <scored-tags-list> ;
-  <tag> = '_String' <@ SMRTag ;
-  <tags-list> = <tag> , [ { <list-delimiter> &> <tag> } ] <@ SMRTagsList@*Flatten@*List ;
-  <scored-tag> = <tag> , <score-association-symbol> &> <number-value> <@ SMRScoredTag ;
+  <profile-spec> = <tag-ids-list> | <scored-tags-list> ;
+  <tag-id> = '_String' <@ SMRTag ;
+  <tag-ids-list> = <tag-id> , [ { <list-delimiter> &> <tag-id> } ] <@ SMRTagsList@*Flatten@*List ;
+  <scored-tag> = <tag-id> , <score-association-symbol> &> <number-value> <@ SMRScoredTag ;
   <scored-tags-list> = <scored-tag> , [ { <list-delimiter> &> <scored-tag> } ] <@ SMRScoredTagsList@*Flatten@*List ;
 ";
 
@@ -191,9 +193,11 @@ ebnfProfileSpec = "
 (************************************************************)
 
 ebnfMakeProfile = "
-  <make-profile-command> = ( <compute-directive> | <generate-directive> ) , [ 'the' ] , <consumption-profile> , <using-preposition> ,
-                           [ <consumption-history> ] , <history-spec>
+  <make-profile-command> = ( <compute-directive> | <generate-directive> ) ,
+                           ( [ 'the' ] , <consumption-profile> , ( <using-preposition> | <of-preposition> ) , <history-spec-filler> ) &>
+                           <history-spec>
                            <@ SMRMakeProfile ;
+  <history-spec-filler> = [ 'the'] , [ <consumption-history> | <item> ] ;
 ";
 
 ebnfProofs = "
@@ -208,7 +212,7 @@ ebnfRecommendationsProcessing = "
                                        <using-preposition> , [ 'the' ] , [ 'dataset' ] ) &>
                                      <dataset-spec> , [ ( <by-preposition> , [ 'the' ] , 'column' ) &> <column-name-spec> ]
                                      <@ SMRExtendRecommendationsCommand ;
-  <filter-recommendations-command> = ( 'filter' , [ 'the' ] , <recommended-items> , <with-preposition> ) &> <tags-list>
+  <filter-recommendations-command> = ( 'filter' , [ 'the' ] , <recommended-items> , <with-preposition> ) &> <tag-ids-list>
                                      <@ SMRFilterRecommendationsCommand ;
   <dataset-spec>  = '_String' <@ SMRDatasetSpec ;
   <column-name-spec> = '_String' <@ SMRColumnNameSpec ;
