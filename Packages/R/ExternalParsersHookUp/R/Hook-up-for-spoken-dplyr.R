@@ -1,5 +1,5 @@
 ##===========================================================
-## Raku Perl 6 parsing and interpretation functions hook-up for spoken dplyr
+## Raku Perl 6 hook-up for spoken dplyr
 ##
 ## BSD 3-Clause License
 ##
