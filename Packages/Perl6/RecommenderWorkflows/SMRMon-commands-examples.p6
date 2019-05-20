@@ -38,4 +38,4 @@ say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("recommend 
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("echo pipeline value", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("extend recommendations with dfTitanic", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("extend recommendations with the data frame dfTitanic", actions => SMRMon-R-actions::SMRMon-R-actions).made;

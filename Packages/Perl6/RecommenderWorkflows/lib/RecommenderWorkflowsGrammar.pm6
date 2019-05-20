@@ -62,8 +62,9 @@ role RecommenderWorkflowsGrammar::CommonParts {
 
   # Data
   token rows { 'rows' | 'records' }
-  token time-series-data { 'time' 'series' 'data'? }
-  token data { 'data' | 'dataset' | <time-series-data> }
+  rule time-series-data { 'time' 'series' 'data'? }
+  rule data-frame { 'data' 'frame' }
+  rule data { <data-frame> | 'data' | 'dataset' | <time-series-data> }
   token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
   token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
 
@@ -197,7 +198,7 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
                                       [ <using-preposition> | <by-preposition> | <for-preposition> ] }
 
   # Extend recommendations commands
-  rule extend-recommendations-command { [ 'extend' <recommendations>? | 'join' [ 'across' ]? ] <.with-preposition> <dataset-name>  }
+  rule extend-recommendations-command { [ 'extend' | 'join' [ 'across' ]? ] <recommendations>? <.with-preposition> <.the-determiner>? <.data>? <dataset-name> }
 
   # Plot command
   rule plot-command { <plot-recommendation-scores> }
