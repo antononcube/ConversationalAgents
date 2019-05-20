@@ -6,7 +6,7 @@ use SMRMon-R-actions;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("load data s2");
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use the smr object smr2");
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use the smr object smr2");
 
 say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use the smr object smr2", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
@@ -35,3 +35,7 @@ say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("recommend 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("compute profile for the item gog");
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("compute the profile for the job history O-2185977=3, O-2140979=2, O-2219692=1");
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("echo pipeline value", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("extend recommendations with dfTitanic", actions => SMRMon-R-actions::SMRMon-R-actions).made;

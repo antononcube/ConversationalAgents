@@ -119,19 +119,30 @@ role RecommenderWorkflowsGrammar::CommonParts {
 
 }
 
+# This role class has pipeline commands.
+role RecommenderWorkflowsGrammar::Pipeline-command {
 
-grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonParts {
+  rule pipeline-command { <get-pipeline-value> }
+  rule get-pipeline-value { <display-directive> <pipeline-value> }
+  rule pipeline-value { <.pipeline-filler-phrase>? 'value'}
+  rule pipeline-filler-phrase { <the-determiner>? [ 'current' ]? 'pipeline' }
+
+}
+
+grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonParts does Pipeline-command {
 
   # TOP
   rule TOP { <data-load-command> | <create-command> |
              <data-transformation-command> | <data-statistics-command> |
              <recommend-by-profile-command> | <recommend-by-history-command> |
-             <make-profile-command> }
+             <make-profile-command> |
+             <extend-recommendations-command> |
+             <pipeline-command> }
 
   # Load data
   rule data-load-command { <load-data> | <use-recommender> }
   rule data-location-spec { <dataset-name> }
-  rule load-data {  <.load-data-directive> <data-location-spec> }
+  rule load-data { <.load-data-directive> <data-location-spec> }
   rule use-recommender { <.use-verb> <.the-determiner>? <recommender-object> <variable-name> }
 
   # Create command
@@ -139,7 +150,7 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule simple-way { <simple> 'way' | 'directly' | 'simply' }
   rule simple-way-phrase { 'in' <a-determiner> <simple-way> }
   rule create-simple { <create-directive> <.a-determiner>? <recommender> <simple-way-phrase> | <simple> <recommender> [ 'creation' | 'making' ] }
-  rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> ]? <dataset-name> }
+  rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
   rule create-by-matrices { <create-directive> [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? 'matrices' <variable-names-list> }
 
   # Data transformation command
@@ -173,17 +184,20 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   # Profile spec
   rule profile-spec { <tag-ids-list> | <scored-tag-ids-list> }
 
-  # Recommend
+  # Recommend by history
   rule recommend-by-history-command { <.recommend-directive>
-                                      [ <.using-preposition> | <.by-preposition> ] <.the-determiner>? <.history-phrase>?
+                                      [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
                                       <history-spec> }
 
   rule recommend-by-profile-command { <.recommend-directive> [ <.using-preposition> | <.by-preposition> ] <.the-determiner>? <.profile> <profile-spec> }
 
-  # Profile
+  # Recommend by profile
   rule make-profile-command {  <make-profile-command-opening> <.the-determiner>? [ <history-phrase> <.list>? | <items> ] <history-spec> }
   rule make-profile-command-opening { <compute-directive> [ <a-determiner> | <the-determiner> ]? <profile>
                                       [ <using-preposition> | <by-preposition> | <for-preposition> ] }
+
+  # Extend recommendations commands
+  rule extend-recommendations-command { [ 'extend' <recommendations>? | 'join' [ 'across' ]? ] <.with-preposition> <dataset-name>  }
 
   # Plot command
   rule plot-command { <plot-recommendation-scores> }

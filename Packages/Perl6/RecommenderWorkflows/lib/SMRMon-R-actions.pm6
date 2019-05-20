@@ -54,26 +54,28 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method variable-names-list($/) { make "c(" ~ $<variable-name>>>.made.join(", ") ~ ")"; }
 
   # (Scored) item lists
-  method item-id($/) { make $/; }
+  method item-id($/) { make "\"" ~ $/ ~ "\""; }
   method item-ids-list($/) { make "c(" ~ $<item-id>>>.made.join(", ") ~ ")"; }
-  method scored-item-id($/) { make $<item-id> ~ "=" ~ $<number-value>; }
+  method scored-item-id($/) { make "\"" ~ $<item-id> ~ "\"" ~ "=" ~ $<number-value>; }
   method scored-item-ids-list($/) { make "c(" ~ $<scored-item-id>>>.made.join(", ") ~ ")"; }
 
   # (Scored) tag lists
+  method tag-id($/) { make "\"" ~ $/ ~ "\""; }
   method tag-ids-list($/) { make "c(" ~ $<tag-id>>>.made.join(", ") ~ ")"; }
-  method scored-tag-id($/) { make $<tag-id> ~ "=" ~ $<number-value>; }
+  method scored-tag-id($/) { make "\"" ~ $<tag-id> ~ "\"" ~ "=" ~ $<number-value>; }
   method scored-tag-ids-list($/) { make "c(" ~ $<scored-tag-id>>>.made.join(", ") ~ ")"; }
 
   # Data load commands
   method data-load-command($/) { make $/.values[0].made; }
-  method load-data($/) { make "SMRMonSetData(" ~ $<data-location-spec>.made ~ ")"; }
+  method load-data($/) { make "SMRMonSetData( data = " ~ $<data-location-spec>.made ~ ")"; }
   method data-location-spec($/) { make $<dataset-name>.made; }
-  method use-recommender($/) { make "SMRMonUseSMR(" ~ $<variable-name>.made ~ ")"; }
+  method use-recommender($/) { make $<variable-name>.made; }
+  method dataset-name($/) { make $/; }
 
   # Create commands
   method create-command($/) { make $/.values[0].made; }
   method create-simple($/) { make "SMRMonCreate()"; }
-  method create-by-dataset($/) { make "SMRMonCreate( data =" ~ $<dataset-name>.made ~ ")"; }
+  method create-by-dataset($/) { make "SMRMonCreate( data = " ~ $<dataset-name>.made ~ ")"; }
   method create-by-matrices($/) { make "SMRMonCreateFromMatrices( matrices = " ~ $<variable-names-list>.made ~ ")"; }
 
   # Data statistics command
@@ -84,14 +86,22 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method tags-per-items($/) { make "SMRMonTagsPerItemDistribution()"; }
 
   # Recommend by history command
-  method recommend-by-history-command($/) { make "SMRMonRecommend(" ~ $<history-spec>.made ~ ")"; }
+  method recommend-by-history-command($/) { make "SMRMonRecommend( history = " ~ $<history-spec>.made ~ ")"; }
   method history-spec($/) { make $/.values[0].made; }
 
   # Recommend by profile command
-  method recommend-by-profile-command($/) { make "SMRMonRecommendByProfile(" ~ $<history-spec>.made ~ ")"; }
+  method recommend-by-profile-command($/) { make "SMRMonRecommendByProfile( profile = " ~ $<profile-spec>.made ~ ")"; }
   method profile-spec($/) { make $/.values[0].made; }
+
+  # Extend recommendations command
+  method extend-recommendations-command($/) { make "SMRMonJoinAcross( data = " ~ $<dataset-name>.made ~ ")" }
 
   # Plot command
   method plot-command($/) { make $/.values[0].made; }
   method plot-recommendation-scores($/) { make "SMRPlotScores()"; }
+
+  # Pipeline command
+  method pipeline-command($/) { make  $/.values[0].made; }
+  method get-pipeline-value($/) { make "SMRMonEchoValue()"; }
+
 }
