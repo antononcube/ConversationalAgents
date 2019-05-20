@@ -144,7 +144,7 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule data-load-command { <load-data> | <use-recommender> }
   rule data-location-spec { <dataset-name> }
   rule load-data { <.load-data-directive> <data-location-spec> }
-  rule use-recommender { <.use-verb> <.the-determiner>? <recommender-object> <variable-name> }
+  rule use-recommender { <.use-verb> <.the-determiner>? <.recommender-object> <variable-name> }
 
   # Create command
   rule create-command { <create-by-matrices> | <create-by-dataset> }
@@ -166,15 +166,15 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule tags-per-item { <number-of> <tags> 'per' <item> }
 
   # (Scored) items lists
-  token score-association-symbol { '=' | '->' | ':' }
+  token score-association-symbol { '=' | '->' }
   token score-association-separator { <.ws>? <score-association-symbol> <.ws>? }
-  token item-id { ([ \w | '-' | '_' | '.' | \d ]+) <!{ $0 eq 'and' }> }
+  token item-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
   rule item-ids-list { <item-id>+ % <list-separator> }
   token scored-item-id { <item-id> <.score-association-separator> <number-value> }
   rule scored-item-ids-list { <scored-item-id>+ % <list-separator> }
 
   # (Scored) tags lists
-  token tag-id { ([ \w | '-' | '_' | '.' | \d ]+) <!{ $0 eq 'and' }> }
+  token tag-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
   rule tag-ids-list { <tag-id>+ % <list-separator> }
   token scored-tag-id { <tag-id> <.score-association-separator> <number-value> }
   rule scored-tag-ids-list { <scored-tag-id>+ % <list-separator> }
