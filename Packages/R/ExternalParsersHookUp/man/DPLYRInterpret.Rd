@@ -17,6 +17,8 @@ Parses and interprets a command by directly invoking a pair of Raku Perl6 parser
 }
 \seealso{
 Other Spoken dplyr: \code{\link{DPLYRParse}},
+  \code{\link{SMRMonInterpret}}, \code{\link{SMRMonParse}},
+  \code{\link{to_SMRMon_R_command}},
   \code{\link{to_dplyr_command}}
 }
 \concept{Spoken dplyr}

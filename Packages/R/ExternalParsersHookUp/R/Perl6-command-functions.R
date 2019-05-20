@@ -114,3 +114,10 @@ Perl6Parse <- function(command,
   pres
 }
 
+
+#' Local user directory name
+#' @details Mac OS X centric user directory at this point.
+#' @return A string
+#' @export
+LocalUserDirName <- function() { file.path( "/", "Users", Sys.info()["user"]) }
+

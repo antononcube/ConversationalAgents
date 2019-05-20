@@ -53,15 +53,10 @@
 ## The paths below assume Mac OS X and the GitHub repository ConversationalAgents being
 ## in the current user directory.
 
-#' Local user directory name
-#' @return A string
-#' @export
-LocalUserDirName <- function() { file.path( "/", "Users", Sys.info()["user"]) }
-
 #' Raku Perl 6 parser library
 #' @return A string
 #' @export
-Perl6ParsingLib <- function() { file.path( LocalUserDirName(), "ConversationalAgents", "Packages", "Perl6", "SpokenDataTransformations", "lib") }
+Perl6DPLYRParsingLib <- function() { file.path( LocalUserDirName(), "ConversationalAgents", "Packages", "Perl6", "SpokenDataTransformations", "lib") }
 
 #' Parse dplyr natural speech command.
 #' @description Parses a command by directly invoking a Raku Perl6 parser class.
@@ -72,7 +67,7 @@ Perl6ParsingLib <- function() { file.path( LocalUserDirName(), "ConversationalAg
 DPLYRParse <-
   function(command) {
     Perl6Parse(command = command,
-               moduleDirectory = Perl6ParsingLib(),
+               moduleDirectory = Perl6DPLYRParsingLib(),
                moduleName = "DataTransformationWorkflowsGrammar",
                grammarClassName = "Spoken-dplyr-command",
                actionsClassName = NULL)
@@ -87,7 +82,7 @@ DPLYRParse <-
 DPLYRInterpret <-
   function(command) {
     Perl6Parse(command = command,
-               moduleDirectory = Perl6ParsingLib(),
+               moduleDirectory = Perl6DPLYRParsingLib(),
                moduleName = "SpokenDataTransformations",
                grammarClassName = "DataTransformationWorkflowsGrammar",
                actionsClassName = "Spoken-dplyr-actions")
@@ -104,7 +99,7 @@ DPLYRInterpret <-
 #' @export
 to_dplyr_command <- function(command, parse=TRUE) {
   pres <- Perl6Command( command = paste0( "say to_dplyr(\"", command, "\")"),
-                        moduleDirectory = Perl6ParsingLib(),
+                        moduleDirectory = Perl6DPLYRParsingLib(),
                         moduleName = "SpokenDataTransformations" )
   if(parse) { parse(text = pres) }
   else { pres }
