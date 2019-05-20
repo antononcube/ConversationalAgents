@@ -3,13 +3,13 @@
 =head1 SpokenDataTransformations
 
 C<SpokenDataTransformations> package has grammar classes and action classes for the parsing and
-interpretation of spoken command that specify data transformations as described and
-implemented in the R/RStudio library [dplyr](https://dplyr.tidyverse.org).
+interpretation of English natural speech commands that specify data transformations as described
+and implemented in the R/RStudio library [dplyr](https://dplyr.tidyverse.org).
 
 =head1 Synopsis
 
     use SpokenDataTransformations;
-    my $rcode = to-dplyr("select height & mass; arrange by height descending");
+    my $rcode = to_dplyr("select height & mass; arrange by height descending");
 
 =end pod
 
