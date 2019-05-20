@@ -4,23 +4,31 @@ use RecommenderWorkflows;
 use RecommenderWorkflowsGrammar;
 use SMRMon-R-actions;
 
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("load data dfTitanic");
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("load data dfTitanic", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use recommender smr");
+
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use recommender smr", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("load data s2");
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use the smr object smr2");
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use the smr object smr2", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("use the smr object smr2", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse("create from matrices smr2");
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("create from matrices smr2", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("create from matrices smr2", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("create a recommender in a simple way with ds2");
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("create with ds2");
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("recommend with history id.12:3 and id.13:4");
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("recommend with history id.12:3 and id.13:4");
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("recommend with history id.12:3 and id.13:4", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("recommend with history id.12:3 and id.13:4", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("recommend by profile hr.12->3 & rr.12->4");
 
