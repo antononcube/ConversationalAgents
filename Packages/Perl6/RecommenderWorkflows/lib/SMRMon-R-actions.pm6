@@ -49,18 +49,18 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method TOP($/) { make $/.values[0].made; }
 
   # General
-  method variable-name($/) { make $/; }
+  method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
   method variable-names-list($/) { make "c(" ~ $<variable-name>>>.made.join(", ") ~ ")"; }
 
   # (Scored) item lists
-  method item-id($/) { make "\"" ~ $/ ~ "\""; }
+  method item-id($/) { make "\"" ~ $/.Str ~ "\""; }
   method item-ids-list($/) { make "c(" ~ $<item-id>>>.made.join(", ") ~ ")"; }
   method scored-item-id($/) { make "\"" ~ $<item-id> ~ "\"" ~ "=" ~ $<number-value>; }
   method scored-item-ids-list($/) { make "c(" ~ $<scored-item-id>>>.made.join(", ") ~ ")"; }
 
   # (Scored) tag lists
-  method tag-id($/) { make "\"" ~ $/ ~ "\""; }
+  method tag-id($/) { make "\"" ~ $/.Str ~ "\""; }
   method tag-ids-list($/) { make "c(" ~ $<tag-id>>>.made.join(", ") ~ ")"; }
   method scored-tag-id($/) { make "\"" ~ $<tag-id> ~ "\"" ~ "=" ~ $<number-value>; }
   method scored-tag-ids-list($/) { make "c(" ~ $<scored-tag-id>>>.made.join(", ") ~ ")"; }
@@ -70,7 +70,7 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method load-data($/) { make "SMRMonSetData( data = " ~ $<data-location-spec>.made ~ ")"; }
   method data-location-spec($/) { make $<dataset-name>.made; }
   method use-recommender($/) { make $<variable-name>.made; }
-  method dataset-name($/) { make $/; }
+  method dataset-name($/) { make $/.Str; }
 
   # Create commands
   method create-command($/) { make $/.values[0].made; }
