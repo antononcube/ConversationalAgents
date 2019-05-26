@@ -52,7 +52,7 @@ role RecommenderWorkflowsGrammar::CommonParts {
   token and-conjuction { 'and' }
   token the-determiner { 'the' }
   rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
-  token number-of { [ 'number' | 'count' ] 'of' }
+  rule number-of { [ 'number' | 'count' ] 'of' }
   token per { 'per' }
   token results { 'results' }
   token simple { 'simple' | 'direct' }
@@ -117,7 +117,9 @@ role RecommenderWorkflowsGrammar::CommonParts {
   rule consumption-profile { <consumption>? 'profile' }
   rule consumption-history { <consumption>? 'history' }
   token recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
-
+  rule recommendation-matrix { <recommendation>? 'matrix' }
+  rule recommendation-matrices { <recommendation>? 'matrices' }
+  rule sparse-matrix { 'sparse' 'matrix' }
 }
 
 # This role class has pipeline commands.
@@ -138,6 +140,7 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
              <recommend-by-profile-command> | <recommend-by-history-command> |
              <make-profile-command> |
              <extend-recommendations-command> |
+             <smr-query-command> |
              <pipeline-command> }
 
   # Load data
@@ -190,18 +193,33 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
                                       [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
                                       <history-spec> }
 
+  # Recommend by profile
   rule recommend-by-profile-command { <.recommend-directive> [ <.using-preposition> | <.by-preposition> ] <.the-determiner>? <.profile> <profile-spec> }
 
-  # Recommend by profile
+
+  # Make profile
   rule make-profile-command {  <make-profile-command-opening> <.the-determiner>? [ <history-phrase> <.list>? | <items> ] <history-spec> }
   rule make-profile-command-opening { <compute-directive> [ <a-determiner> | <the-determiner> ]? <profile>
                                       [ <using-preposition> | <by-preposition> | <for-preposition> ] }
 
-  # Extend recommendations commands
+  # Recommendations processing commands
   rule extend-recommendations-command { [ 'extend' | 'join' [ 'across' ]? ] <recommendations>? <.with-preposition> <.the-determiner>? <.data>? <dataset-name> }
 
-  # Plot command
+  # Plot commands
   rule plot-command { <plot-recommendation-scores> }
   rule plot-recommendation-scores { <plot-directive> <.the-determiner>? <recommendation-results> }
+
+  # SMR query commands
+  rule smr-query-command { <display-directive> <.the-determiner>? <smr-property-spec> }
+  rule smr-property-spec { <smr-context-property> | <smr-matrix-property> }
+  rule smr-context-property { 'tag'  'types' | 'tags' |  [ 'sparse' ]? [ 'contingency' ]? 'matrices' | <recommendation-matrix> }
+  rule smr-matrix-property { <smr-matrix-columns> | <smr-matrix-rows> | <smr-matrix-dimensions> | <smr-matrix-density> }
+  rule smr-matrix-columns { [ <recommendation-matrix> | <sparse-matrix> ]? <number-of> 'columns' }
+  rule smr-matrix-rows { [ <recommendation-matrix> | <sparse-matrix> ]? <number-of> 'rows' }
+  rule smr-matrix-dimensions { <recommendation-matrix> 'dimensions' }
+  rule smr-matrix-density  { <recommendation-matrix> 'density' }
+
+  # Data query commands
+
 
 }
