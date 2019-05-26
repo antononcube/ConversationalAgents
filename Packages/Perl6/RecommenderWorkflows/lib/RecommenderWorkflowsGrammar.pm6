@@ -202,22 +202,30 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule make-profile-command-opening { <compute-directive> [ <a-determiner> | <the-determiner> ]? <profile>
                                       [ <using-preposition> | <by-preposition> | <for-preposition> ] }
 
-  # Recommendations processing commands
+  # Recommendations processing command
   rule extend-recommendations-command { [ 'extend' | 'join' [ 'across' ]? ] <recommendations>? <.with-preposition> <.the-determiner>? <.data>? <dataset-name> }
 
-  # Plot commands
+  # Plot command
   rule plot-command { <plot-recommendation-scores> }
   rule plot-recommendation-scores { <plot-directive> <.the-determiner>? <recommendation-results> }
 
-  # SMR query commands
+  # SMR query command
   rule smr-query-command { <display-directive> <.the-determiner>? <smr-property-spec> }
-  rule smr-property-spec { <smr-context-property> | <smr-matrix-property> }
-  rule smr-context-property { 'tag'  'types' | 'tags' |  [ 'sparse' ]? [ 'contingency' ]? 'matrices' | <recommendation-matrix> }
-  rule smr-matrix-property { <smr-matrix-columns> | <smr-matrix-rows> | <smr-matrix-dimensions> | <smr-matrix-density> }
-  rule smr-matrix-columns { [ <recommendation-matrix> | <sparse-matrix> ]? <number-of> 'columns' }
-  rule smr-matrix-rows { [ <recommendation-matrix> | <sparse-matrix> ]? <number-of> 'rows' }
-  rule smr-matrix-dimensions { <recommendation-matrix> 'dimensions' }
-  rule smr-matrix-density  { <recommendation-matrix> 'density' }
+  rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> }
+  rule smr-context-property-spec { <smr-tag-types> | <smr-tags> | <smr-sub-matrices> | <smr-recommendation-matrix> }
+  rule smr-tag-types { 'tag' 'types' }
+  token smr-tags { 'tags' }
+  rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub']? 'matrices' ] }
+  rule smr-recommendation-matrix { <recommendation-matrix> }
+  rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> }
+  rule smr-matrix-property-spec { <.smr-matrix-property-spec-openning>? <smr-matrix-property> }
+  rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> }
+  token columns { 'columns' }
+  token rows { 'rows' }
+  rule number-of-columns { <number-of> <columns> }
+  rule number-of-rows { <number-of> <rows> }
+  token dimensions { 'dimensions' }
+  token density  { 'density' }
 
   # Data query commands
 

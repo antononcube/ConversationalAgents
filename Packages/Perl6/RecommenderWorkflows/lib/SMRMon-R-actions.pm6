@@ -37,8 +37,8 @@
 
 
 use v6;
-#use lib '.';
-#use lib '../../../EBNF/English/RakuPerl6/';
+#use lib ".";
+#use lib "../../../EBNF/English/RakuPerl6/";
 use RecommenderWorkflowsGrammar;
 
 unit module SMRMon-R-actions;
@@ -51,57 +51,68 @@ class SMRMon-R-actions::SMRMon-R-actions {
   # General
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
-  method variable-names-list($/) { make "c(" ~ $<variable-name>>>.made.join(", ") ~ ")"; }
+  method variable-names-list($/) { make 'c(' ~ $<variable-name>>>.made.join(', ') ~ ')'; }
 
   # (Scored) item lists
-  method item-id($/) { make "\"" ~ $/.Str ~ "\""; }
-  method item-ids-list($/) { make "c(" ~ $<item-id>>>.made.join(", ") ~ ")"; }
-  method scored-item-id($/) { make "\"" ~ $<item-id> ~ "\"" ~ "=" ~ $<number-value>; }
-  method scored-item-ids-list($/) { make "c(" ~ $<scored-item-id>>>.made.join(", ") ~ ")"; }
+  method item-id($/) { make '\"' ~ $/.Str ~ '\"'; }
+  method item-ids-list($/) { make 'c(' ~ $<item-id>>>.made.join(', ') ~ ')'; }
+  method scored-item-id($/) { make '\"' ~ $<item-id> ~ '\"' ~ '=' ~ $<number-value>; }
+  method scored-item-ids-list($/) { make 'c(' ~ $<scored-item-id>>>.made.join(', ') ~ ')'; }
 
   # (Scored) tag lists
-  method tag-id($/) { make "\"" ~ $/.Str ~ "\""; }
-  method tag-ids-list($/) { make "c(" ~ $<tag-id>>>.made.join(", ") ~ ")"; }
-  method scored-tag-id($/) { make "\"" ~ $<tag-id> ~ "\"" ~ "=" ~ $<number-value>; }
-  method scored-tag-ids-list($/) { make "c(" ~ $<scored-tag-id>>>.made.join(", ") ~ ")"; }
+  method tag-id($/) { make '\"' ~ $/.Str ~ '\"'; }
+  method tag-ids-list($/) { make 'c(' ~ $<tag-id>>>.made.join(', ') ~ ')'; }
+  method scored-tag-id($/) { make '\"' ~ $<tag-id> ~ '\"' ~ '=' ~ $<number-value>; }
+  method scored-tag-ids-list($/) { make 'c(' ~ $<scored-tag-id>>>.made.join(', ') ~ ')'; }
 
   # Data load commands
   method data-load-command($/) { make $/.values[0].made; }
-  method load-data($/) { make "SMRMonSetData( data = " ~ $<data-location-spec>.made ~ ")"; }
+  method load-data($/) { make 'SMRMonSetData( data = ' ~ $<data-location-spec>.made ~ ')'; }
   method data-location-spec($/) { make $<dataset-name>.made; }
   method use-recommender($/) { make $<variable-name>.made; }
   method dataset-name($/) { make $/.Str; }
 
   # Create commands
   method create-command($/) { make $/.values[0].made; }
-  method create-simple($/) { make "SMRMonCreate()"; }
-  method create-by-dataset($/) { make "SMRMonCreate( data = " ~ $<dataset-name>.made ~ ")"; }
-  method create-by-matrices($/) { make "SMRMonCreateFromMatrices( matrices = " ~ $<variable-names-list>.made ~ ")"; }
+  method create-simple($/) { make 'SMRMonCreate()'; }
+  method create-by-dataset($/) { make 'SMRMonCreate( data = ' ~ $<dataset-name>.made ~ ')'; }
+  method create-by-matrices($/) { make 'SMRMonCreateFromMatrices( matrices = ' ~ $<variable-names-list>.made ~ ')'; }
 
   # Data statistics command
   method statistics-command($/) { make $/.values[0].made; }
-  method show-data-summary($/) { make "SMRMonEchoDataSummary()"; }
-  method summarize-data($/) { make "SMRMonEchoDataSummary()"; }
-  method items-per-tag($/) { make "SMRMonItemsPerTagDistribution()"; }
-  method tags-per-items($/) { make "SMRMonTagsPerItemDistribution()"; }
+  method show-data-summary($/) { make 'SMRMonEchoDataSummary()'; }
+  method summarize-data($/) { make 'SMRMonEchoDataSummary()'; }
+  method items-per-tag($/) { make 'SMRMonItemsPerTagDistribution()'; }
+  method tags-per-items($/) { make 'SMRMonTagsPerItemDistribution()'; }
 
   # Recommend by history command
-  method recommend-by-history-command($/) { make "SMRMonRecommend( history = " ~ $<history-spec>.made ~ ")"; }
+  method recommend-by-history-command($/) { make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ')'; }
   method history-spec($/) { make $/.values[0].made; }
 
   # Recommend by profile command
-  method recommend-by-profile-command($/) { make "SMRMonRecommendByProfile( profile = " ~ $<profile-spec>.made ~ ")"; }
+  method recommend-by-profile-command($/) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ')'; }
   method profile-spec($/) { make $/.values[0].made; }
 
-  # Extend recommendations command
-  method extend-recommendations-command($/) { make "SMRMonJoinAcross( data = " ~ $<dataset-name>.made ~ ")" }
+  # Process recommendations command
+  method extend-recommendations-command($/) { make 'SMRMonJoinAcross( data = ' ~ $<dataset-name>.made ~ ')' }
 
   # Plot command
   method plot-command($/) { make $/.values[0].made; }
-  method plot-recommendation-scores($/) { make "SMRPlotScores()"; }
+  method plot-recommendation-scores($/) { make 'SMRPlotScores()'; }
+
+  # SMR query command
+  method smr-query-command($/) { make $/.values[0].made; }
+  method smr-property-spec($/) { make $/.values[0].made; }
+  method smr-context-property-spec($/) { make 'SMRMonGetProperty(' ~ $/.values[0].made ~ ') %>% SMRMonEchoValue()'; }
+  method smr-recommendation-matrix($/) { make '\"sparseMatrix\"'; }
+  method smr-tag-types($/) { make '\"tagTypes\"'; }
+  method smr-tags($/) { make '\"tags\"'; }
+  method smr-sub-matrices($/) { make '\"subMatrices\"'; }
+  method smr-matrix-property-spec($/) { make  'SMRMonGetMatrixProperty(' ~ $/.values[0].made ~ ') %>% SMRMonEchoValue()'; }
+  method smr-matrix-property($/) { make '\"' ~ 'not-done-yet' ~ '\"'}
 
   # Pipeline command
   method pipeline-command($/) { make  $/.values[0].made; }
-  method get-pipeline-value($/) { make "SMRMonEchoValue()"; }
+  method get-pipeline-value($/) { make 'SMRMonEchoValue()'; }
 
 }
