@@ -61,7 +61,7 @@ role RecommenderWorkflowsGrammar::CommonParts {
   token object { 'object' }
 
   # Data
-  token rows { 'rows' | 'records' }
+  token records { 'rows' | 'records' }
   rule time-series-data { 'time' 'series' 'data'? }
   rule data-frame { 'data' 'frame' }
   rule data { <data-frame> | 'data' | 'dataset' | <time-series-data> }
@@ -120,6 +120,13 @@ role RecommenderWorkflowsGrammar::CommonParts {
   rule recommendation-matrix { <recommendation>? 'matrix' }
   rule recommendation-matrices { <recommendation>? 'matrices' }
   rule sparse-matrix { 'sparse' 'matrix' }
+  token column { 'column' }
+  token columns { 'columns' }
+  token row { 'row' }
+  token rows { 'rows' }
+  token dimensions { 'dimensions' }
+  token density  { 'density' }
+
 }
 
 # This role class has pipeline commands.
@@ -212,20 +219,17 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   # SMR query command
   rule smr-query-command { <display-directive> <.the-determiner>? <smr-property-spec> }
   rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> }
-  rule smr-context-property-spec { <smr-tag-types> | <smr-tags> | <smr-sub-matrices> | <smr-recommendation-matrix> }
+  rule smr-context-property-spec { <.recommender>? [ <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> ]}
   rule smr-tag-types { 'tag' 'types' }
-  token smr-tags { 'tags' }
+  rule smr-item-column-name { <item> <column> 'name' | 'itemColumnName' }
   rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub']? 'matrices' ] }
   rule smr-recommendation-matrix { <recommendation-matrix> }
   rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> }
   rule smr-matrix-property-spec { <.smr-matrix-property-spec-openning>? <smr-matrix-property> }
   rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> }
-  token columns { 'columns' }
-  token rows { 'rows' }
   rule number-of-columns { <number-of> <columns> }
   rule number-of-rows { <number-of> <rows> }
-  token dimensions { 'dimensions' }
-  token density  { 'density' }
+
 
   # Data query commands
 

@@ -101,15 +101,21 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method plot-recommendation-scores($/) { make 'SMRPlotScores()'; }
 
   # SMR query command
-  method smr-query-command($/) { make $/.values[0].made; }
+  method smr-query-command($/) { make $<smr-property-spec>.made; }
   method smr-property-spec($/) { make $/.values[0].made; }
   method smr-context-property-spec($/) { make 'SMRMonGetProperty(' ~ $/.values[0].made ~ ') %>% SMRMonEchoValue()'; }
   method smr-recommendation-matrix($/) { make '\"sparseMatrix\"'; }
   method smr-tag-types($/) { make '\"tagTypes\"'; }
-  method smr-tags($/) { make '\"tags\"'; }
+  method smr-item-column-name($/) { make '\"itemColumnName\"'; }
   method smr-sub-matrices($/) { make '\"subMatrices\"'; }
-  method smr-matrix-property-spec($/) { make  'SMRMonGetMatrixProperty(' ~ $/.values[0].made ~ ') %>% SMRMonEchoValue()'; }
-  method smr-matrix-property($/) { make '\"' ~ 'not-done-yet' ~ '\"'}
+  method smr-matrix-property-spec($/) { make 'SMRMonGetMatrixProperty(' ~ $/.values[0].made ~ ') %>% SMRMonEchoValue()'; }
+  method smr-matrix-property($/) { make '\"' ~ $/.values[0].made() ~ '\"'; }
+  method number-of-columns($/) { make '\"numberOfColumns\"'; }
+  method number-of-rows($/) { make '\"numberOfRows\"'; }
+  method rows($/) { make '\"rows\"'; }
+  method columns($/) { make '\"columns\"'; }
+  method dimensions($/) { make '\"dimensions\"'; }
+  method density($/) { make '\"density\"'; }
 
   # Pipeline command
   method pipeline-command($/) { make  $/.values[0].made; }
