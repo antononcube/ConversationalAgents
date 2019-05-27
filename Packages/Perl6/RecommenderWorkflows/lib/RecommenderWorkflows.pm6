@@ -19,7 +19,7 @@ use SMRMon-R-actions;
 #use SMRMon-WL-actions;
 
 sub has-semicolon (Str $word) {
-    return defined index $word, ";";
+    return defined index $word, ';';
 }
 
 proto to_SMRMon_R($) is export {*}
@@ -27,7 +27,7 @@ proto to_SMRMon_R($) is export {*}
 multi to_SMRMon_R ( Str $command where not has-semicolon($command) ) {
   #say DataTransformationWorkflowsGrammar::Spoken-dplyr-command.parse($command);
   my $match = RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse($command, actions => SMRMon-R-actions::SMRMon-R-actions );
-  die "Cannot parse input given command." unless $match;
+  die 'Cannot parse input given command.' unless $match;
   return $match.made;
 }
 
