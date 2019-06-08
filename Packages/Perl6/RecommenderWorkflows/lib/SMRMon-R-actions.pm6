@@ -52,6 +52,8 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
   method variable-names-list($/) { make 'c(' ~ $<variable-name>>>.made.join(', ') ~ ')'; }
+  method integer-value($/) { make $/.Str; }
+  method number-value($/) { make $/.Str; }
 
   # (Scored) item lists
   method item-id($/) { make '\"' ~ $/.Str ~ '\"'; }
@@ -86,12 +88,21 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method tags-per-items($/) { make 'SMRMonTagsPerItemDistribution()'; }
 
   # Recommend by history command
-  method recommend-by-history-command($/) { make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ')'; }
+  method recommend-by-history-command($/) { make $/.values[0].made; }
+  method recommend-by-history($/) { make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ')'; }
+  method top-recommendations($/) { make 'SMRMonGetTopRecommendations( spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ')'; }
+  method top-recommendations-by-history($/) { make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ', nrecs = ' ~ $<top-recommendations><integer-value>.made ~ ')'; }
   method history-spec($/) { make $/.values[0].made; }
 
   # Recommend by profile command
-  method recommend-by-profile-command($/) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ')'; }
+  method recommend-by-profile-command($/) { make $/.values[0].made; }
+  method recommend-by-profile($) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ')'; }
+  method top-profile-recommendations($/) { make 'SMRMonGetTopRecommendations( spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ')'; }
+  method top-recommendations-by-profile($/) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ', nrecs = ' ~ $<top-recommendations><integer-value>.made ~ ')'; }
   method profile-spec($/) { make $/.values[0].made; }
+
+  # Make profile
+  method make-profile-command($/) { make 'SMRMonProfile( history = ' ~ $<history-spec>.made ~ ')'; }
 
   # Process recommendations command
   method extend-recommendations-command($/) { make 'SMRMonJoinAcross( data = ' ~ $<dataset-name>.made ~ ')' }
@@ -109,7 +120,7 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method smr-item-column-name($/) { make '\"itemColumnName\"'; }
   method smr-sub-matrices($/) { make '\"subMatrices\"'; }
   method smr-matrix-property-spec($/) { make 'SMRMonGetMatrixProperty(' ~ $/.values[0].made ~ ') %>% SMRMonEchoValue()'; }
-  method smr-matrix-property($/) { make '\"' ~ $/.values[0].made() ~ '\"'; }
+  method smr-matrix-property($/) { make $/.values[0].made(); }
   method number-of-columns($/) { make '\"numberOfColumns\"'; }
   method number-of-rows($/) { make '\"numberOfRows\"'; }
   method rows($/) { make '\"rows\"'; }

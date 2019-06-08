@@ -34,6 +34,34 @@ use SMRMon-R-actions;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('recommend by history hr:3, rr:4, ra:1');
 
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find recommendations for history hr:3, rr:4, ra:1');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 12 recommendations for history hr:3, rr:4, ra:1');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('compute 12 recommendations for the history hr:3, rr:4, ra:1');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('compute 12 recommendations for the history hr:3, rr:4, ra:1', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 5 recommendations');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 5 recommendations', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 15 profile recommendations');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 15 profile recommendations', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 15 recommendations for the profile hr=2, jj=2');
+
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 15 recommendations for the profile hr=2, jj=2', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('what are the top 7 recommendations');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('what are the most relevant recommendations');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('compute the 12 most relevant recommendations');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('compute the 12 most relevant recommendations', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('recommend by profile hr=3, rr=4, ra=1');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('compute the profile for the history hr=3, rr=4, ra=1');
@@ -42,7 +70,11 @@ use SMRMon-R-actions;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('compute profile for the item gog');
 
-#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('compute the profile for the job history O-2185977=3, O-2140979=2, O-2219692=1');
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('compute recommendations');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('find profile for the history O-2185977=3, O-2140979=2, O-2219692=1');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('compute the profile for the history O-2185977=3, O-2140979=2, O-2219692=1');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('echo pipeline value', actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
@@ -56,10 +88,16 @@ use SMRMon-R-actions;
 #
 # say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the number of columns');
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("display the tag types", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("display the tag types", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the recommender sub-matrices", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the recommender sub-matrices", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the sparse matrix number of rows", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the sparse matrix number of rows", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the item column name')
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the matrix number of rows", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the recommender matrix density", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse("show the recommendation matrix density", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the item column name')

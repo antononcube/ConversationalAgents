@@ -102,23 +102,23 @@ role RecommenderWorkflowsGrammar::CommonParts {
   rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step> <number-value> ]? }
 
   # Recommender specific
-  token recommendation { 'recommendation' }
-  token recommendations { 'recommendations' }
+  token consumption { 'consumption' }
+  rule consumption-profile { <consumption>? 'profile' }
+  rule consumption-history { <consumption>? 'history' }
+  token item { 'item' }
+  rule items { 'item' | 'items' }
   token history { 'history' }
   rule history-phrase { [ 'item' ]? <history> }
   token profile { 'profile' }
   token recommend-directive { 'recommend' | 'suggest' }
-  token consumption { 'consumption' }
-  token item { 'item' }
-  token items { 'item' | 'items' }
-  token recommender { 'recommender' | 'smr' }
+  token recommendation { 'recommendation' }
+  token recommendations { 'recommendations' }
+  rule recommender { 'recommender' | 'smr' }
   rule recommender-object { <recommender> [ 'object' | 'system' ]? }
   token recommended-items { 'recommended' 'items' | [ 'recommendations' | 'recommendation' ]  <.results>?  }
-  rule consumption-profile { <consumption>? 'profile' }
-  rule consumption-history { <consumption>? 'history' }
   token recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
-  rule recommendation-matrix { <recommendation>? 'matrix' }
-  rule recommendation-matrices { <recommendation>? 'matrices' }
+  rule recommendation-matrix { [ <recommendation> | <recommender> ]? 'matrix' }
+  rule recommendation-matrices { [ <recommendation> | <recommender> ]? 'matrices' }
   rule sparse-matrix { 'sparse' 'matrix' }
   token column { 'column' }
   token columns { 'columns' }
@@ -126,6 +126,7 @@ role RecommenderWorkflowsGrammar::CommonParts {
   token rows { 'rows' }
   token dimensions { 'dimensions' }
   token density  { 'density' }
+  rule most-relevant { 'most' 'relevant' }
 
 }
 
@@ -196,13 +197,27 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule profile-spec { <tag-ids-list> | <scored-tag-ids-list> }
 
   # Recommend by history
-  rule recommend-by-history-command { <.recommend-directive>
-                                      [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
-                                      <history-spec> }
+  rule recommend-by-history-command { <recommend-by-history> | <top-recommendations-by-history> | <top-recommendations> | <simple-recommend> }
+  rule recommend-by-history { <.recommend-directive>
+                              [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
+                              <history-spec> }
+  rule top-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.recommendations> }
+  rule top-recommendations-by-history { <top-recommendations>
+                                        [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
+                                        <history-spec> }
+  rule most-relevant-phrase { <most-relevant> | 'top' <most-relevant>? }
+  rule simple-recommend { <.recommend-directive> | <compute-directive> <recommendations> }
+
 
   # Recommend by profile
-  rule recommend-by-profile-command { <.recommend-directive> [ <.using-preposition> | <.by-preposition> ] <.the-determiner>? <.profile> <profile-spec> }
-
+  rule recommend-by-profile-command { <recommend-by-profile> | <top-profile-recommendations> | <top-recommendations-by-profile> }
+  rule recommend-by-profile { <.recommend-directive>
+                              [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile>
+                              <profile-spec> }
+  rule top-profile-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.profile> <.recommendations> }
+  rule top-recommendations-by-profile { <top-recommendations>
+                                        [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile>
+                                        <profile-spec> }
 
   # Make profile
   rule make-profile-command {  <make-profile-command-opening> <.the-determiner>? [ <history-phrase> <.list>? | <items> ] <history-spec> }
@@ -217,14 +232,14 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule plot-recommendation-scores { <plot-directive> <.the-determiner>? <recommendation-results> }
 
   # SMR query command
-  rule smr-query-command { <display-directive> <.the-determiner>? <smr-property-spec> }
+  rule smr-query-command { <display-directive> <.the-determiner>? <.recommender>? <smr-property-spec> }
   rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> }
-  rule smr-context-property-spec { <.recommender>? [ <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> ]}
+  rule smr-context-property-spec { <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> }
   rule smr-tag-types { 'tag' 'types' }
   rule smr-item-column-name { <item> <column> 'name' | 'itemColumnName' }
-  rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub']? 'matrices' ] }
+  rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub' ]? 'matrices' ] }
   rule smr-recommendation-matrix { <recommendation-matrix> }
-  rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> }
+  rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> | 'matrix' }
   rule smr-matrix-property-spec { <.smr-matrix-property-spec-openning>? <smr-matrix-property> }
   rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> }
   rule number-of-columns { <number-of> <columns> }
