@@ -78,6 +78,7 @@ role RecommenderWorkflowsGrammar::CommonParts {
   token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
   token plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
   rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
+  token classify { 'classify' }
 
   # Value types
   token number-value { (\d+ ['.' \d+]?  [ [e|E] \d+]?) }
@@ -127,6 +128,7 @@ role RecommenderWorkflowsGrammar::CommonParts {
   token dimensions { 'dimensions' }
   token density  { 'density' }
   rule most-relevant { 'most' 'relevant' }
+  rule tag-type { 'tag' 'type' }
 
 }
 
@@ -148,6 +150,7 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
              <recommend-by-profile-command> | <recommend-by-history-command> |
              <make-profile-command> |
              <extend-recommendations-command> |
+             <classify-command> |
              <smr-query-command> |
              <pipeline-command> }
 
@@ -189,6 +192,7 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule tag-ids-list { <tag-id>+ % <list-separator> }
   token scored-tag-id { <tag-id> <.score-association-separator> <number-value> }
   rule scored-tag-ids-list { <scored-tag-id>+ % <list-separator> }
+  token tag-type-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
 
   # History spec
   rule history-spec { <item-ids-list> | <scored-item-ids-list> }
@@ -226,6 +230,14 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
 
   # Recommendations processing command
   rule extend-recommendations-command { [ 'extend' | 'join' [ 'across' ]? ] <recommendations>? <.with-preposition> <.the-determiner>? <.data>? <dataset-name> }
+
+  # Classifications command
+  rule classify-command { <classify-by-profile> | <classify-by-profile-rev> }
+  rule classify-by-profile { <classify> <.the-determiner>? <.profile>? <profile-spec>
+                              <.to-preposition> <.tag-type>? <tag-type-id> }
+  rule classify-by-profile-rev { <classify> [ <.for-preposition> | <.to-preposition>] <.the-determiner>? <.tag-type>? <tag-type-id>
+                                 [ <.by-preposition> | <.for-preposition> | <.using-preposition> ]? <.the-determiner>? <.profile>?
+                                 <profile-spec> }
 
   # Plot command
   rule plot-command { <plot-recommendation-scores> }

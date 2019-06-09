@@ -66,6 +66,7 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method tag-ids-list($/) { make 'c(' ~ $<tag-id>>>.made.join(', ') ~ ')'; }
   method scored-tag-id($/) { make '\"' ~ $<tag-id> ~ '\"' ~ '=' ~ $<number-value>; }
   method scored-tag-ids-list($/) { make 'c(' ~ $<scored-tag-id>>>.made.join(', ') ~ ')'; }
+  method tag-type-id($/) { make '\"' ~ $/.Str ~ '\"'; }
 
   # Data load commands
   method data-load-command($/) { make $/.values[0].made; }
@@ -96,7 +97,7 @@ class SMRMon-R-actions::SMRMon-R-actions {
 
   # Recommend by profile command
   method recommend-by-profile-command($/) { make $/.values[0].made; }
-  method recommend-by-profile($) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ')'; }
+  method recommend-by-profile($/) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ')'; }
   method top-profile-recommendations($/) { make 'SMRMonGetTopRecommendations( spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ')'; }
   method top-recommendations-by-profile($/) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ', nrecs = ' ~ $<top-recommendations><integer-value>.made ~ ')'; }
   method profile-spec($/) { make $/.values[0].made; }
@@ -106,6 +107,12 @@ class SMRMon-R-actions::SMRMon-R-actions {
 
   # Process recommendations command
   method extend-recommendations-command($/) { make 'SMRMonJoinAcross( data = ' ~ $<dataset-name>.made ~ ')' }
+
+  # Classifications command
+  method classify-command($/) { make $/.values[0].made; }
+  method classify-by-profile($/) { make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ')'; }
+  method classify-by-profile-rev($/) { make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ')'; }
+  method classify($/) { make 'classify'; }
 
   # Plot command
   method plot-command($/) { make $/.values[0].made; }

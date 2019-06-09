@@ -52,7 +52,7 @@ use SMRMon-R-actions;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 15 recommendations for the profile hr=2, jj=2');
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 15 recommendations for the profile hr=2, jj=2', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find the top 15 recommendations for the profile hr=2, jj=2', actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('what are the top 7 recommendations');
 
@@ -75,6 +75,16 @@ say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('find th
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('find profile for the history O-2185977=3, O-2140979=2, O-2219692=1');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('compute the profile for the history O-2185977=3, O-2140979=2, O-2219692=1');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify the profile hh1=1, hh2=4, uu4=3 to travelClass', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify hh1=1, hh2=4, uu4=3 to travelClass');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass hh1=1, hh2=4, uu4=3');
+
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass hh1=1, hh2=4, uu4=3', actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('echo pipeline value', actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
