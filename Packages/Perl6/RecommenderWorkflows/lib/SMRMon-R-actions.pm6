@@ -110,8 +110,21 @@ class SMRMon-R-actions::SMRMon-R-actions {
 
   # Classifications command
   method classify-command($/) { make $/.values[0].made; }
-  method classify-by-profile($/) { make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ')'; }
-  method classify-by-profile-rev($/) { make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ')'; }
+  method classify-by-profile($/) {
+    if $<ntop-nns> {
+      make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ', nTopNNs = ' ~ $<ntop-nns>.made ~ ')';
+    } else {
+      make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ')';
+    }
+  }
+  method classify-by-profile-rev($/) {
+    if $<ntop-nns> {
+      make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ', nTopNNs = ' ~ $<ntop-nns>.made ~ ')';
+    } else {
+      make 'SMRMonClassifyByProfile( tagType = ' ~ $<tag-type-id>.made ~ ', profile = ' ~ $<profile-spec>.made ~ ')';
+    }
+  }
+  method ntop-nns($/) { make $<integer-value>.Str; }
   method classify($/) { make 'classify'; }
 
   # Plot command

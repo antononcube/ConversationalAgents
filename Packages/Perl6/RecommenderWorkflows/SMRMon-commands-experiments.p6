@@ -1,7 +1,7 @@
 use lib './lib';
 use lib '.';
 use RecommenderWorkflows;
-
+use RecommenderWorkflowsGrammar;
 say to_SMRMon_R("create from dfTitanic");
 
 say to_SMRMon_R("recommend for history hr:3, rr:4, ra:1");

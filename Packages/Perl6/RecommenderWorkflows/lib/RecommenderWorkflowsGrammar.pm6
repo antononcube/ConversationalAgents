@@ -102,7 +102,19 @@ role RecommenderWorkflowsGrammar::CommonParts {
   rule range-spec-step { <with-preposition> | <with-preposition>? 'step' }
   rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step> <number-value> ]? }
 
-  # Recommender specific
+  # Error message
+  method error($msg) {
+    my $parsed = self.target.substr(0, self.pos).trim-trailing;
+    my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
+    my $line-no = $parsed.lines.elems;
+    die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
+  }
+
+}
+
+role RecommenderWorkflowsGrammar::RecommenderPhrases {
+
+  # Recommender specific phrases
   token consumption { 'consumption' }
   rule consumption-profile { <consumption>? 'profile' }
   rule consumption-history { <consumption>? 'history' }
@@ -129,6 +141,7 @@ role RecommenderWorkflowsGrammar::CommonParts {
   token density  { 'density' }
   rule most-relevant { 'most' 'relevant' }
   rule tag-type { 'tag' 'type' }
+  rule nearest-neighbors { 'nearest' [ 'neighbors' | 'neighbours' ] | 'nns' }
 
 }
 
@@ -142,7 +155,7 @@ role RecommenderWorkflowsGrammar::Pipeline-command {
 
 }
 
-grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonParts does Pipeline-command {
+grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonParts does RecommenderPhrases does Pipeline-command {
 
   # TOP
   rule TOP { <data-load-command> | <create-command> |
@@ -233,11 +246,14 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
 
   # Classifications command
   rule classify-command { <classify-by-profile> | <classify-by-profile-rev> }
-  rule classify-by-profile { <classify> <.the-determiner>? <.profile>? <profile-spec>
-                              <.to-preposition> <.tag-type>? <tag-type-id> }
-  rule classify-by-profile-rev { <classify> [ <.for-preposition> | <.to-preposition>] <.the-determiner>? <.tag-type>? <tag-type-id>
+  rule ntop-nns { [ 'top' ]? <integer-value> [ 'top' ]? <.nearest-neighbors> }
+  rule classify-by-profile { <.classify> <.the-determiner>? <.profile>? <profile-spec>
+                             <.to-preposition> <.tag-type>? <tag-type-id>
+                             [ <.using-preposition> <ntop-nns> ]? }
+  rule classify-by-profile-rev { <.classify> [ <.for-preposition> | <.to-preposition>] <.the-determiner>? <.tag-type>? <tag-type-id>
                                  [ <.by-preposition> | <.for-preposition> | <.using-preposition> ]? <.the-determiner>? <.profile>?
-                                 <profile-spec> }
+                                 <profile-spec>
+                                 [ <.and-conjuction>? <.using-preposition>? <ntop-nns> ]? }
 
   # Plot command
   rule plot-command { <plot-recommendation-scores> }
