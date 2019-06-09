@@ -80,11 +80,23 @@ use SMRMon-R-actions;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify hh1=1, hh2=4, uu4=3 to travelClass');
 
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify hh1=1, hh2=4, uu4=3 to travelClass using 220 top nns');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify hh1=1, hh2=4, uu4=3 to travelClass using 220 top nns', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify hh1=1, hh2=4, uu4=3 to travelClass', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3 using 333 nearest neighbors');
+
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3 using 333 nearest neighbors', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass hh1=1, hh2=4, uu4=3');
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass hh1=1, hh2=4, uu4=3', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass hh1=1, hh2=4, uu4=3', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse('classify to travelClass the profile hh1=1, hh2=4, uu4=3 using 300 top nearest neighbors');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('echo pipeline value', actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
