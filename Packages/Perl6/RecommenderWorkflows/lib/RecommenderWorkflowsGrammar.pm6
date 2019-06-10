@@ -31,7 +31,6 @@
 #    https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/English/Mathematica/RecommenderWorkflowsGrammar.m
 #
 #==============================================================================
-
 use v6;
 unit module RecommenderWorkflowsGrammar;
 
@@ -141,6 +140,7 @@ role RecommenderWorkflowsGrammar::RecommenderPhrases {
   token density  { 'density' }
   rule most-relevant { 'most' 'relevant' }
   rule tag-type { 'tag' 'type' }
+  rule tag-types { 'tag' 'types' }
   rule nearest-neighbors { 'nearest' [ 'neighbors' | 'neighbours' ] | 'nns' }
 
 }
@@ -260,21 +260,28 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule plot-recommendation-scores { <plot-directive> <.the-determiner>? <recommendation-results> }
 
   # SMR query command
-  rule smr-query-command { <display-directive> <.the-determiner>? <.recommender>? <smr-property-spec> }
-  rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> }
+  rule smr-query-command { <smr-recommender-query> | <smr-filter-matrix> }
+  rule smr-recommender-query { <display-directive> <.the-determiner>? <.recommender>? <smr-property-spec> }
+  rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> | <smr-sub-matrix-property-spec> }
+
   rule smr-context-property-spec { <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> }
-  rule smr-tag-types { 'tag' 'types' }
+  rule smr-tag-types { <tag-types> }
   rule smr-item-column-name { <item> <column> 'name' | 'itemColumnName' }
   rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub' ]? 'matrices' ] }
   rule smr-recommendation-matrix { <recommendation-matrix> }
+
   rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> | 'matrix' }
   rule smr-matrix-property-spec { <.smr-matrix-property-spec-openning>? <smr-matrix-property> }
+
+  rule smr-sub-matrix-property-spec-openning { 'sub-matrix' | 'sub' 'matrix' | <tag-type> }
+  rule smr-sub-matrix-property-spec { <.smr-sub-matrix-property-spec-openning>? <tag-type-id> <smr-matrix-property> }
+
   rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> }
   rule number-of-columns { <number-of> <columns> }
   rule number-of-rows { <number-of> <rows> }
 
-
-  # Data query commands
-
+  rule smr-filter-matrix { [ 'filter' | 'reduce' ] <.the-determiner>? <.smr-matrix-property-spec-openning>
+                           [ <.using-preposition> | <.with-preposition> | <.by-preposition> ]
+                           <profile-spec> }
 
 }

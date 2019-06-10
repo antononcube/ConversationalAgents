@@ -88,7 +88,7 @@ use SMRMon-R-actions;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3 using 333 nearest neighbors');
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3 using 333 nearest neighbors', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3 using 333 nearest neighbors', actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify to travelClass the profile hh1=1, hh2=4, uu4=3');
 
@@ -107,8 +107,8 @@ say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify t
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('show the sparse matrix number of rows');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the tag types');
-#
-# say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the number of columns');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the number of columns');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("display the tag types", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
@@ -116,10 +116,18 @@ say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('classify t
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the sparse matrix number of rows", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the sub matrix Skills number of rows", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show tag type Skills columns", actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the matrix number of rows", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse("show the recommender matrix density", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.subparse("show the recommendation matrix density", actions => SMRMon-R-actions::SMRMon-R-actions).made;
 
-#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the item column name')
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the item column name');
+
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('filter the recommendation matrix with rr, jj, kk, pp');
+
+say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('filter the recommendation matrix with rr, jj, kk, pp', actions => SMRMon-R-actions::SMRMon-R-actions).made;
