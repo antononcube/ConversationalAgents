@@ -26,7 +26,7 @@ ebnfCode = "
 
 
 (*
-Generate parses from EBNF string:
+Generate parsers from the EBNF string:
 *)
 
 GenerateParsersFromEBNF[ParseToTokens@ebnfCode];
@@ -39,6 +39,19 @@ sentences = {"I love milk", "We demand 2 ice creams",
   "I crave 2 ice creams and 5 chocolates",
   "You crave chocolate and milk"};
 ParsingTestTable[pLOVEFOOD, ToLowerCase@sentences, "Layout" -> "Vertical"]
+
+(*
+Generate random sentences from the grammar:
+*)
+
+GrammarRandomSentences[GrammarNormalize[ebnfCode], 12]
+
+(* {"i love milks", "we demand 75 ice creams", "you crave milks", "we crave 67 sushi",
+     "you demand cream and cream and 89 ice creams and chocolate and 89 milks and 89 tangerines",
+     "we crave tangerines", "you crave ice-creams and ice-creams and 23 ice-creams",
+     "i demand tangerines and ice creams and a tangerine and 40 ice-creams and a tangerine and 40 milks",
+     "i crave 47 chocolates", "we love 13 ice-creams", "you demand tangerines",
+     "you demand a tangerine"} *)
 
 (*
 Note the EBNF rule wrappers -- those are symbols specified at the ends of some of the rules.
