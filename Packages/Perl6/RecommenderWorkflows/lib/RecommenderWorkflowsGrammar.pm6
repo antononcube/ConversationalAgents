@@ -158,14 +158,14 @@ role RecommenderWorkflowsGrammar::Pipeline-command {
 grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonParts does RecommenderPhrases does Pipeline-command {
 
   # TOP
-  rule TOP { <data-load-command> | <create-command> |
+  rule TOP { <pipeline-command> |
+             <data-load-command> | <create-command> |
              <data-transformation-command> | <data-statistics-command> |
              <recommend-by-profile-command> | <recommend-by-history-command> |
              <make-profile-command> |
              <extend-recommendations-command> |
              <classify-command> |
-             <smr-query-command> |
-             <pipeline-command> }
+             <smr-query-command> }
 
   # Load data
   rule data-load-command { <load-data> | <use-recommender> }
@@ -264,6 +264,8 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule smr-recommender-query { <display-directive> <.the-determiner>? <.recommender>? <smr-property-spec> }
   rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> | <smr-sub-matrix-property-spec> }
 
+  token smr-property-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' || $0 eq 'pipeline' }> }
+
   rule smr-context-property-spec { <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> }
   rule smr-tag-types { <tag-types> }
   rule smr-item-column-name { <item> <column> 'name' | 'itemColumnName' }
@@ -276,7 +278,7 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule smr-sub-matrix-property-spec-openning { 'sub-matrix' | 'sub' 'matrix' | <tag-type> }
   rule smr-sub-matrix-property-spec { <.smr-sub-matrix-property-spec-openning>? <tag-type-id> <smr-matrix-property> }
 
-  rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> }
+  rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> | <smr-property-id> }
   rule number-of-columns { <number-of> <columns> }
   rule number-of-rows { <number-of> <rows> }
 
