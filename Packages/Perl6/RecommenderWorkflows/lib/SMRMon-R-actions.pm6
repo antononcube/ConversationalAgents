@@ -144,6 +144,7 @@ class SMRMon-R-actions::SMRMon-R-actions {
   method smr-matrix-property-spec($/) { make 'SMRMonGetMatrixProperty(' ~ $<smr-matrix-property>.made ~ ', tagType = NULL ) %>% SMRMonEchoValue()'; }
   method smr-sub-matrix-property-spec($/) { make 'SMRMonGetMatrixProperty(' ~ $<smr-matrix-property>.made ~ ', tagType = ' ~ $<tag-type-id>.made ~ ' ) %>% SMRMonEchoValue()'; }
   method smr-matrix-property($/) { make $/.values[0].made(); }
+  method smr-property-id($/) { make '\"' ~ $/.Str ~ '\"'; }
   method number-of-columns($/) { make '\"numberOfColumns\"'; }
   method number-of-rows($/) { make '\"numberOfRows\"'; }
   method rows($/) { make '\"rows\"'; }
