@@ -35,6 +35,8 @@ multi to_SMRMon_R ( Str $command where has-semicolon($command) ) {
 
   my @commandLines = $command.split(/ ';' \s* /);
 
+  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
+
   my @smrLines =
   map { to_SMRMon_R($_) }, @commandLines;
 
