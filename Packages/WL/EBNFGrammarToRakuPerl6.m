@@ -51,13 +51,15 @@ Package["EBNFGrammarToRakuPerl6`"]
 (* Import other packages *)
 (*PackageImport["GeneralUtilities`"]*)
 
-If[Length[DownValues[FunctionalParsers`ParseEBNF]] == 0,
-  Echo["FunctionalParsers.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
-];
+(* The package FunctionalParsers.m has to be loaded beforehand. *)
+(*If[Length[DownValues[FunctionalParsers`ParseEBNF]] == 0,*)
+(*  Echo["FunctionalParsers.m", "Importing from GitHub:"];*)
+(*  Get["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]*)
+(*];*)
 
-Needs["FunctionalParsers`"];
+(*Needs["FunctionalParsers`"];*)
 
+PackageImport["FunctionalParsers`"]
 
 (************************************************************)
 (* Private functions                                        *)
