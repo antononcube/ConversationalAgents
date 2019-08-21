@@ -41,8 +41,93 @@
 (* :Package Version: 0.8 *)
 (* :Mathematica Version: 12.0 *)
 (* :Copyright: (c) 2019 Anton Antonov *)
-(* :Keywords: functional parsers, Raku Perl 6, grammar, class *)
-(* :Discussion: *)
+(* :Keywords: functional parsers, Raku Perl 6, grammar, class, BNF, EBNF *)
+(* :Discussion:
+
+   # In brief
+
+   I find the Raku Perl 6 grammars functionalities pretty neat and good looking.
+
+   This Wolfram Language package translates Extended Backus-Naur Form (EBNF) grammars parsed and manipulated
+   byt the package "FunctionalParsers.m", [1], into Raku Perl 6 grammar class definitions.
+
+   # Usage example
+
+   In order to run the code of this package the package "FunctionalParsers.m" has to be loaded first.
+   (See the section "Implementation notes" for more details.)
+
+     Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"];
+
+   Here is an example of translation of a small grammar.
+
+     ebnfCode = "
+       <lovefood> = <subject> , <loveverb> , <object-spec> <@ LoveFood[Flatten[#]]& ;
+       <loveverb> = ( 'love' | 'crave' | 'demand' ) <@ LoveType ;
+       <object-spec> = ( <object-list> | <object> | <objects> | <objects-mult> ) <@ LoveObjects[Flatten[{#}]]& ;
+       <subject> = 'i' | 'we' | 'you' <@ Who ;
+       <object> = 'sushi' | [ 'a' ] , 'chocolate' | 'milk' | [ 'an' ] , 'ice' , 'cream' | 'a' , 'tangerine' ;
+       <objects> = 'sushi' | 'chocolates' | 'milks' | 'ice' , 'creams' | 'ice-creams' | 'tangerines' ;
+       <objects-mult> = 'Range[2,100]' , <objects> <@ Mult ;
+       <object-list> = ( <object> | <objects> | <objects-mult> ) , { 'and' &> ( <object> | <objects> | <objects-mult> ) } ;
+     ";
+
+     ToRakuPerl6[ebnfCode, "GrammarName" -> "LoveFood", "TopRule" -> "<lovefood>"]
+
+     (* "grammar LoveFood {
+           rule TOP {<subject> <loveverb> <object-spec>}
+           rule loveverb {[ 'love' | 'crave' | 'demand' ]}
+           rule object-spec {[ <object-list> | <object> | <objects> | <objects-mult> ]}
+           rule subject {[ 'i' | 'we' | 'you' ]}
+           rule object {[ 'sushi' | [ 'a' ]? 'chocolate' | 'milk' | [ 'an' ]? 'ice' 'cream' | 'a' 'tangerine' ]}
+           rule objects {[ 'sushi' | 'chocolates' | 'milks' | 'ice' 'creams' | 'ice-creams' | 'tangerines' ]}
+           rule objects-mult {[\\d+] <objects>}
+           rule object-list {[ <object> | <objects> | <objects-mult> ] [ 'and' [ <object> | <objects> | <objects-mult> ] ]+}
+         }" *)
+
+   # Implementation notes
+
+   I used the undocumented "modern" package style, [3], but that prevents from downloading and using
+   packages from GitHub directly as described in [2].
+
+   The EBNF grammar string is normalized first. Meaning, "<&" and "&>" are replaced with "," and
+   the function applications, "<@ XXX" are removed.
+   (See GrammarNormalize of "FunctionalParsers.m".)
+
+   An idiomatic definition for a list of things, for example
+
+      "<obj-list> = <obj> , { 'and' , <obj> } ;"
+
+   is translated directly to Raku Perl 6 as
+
+      rule obj-list { <obj> [ 'and' <obj> ]+ }
+
+   A better translation is
+
+      rule obj-list { <obj>+ % 'and' }
+
+   # References
+
+   [1] Anton Antonov, Functional parsers Mathematica package, (2014),
+       MathematicaForPrediction at GitHub.
+       URL: https://github.com/antononcube/MathematicaForPrediction/blob/master/FunctionalParsers.m .
+
+   [2] Anton Antonov, Answer of "Declaring Package with dependencies in multiples files?", (2018),
+       MathematicaStackExchange.
+       URL: https://mathematica.stackexchange.com/a/176504/34008 .
+
+   [3] Leonid Shifrin, Answer of "Declaring Package with dependencies in multiples files?", (2018),
+       MathematicaStackExchange.
+       URL: https://mathematica.stackexchange.com/a/176489/34008 .
+
+*)
+
+(*
+   TODO
+   1. [ ] Add function or option for exporting the translated grammar into a file.
+   2. [ ] Special handling of the "lists of things", like, "<obj-list> = <obj> , { 'and' , <obj> } ;" .
+   3. [ ] Move the "modern" package implementation into a classic one.
+   4. [ ] Add unit tests in both Raku Perl 6 and WL.
+*)
 
 (* For new style packages see: https://mathematica.stackexchange.com/a/176489) *)
 (* Declare package context *)
