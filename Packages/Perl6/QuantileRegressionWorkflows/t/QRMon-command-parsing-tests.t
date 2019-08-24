@@ -3,7 +3,7 @@ use lib '../lib';
 use lib './lib';
 use QuantileRegressionWorkflowsGrammar;
 
-plan 70;
+plan 71;
 
 # Shortcut
 my $pQRMONCOMMAND = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand;
@@ -70,7 +70,7 @@ ok $pQRMONCOMMAND.parse("compute a quantile regression fit");
 
 ok $pQRMONCOMMAND.parse("compute quantile regression with probabilities from 0. to 1");
 
-ok $pQRMONCOMMAND.parse("compute quantile regression for the probabilities 0.1 0.2 0.5 0.7 0.9");
+ok $pQRMONCOMMAND.parse("compute quantile regression for the probabilities 0.1 and 0.9");
 
 ok $pQRMONCOMMAND.parse("compute quantile regression with 0.1 0.2 0.5 0.7 0.9");
 
@@ -81,6 +81,8 @@ ok $pQRMONCOMMAND.parse("compute quantile regression with probabilities 0.5 and 
 ok $pQRMONCOMMAND.parse("compute quantile regression using the 0.5 probability");
 
 ok $pQRMONCOMMAND.parse("compute quantile regression using probability 0.5");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with 0.1, 0.2, 0.5, 0.7 and 0.9");
 
 ok $pQRMONCOMMAND.parse("compute quantile regression with 0.1, 0.2, 0.5, 0.7, and 0.9");
 
