@@ -66,19 +66,19 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 ];
 
-BeginPackage["TimeSeriesWorkflowsGrammar`"]
+BeginPackage["TimeSeriesWorkflowsGrammar`"];
 
 pQRMONCOMMAND::usage = "Parses natural language commands for time series workflows."
 
 QRMonCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
-specifying QRMon pipelines construction."
+specifying QRMon pipelines construction.";
 
 QRMonCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
-specifying QRMon pipelines construction."
+specifying QRMon pipelines construction.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
-Needs["FunctionalParsers`"]
+Needs["FunctionalParsers`"];
 
 (************************************************************)
 (* Common parts                                             *)
@@ -348,7 +348,7 @@ pWLEXPR = ParseApply[ ToExpression, ParsePredicate[SyntaxQ[#]&] ];
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[QRMonCommandsSubGrammars]
+Clear[QRMonCommandsSubGrammars];
 
 Options[QRMonCommandsSubGrammars] = { "Normalize" -> False };
 
@@ -367,7 +367,7 @@ QRMonCommandsSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[QRMonCommandsGrammar]
+Clear[QRMonCommandsGrammar];
 
 Options[QRMonCommandsGrammar] = Options[QRMonCommandsSubGrammars];
 
@@ -385,6 +385,6 @@ QRMonCommandsGrammar[opts:OptionsPattern[]] :=
       If[ normalizeQ, GrammarNormalize[res], res ]
     ];
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]
