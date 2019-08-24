@@ -152,12 +152,11 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
 
     # QR element -- interpolation order.
     rule interpolation-order { 'interpolation' [ 'order' | 'degree' ] }
-    rule interpolation-order-spec-phrase { <.interpolation-order> <interpolation-order-spec> |
-    <interpolation-order-spec> <.interpolation-order> }
+    rule interpolation-order-spec-phrase { <.interpolation-order> <interpolation-order-spec> | <interpolation-order-spec> <.interpolation-order> }
     rule interpolation-order-spec { <integer-value> }
 
     # Find outliers command
-    rule find-outliers-command { <find-outliers-simple> | <find-type-outliers> | <find-outliers-spec> }
+    rule find-outliers-command { <find-type-outliers> | <find-outliers-spec> | <find-outliers-simple> }
     rule outliers-phrase { <the-determiner>? <data>? <outliers> }
     rule find-outliers-simple { <compute-and-display> <.outliers-phrase> }
 
@@ -169,9 +168,8 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule the-probability { <the-determiner>? <probability> }
     rule the-probabilities { <the-determiner>? <probabilities> }
 
-    rule find-type-outliers { <compute-and-display> [ <outlier-type> <.outliers-phrase> ]
-    [ <with-preposition> <.the-probability>? <number-value> <probability>? ]? }
-    rule find-outliers-spec { <compute-and-display> <outliers-phrase> <with-preposition> <.the-proabilities>? <probabilities-spec> <probability>? }
+    rule find-type-outliers { <compute-and-display> [ <outlier-type> <.outliers-phrase> ] [ <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] ]? }
+    rule find-outliers-spec { <compute-and-display> <outliers-phrase> <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] }
 
     # Plot command
     rule plot-command { <display-directive> <plot-elements-list>? [ <date-list-diagram> | <diagram> ] | <diagram> };
