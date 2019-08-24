@@ -180,13 +180,13 @@ ebnfRegression = "
   <quantile-regression-spec> = <quantile-regression> ,
                                [ <using-preposition>  &>  <quantile-regression-spec-element-list> ]
                                <@ QuantileRegressionSpec ;
-  <quantile-regression-spec-element> = <quantiles-spec-phrase> | <knots-spec-phrase> | <interpolation-order-spec-phrase> ;
+  <quantile-regression-spec-element> = <probabilities-spec-phrase> | <knots-spec-phrase> | <interpolation-order-spec-phrase> ;
   <quantile-regression-spec-element-list> = <quantile-regression-spec-element> ,
                                             [ { ( <list-delimiter> , [ <using-preposition> ] ) &> <quantile-regression-spec-element> } ]
                                             <@ QuantileRegressionSpecElementList@*Flatten ;
-  <quantiles-spec-phrase> = ( [ 'the' ] , ( 'quantiles' | 'quantile' , [ 'list' ] ) ) &> <quantiles-spec> |
-                               [ 'the' ] &> <quantiles-spec> <& ( 'quantiles' | 'quantile' , [ 'list' ] ) ;
-  <quantiles-spec> = { '_?NumberQ' } | <number-value-list> | <range-spec> <@ QuantilesSpec ;
+  <probabilities-spec-phrase> = ( [ 'the' ] , ( 'probabilities' | 'probability' , [ 'list' ] ) ) &> <probabilities-spec> |
+                               [ 'the' ] &> <probabilities-spec> <& ( 'probabilities' | 'probability' , [ 'list' ] ) ;
+  <probabilities-spec> = { '_?NumberQ' } | <number-value-list> | <range-spec> <@ ProbabilitiesSpec ;
   <knots-spec-phrase> = ( [ 'the' ] , 'knots' ) &> <knots-spec> | <knots-spec> <& 'knots' ;
   <knots-spec> = '_?IntegerQ' | <number-value-list> | <range-spec> <@ KnotsSpec ;
   <interpolation-order-spec-phrase> = ( [ 'interpolation' ] , ( 'order' | 'degree' ) ) &> <interpolation-order-spec> |
@@ -205,7 +205,7 @@ ebnfRegressionFit = "
   <least-squares-fit-spec> = <least-squares-fit> , <using-preposition> , <basis-functions-spec> <@ LeastSquaresFitSpec ;
   <quantile-regression-fit> = 'quantile' , 'regression' , 'fit' | 'QuantileRegressionFit' ;
   <using-basis-functions-phrase> = ( <using-preposition> , [ 'the' ] , [ 'basis' ] , [ 'functions' ] ) &> <basis-functions-spec> ;
-  <using-quantiles-phrase> = ( <using-preposition> , [ 'the' ] , [ 'quantiles' ] ) &> <quantiles-spec> ;
+  <using-quantiles-phrase> = ( <using-preposition> , [ 'the' ] , [ 'quantiles' ] ) &> <probabilities-spec> ;
   <quantile-regression-fit-spec> = <quantile-regression-fit> &>
                                    ( <using-basis-functions-phrase> , [ 'and' ] , [ <using-quantiles-phrase> ] |
                                      <using-quantiles-phrase> , [ 'and' ] , [ <using-basis-functions-phrase> ] )
@@ -245,7 +245,7 @@ ebnfFindOutliers = "
                          [ ( <with-preposition> , [ [ 'the' ] , 'quantile' ] ) &> <number-value> , [ 'quantile' ] ]
                          <@ FindTypeOutliers@*Flatten ;
   <find-outliers-spec> = <compute-and-display> , <outliers-phrase> , <with-preposition> ,
-                         ( [ [ 'the' ] , 'quantiles' ] ) &> <quantiles-spec> , [ 'quantiles' ] <@ FindTypeOutliers@Flatten ;
+                         ( [ [ 'the' ] , 'quantiles' ] ) &> <probabilities-spec> , [ 'quantiles' ] <@ FindTypeOutliers@Flatten ;
 ";
 
 
