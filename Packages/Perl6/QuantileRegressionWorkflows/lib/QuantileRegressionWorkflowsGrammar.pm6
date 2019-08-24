@@ -33,7 +33,7 @@
 #==============================================================================
 
 use v6;
-  unit module QuantileRegressionWorkflowsGrammar;
+unit module QuantileRegressionWorkflowsGrammar;
 
 # This role class has common command parts.
 role QuantileRegressionWorkflowsGrammar::CommonParts {
@@ -46,7 +46,7 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
   token to-preposition { 'to' | 'into' }
   token with-preposition { 'with' | 'using' }
   token assign { 'assign' | 'set' }
-  token a-determiner { 'a' | 'an'}
+  token a-determiner { 'a' | 'an' }
   token the-determiner { 'the' }
   token rows { 'rows' | 'records' }
   rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
@@ -58,7 +58,7 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
   token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
 
   # Value types
-  token number-value { (\d+ ['.' \d+]?  [ [e|E] \d+]?) }
+  token number-value { (\d+ ['.' \d*]?  [ [e|E] \d+]?) }
   token integer-value { \d+ }
   token percent { '%' | 'percent' }
   token percent-value { <number-value> <.percent> }
@@ -71,8 +71,11 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
   token outliers { 'outliers' | 'outlier' }
   rule the-outliers { <the-determiner> <outliers> }
   token ingest { 'ingest' | 'load' | 'use' | 'get' }
+  token fit { 'fit' | 'fitting' }
   token quantile { 'quantile' }
   token quantiles { 'quantiles' }
+  token probability { 'probability' }
+  token probabilities { 'probabilities' }
 
   # Lists of things
   token list-separator-symbol { ',' | '&' | 'and' }
@@ -80,9 +83,9 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
   token list { 'list' }
 
   # Number list
-  rule number-value-list { <number-value>+ % <list-separator> }
+  rule number-value-list { <number-value>+ % <list-separator>? }
 
-  rule range-spec-step { <with-preposition> | <with-preposition>? 'step' }
+  rule range-spec-step { <with-preposition>? 'step' | <with-preposition> }
   rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step> <number-value> ]? }
 
 }
@@ -109,19 +112,33 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
   rule summarize-data { 'summarize' <.the-determiner>? <data> | <display-directive> <data>? ( 'summary' | 'summaries' ) }
 
   # Regression command
-  rule regression-command { ( <.compute-directive> | <.do-verb> )  <quantile-regression-spec> }
+  rule regression-command { [ <.compute-directive> | <.compute-and-display> | <.do-verb> ] <quantile-regression-spec> }
   rule quantile-regression { 'quantile' 'regression' | 'QuantileRegression' }
-  rule quantile-regression-spec { <quantile-regression> [ <using-preposition> <quantile-regression-spec-element-list> ]? }
+  rule quantile-regression-phrase { <.a-determiner>? <quantile-regression> <.fit>? }
+  rule quantile-regression-spec { <quantile-regression-phrase> [ <using-preposition> <quantile-regression-spec-element-list> ]? }
   rule quantile-regression-spec-element-list { <quantile-regression-spec-element>+ % <spec-list-delimiter> }
-  rule quantile-regression-spec-element { <quantiles-spec-phrase> | <knots-spec-phrase> | <interpolation-order-spec-phrase> }
+  rule quantile-regression-spec-element { <probabilities-spec-phrase> | <knots-spec-phrase> | <interpolation-order-spec-phrase> }
+
   token spec-list-delimiter { <list-separator> | <list-separator> <.ws> <.using-preposition>? }
-  rule quantiles-list { <.the-determiner>? [ 'quantiles' | 'quantile' <list>? ] }
+
+  # QR elenent - list of probabilities.
+  rule probabilities-list { <.the-determiner>? [ <probabilities> | <probability> <list>? | <probability> ] }
+  rule probabilities-spec-phrase { <.probabilities-list> <probabilities-spec> |
+                               <.the-determiner>? <probabilities-spec> <.probabilities-list> }
+  rule probabilities-spec { <number-value-list> | <range-spec> }
+
+  # This is probably not needed.
+  rule quantiles-list { <.the-determiner>? [ <quantiles> | <quantile> <list>? | <quantile> ] }
   rule quantiles-spec-phrase { <.quantiles-list> <quantiles-spec> |
                                <.the-determiner>? <quantiles-spec> <.quantiles-list> }
-  rule quantiles-spec { <number-value>+ | <number-value-list> | <range-spec> }
+  rule quantiles-spec { <number-value-list> | <range-spec> }
+
+  # QR element -- knots.
   rule knots { <the-determiner>? 'knots' }
-  rule knots-spec-phrase { <.knots> <knots-spec> | <knots-spec> <knots> }
+  rule knots-spec-phrase { <.knots> <knots-spec> | <knots-spec> <.knots> }
   rule knots-spec { <integer-value> | <number-value-list> | <range-spec> }
+
+  # QR element -- interpolation order.
   rule interpolation-order { 'interpolation' [ 'order' | 'degree' ] }
   rule interpolation-order-spec-phrase { <.interpolation-order> <interpolation-order-spec> |
                                          <interpolation-order-spec> <.interpolation-order> }
@@ -131,12 +148,18 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
   rule find-outliers-command { <find-outliers-simple> | <find-type-outliers> | <find-outliers-spec> }
   rule outliers-phrase { <the-determiner>? <data>? <outliers> }
   rule find-outliers-simple { <compute-and-display> <.outliers-phrase> }
+
   rule outlier-type { [ <.the-determiner>? <.data>? ] ( 'top' | 'bottom' ) }
+
   rule the-quantile { <the-determiner>? <quantile> }
   rule the-quantiles { <the-determiner>? <quantiles> }
+
+  rule the-probability { <the-determiner>? <probability> }
+  rule the-probabilities { <the-determiner>? <probabilities> }
+
   rule find-type-outliers { <compute-and-display> [ <outlier-type> <.outliers-phrase> ]
-                            [ <with-preposition> <.the-quantile>? <number-value> <quantile>? ]? }
-  rule find-outliers-spec { <compute-and-display> <outliers-phrase> <with-preposition> <.the-quantiles>? <quantiles-spec> <quantile>? }
+                            [ <with-preposition> <.the-probability>? <number-value> <probability>? ]? }
+  rule find-outliers-spec { <compute-and-display> <outliers-phrase> <with-preposition> <.the-proabilities>? <probabilities-spec> <probability>? }
 
   # Plot command
   rule plot-command { <display-directive> <plot-elements-list>? [ <date-list-diagram> | <diagram> ] | <diagram> };
@@ -146,7 +169,7 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
   rule date-list-phrase { [ 'date' | 'dates' ]  ['list']? }
   rule date-list-diagram { ( <date-list-phrase>?  <diagram> ) | <diagram> [ <with-preposition> [ 'dates' | 'date' 'axis' ] ] }
   rule regression-function-list { [ <regression-function> | <regression-function-name> ]+ % <list-separator> }
-  rule regression-function { 'QuantileRegression' | 'LeastSquares' }
+  rule regression-function { 'QuantileRegression' | 'QuantileRegressionFit' | 'LeastSquares' }
   rule regression-function-name { 'quantile' ['regression']? | 'least' 'squares' ['regression']? }
 
 }
