@@ -50,7 +50,7 @@ If[Length[DownValues[ToNetMonPipelineFunction]] == 0,
 (*Begin["`Private`"]*)
 
 
-Clear[TGetValue]
+Clear[TGetValue];
 TGetValue[parsed_, head_] :=
     If[FreeQ[parsed, head[___]], None, First@Cases[parsed, head[n___] :> n, {0, Infinity}]];
 
@@ -59,10 +59,10 @@ TGetValue[parsed_, head_] :=
 (* Data statistics                                         *)
 (***********************************************************)
 
-Clear[TDataStatisticsCommand]
+Clear[TDataStatisticsCommand];
 TDataStatisticsCommand[parsed_] := parsed;
 
-Clear[TSummarizeData]
+Clear[TSummarizeData];
 TSummarizeData[parsed_] :=
     Block[{},
       (*Fold[ QRMonBind, QRMonUnit[##], {QRMonGetData, QRMonEchoDataSummary}]&*)
@@ -71,11 +71,11 @@ TSummarizeData[parsed_] :=
     ];
 
 
-Clear[TCrossTabulateData]
+Clear[TCrossTabulateData];
 TCrossTabulateData[parsed_] := parsed;
 
 
-Clear[TCrossTabulateVars]
+Clear[TCrossTabulateVars];
 TCrossTabulateVars[parsed_] :=
     Block[{},
 
@@ -89,15 +89,15 @@ TCrossTabulateVars[parsed_] :=
 (* Regression                                              *)
 (***********************************************************)
 
-ClearAll[TNumberValueList]
+ClearAll[TNumberValueList];
 TNumberValueList[parsed_] :=
     Map[TGetValue[#,NumericValue]&, parsed];
 
-ClearAll[TRangeSpec]
+ClearAll[TRangeSpec];
 TRangeSpec[parsed_] :=
     Range @@ Map[TGetValue[#,NumericValue]&, parsed];
 
-ClearAll[TComputeRegression]
+ClearAll[TComputeRegression];
 TComputeRegression[parsed_] :=
     Block[{knots=6, intOrder=2, qs = {0.25, 0.5, 0.75} },
 
@@ -109,8 +109,8 @@ TComputeRegression[parsed_] :=
         intOrder = TGetValue[ parsed, InterpolationOrderSpec]
       ];
 
-      If[!FreeQ[parsed, QuantilesSpec],
-        qs = TGetValue[ parsed, QuantilesSpec];
+      If[!FreeQ[parsed, ProbabilitiesSpec],
+        qs = TGetValue[ parsed, ProbabilitiesSpec];
       ];
 
       QRMonQuantileRegression[ knots, qs, InterpolationOrder->intOrder]
@@ -130,7 +130,7 @@ TComputeRegression[parsed_] :=
 (*TNetTrainingTimeSpec[parsed_] :=*)
     (*Round[TGetValue[parsed,NumericValue]];*)
 
-ClearAll[TComputeNetRegression]
+ClearAll[TComputeNetRegression];
 TComputeNetRegression[parsed_] :=
     Block[{splitRatio = 0.75, epochs = Automatic, timeGoal = Automatic},
 
@@ -151,7 +151,7 @@ TComputeNetRegression[parsed_] :=
 (* Data and regression functions plot                      *)
 (***********************************************************)
 
-ClearAll[TDataAndRegressionFunctionsPlot]
+ClearAll[TDataAndRegressionFunctionsPlot];
 TDataAndRegressionFunctionsPlot[parsed_] :=
     Block[{diagramType = None, dateListPlotQ = False},
 
@@ -194,15 +194,15 @@ TDataAndRegressionFunctionsPlot[parsed_] :=
 (* General pipeline commands                               *)
 (***********************************************************)
 
-Clear[TPipelineCommand]
+Clear[TPipelineCommand];
 TPipelineCommand[parsed_] := parsed;
 
 
-Clear[TGetPipelineValue]
+Clear[TGetPipelineValue];
 TGetPipelineValue[parsed_] := QRMonEchoValue;
 
 
-Clear[TGetPipelineContext]
+Clear[TGetPipelineContext];
 TGetPipelineContext[parsed_] :=
     Block[{},
 
@@ -218,7 +218,7 @@ TGetPipelineContext[parsed_] :=
     ];
 
 
-Clear[TPipelineContextRetrieve]
+Clear[TPipelineContextRetrieve];
 TPipelineContextRetrieve[parsed_] :=
     Block[{cvKey},
 
@@ -229,7 +229,7 @@ TPipelineContextRetrieve[parsed_] :=
     ];
 
 
-Clear[TPipelineContextAdd]
+Clear[TPipelineContextAdd];
 TPipelineContextAdd[parsed_] :=
     Block[{cvKey},
 
@@ -275,7 +275,7 @@ TSecondOrderCommand[parsed_] := parsed;
 (* Main translation functions                              *)
 (***********************************************************)
 
-ClearAll[TranslateToQRMon]
+ClearAll[TranslateToQRMon];
 
 Options[TranslateToQRMon] = { "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&) };
 
@@ -314,7 +314,7 @@ TranslateToQRMon[pres_] :=
     ];
 
 
-ClearAll[ToQRMonPipelineFunction]
+ClearAll[ToQRMonPipelineFunction];
 
 Options[ToQRMonPipelineFunction] =
     { "Trace" -> False,
