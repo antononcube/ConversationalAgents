@@ -28,11 +28,11 @@
 #
 #   The actions are implemented for the grammar:
 #
-#     DataTransformationWorkflowGrammar::Spoken-dplyr-command
+#     QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand
 #
 #   in the file :
 #
-#     https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/English/RakuPerl6/DataTransformationWorkflowsGrammar.pm6
+#     https://github.com/antononcube/ConversationalAgents/blob/master/Packages/Perl6/QuantileRegressionWorkflows/lib/QuantileRegressionWorkflowsGrammar.pm6
 #
 #==============================================================================
 
@@ -40,48 +40,51 @@
 use v6;
 #use lib '.';
 #use lib '../../../EBNF/English/RakuPerl6/';
-use DataTransformationWorkflowsGrammar;
+use QuantileRegressionWorkflowsGrammar;
 
-unit module Spoken-dplyr-actions;
+unit module QRMon-R-actions;
 
-class Spoken-dplyr-actions::Spoken-dplyr-actions {
+class QRMon-R-actions::QRMon-R-actions {
+
+  # Top
   method TOP($/) { make $/.values[0].made; }
 
   # General
-  method variable-name($/) { make $/; }
+  method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
-  method variable-names-list($/) { make $<variable-name>>>.made.join(", "); }
+  method integer-value($/) { make $/.Str; }
+  method number-value($/) { make $/.Str; }
+  method percent-value($/) { make $<number-value> ~ "/100"; }
 
-  # Load data
-  method load-data($/) { make "loadData(" ~ $<data-location-spec>.made ~")"; }
-  method data-location-spec($/) { make "\'" ~ $/ ~ "\'"; }
+  method number-value-list($/) { make 'c(' ~ $<number-value>>>.made.join(', ') ~ ')'; }
+  method range-spec($/) { make 'seq(' ~ $/.values[0].made ~ ")"; }
 
-  # Select command
-  method select-command($/) { make "dplyr::select(" ~ $<variable-names-list>.made ~ ")"; }
+  # Data load commands
+  method data-load-command($/) { make $/.values[0].made; }
+  method load-data($/) { make 'QRMonSetData( data = ' ~ $<data-location-spec>.made ~ ')'; }
+  method data-location-spec($/) { make $<dataset-name>.made; }
+  method use-qr-object($/) { make $<variable-name>.made; }
+  method dataset-name($/) { make $/.Str; }
 
-  # Filter commands
-  method filter-command($/) { make "dplyr::filter(" ~ $<filter-spec> ~ ")"; }
-  method filter-spec($/) { make $<predicates-list>.made; }
-  method predicate($/) { make $/>>.made.join(" "); }
-  method predicate-symbol($/) { make $/; }
-  method predicate-value($/) { make $/.values[0].made; }
+  # Quantile Regression.
+  method regression-command($/) { make $/.values[0].made; }
+  method quantile-regression-spec($/) { make $/.values[0].made; }
+  method quantile-regression-spec-simple($/) { make "QRMonQuantileRegression()"; }
+  method quantile-regression-spec-full($/) {  make "QRMonQuantileRegression(" ~ $<quantile-regression-spec-element-list>.made ~ ")"; }
+  method quantile-regression-spec-element-list($/) { make $<quantile-regression-spec-element>>>.made.join(', '); }
+  method quantile-regression-spec-element($/) { make $/.values[0].made; }
 
-  # Mutate command
-  method mutate-command($/) { make "dplyr::mutate(" ~ $<assign-pairs-list>.made ~ ")"; }
-  method assign-pairs-list($/) { make $<assign-pair>>>.made.join(", "); }
-  method assign-pair($/) { make $/.values[0].made ~ " = " ~ $/.values[1].made; }
+  # QR element - list of probabilities.
+  method probabilities-spec-phrase($/) { make "probabilities = " ~ $<probabilities-spec>.made ; }
+  method probabilities-spec($/) { make $/.values[0].made; }
 
-  # Group command
-  method group-command($/) { make "dplyr::group_by(" ~ $<variable-names-list>.made ~ ")"; }
+  # QR element - knots.
+  method knots-spec-phrase($/) { make "df = " ~ $<knots-spec>.made; }
+  method knots-spec($/) { make $/.values[0].made; }
 
-  # Arrange command
-  method arrange-command($/) { make $/.values[0].made; }
-  method arrange-command-simple($/) { make $<variable-names-list>.made; }
-  method arrange-command-ascending($/) { make "dplyr::arrange(" ~ $<arrange-command-simple>.made ~ ")"; }
-  method arrange-command-descending($/) { make "dplyr::arrange(desc(" ~ $<arrange-command-simple>.made ~ "))"; }
+  # QR element - interplation order.
+  method interpolation-order-phrase($/) { make "order = 3"; }
 
-  # Statistics command
-  method statistics-command($/) { make $/.values[0].made; }
-  method count-command($/) { make "dplyr::count()"; }
-  method summarize-all-command($/) { make "dplyr::summarise_all(mean)"}
+  # Plot command
+  method plot-command($/) { make "QRMonPlot()"; }
 }
