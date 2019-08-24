@@ -3,30 +3,174 @@ use lib '../lib';
 use lib './lib';
 use QuantileRegressionWorkflowsGrammar;
 
-plan 12;
+plan 68;
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("show data and quantile regression curves plot");
+# Shortcut
+my $pQRMONCOMMAND = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand;
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression");
+#-----------------------------------------------------------
+# Data transformation
+#-----------------------------------------------------------
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("summarize data");
+ok $pQRMONCOMMAND.parse("rescale x axis");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute and display QuantileRegression");
+ok $pQRMONCOMMAND.parse("rescale both axes");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute a quantile regression fit");
+ok $pQRMONCOMMAND.parse("resample");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression with probability 0.85");
+ok $pQRMONCOMMAND.parse("resample the time series with step 0.3");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression with probabilities 0.5 and 0.75");
+ok $pQRMONCOMMAND.parse("resample with linear interpolation");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression with probabilities 0.25 0.5 0.75");
+ok $pQRMONCOMMAND.parse("moving average using two days");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression with probabilities 0.5 and 0.75 and 0.3");
+ok $pQRMONCOMMAND.parse("moving average using 5");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression with probabilities 0.25, 0.5 and 0.75");
+ok $pQRMONCOMMAND.parse("moving median with 5 elements");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression with probabilities from 0.25 to 0.75 with step 0.25");
+ok $pQRMONCOMMAND.parse("moving average with weights 1, 2, 5");
 
-ok QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse("compute quantile regression with probabilities from 0. to 1");
+ok $pQRMONCOMMAND.parse("moving map Mean with 5 elements");
+
+ok $pQRMONCOMMAND.parse("resample with hold value from left");
+
+ok $pQRMONCOMMAND.parse("resample with HoldValueFromLeft");
+
+ok $pQRMONCOMMAND.parse("resample the time series");
+
+
+#-----------------------------------------------------------
+# Data statistics
+#-----------------------------------------------------------
+
+ok $pQRMONCOMMAND.parse("summarize data");
+
+ok $pQRMONCOMMAND.parse("summarize the data");
+
+ok $pQRMONCOMMAND.parse("show data summary");
+
+ok $pQRMONCOMMAND.parse("cross tabulate");
+
+ok $pQRMONCOMMAND.parse("cross tabulate the data");
+
+ok $pQRMONCOMMAND.parse("cross tabulate time variable vs dependent variable");
+
+ok $pQRMONCOMMAND.parse("cross tabulate the time variable vs the dependent");
+
+
+#-----------------------------------------------------------
+# Quantile Regression
+#-----------------------------------------------------------
+
+ok $pQRMONCOMMAND.parse("compute quantile regression");
+
+ok $pQRMONCOMMAND.parse("compute and display QuantileRegression");
+
+ok $pQRMONCOMMAND.parse("compute a quantile regression fit");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with probabilities from 0. to 1");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression for the probabilities 0.1 0.2 0.5 0.7 0.9");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with 0.1 0.2 0.5 0.7 0.9");
+
+ok $pQRMONCOMMAND.parse("calculate quantile regression with probabilities 0.5 and 0.75");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with probabilities 0.5 and 0.75 and 0.3");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression using the 0.5 probability");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression using probability 0.5");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with 0.1, 0.2, 0.5, 0.7, and 0.9");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with probabilities 0.1, 0.2, 0.5, 0.7, and 0.9");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with the probability list 0.1, 0.2, 0.5, 0.7, 0.9");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with the knots 0.1, 0.2, 0.5, 0.7, 0.9");
+
+ok $pQRMONCOMMAND.parse("compute QuantileRegression using probabilities from 0.1 to 0.9 step 0.1");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with probabilities from 0.25 to 0.75 with step 0.25");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression using 0.5 and 10 knots");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with 12 knots and using the probability 0.5");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with 12 knots, using the probability 0.5 and interpolation order 3");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression with the knots from 0.1 to 20.2 step 0.5, using the probability 0.25, 0.5, 0.75 and interpolation order 3");
+
+ok $pQRMONCOMMAND.parse("compute quantile regression using the probabilities 0.25, 0.5, 0.75 and knots from 0.1 to 20.2 step 0.5 and interpolation order 3");
+
+
+#-----------------------------------------------------------
+# Quantile Regression fit
+#-----------------------------------------------------------
+
+ok $pQRMONCOMMAND.parse("compute quantile regression fit");
+
+ok $pQRMONCOMMAND.parse("compute a quantile regression fit");
+
+ok $pQRMONCOMMAND.parse("compute least squares regression");
+
+ok $pQRMONCOMMAND.parse("compute least squares fit");
+
+ok $pQRMONCOMMAND.parse('compute quantile regression fit with functions Table[Sin[x],{x,0,10,2}]');
+
+ok $pQRMONCOMMAND.parse("compute quantile regression fit with 0.1 0.2 0.5 0.7 0.9");
+
+ok $pQRMONCOMMAND.parse('compute quantile regression fit with functions Table[Sin[x],{x,0,10,2}] and proabilities 0.1, 0.2, and 0.6');
+
+ok $pQRMONCOMMAND.parse('compute quantile regression fit with quantiles 0.1, 0.2, and 0.6 and functions Table[Sin[x],{x,0,10,2}]');
+
+ok $pQRMONCOMMAND.parse("compute QuantileRegression using probabilities from 0.1 to 0.9 step 0.1");
+
+
+#-----------------------------------------------------------
+# Find outliers
+#-----------------------------------------------------------
+
+ok $pQRMONCOMMAND.parse('find outliers');
+
+ok $pQRMONCOMMAND.parse('find top outliers');
+
+ok $pQRMONCOMMAND.parse('find bottom outliers');
+
+ok $pQRMONCOMMAND.parse('find bottom outliers with 0.1');
+
+ok $pQRMONCOMMAND.parse('find and show bottom outliers with 0.01');
+
+ok $pQRMONCOMMAND.parse('compute outliers with 0.1 0.2 0.5 0.7 0.9');
+
+
+#-----------------------------------------------------------
+# Plot
+#-----------------------------------------------------------
+
+ok $pQRMONCOMMAND.parse('display plot');
+
+ok $pQRMONCOMMAND.parse('display date list plot');
+
+ok $pQRMONCOMMAND.parse('show regression curves plot');
+
+ok $pQRMONCOMMAND.parse('show data and quantile regression curves plot');
+
+ok $pQRMONCOMMAND.parse('show quantile regression curves plot');
+
+ok $pQRMONCOMMAND.parse('show data and quantile curves plot');
+
+ok $pQRMONCOMMAND.parse('show data and quantile curves date plot');
+
+ok $pQRMONCOMMAND.parse('show error plots');
+
+ok $pQRMONCOMMAND.parse('display outliers date list plot');
+
+ok $pQRMONCOMMAND.parse('display date list outliers plot');
+
+ok $pQRMONCOMMAND.parse('display date list plot');
+
+ok $pQRMONCOMMAND.parse('show outliers plot');
 
 done-testing;
