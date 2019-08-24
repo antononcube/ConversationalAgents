@@ -3,7 +3,7 @@ use lib '../lib';
 use lib './lib';
 use QuantileRegressionWorkflowsGrammar;
 
-plan 68;
+plan 70;
 
 # Shortcut
 my $pQRMONCOMMAND = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand;
@@ -142,8 +142,11 @@ ok $pQRMONCOMMAND.parse('find bottom outliers with 0.1');
 
 ok $pQRMONCOMMAND.parse('find and show bottom outliers with 0.01');
 
-ok $pQRMONCOMMAND.parse('compute outliers with 0.1 0.2 0.5 0.7 0.9');
+ok $pQRMONCOMMAND.parse('compute outliers with probabilities 0.1 0.2 0.5 0.7 0.9');
 
+ok $pQRMONCOMMAND.parse('compute outliers with probabilities 0.1 and 0.9');
+
+ok $pQRMONCOMMAND.parse('compute outliers with 0.1 0.2 0.5 0.7 0.9');
 
 #-----------------------------------------------------------
 # Plot
