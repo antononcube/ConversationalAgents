@@ -177,9 +177,9 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does CommonPa
   rule create-command { <create-by-matrices> | <create-by-dataset> }
   rule simple-way { <simple> 'way' | 'directly' | 'simply' }
   rule simple-way-phrase { 'in' <a-determiner> <simple-way> }
-  rule create-simple { <create-directive> <.a-determiner>? <recommender> <simple-way-phrase> | <simple> <recommender> [ 'creation' | 'making' ] }
-  rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
-  rule create-by-matrices { <create-directive> [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? 'matrices' <variable-names-list> }
+  rule create-simple { <generate-directive> [ <.a-determiner> | <.the-determiner> ]? <recommender-object> <simple-way-phrase>? | <simple> <recommender-object> [ 'creation' | 'making' ] }
+  rule create-by-dataset { [ <create-simple> | <generate-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
+  rule create-by-matrices { <generate-directive> [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? 'matrices' <variable-names-list> }
 
   # Data transformation command
   rule data-transformation-command { <cross-tabulate-command> }
