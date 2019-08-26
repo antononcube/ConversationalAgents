@@ -12,17 +12,23 @@ my $pQRMONCOMMAND = QuantileRegressionWorkflowsGrammar::Quantile-regression-work
 # Data transformation
 #-----------------------------------------------------------
 
-ok $pQRMONCOMMAND.parse('rescale x axis'), 'rescale x axis';
+ok $pQRMONCOMMAND.parse('rescale x axis'),
+'rescale x axis';
 
-ok $pQRMONCOMMAND.parse('rescale regressor axis'), 'rescale regressor axis';
+ok $pQRMONCOMMAND.parse('rescale regressor axis'),
+'rescale regressor axis';
 
-ok $pQRMONCOMMAND.parse('rescale y axis'), 'rescale y axis';
+ok $pQRMONCOMMAND.parse('rescale y axis'),
+'rescale y axis';
 
-ok $pQRMONCOMMAND.parse('rescale value axis'), 'rescale value axis';
+ok $pQRMONCOMMAND.parse('rescale value axis'),
+'rescale value axis';
 
-ok $pQRMONCOMMAND.parse('rescale both axes'), 'rescale both axes';
+ok $pQRMONCOMMAND.parse('rescale both axes'),
+'rescale both axes';
 
-ok $pQRMONCOMMAND.parse('resample'), 'resample';
+ok $pQRMONCOMMAND.parse('resample'),
+'resample';
 
 ok $pQRMONCOMMAND.parse('resample the time series with step 0.3'),
 'resample the time series with step 0.3';
