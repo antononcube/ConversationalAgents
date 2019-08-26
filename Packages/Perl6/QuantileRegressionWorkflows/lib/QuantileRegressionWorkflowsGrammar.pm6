@@ -116,8 +116,10 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
 
 grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand does CommonParts {
     # TOP
-    rule TOP { <data-load-command> | <data-transformation-command> | <data-statistics-command> |
-    <regression-command> | <find-outliers-command> | <plot-command> }
+    rule TOP { <data-load-command> | <create-command> |
+               <data-transformation-command> | <data-statistics-command> |
+               <regression-command> |
+               <find-outliers-command> | <plot-command> }
 
     # Load data
     rule data-load-command { <load-data> | <use-qr-object> }
@@ -125,14 +127,22 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule load-data { <.load-data-directive> <data-location-spec> }
     rule use-qr-object { <.use-verb> <.the-determiner>? <.qr-object> <variable-name> }
 
+    # Create command
+    rule create-command { <create-by-dataset> }
+    rule create-simple { <create-directive> <.a-determiner>? <object> <simple-way-phrase> | <simple> <object> [ 'creation' | 'making' ] }
+    rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
+
     # Data transform command
     rule data-transformation-command {[ <rescale-command> | <resample-command> | <moving-func-command> ]}
 
     rule rescale-command { <rescale-axis> | <rescale-both-axes> }
-    rule rescale-axis {'rescale' <.the-determiner>? [ 'x' | 'y' ]? 'axis'}
+    rule rescale-axis {'rescale' <.the-determiner>? <axis-spec> 'axis'}
+    rule axis-spec { <regressor-axis-spec> | <value-axis-spec> }
+    rule regressor-axis-spec { 'x' | 'regressor' }
+    rule value-axis-spec { 'y' | 'value' }
     rule rescale-both-axes {'rescale' [ <the-determiner> | 'both' ]? 'axes'}
-    rule resample-command {'resample' <.the-determiner>? [ <time-series-data> ]? [ <using-preposition> <resampling-method-spec> ]? [ <using-preposition> <sampling-step-spec> ]?}
 
+    rule resample-command {'resample' <.the-determiner>? [ <time-series-data> ]? [ <using-preposition> <resampling-method-spec> ]? [ <using-preposition> <sampling-step-spec> ]?}
     rule sampling-step-spec { <default-sampling-step> | 'step' <number-value> }
     rule default-sampling-step { [ 'smallest' 'difference' | 'default' | 'automatic' ] 'step'}
     rule resampling-method-spec { <resampling-method> | <resampling-method-name> }
@@ -158,7 +168,7 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule quantile-regression-spec-element-list { <quantile-regression-spec-element>+ % <spec-list-delimiter> }
     rule quantile-regression-spec-element { <probabilities-spec-phrase> | <knots-spec-phrase> | <interpolation-order-spec-phrase> }
 
-    token spec-list-delimiter { <list-separator> | <list-separator> <.ws> <.using-preposition>? }
+    token spec-list-delimiter { <list-separator> <.ws>? <.using-preposition>? }
 
     # QR elenent - list of probabilities.
     rule probabilities-spec-phrase {  <.the-determiner>? [ <.probabilities-list> <probabilities-spec> | <probabilities-spec> <.probabilities-list>? ] }
