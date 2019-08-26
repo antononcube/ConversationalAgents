@@ -59,20 +59,51 @@ class QRMon-R-actions::QRMon-R-actions {
   method number-value-list($/) { make 'c(' ~ $<number-value>>>.made.join(', ') ~ ')'; }
   method range-spec($/) { make 'seq(' ~ $/.values[0].made ~ ")"; }
 
-  # Data load commands
+  # Load data
   method data-load-command($/) { make $/.values[0].made; }
   method load-data($/) { make 'QRMonSetData( data = ' ~ $<data-location-spec>.made ~ ')'; }
   method data-location-spec($/) { make $<dataset-name>.made; }
   method use-qr-object($/) { make $<variable-name>.made; }
   method dataset-name($/) { make $/.Str; }
 
-  # Quantile Regression.
+  # Create commands
+  method create-command($/) { make $/.values[0].made; }
+  method create-simple($/) { make 'QRMonUnit()'; }
+  method create-by-dataset($/) { make 'QRMonUnit( data = ' ~ $<dataset-name>.made ~ ')'; }
+
+  # Data transform command
+  method data-transformation-command($/) { make $/.values[0].made; }
+
+  method rescale-command($/) { make 'QRMonRescale(' ~ make $/.values[0].made ~ ')'; }
+  method rescale-axis($/) { make $/.values[0].made; }
+  method axis-spec($/) { make $/.values[0].made; }
+  method regressor-axis-spec($/) { make 'regressorAxisQ = TRUE'; }
+  method value-axis-spec($/) { make 'valueAxisQ = TRUE'; }
+
+  method rescale-both-axes($/) { make 'QRMonRescale( regressorAxisQ = TRUE, valueAxisQ = TRUE )'; }
+
+  method resample-command($/) { make 'QRMonFailure( \"Resampling is not implemented in QRMon-R.\" )'; }
+
+  method moving-func-command($/) { make 'QRMonFailure( \"Moving mapping is not implemented in QRMon-R.\" )'; }
+
+  # Data statistics command
+  method data-statistics-command($/) { make $/.values[0].made; }
+  method summarize-data($/) { make 'QRMonEchoDataSummary()'; }
+
+  # Quantile Regression
   method regression-command($/) { make $/.values[0].made; }
   method quantile-regression-spec($/) { make $/.values[0].made; }
   method quantile-regression-spec-simple($/) { make "QRMonQuantileRegression()"; }
   method quantile-regression-spec-full($/) {  make "QRMonQuantileRegression(" ~ $<quantile-regression-spec-element-list>.made ~ ")"; }
-  method quantile-regression-spec-element-list($/) { make $<quantile-regression-spec-element>>>.made.join(', '); }
-  method quantile-regression-spec-element($/) { make $/.values[0].made; }
+  method quantile-regression-spec-element-list($/) {
+    # say $/<knots-spec-phrase>:exists;
+    # say $<quantile-regression-spec-element>>>.keys;
+    make $<quantile-regression-spec-element>>>.made.join(', ');
+  }
+  method quantile-regression-spec-element($/) {
+    # say $<knots-spec-phrase>;
+    make $/.values[0].made;
+  }
 
   # QR element - list of probabilities.
   method probabilities-spec-phrase($/) { make "probabilities = " ~ $<probabilities-spec>.made ; }
@@ -83,7 +114,8 @@ class QRMon-R-actions::QRMon-R-actions {
   method knots-spec($/) { make $/.values[0].made; }
 
   # QR element - interplation order.
-  method interpolation-order-phrase($/) { make "order = 3"; }
+  method interpolation-order-spec-phrase($/) { make "degree = " ~ $/.values[0].made; }
+  method interpolation-order-spec($/) { make $/.values[0].made; } # make $.<integer-value>.made;
 
   # Plot command
   method plot-command($/) { make "QRMonPlot()"; }
