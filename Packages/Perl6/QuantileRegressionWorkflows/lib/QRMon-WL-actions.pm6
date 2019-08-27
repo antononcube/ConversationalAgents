@@ -94,27 +94,27 @@ class QRMon-WL-actions::QRMon-WL-actions {
   method quantile-regression-spec($/) { make $/.values[0].made; }
   method quantile-regression-spec-simple($/) { make "QRMonQuantileRegression[]"; }
   method quantile-regression-spec-full($/) {  make "QRMonQuantileRegression[" ~ $<quantile-regression-spec-element-list>.made ~ "]"; }
-  method quantile-regression-spec-element-list($/) {
-    # say $/<knots-spec-phrase>:exists;
-    # say $<quantile-regression-spec-element>>>.keys;
-    make $<quantile-regression-spec-element>>>.made.join(', ');
-  }
-  method quantile-regression-spec-element($/) {
-    # say $<knots-spec-phrase>;
-    make $/.values[0].made;
-  }
+  method quantile-regression-spec-element-list($/) { make $<quantile-regression-spec-element>>>.made.join(', '); }
+  method quantile-regression-spec-element($/) { make $/.values[0].made; }
 
   # QR element - list of probabilities.
   method probabilities-spec-phrase($/) { make $<probabilities-spec>.made; }
-  method probabilities-spec($/) { make $/.values[0].made; }
+  method probabilities-spec($/) { make '"Probabilities" -> ' ~ $/.values[0].made; }
 
   # QR element - knots.
   method knots-spec-phrase($/) { make $<knots-spec>.made; }
-  method knots-spec($/) { make $/.values[0].made; }
+  method knots-spec($/) { make '"Knots" -> ' ~ $/.values[0].made; }
 
   # QR element - interplation order.
   method interpolation-order-spec-phrase($/) { make '"InterpolationOrder" -> ' ~ $/.values[0].made; }
   method interpolation-order-spec($/) { make $/.values[0].made; } # make $.<integer-value>.made;
+
+  # Find outliers command
+  method find-outliers-command($/) { make $/.values[0].made; }
+  method find-outliers-simple($/) { make "QRMonOutliersPlot[]"; }
+
+  method find-type-outliers($/) { make "QRMonOutliersPlot[]"; }
+  method find-outliers-spec($/) { make "QRMonOutliersPlot[]"; }
 
   # Plot command
   method plot-command($/) { make "QRMonPlot[]"; }

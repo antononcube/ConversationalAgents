@@ -95,15 +95,21 @@ class QRMon-R-actions::QRMon-R-actions {
   method quantile-regression-spec($/) { make $/.values[0].made; }
   method quantile-regression-spec-simple($/) { make "QRMonQuantileRegression()"; }
   method quantile-regression-spec-full($/) {  make "QRMonQuantileRegression(" ~ $<quantile-regression-spec-element-list>.made ~ ")"; }
+
   method quantile-regression-spec-element-list($/) {
-    # say $/<knots-spec-phrase>:exists;
-    # say $<quantile-regression-spec-element>>>.keys;
-    make $<quantile-regression-spec-element>>>.made.join(', ');
+
+    my $res = $<quantile-regression-spec-element>>>.made.join(', ');
+
+    my @ks = $<quantile-regression-spec-element>>>.keys;
+
+    if @ks.first('knots-spec-phrase') {
+      make $res;
+    } else {
+      make 'df = 12, ' ~ $res ;
+    }
   }
-  method quantile-regression-spec-element($/) {
-    # say $<knots-spec-phrase>;
-    make $/.values[0].made;
-  }
+
+  method quantile-regression-spec-element($/) { make $/.values[0].made; }
 
   # QR element - list of probabilities.
   method probabilities-spec-phrase($/) { make "probabilities = " ~ $<probabilities-spec>.made ; }
@@ -117,6 +123,14 @@ class QRMon-R-actions::QRMon-R-actions {
   method interpolation-order-spec-phrase($/) { make "degree = " ~ $/.values[0].made; }
   method interpolation-order-spec($/) { make $/.values[0].made; } # make $.<integer-value>.made;
 
+  # Find outliers command
+  method find-outliers-command($/) { make $/.values[0].made; }
+  method find-outliers-simple($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
+
+  method find-type-outliers($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
+  method find-outliers-spec($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
+
   # Plot command
   method plot-command($/) { make "QRMonPlot()"; }
+
 }
