@@ -73,6 +73,8 @@ class QRMon-WL-actions::QRMon-WL-actions {
   # Data transform command
   method data-transformation-command($/) { make $/.values[0].made; }
 
+  method delete-missing($/) { make "QRMonDeleteMissing[]"; }
+
   method rescale-command($/) { make 'QRMonRescale[' ~ make $/.values[0].made ~ ']'; }
   method rescale-axis($/) { make $/.values[0].made; }
   method axis-spec($/) { make $/.values[0].made; }
