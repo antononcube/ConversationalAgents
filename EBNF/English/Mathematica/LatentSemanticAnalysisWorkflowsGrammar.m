@@ -59,19 +59,19 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 ];
 
-BeginPackage["LatentSemanticAnalysisWorkflowsGrammar`"]
+BeginPackage["LatentSemanticAnalysisWorkflowsGrammar`"];
 
-pLSAMONCOMMAND::usage = "Parses natural language commands for latent semantic analysis workflows."
+pLSAMONCOMMAND::usage = "Parses natural language commands for latent semantic analysis workflows.";
 
 LSAMonCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
-specifying LSAMon pipelines construction."
+specifying LSAMon pipelines construction.";
 
 LSAMonCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
-specifying LSAMon pipelines construction."
+specifying LSAMon pipelines construction.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
-Needs["FunctionalParsers`"]
+Needs["FunctionalParsers`"];
 
 (************************************************************)
 (* Common parts                                             *)
@@ -270,7 +270,7 @@ res =
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[LSAMonCommandsSubGrammars]
+Clear[LSAMonCommandsSubGrammars];
 
 Options[LSAMonCommandsSubGrammars] = { "Normalize" -> False };
 
@@ -289,7 +289,7 @@ LSAMonCommandsSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[LSAMonCommandsGrammar]
+Clear[LSAMonCommandsGrammar];
 
 Options[LSAMonCommandsGrammar] = Options[LSAMonCommandsSubGrammars];
 
@@ -307,6 +307,6 @@ LSAMonCommandsGrammar[opts:OptionsPattern[]] :=
       If[ normalizeQ, GrammarNormalize[res], res ]
     ];
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]
