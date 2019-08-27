@@ -74,6 +74,8 @@ class QRMon-R-actions::QRMon-R-actions {
   # Data transform command
   method data-transformation-command($/) { make $/.values[0].made; }
 
+  method delete-missing($/) { make 'QRMonDeleteMissing()'; }
+
   method rescale-command($/) { make 'QRMonRescale(' ~ make $/.values[0].made ~ ')'; }
   method rescale-axis($/) { make $/.values[0].made; }
   method axis-spec($/) { make $/.values[0].made; }
@@ -119,7 +121,7 @@ class QRMon-R-actions::QRMon-R-actions {
   method knots-spec-phrase($/) { make "df = " ~ $<knots-spec>.made; }
   method knots-spec($/) { make $/.values[0].made; }
 
-  # QR element - interplation order.
+  # QR element - interpolation order.
   method interpolation-order-spec-phrase($/) { make "degree = " ~ $/.values[0].made; }
   method interpolation-order-spec($/) { make $/.values[0].made; } # make $.<integer-value>.made;
 
