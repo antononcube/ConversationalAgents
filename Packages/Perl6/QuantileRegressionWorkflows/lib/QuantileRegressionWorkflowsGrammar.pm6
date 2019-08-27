@@ -133,7 +133,9 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
 
     # Data transform command
-    rule data-transformation-command {[ <rescale-command> | <resample-command> | <moving-func-command> ]}
+    rule data-transformation-command { <delete-missing> | <rescale-command> | <resample-command> | <moving-func-command> }
+
+    rule delete-missing { [ 'delete' | 'drop' | 'erase' ] [ 'rows' <.with-preposition> ]? 'missing' [ 'values' ]? }
 
     rule rescale-command { <rescale-axis> | <rescale-both-axes> }
     rule rescale-axis {'rescale' <.the-determiner>? <axis-spec> 'axis'}
@@ -198,8 +200,8 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule the-probability { <the-determiner>? <probability> }
     rule the-probabilities { <the-determiner>? <probabilities> }
 
-    rule find-type-outliers { <compute-and-display> [ <outlier-type> <.outliers-phrase> ] [ <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] ]? }
-    rule find-outliers-spec { <compute-and-display> <outliers-phrase> <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] }
+    rule find-type-outliers { <.compute-and-display> <outlier-type> <.outliers-phrase> [ <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] ]? }
+    rule find-outliers-spec { <.compute-and-display> <.outliers-phrase> <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] }
 
     # Plot command
     rule plot-command { <display-directive> <plot-elements-list>? [ <date-list-diagram> | <diagram> ] | <diagram> };
