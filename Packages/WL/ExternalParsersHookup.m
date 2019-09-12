@@ -67,11 +67,13 @@ Perl6Command[command_String, moduleDirectory_String, moduleName_String, perl6Loc
         perl6Location,
         StringJoin["-I\"", moduleDirectory, "\""],
         StringJoin["-M'", moduleName, "'"],
-        StringJoin["-e '" <> command <> "'"]
+        StringJoin["-e \"" <> command <> "\""]
       };
       (*pres=RunProcess[p6Command];*)
 
-      pres = Import["! " <> StringRiffle[p6Command, " "], "String"];
+      p6Command = StringRiffle[p6Command, " "];
+
+      pres = Import["! " <> p6Command, "String"];
       StringReplace[pres, "==>" -> "\[DoubleLongRightArrow]"]
     ];
 
