@@ -33,7 +33,7 @@ multi to_QRMon_R ( Str $command where not has-semicolon($command) ) {
 
 multi to_QRMon_R ( Str $command where has-semicolon($command) ) {
 
-  my @commandLines = $command.split(/ ';' \s* /);
+  my @commandLines = $command.trim.split(/ ';' \s* /);
 
   @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
 
@@ -53,7 +53,7 @@ multi to_QRMon_WL ( Str $command where not has-semicolon($command) ) {
 
 multi to_QRMon_WL ( Str $command where has-semicolon($command) ) {
 
-  my @commandLines = $command.split(/ ';' \s* /);
+  my @commandLines = $command.trim.split(/ ';' \s* /);
 
   @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
 
