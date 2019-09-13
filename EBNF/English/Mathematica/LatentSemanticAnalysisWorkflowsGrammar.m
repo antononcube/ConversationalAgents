@@ -153,7 +153,7 @@ ebnfStatistics = "
 (************************************************************)
 
 ebnfDocTermMat = "
-  <make-doc-term-mat> = ( ( <compute-directive> | <generate-directive> ) , [ 'the' | 'a' ] ) &> <doc-term-mat> ;
+  <make-doc-term-mat> = ( ( <compute-directive> | <generate-directive> ) , [ 'the' | 'a' ] ) &> <doc-term-mat> <@ MakeDocumentTermMatrix ;
   <doc-term-mat> = ( 'document' | 'item' ) , ( 'term' | 'word' ) , 'matrix' ;
   ";
 
@@ -183,15 +183,33 @@ ebnfLSIApplyFuncs = "
 
 
 (************************************************************)
-(* LSI topics extraction commands                           *)
+(* Topics extraction commands                           *)
 (************************************************************)
 
+(* The parameter specification has to be done as a list of parameters. *)
+
 ebnfTopicsExtraction = "
-  <topics-extraction-command> = ( <compute-directive> | 'extract' ) &> <topics-spec> <@ TopicsExtractionCommand ;
-  <topics-spec> = <number-value> , 'topics' , [ <topics-parameters-spec> ] ;
-  <topics-parameters-spec> = { <topics-max-iterations> | <topics-initialization> } <@ TopicsParametersSpec ;
-  <topics-max-iterations> = ( 'max' | 'maximum' ) , ( 'iterations' | 'steps' ) , <number-value> ;
-  <topics-initialization> = [ <with-preposition> ] , [ 'random' ] , <number-value> , 'columns' , 'clusters' ;
+  <topics-extraction-command> = ( <compute-directive> | 'extract' ) &> <topics-spec> , [ <topics-parameters-spec> ] <@ TopicsExtractionCommand ;
+  <topics-spec> = <number-value> <& 'topics' <@ TopicsNumber ;
+  <topics-parameters-spec> = <with-preposition> &> <topics-parameters-list> <@ TopicsParametersSpec ;
+  <topics-parameters-list> = <topics-parameter> , [ { <list-delimiter> &> <topics-parameter> } ] <@ TopicsParametersList ;
+  <topics-parameter> = <topics-max-iterations> | <topics-initialization> | <topics-method> ;
+  <topics-max-iterations> = <max-iterations-phrase> &> <number-value> | <number-value> <& <max-iterations-phrase> <@ TopicsMaxIterations ;
+  <max-iterations-phrase> = ( 'max' | 'maximum' ) , ( 'iterations' | 'steps' ) ;
+  <topics-initialization> = [ 'random' ] , <number-value> , 'columns' , 'clusters' <@ TopicsInitialization ;
+  <topics-method> = [ [ 'the' ] , 'method' ] &> ( 'SVD' | 'PCA' | 'NNMF' | 'NMF' ) <@ TopicsExtractionMethod ;
+  ";
+
+
+(************************************************************)
+(* Statistical thesaurus extraction commands                *)
+(************************************************************)
+
+ebnfThesaurusExtraction = "
+  <thesaurus-extraction-command> = ( <compute-directive> | 'extract' ) &> <thesaurus-spec> <@ ThesaurusExtractionCommand ;
+  <thesaurus-spec> = ( [ 'statistical' ] , 'thesaurus' ) &> [ <with-preposition> &> <thesaurus-parameters-spec> ] ;
+  <thesaurus-parameters-spec> = <thesaurus-number-of-nns> <@ ThesaurusParametersSpec ;
+  <thesaurus-number-of-nns> = <number-value> <& ( [ 'number' , 'of' ] , ( [ 'nearest' ] , 'neighbors'  | 'synonyms' | 'synonym' ,  ( 'words' | 'terms' ) ) , [ 'per' , ( 'word' | 'term' ) ] ) <@ ThesaurusNumberOfSynonyms ;
   ";
 
 
@@ -242,7 +260,7 @@ ebnfSecondOrderCommand = "
 ebnfCommand = "
   <lsamon-command> = <load-data> | <data-transformation> |
               <make-doc-term-mat> | <statistics-command> | <lsi-apply-command> |
-              <topics-extraction-command> | <topics-extraction-command> |
+              <topics-extraction-command> | <thesaurus-extraction-command> |
               <pipeline-command> | <second-order-command> ;
   ";
 
@@ -254,7 +272,7 @@ ebnfCommand = "
 res =
     GenerateParsersFromEBNF[ParseToEBNFTokens[#]] & /@
         {ebnfCommonParts, ebnfDataLoad, ebnfDataTransform, ebnfStatistics,
-          ebnfDocTermMat, ebnfLSIApplyFuncs, ebnfTopicsExtraction,
+          ebnfDocTermMat, ebnfLSIApplyFuncs, ebnfTopicsExtraction, ebnfThesaurusExtraction,
           ebnfPipelineCommand,
           ebnfGeneratePipeline, ebnfSecondOrderCommand, ebnfCommand};
 (* LeafCount /@ res *)
