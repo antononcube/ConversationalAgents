@@ -59,6 +59,8 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
     token use-verb { 'use' | 'utilize' }
     token get-verb { 'obtain' | 'get' | 'take' }
     token object { 'object' }
+    token plot { 'plot' }
+    token plots { 'plot' | 'plots' }
 
     # Data
     token records { 'rows' | 'records' }
@@ -76,7 +78,7 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
     token display-directive { 'display' | 'show' | 'echo' }
     rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
     token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
-    token plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
+    rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
     rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
     token classify { 'classify' }
 
@@ -88,7 +90,9 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
     token boolean-value { 'True' | 'False' | 'true' | 'false' }
 
     # Time series and regression specific
-    token error { 'error' | 'errors' }
+    token error { 'error' }
+    token errors { 'error' | 'errors' }
+    token outlier { 'outlier' }
     token outliers { 'outliers' | 'outlier' }
     rule the-outliers { <the-determiner> <outliers> }
     token ingest { 'ingest' | 'load' | 'use' | 'get' }
@@ -98,6 +102,11 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
     token probability { 'probability' }
     token probabilities { 'probabilities' }
     rule qr-object { [ 'qr' | 'quantile' 'regression' ]? 'object' }
+    token anomaly { 'anomaly' }
+    token anomalies { 'anomalies' }
+    token threshold { 'threshold' }
+    token identifier { 'identifier' }
+    token residuals { 'residuals' }
 
     # Lists of things
     token list-separator-symbol { ',' | '&' | 'and' | ',' 'and' }
@@ -148,17 +157,29 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
       $msg ~= "; target '$target' position $*HIGHWATER";
       $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
       $msg ~= ' .';
-      die $msg;
+      say $msg;
     }
 
 }
 
-grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand does CommonParts {
+# This role class has pipeline commands.
+role QuantileRegressionWorkflowsGrammar::PipelineCommand {
+
+  rule pipeline-command { <get-pipeline-value> }
+  rule get-pipeline-value { <display-directive> <pipeline-value> }
+  rule pipeline-value { <.pipeline-filler-phrase>? 'value'}
+  rule pipeline-filler-phrase { <the-determiner>? [ 'current' ]? 'pipeline' }
+
+}
+
+grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand does PipelineCommand does CommonParts {
     # TOP
-    rule TOP { <data-load-command> | <create-command> |
-               <data-transformation-command> | <data-statistics-command> |
-               <regression-command> |
-               <find-outliers-command> | <plot-command> }
+    regex TOP { <data-load-command> | <create-command> |
+                <data-transformation-command> | <data-statistics-command> |
+                <regression-command> |
+                <find-outliers-command> | <find-anomalies-command> |
+                <plot-command> | <plot-errors-command> |
+                <pipeline-command> }
 
     # Load data
     rule data-load-command { <load-data> | <use-qr-object> }
@@ -242,6 +263,12 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule find-type-outliers { <.compute-and-display> <outlier-type> <.outliers-phrase> [ <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] ]? }
     rule find-outliers-spec { <.compute-and-display> <.outliers-phrase> <.with-preposition> [ <probabilities-spec> | <probabilities-spec-phrase> ] }
 
+    # Find anomalies command
+    rule find-anomalies-command { <find-anomalies-by-residuals-threshold> | <find-anomalies-by-residuals-outliers> }
+    rule find-anomalies-by-residuals-preamble { <compute-directive> <.anomalies> [ <.by-preposition> <.residuals> ]? }
+    rule find-anomalies-by-residuals-threshold { <find-anomalies-by-residuals-preamble> <.with-preposition> <.the-determiner>? <.threshold> <number-value> }
+    rule find-anomalies-by-residuals-outliers { <find-anomalies-by-residuals-preamble> <.with-preposition> <.the-determiner>? [ <.outlier> <.identifier> <variable-name> | <variable-name> <.outlier> <.identifier> ]}
+
     # Plot command
     rule plot-command { <display-directive> <plot-elements-list>? [ <date-list-diagram> | <diagram> ] | <diagram> };
     rule plot-elements-list { [ <diagram-type> | <data> ]+  % <list-separator> }
@@ -253,4 +280,11 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule regression-function-list { [ <regression-function> | <regression-function-name> ]+ % <list-separator> }
     rule regression-function { 'QuantileRegression' | 'QuantileRegressionFit' | 'LeastSquares' }
     rule regression-function-name { 'quantile' ['regression']? | 'least' 'squares' ['regression']? }
+
+    # Plot errors command
+    rule plot-errors-command { <plot-errors-with-directive> | <plot-errors-simple> }
+    rule plot-errors-with-directive { <display-directive> <the-determiner>? <errors-type>? <errors> <plots> }
+    rule plot-errors-simple { <plot-directive> <the-determiner>? <errors-type>? <errors> }
+    rule errors-type { 'absolute' | 'relative' }
+
 }

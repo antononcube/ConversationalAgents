@@ -3,7 +3,7 @@ use lib '../lib';
 use lib './lib';
 use QuantileRegressionWorkflowsGrammar;
 
-plan 72;
+plan 82;
 
 # Shortcut
 my $pQRMONCOMMAND = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand;
@@ -214,6 +214,30 @@ ok $pQRMONCOMMAND.parse('compute outliers with probabilities 0.1 and 0.9'),
 ok $pQRMONCOMMAND.parse('compute outliers with 0.1 0.2 0.5 0.7 0.9'),
 'compute outliers with 0.1 0.2 0.5 0.7 0.9';
 
+
+#-----------------------------------------------------------
+# Find anomalies
+#-----------------------------------------------------------
+
+ok $pQRMONCOMMAND.parse('compute anomalies with threshold 0.9'),
+'compute anomalies with threshold 0.9';
+
+ok $pQRMONCOMMAND.parse('compute anomalies by residuals with the threshold 5'),
+'compute anomalies by residuals with the threshold 5';
+
+ok $pQRMONCOMMAND.parse('find anomalies by the SPLUS outlier identifier'),
+'find anomalies by the SPLUS outlier identifier';
+
+ok $pQRMONCOMMAND.parse('find anomalies with the outlier identifier Hampel'),
+'find anomalies with the outlier identifier Hampel';
+
+ok $pQRMONCOMMAND.parse('find anomalies by residuals using outlier identifier Hampel'),
+'find anomalies by residuals using outlier identifier Hampel';
+
+ok $pQRMONCOMMAND.parse('find anomalies by residuals using the SPLUS outlier identifier'),
+'find anomalies by residuals using the SPLUS outlier identifier';
+
+
 #-----------------------------------------------------------
 # Plot
 #-----------------------------------------------------------
@@ -250,5 +274,21 @@ ok $pQRMONCOMMAND.parse('display date list outliers plot'),
 
 ok $pQRMONCOMMAND.parse('show outliers plot'),
 'show outliers plot';
+
+#-----------------------------------------------------------
+# Error plots
+#-----------------------------------------------------------
+
+ok $pQRMONCOMMAND.parse('display errors plot'),
+'display errors plots';
+
+ok $pQRMONCOMMAND.parse('show the relative errors plots'),
+'show the relative errors plots';
+
+ok $pQRMONCOMMAND.parse('plot errors'),
+'plot errors';
+
+ok $pQRMONCOMMAND.parse('plot absolute errors'),
+'plot absolute errors';
 
 done-testing;

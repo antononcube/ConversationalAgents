@@ -94,8 +94,8 @@ class QRMon-WL-actions::QRMon-WL-actions {
   # Quantile Regression
   method regression-command($/) { make $/.values[0].made; }
   method quantile-regression-spec($/) { make $/.values[0].made; }
-  method quantile-regression-spec-simple($/) { make "QRMonQuantileRegression[]"; }
-  method quantile-regression-spec-full($/) {  make "QRMonQuantileRegression[" ~ $<quantile-regression-spec-element-list>.made ~ "]"; }
+  method quantile-regression-spec-simple($/) { make 'QRMonQuantileRegression[]'; }
+  method quantile-regression-spec-full($/) {  make 'QRMonQuantileRegression[' ~ $<quantile-regression-spec-element-list>.made ~ ']'; }
   method quantile-regression-spec-element-list($/) { make $<quantile-regression-spec-element>>>.made.join(', '); }
   method quantile-regression-spec-element($/) { make $/.values[0].made; }
 
@@ -113,11 +113,35 @@ class QRMon-WL-actions::QRMon-WL-actions {
 
   # Find outliers command
   method find-outliers-command($/) { make $/.values[0].made; }
-  method find-outliers-simple($/) { make "QRMonOutliersPlot[]"; }
+  method find-outliers-simple($/) { make 'QRMonOutliersPlot[]'; }
 
-  method find-type-outliers($/) { make "QRMonOutliersPlot[]"; }
-  method find-outliers-spec($/) { make "QRMonOutliersPlot[]"; }
+  method find-type-outliers($/) { make 'QRMonOutliersPlot[]'; }
+  method find-outliers-spec($/) { make 'QRMonOutliersPlot[]'; }
+
+  # Find anomalies command
+  method find-anomalies-command($/) { make $/.values[0].made; }
+
+  method find-anomalies-by-residuals-threshold($/) { make 'QRMonFindAnomaliesByResiduals[ "Threshold"->' ~ $<number-value> ~ ']'; }
+  method find-anomalies-by-residuals-outliers($/) { make 'QRMonFindAnomaliesByResiduals[ "OutlierIdentifier"->' ~ $<variable-name> ~ ']'; }
 
   # Plot command
-  method plot-command($/) { make "QRMonPlot[]"; }
+  method plot-command($/) { make 'QRMonPlot[]'; }
+
+  # Plot command
+  method plot-errors-command($/) { make $/.values[0].made; }
+  method plot-errors-with-directive($/) {
+    my $err_type = 'True';
+    if $<errors-type> && $<errors-type>.trim eq 'absolute' { $err_type = 'False'  }
+    make 'QRMonErrorPlots[ "RelativeErrors" -> ' ~ $err_type ~ ']';
+  }
+  method plot-errors-simple($/) {
+    my $err_type = 'True';
+    if $<errors-type> && $<errors-type>.trim eq 'absolute' { $err_type = 'False'  }
+    make 'QRMonErrorPlots[ "RelativeErrors" -> ' ~ $err_type ~ ']';
+  }
+
+  # Pipeline command
+  method pipeline-command($/) { make $/.values[0].made; }
+  method get-pipeline-value($/) { make 'QRMonEchoValue'; }
+
 }
