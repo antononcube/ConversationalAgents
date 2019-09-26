@@ -3,7 +3,7 @@ use lib '../lib';
 use lib './lib';
 use RecommenderWorkflowsGrammar;
 
-plan 71;
+plan 79;
 
 # Shortcut
 my $pSMRMONCOMMAND = RecommenderWorkflowsGrammar::Recommender-workflow-commmand;
@@ -61,13 +61,13 @@ ok $pSMRMONCOMMAND.parse('recommend with history id.12:3 and id.13:4'),
 ok $pSMRMONCOMMAND.parse('recommend by history hr:3, rr:4, ra:1'),
 'recommend by history hr:3, rr:4, ra:1';
 
-ok $pSMRMONCOMMAND.subparse('find recommendations for history hr:3, rr:4, ra:1'),
+ok $pSMRMONCOMMAND.parse('find recommendations for history hr:3, rr:4, ra:1'),
 'find recommendations for history hr:3, rr:4, ra:1';
 
-ok $pSMRMONCOMMAND.subparse('find the top 12 recommendations for history hr:3, rr:4, ra:1'),
+ok $pSMRMONCOMMAND.parse('find the top 12 recommendations for history hr:3, rr:4, ra:1'),
 'find the top 12 recommendations for history hr:3, rr:4, ra:1';
 
-ok $pSMRMONCOMMAND.subparse('compute 12 recommendations for the history hr:3, rr:4, ra:1'),
+ok $pSMRMONCOMMAND.parse('compute 12 recommendations for the history hr:3, rr:4, ra:1'),
 'compute 12 recommendations for the history hr:3, rr:4, ra:1';
 
 
@@ -92,22 +92,22 @@ ok $pSMRMONCOMMAND.parse('recommend by profile hr=3, rr=4, ra=1'),
 # Recommendations universal commands
 #-----------------------------------------------------------
 
-ok $pSMRMONCOMMAND.subparse('find the top 5 recommendations'),
+ok $pSMRMONCOMMAND.parse('find the top 5 recommendations'),
 'find the top 5 recommendations';
 
-ok $pSMRMONCOMMAND.subparse('find the top 15 profile recommendations'),
+ok $pSMRMONCOMMAND.parse('find the top 15 profile recommendations'),
 'find the top 15 profile recommendations';
 
-ok $pSMRMONCOMMAND.subparse('find the top 15 recommendations for the profile hr=2, jj=2'),
+ok $pSMRMONCOMMAND.parse('find the top 15 recommendations for the profile hr=2, jj=2'),
 'find the top 15 recommendations for the profile hr=2, jj=2';
 
-ok $pSMRMONCOMMAND.subparse('what are the top 7 recommendations'),
+ok $pSMRMONCOMMAND.parse('what are the top 7 recommendations'),
 'what are the top 7 recommendations';
 
-ok $pSMRMONCOMMAND.subparse('what are the most relevant recommendations'),
+ok $pSMRMONCOMMAND.parse('what are the most relevant recommendations'),
 'what are the most relevant recommendations';
 
-ok $pSMRMONCOMMAND.subparse('compute the 12 most relevant recommendations'),
+ok $pSMRMONCOMMAND.parse('compute the 12 most relevant recommendations'),
 'compute the 12 most relevant recommendations';
 
 #-----------------------------------------------------------
@@ -246,6 +246,33 @@ ok $pSMRMONCOMMAND.parse('display the recommender properties'),
 ok $pSMRMONCOMMAND.parse('show the tag type passengerClass density'),
 'show the tag type passengerClass density';
 
+#-----------------------------------------------------------
+# Find anomalies
+#-----------------------------------------------------------
+
+ok $pSMRMONCOMMAND.parse('find anomalies by proximity'),
+'find anomalies by proximity';
+
+ok $pSMRMONCOMMAND.parse('find proximity anomalies'),
+'find proximity anomalies';
+
+ok $pSMRMONCOMMAND.parse('compute anomalies with 12 nns'),
+'compute anomalies with 12 nns';
+
+ok $pSMRMONCOMMAND.parse('compute proximity anomalies using 20 nearest neighbors'),
+'compute anomalies using 20 nearest neighbors';
+
+ok $pSMRMONCOMMAND.parse('find anomalies by proximity with the SPLUS outlier identifier'),
+'find anomalies with the SPLUS outlier identifier';
+
+ok $pSMRMONCOMMAND.parse('find anomalies with the outlier identifier Hampel'),
+'find anomalies with the outlier identifier Hampel';
+
+ok $pSMRMONCOMMAND.parse('find anomalies using outlier identifier Hampel and 12 nearest neighbors'),
+'find anomalies using outlier identifier Hampel and 12 nearest neighbors';
+
+ok $pSMRMONCOMMAND.parse('find anomalies by residuals using 20 nns and the SPLUS outlier identifier'),
+'find anomalies by residuals using 20 nns and the SPLUS outlier identifier';
 
 #-----------------------------------------------------------
 # Recommendations processing commands
