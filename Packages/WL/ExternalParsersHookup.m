@@ -47,11 +47,17 @@
 BeginPackage["ExternalParsersHookup`"];
 (* Exported symbols added here with SymbolName::usage *)
 
-Perl6Command::usage = "Raku Perl6 command invocation.";
+Perl6Command::usage = "Raku Perl 6 command invocation.";
 
 ToQRMonWLCommand::usage = "Translates a natural language command into a QRMon-WL pipeline.";
 
+ToSMRMonWLCommand::usage = "Translates a natural language command into a SMRMon-WL pipeline.";
+
 Begin["`Private`"];
+
+(*===========================================================*)
+(* Perl6Command                                              *)
+(*===========================================================*)
 
 Clear[Perl6Command];
 
@@ -83,6 +89,11 @@ Perl6Command[___] :=
       $Failed
     ];
 
+
+(*===========================================================*)
+(* ToQRMonWLCommand                                          *)
+(*===========================================================*)
+
 Clear[ToQRMonWLCommand];
 
 Options[ToQRMonWLCommand] = {
@@ -99,6 +110,30 @@ ToQRMonWLCommand[command_, parse : (True | False) : True] :=
             StringJoin["say to_QRMon_WL('", command, "')"],
             lib,
             "QuantileRegressionWorkflows"];
+      If[parse, ToExpression[pres], pres]
+    ];
+
+
+(*===========================================================*)
+(* ToSMRMonWLCommand                                         *)
+(*===========================================================*)
+
+Clear[ToSMRMonWLCommand];
+
+Options[ToSMRMonWLCommand] = {
+  "Perl6SMRMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "RecommenderWorkflows", "lib"}]
+};
+
+ToSMRMonWLCommand[command_, parse : (True | False) : True] :=
+    Block[{pres, lib},
+
+      lib = OptionValue[ ToSMRMonWLCommand, "Perl6SMRMonParsingLib" ];
+
+      pres =
+          Perl6Command[
+            StringJoin["say to_SMRMon_WL('", command, "')"],
+            lib,
+            "RecommenderWorkflows"];
       If[parse, ToExpression[pres], pres]
     ];
 
