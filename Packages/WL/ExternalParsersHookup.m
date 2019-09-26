@@ -134,6 +134,7 @@ ToSMRMonWLCommand[command_, parse : (True | False) : True] :=
             StringJoin["say to_SMRMon_WL('", command, "')"],
             lib,
             "RecommenderWorkflows"];
+      pres = StringReplace[ pres, "\\\"" -> "\""];
       If[parse, ToExpression[pres], pres]
     ];
 
