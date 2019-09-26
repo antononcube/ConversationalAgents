@@ -282,9 +282,8 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule regression-function-name { 'quantile' ['regression']? | 'least' 'squares' ['regression']? }
 
     # Plot errors command
-    rule plot-errors-command { <plot-errors-with-directive> | <plot-errors-simple> }
-    rule plot-errors-with-directive { <display-directive> <the-determiner>? <errors-type>? <errors> <plots> }
-    rule plot-errors-simple { <plot-directive> <the-determiner>? <errors-type>? <errors> }
+    rule plot-errors-command { <plot-errors-with-directive> }
+    rule plot-errors-with-directive { [ <display-directive> | <plot-directive> ] <the-determiner>? <errors-type>? <errors> <plots>? }
     rule errors-type { 'absolute' | 'relative' }
 
 }

@@ -134,11 +134,6 @@ class QRMon-WL-actions::QRMon-WL-actions {
     if $<errors-type> && $<errors-type>.trim eq 'absolute' { $err_type = 'False'  }
     make 'QRMonErrorPlots[ "RelativeErrors" -> ' ~ $err_type ~ ']';
   }
-  method plot-errors-simple($/) {
-    my $err_type = 'True';
-    if $<errors-type> && $<errors-type>.trim eq 'absolute' { $err_type = 'False'  }
-    make 'QRMonErrorPlots[ "RelativeErrors" -> ' ~ $err_type ~ ']';
-  }
 
   # Pipeline command
   method pipeline-command($/) { make $/.values[0].made; }
