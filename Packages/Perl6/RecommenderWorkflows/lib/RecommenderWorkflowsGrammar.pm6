@@ -34,6 +34,7 @@
 use v6;
 unit module RecommenderWorkflowsGrammar;
 
+
 # This role class has common command parts.
 role RecommenderWorkflowsGrammar::CommonParts {
 
@@ -154,6 +155,10 @@ role RecommenderWorkflowsGrammar::RecommenderPhrases {
   token threshold { 'threshold' }
   token identifier { 'identifier' }
   token proximity { 'proximity' }
+  token aggregation { 'aggregation' }
+  token aggregate { 'aggregate' }
+  token function { 'function' }
+  token property { 'property' }
 
 }
 
@@ -305,9 +310,12 @@ grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does Pipeline
   rule find-proximity-anomalies-preamble { <compute-directive> [ <.anomalies> [ <.by-preposition> <.proximity> ]? | <.proximity> <.anomalies> ] }
   rule find-proximity-anomalies { <find-proximity-anomalies-preamble> <.using-preposition> <proximity-anomalies-spec-list> }
   rule proximity-anomalies-spec-list { <proximity-anomalies-spec>* % <.list-separator> }
-  rule proximity-anomalies-spec { <proximity-anomalies-nns-spec> | <proximity-anomalies-outlier-identifier-spec> }
+  rule proximity-anomalies-spec { <proximity-anomalies-nns-spec> | <proximity-anomalies-outlier-identifier-spec> | <proximity-anomalies-aggr-func-spec> | <proximity-anomalies-property-spec> }
   rule proximity-anomalies-nns-spec { <integer-value> <nearest-neighbors> }
+  rule proximity-anomalies-aggr-func-spec { <.the-determiner>? <.aggregation> <.function> <variable-name> |
+                                            <.aggregate> [ <.by-preposition> | <.using-preposition> ] <.the-determiner>? <.function> <variable-name> }
   rule proximity-anomalies-outlier-identifier-spec { <.the-determiner>? [ <.outlier> <.identifier> <variable-name> | <variable-name> <.outlier> <.identifier> ]}
+  rule proximity-anomalies-property-spec { <.the-determiner>? <.property> <variable-name> }
 
    # Error message
    # method error($msg) {
