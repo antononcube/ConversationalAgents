@@ -74,17 +74,17 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
 
 BeginPackage["NeuralNetworkSpecificationsGrammar`"]
 
-pNETMONCOMMAND::usage = "Parses natural language commands for neural network specification and training."
+pNETMONCOMMAND::usage = "Parses natural language commands for neural network specification and training.";
 
-NetMonCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
-specifying NetMon pipelines construction."
+NetMonCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language \
+commands specifying NetMon pipelines construction.";
 
 NetMonCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
-specifying NetMon pipelines construction."
+specifying NetMon pipelines construction.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
-Needs["FunctionalParsers`"]
+Needs["FunctionalParsers`"];
 
 
 (************************************************************)
@@ -381,6 +381,6 @@ NetMonCommandsGrammar[opts:OptionsPattern[]] :=
       If[ normalizeQ, GrammarNormalize[res], res ]
     ];
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]
