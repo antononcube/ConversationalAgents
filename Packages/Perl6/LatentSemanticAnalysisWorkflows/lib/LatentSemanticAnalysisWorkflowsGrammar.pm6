@@ -57,6 +57,8 @@ role LatentSemanticAnalysisWorkflowsGrammar::CommonParts {
     token results { 'results' }
     token simple { 'simple' | 'direct' }
     token use-verb { 'use' | 'utilize' }
+    token apply-verb { 'apply' }
+    token transform-verb { 'transform' }
     token get-verb { 'obtain' | 'get' | 'take' }
     token object { 'object' }
     token plot { 'plot' }
@@ -66,7 +68,7 @@ role LatentSemanticAnalysisWorkflowsGrammar::CommonParts {
     token records { 'rows' | 'records' }
     rule time-series-data { 'time' 'series' 'data'? }
     rule data-frame { 'data' 'frame' }
-    rule data { <data-frame> | 'data' | 'dataset' | <time-series-data> }
+    rule data { <data-frame> | 'data' | 'dataset' }
     token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
     token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
 
@@ -89,27 +91,35 @@ role LatentSemanticAnalysisWorkflowsGrammar::CommonParts {
     token percent-value { <number-value> <.percent> }
     token boolean-value { 'True' | 'False' | 'true' | 'false' }
 
-    # Time series and regression specific
-    token error { 'error' }
-    token errors { 'error' | 'errors' }
-    token outlier { 'outlier' }
-    token outliers { 'outliers' | 'outlier' }
+    # LSA and LSI specific
     rule the-outliers { <the-determiner> <outliers> }
+    rule lsa-phrase { 'latent' 'semantic' 'analysis' | 'lsa' }
+    rule lsi-phrase { 'latent' 'semantic' 'indexing' | 'lsi' }
     token ingest { 'ingest' | 'load' | 'use' | 'get' }
-    token fit { 'fit' | 'fitting' }
-    token quantile { 'quantile' }
-    token quantiles { 'quantiles' }
-    token probability { 'probability' }
-    token probabilities { 'probabilities' }
-    rule lsa-object { [ 'lsa' | 'latent' 'semanatic' 'analysis' ]? 'object' }
-    token anomaly { 'anomaly' }
-    token anomalies { 'anomalies' }
+    rule lsa-object { <lsa-phrase>? 'object' }
     token threshold { 'threshold' }
     token identifier { 'identifier' }
-    token residuals { 'residuals' }
+    token weight { 'weight' }
+    token term { 'term' }
+    token entries { 'entries' }
+    token matrix { 'matrix' }
+    rule doc-term-mat {[ 'document' | 'item' ] [ 'term' | 'word' ] <matrix> }
+    rule matrix-entries { [ <matrix> | <doc-term-mat> ]? <entries> }
+
+    token normalization { 'normalization' }
+    token normalizing { 'normalizing' }
+    token normalizer { 'normalizer' }
+    token global { 'global' }
+    token local { 'local' }
+    token function { 'function' }
+    token functions { 'function' | 'functions' }
+    token frequency { 'frequency' }
+    rule global-function-phrase { <global> <term> ?<weight>? <function> }
+    rule local-function-phrase { <local> <term>? <weight>? <function> }
+    rule normalizer-function-phrase { [ <normalizer> | <normalizing> | <normalization> ] <term>? <weight>? <function>? }
 
     # Lists of things
-    token list-separator-symbol { ',' | '&' | 'and' | ',' 'and' }
+    token list-separator-symbol { ',' | '&' | 'and' | ',' \h* 'and' }
     token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
     token list { 'list' }
 
@@ -172,7 +182,7 @@ role LatentSemanticAnalysisWorkflowsGrammar::PipelineCommand {
 
   rule generate-pipeline {<generate-pipeline-phrase> [ <using-preposition> <topics-spec> ]?}
   rule generate-pipeline-phrase {<generate-directive> [ [ 'an' | 'a' | 'the' ] ]? [ 'standard' ]? <lsa-phrase> 'pipeline'}
-  rule lsa-phrase {<lsa-phrase-word> [ [ <lsa-phrase-word> ]+ ]?}
+  rule lsa-general-phrase {<lsa-phrase-word> [ [ <lsa-phrase-word> ]+ ]?}
   rule lsa-phrase-word {[ 'text' | 'latent' | 'semantic' | 'analysis' ]}
 
 }
@@ -185,63 +195,76 @@ role LatentSemanticAnalysisWorkflowsGrammar::PipelineCommand {
 grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand does PipelineCommand does CommonParts {
     # TOP
     regex TOP {
-        <load-data> | <data-transformation> | <make-doc-term-mat> |
+        <load-data> | <make-doc-term-matrix-command> | <data-transformation-command> |
         <statistics-command> | <lsi-apply-command> |
         <topics-extraction-command> | <thesaurus-extraction-command> |
         <pipeline-command> }
 
     # Load data
+    rule load-data { <use-lsa-object> | <load-data-opening> <the-determiner>? <data-kind> [ <data>? <load-preposition> ]? <location-specification> | <load-data-opening> [ <the-determiner> ]? <location-specification> <data>? }
     rule data-reference {[ 'data' | [ 'texts' | 'text' [ [ 'corpus' | 'collection' ] ]? [ 'data' ]? ] ]}
     rule load-data-opening {[ 'load' | 'get' | 'consider' ] [ 'the' ]? <data-reference>}
     rule load-preposition { 'for' | 'of' | 'at' | 'from' }
-    rule load-data {[ <load-data-opening> [ 'the' ]? <data-kind> [ [ 'data' ]? <load-preposition> ]? <location-specification> | <load-data-opening> [ 'the' ]? <location-specification> [ 'data' ]? ]}
     rule location-specification {[ <dataset-name> | <web-address> | <database-name> ]}
     rule web-address { <variable-name> }
     rule dataset-name { <variable-name> }
     rule database-name { <variable-name> }
     rule data-kind { <variable-name> }
+    rule use-lsa-object { <.use-verb> <.the-determiner>? <.lsa-object> <variable-name> }
+
 
     # Create command
-    rule create-command { <create-by-dataset> }
-    rule create-simple { <create-directive> <.a-determiner>? <object> <simple-way-phrase> | <simple> <object> [ 'creation' | 'making' ] }
-    rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
+    # rule create-command { <create-by-dataset> }
+    # rule create-simple { <create-directive> <.a-determiner>? <object> <simple-way-phrase> | <simple> <object> [ 'creation' | 'making' ] }
+    # rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
 
-    # Data transform command
-    rule data-transformation {<data-partition>}
+    # Make document-term matrix command
+    rule make-doc-term-matrix-command { [ <compute-directive> | <generate-directive> ] [ <the-determiner> | <a-determiner> ]? <doc-term-mat> }
+
+    # Data transformation command
+    rule data-transformation-command {<data-partition>}
     rule data-partition {'partition' [ <data-reference> ]? [ 'to' | 'into' ] <data-elements>}
     rule data-element {[ 'sentence' | 'paragraph' | 'section' | 'chapter' | 'word' ]}
     rule data-elements {[ 'sentences' | 'paragraphs' | 'sections' | 'chapters' | 'words' ]}
-    rule data-spec-opening {'transform'}
+    rule data-spec-opening {<transform-verb>}
     rule data-type-filler {[ 'data' | 'records' ]}
 
     # Data statistics command
     rule data-statistics-command { <summarize-data> }
     rule summarize-data { 'summarize' <.the-determiner>? <data> | <display-directive> <data>? ( 'summary' | 'summaries' ) }
 
-    # Make document-term matrix command
-    rule make-doc-term-mat { [ <compute-directive> | <generate-directive> ] [ 'the' | 'a' ]? <doc-term-mat> }
-    rule doc-term-mat {[ 'document' | 'item' ] [ 'term' | 'word' ] 'matrix'}
-
     # LSI command is programmed as a role.
-    rule lsi-apply-command {<lsi-apply-phrase> <lsi-funcs-list>}
-    rule lsi-apply-verb {[ 'apply' 'to' | 'transform' ]}
-    rule lsi-apply-phrase {<lsi-apply-verb> [ 'the' ]? [ [ 'matrix' | <doc-term-mat> ] 'entries' ]? [ 'the' ]? [ 'lsi' ]? [ 'functions' ]?}
-    rule lsi-funcs-list {<lsi-func> [ [ <list-separator> <lsi-func> ]+ ]?}
-    rule lsi-func {[ <lsi-global-func> | <lsi-local-func> | <lsi-normal-func> ]}
-    rule lsi-global-func {[ <lsi-global-func-idf> | <lsi-global-func-entropy> ]}
-    rule lsi-global-func-idf {[ 'IDF' | 'idf' | 'inverse' 'document' 'frequency' ]}
-    rule lsi-global-func-entropy {[ 'Entropy' | 'entropy' ]}
-    rule lsi-local-func {[ <lsi-local-func-frequency> | <lsi-local-func-binary> ]}
-    rule lsi-local-func-frequency {'frequency'}
-    rule lsi-local-func-binary {'binary' [ 'frequency' ]?}
-    rule lsi-normal-func {[ <lsi-normal-func-sum> | <lsi-normal-func-max> | <lsi-normal-func-cosine> ] [ 'normalization' ]?}
-    rule lsi-normal-func-sum {'sum'}
-    rule lsi-normal-func-max {'max' | 'maximum' }
-    rule lsi-normal-func-cosine {'cosine'}
+    regex lsi-apply-command { <.lsi-apply-phrase> [ <lsi-funcs-list> | <lsi-funcs-simple-list> ] }
+
+    rule lsi-funcs-simple-list { <lsi-global-func> <lsi-local-func> <lsi-normalizer-func> }
+
+    rule lsi-apply-verb { <apply-verb> 'to'? | <transform-verb> | <use-verb> }
+    rule lsi-apply-phrase { <lsi-apply-verb> <the-determiner>? [ <matrix> | <matrix-entries> ]? <the-determiner>? <lsi-phrase>? <functions>? }
+
+    rule lsi-funcs-list { <lsi-func>+ % <list-separator> }
+
+    rule lsi-func { <lsi-global-func> | <lsi-local-func> | <lsi-normalizer-func> }
+
+    rule lsi-func-none { 'None' | 'none' }
+
+    rule lsi-global-func { <.global-function-phrase>? [ <lsi-global-func-idf> | <lsi-global-func-entropy> | <lsi-global-func-sum> | <lsi-func-none> ] }
+    rule lsi-global-func-idf { 'IDF' | 'idf' | 'inverse' 'document' <frequency> }
+    rule lsi-global-func-entropy { 'Entropy' | 'entropy' }
+    rule lsi-global-func-sum {  'sum' }
+
+    rule lsi-local-func { <.local-function-phrase>? [ <lsi-local-func-frequency> | <lsi-local-func-binary> | <lsi-local-func-log> | <lsi-func-none> ] }
+    rule lsi-local-func-frequency {  <term>? <frequency> }
+    rule lsi-local-func-binary { 'binary' <frequency>? }
+    rule lsi-local-func-log { 'log' | 'logarithmic' }
+
+    rule lsi-normalizer-func { <.normalizer-function-phrase>? [ <lsi-normalizer-func-sum> | <lsi-normalizer-func-max> | <lsi-normalizer-func-cosine> | <lsi-func-none> ] <.normalization>? }
+    rule lsi-normalizer-func-sum {'sum'}
+    rule lsi-normalizer-func-max {'max' | 'maximum' }
+    rule lsi-normalizer-func-cosine {'cosine'}
 
     # Statistics command
     rule statistics-command {<statistics-preamble> [ <docs-per-term> | <terms-per-doc> ] [ <statistic-spec> ]?}
-    rule statistics-preamble {[ <compute-and-display> | <display-directive> ] [ [ 'the' | 'a' | 'some' ] ]?}
+    rule statistics-preamble {[ <compute-and-display> | <display-directive> ] [ 'the' | 'a' | 'some' ]?}
     rule docs-per-term {<docs> [ 'per' ]? <terms>}
     rule terms-per-doc {<terms> [ 'per' ]? <docs>}
     rule docs { 'document' | 'documents' | 'item' | 'items' }
