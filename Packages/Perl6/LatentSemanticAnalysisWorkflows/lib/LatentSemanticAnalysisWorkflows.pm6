@@ -46,7 +46,7 @@ multi to_LSAMon_R ( Str $command where has-semicolon($command) ) {
 proto to_LSAMon_WL($) is export {*}
 
 multi to_LSAMon_WL ( Str $command where not has-semicolon($command) ) {
-  my $match = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-commmand.parse($command, actions => LSAMon-WL-actions::LSAMon-WL-actions );
+  my $match = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse($command, actions => LSAMon-WL-actions::LSAMon-WL-actions );
   die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }
