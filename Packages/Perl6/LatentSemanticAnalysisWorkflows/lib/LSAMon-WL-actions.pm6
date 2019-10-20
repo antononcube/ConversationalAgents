@@ -46,7 +46,52 @@ unit module LSAMon-WL-actions;
 class LSAMon-WL-actions::LSAMon-WL-actions {
 
   # Top
-  # method TOP($/) { make $/.values[0].made; }
-  method TOP($/) { make "Not implemented"; }
+  method TOP($/) { make $/.values[0].made; }
+  # method TOP($/) { make "Not implemented"; }
+
+  # General
+  method dataset-name($/) { make $/.values[0].made; }
+  method variable-name($/) { make $/.Str; }
+  method list-separator($/) { make ','; }
+  method variable-names-list($/) { make '{' ~ $<variable-name>>>.made.join(', ') ~ '}'; }
+  method integer-value($/) { make $/.Str; }
+  method number-value($/) { make $/.Str; }
+
+
+  # Data load commands
+  method data-load-command($/) { make $/.values[0].made; }
+  method load-data($/) { make 'LSAMonSetData[' ~ $/.values[0].made ~ ']'; }
+  method data-location-spec($/) { make $<dataset-name>.made; }
+  method use-lsa-object($/) { make $<variable-name>.made; }
+
+  # Create command
+  method make-doc-term-matrix-command($/) { make $/.values[0].made; }
+  method create-by-dataset($/) { make 'LSAMonMakeDocumentTermMatrix[]'; }
+
+  # Data transformation commands
+  method data-transformation-command($/) { make 'LSMonFailure["Not implemented yet."]'; }
+
+  # LSI command is programmed as a role.
+  method lsi-apply-command($/) { make 'LSAMonApplyTermWeightFunctions[' ~ $/.values[0].made ~ ']'; }
+  method lsi-funcs-simple-list($/) { say 'simple'; make $<lsi-global-func>.made ~ ", " ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>; }
+  method lsi-funcs-list($/) { make $<lsi-func>>>.made.join(', '); }
+  method lsi-func($/) { make $/.values[0].made; }
+  method lsi-global-func($/) { make '"GlobalWeightFunction" -> ' ~  $/.values[0].made; }
+  method lsi-global-func-idf($/) { make '"IDF"'; }
+  method lsi-global-func-entropy($/) { make '"Entropy"'; }
+  method lsi-global-func-sum($/) { make '"ColummStochastic"'; }
+  method lsi-func-none($/) { make '"None"';}
+
+  method lsi-local-func($/) { make '"LocalWeightFunction" -> ' ~  $/.values[0].made; }
+  method lsi-local-func-frequency($/) { make '"None"'; }
+  method lsi-local-func-binary($/) { make '"Binary"'; }
+  method lsi-local-func-log($/) { make '"Log"'; }
+
+  method lsi-normalizer-func($/) { make '"NormalizerFunction" -> ' ~  $/.values[0].made; }
+  method lsi-normalizer-func-sum($/) { make '"Sum"'; }
+  method lsi-normalizer-func-max($/) { make '"Max"'; }
+  method lsi-normalizer-func-cosine($/) { make '"Cosine"'; }
+
+
 
 }
