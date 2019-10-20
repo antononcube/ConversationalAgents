@@ -6,7 +6,9 @@ use LatentSemanticAnalysisWorkflowsGrammar;
 # my $*HIGHWATER = 0;
 # my $*LASTRULE = 0;
 
-say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse("create the document term matrix");
+# say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse("create the document term matrix");
+#
+# say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse("apply lsi functions idf, none, cosine");
 
 # say "\n=======\n";
 #
@@ -14,8 +16,19 @@ say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-co
 #
 # say to_LSAMon_WL("create the document term matrix");
 #
-# say "\n=======\n";
+say "\n=======\n";
 #
+
+say to_LSAMon_WL('
+use lsa object lsaObj;
+apply lsi functions idf, none, cosine
+');
+
+say to_LSAMon_WL('
+use lsa object lsaObj;
+apply lsi functions global weight function idf, local term weight function none, normalizer function cosine
+');
+
 
 # say to_LSAMon_WL('
 # create the document term matrix;
