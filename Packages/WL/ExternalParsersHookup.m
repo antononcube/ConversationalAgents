@@ -102,7 +102,7 @@ Options[ToQRMonWLCommand] = {
 };
 
 ToQRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
-    Block[{pres, lib, stringResultQ},
+    Block[{pres, lib, stringResultQ, res},
 
       lib = OptionValue[ ToQRMonWLCommand, "Perl6QRMonParsingLib" ];
       stringResultQ = TrueQ[ OptionValue[ ToQRMonWLCommand, "StringResult" ] ];
@@ -113,10 +113,14 @@ ToQRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[
             lib,
             "QuantileRegressionWorkflows"];
 
+      pres = StringReplace[ pres, "\\\"" -> "\""];
+
       Which[
         parse, ToExpression[pres],
 
-        !stringResultQ, ToExpression[pres, StandardForm, Hold],
+        !stringResultQ,
+        res = ToExpression[pres, StandardForm, Hold];
+        If[ TrueQ[res === $Failed], pres, res],
 
         True, pres
       ]
@@ -135,7 +139,7 @@ Options[ToSMRMonWLCommand] = {
 };
 
 ToSMRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
-    Block[{pres, lib, stringResultQ},
+    Block[{pres, lib, stringResultQ, res},
 
       lib = OptionValue[ ToSMRMonWLCommand, "Perl6SMRMonParsingLib" ];
       stringResultQ = TrueQ[ OptionValue[ ToSMRMonWLCommand, "StringResult" ] ];
@@ -151,7 +155,9 @@ ToSMRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern
       Which[
         parse, ToExpression[pres],
 
-        !stringResultQ, ToExpression[pres, StandardForm, Hold],
+        !stringResultQ,
+        res = ToExpression[pres, StandardForm, Hold];
+        If[ TrueQ[res === $Failed], pres, res],
 
         True, pres
       ]
