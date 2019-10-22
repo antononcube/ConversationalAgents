@@ -97,20 +97,29 @@ Perl6Command[___] :=
 Clear[ToQRMonWLCommand];
 
 Options[ToQRMonWLCommand] = {
-  "Perl6QRMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "QuantileRegressionWorkflows", "lib"}]
+  "Perl6QRMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "QuantileRegressionWorkflows", "lib"}],
+  "StringResult" -> False
 };
 
-ToQRMonWLCommand[command_, parse : (True | False) : True] :=
-    Block[{pres, lib},
+ToQRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
+    Block[{pres, lib, stringResultQ},
 
       lib = OptionValue[ ToQRMonWLCommand, "Perl6QRMonParsingLib" ];
+      stringResultQ = TrueQ[ OptionValue[ ToQRMonWLCommand, "StringResult" ] ];
 
       pres =
           Perl6Command[
             StringJoin["say to_QRMon_WL('", command, "')"],
             lib,
             "QuantileRegressionWorkflows"];
-      If[parse, ToExpression[pres], pres]
+
+      Which[
+        parse, ToExpression[pres],
+
+        !stringResultQ, ToExpression[pres, StandardForm, Hold],
+
+        True, pres
+      ]
     ];
 
 
@@ -121,21 +130,31 @@ ToQRMonWLCommand[command_, parse : (True | False) : True] :=
 Clear[ToSMRMonWLCommand];
 
 Options[ToSMRMonWLCommand] = {
-  "Perl6SMRMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "RecommenderWorkflows", "lib"}]
+  "Perl6SMRMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "RecommenderWorkflows", "lib"}],
+  "StringResult" -> False
 };
 
-ToSMRMonWLCommand[command_, parse : (True | False) : True] :=
-    Block[{pres, lib},
+ToSMRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
+    Block[{pres, lib, stringResultQ},
 
       lib = OptionValue[ ToSMRMonWLCommand, "Perl6SMRMonParsingLib" ];
+      stringResultQ = TrueQ[ OptionValue[ ToSMRMonWLCommand, "StringResult" ] ];
 
       pres =
           Perl6Command[
             StringJoin["say to_SMRMon_WL('", command, "')"],
             lib,
             "RecommenderWorkflows"];
+
       pres = StringReplace[ pres, "\\\"" -> "\""];
-      If[parse, ToExpression[pres], pres]
+
+      Which[
+        parse, ToExpression[pres],
+
+        !stringResultQ, ToExpression[pres, StandardForm, Hold],
+
+        True, pres
+      ]
     ];
 
 End[]; (* `Private` *)
