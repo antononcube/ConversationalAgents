@@ -137,6 +137,7 @@ class QRMon-WL-actions::QRMon-WL-actions {
 
   # Pipeline command
   method pipeline-command($/) { make $/.values[0].made; }
-  method get-pipeline-value($/) { make 'QRMonEchoValue'; }
+  method take-pipeline-value($/) { make 'QRMonTakeValue'; }
+  method echo-pipeline-value($/) { make 'QRMonEchoValue'; }
 
 }
