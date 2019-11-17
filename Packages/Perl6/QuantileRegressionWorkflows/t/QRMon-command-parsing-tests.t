@@ -3,7 +3,7 @@ use lib '../lib';
 use lib './lib';
 use QuantileRegressionWorkflowsGrammar;
 
-plan 82;
+plan 83;
 
 # Shortcut
 my $pQRMONCOMMAND = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand;
@@ -247,6 +247,9 @@ ok $pQRMONCOMMAND.parse('display plot'),
 
 ok $pQRMONCOMMAND.parse('display date list plot'),
 'display date list plot';
+
+ok $pQRMONCOMMAND.parse('display date list plot with date origin 1900-01-01'),
+'display date list plot with date origin 1900-01-01';
 
 ok $pQRMONCOMMAND.parse('show regression curves plot'),
 'show regression curves plot';
