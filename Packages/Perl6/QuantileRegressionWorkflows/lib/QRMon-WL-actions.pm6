@@ -125,9 +125,15 @@ class QRMon-WL-actions::QRMon-WL-actions {
   method find-anomalies-by-residuals-outliers($/) { make 'QRMonFindAnomaliesByResiduals[ "OutlierIdentifier"->' ~ $<variable-name> ~ ']'; }
 
   # Plot command
-  method plot-command($/) { make 'QRMonPlot[]'; }
+  method plot-command($/) {
+    if $/.keys.contains(<date-list-diagram>) {
+      make 'QRMonDateListPlot[]';
+    } else {
+      make 'QRMonPlot[]';
+    }
+  }
 
-  # Plot command
+  # Error plot command
   method plot-errors-command($/) { make $/.values[0].made; }
   method plot-errors-with-directive($/) {
     my $err_type = 'True';
