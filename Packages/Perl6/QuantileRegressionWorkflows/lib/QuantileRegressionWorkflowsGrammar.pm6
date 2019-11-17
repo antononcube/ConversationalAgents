@@ -69,6 +69,7 @@ role QuantileRegressionWorkflowsGrammar::CommonParts {
     rule data { <data-frame> | 'data' | 'dataset' | <time-series-data> }
     token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
     token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
+    token date-spec { [ \d ** 4 ] '-' [ \d ** 2 ] '-' [ \d ** 2 ] }
 
     # Directives
     rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
@@ -233,7 +234,7 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
 
     token spec-list-delimiter { <list-separator> <.ws>? <.using-preposition>? }
 
-    # QR elenent - list of probabilities.
+    # QR element - list of probabilities.
     rule probabilities-spec-phrase {  <.the-determiner>? [ <.probabilities-list> <probabilities-spec> | <probabilities-spec> <.probabilities-list>? ] }
     rule probabilities-list {  <probabilities> | <probability> <list>? | <probability> }
     rule probabilities-spec { <number-value-list> | <range-spec> }
@@ -276,7 +277,8 @@ grammar QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commman
     rule diagram-type { <regression-curve-spec> | <error> | <outliers> };
     rule regression-curve-spec { ['fitted']? ( <regression-function> | <regression-function-name> ) [ 'curve' | 'curves' | 'function' | 'functions' ]? }
     rule date-list-phrase { [ 'date' | 'dates' ]  ['list']? }
-    rule date-list-diagram { ( <date-list-phrase>?  <diagram> ) | <diagram> [ <with-preposition> [ 'dates' | 'date' 'axis' ] ] }
+    rule date-list-diagram { [ ( <date-list-phrase> <diagram> ) | <diagram> [ <with-preposition> [ 'dates' | 'date' 'axis' ] ] ] [ <.with-preposition>? <date-origin> ]? }
+    rule date-origin { ['date' 'origin'] <date-spec> }
 
     rule regression-function-list { [ <regression-function> | <regression-function-name> ]+ % <list-separator> }
     rule regression-function { 'QuantileRegression' | 'QuantileRegressionFit' | 'LeastSquares' }
