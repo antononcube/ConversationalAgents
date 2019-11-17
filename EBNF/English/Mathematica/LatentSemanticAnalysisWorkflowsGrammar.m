@@ -177,7 +177,7 @@ ebnfLSIApplyFuncs = "
   <lsi-local-func-binary> = 'binary' <& [ 'frequency' ] <@ LSILocalFuncBinary ;
   <lsi-normal-func> = ( <lsi-normal-func-sum> | <lsi-normal-func-max> | <lsi-normal-func-cosine> ) <& [ 'normalization' ] <@ LSINormalFunc@*Flatten ;
   <lsi-normal-func-sum> = 'sum' <@ LSILocalFuncSum ;
-  <lsi-normal-func-max> = 'cosine' <@ LSILocalFuncMax ;
+  <lsi-normal-func-max> = 'max' | 'maximum' <@ LSILocalFuncMax ;
   <lsi-normal-func-cosine> = 'cosine' <@ LSILocalFuncCosine ;
   ";
 
