@@ -132,7 +132,37 @@ class QRMon-R-actions::QRMon-R-actions {
   method find-type-outliers($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
   method find-outliers-spec($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
 
-  # Plot command
-  method plot-command($/) { make "QRMonPlot()"; }
+  # Find anomalies command
+  method find-anomalies-command($/) { make $/.values[0].made; }
 
+  method find-anomalies-by-residuals-threshold($/) { make 'QRMonFindAnomaliesByResiduals( threshold = ' ~ $<number-value> ~ ')'; }
+  method find-anomalies-by-residuals-outliers($/) { make 'QRMonFindAnomaliesByResiduals( outlierIdentifier = ' ~ $<variable-name> ~ ')'; }
+
+  # Plot command
+  method plot-command($/) {
+    my Str $opts = 'datePlotQ = FALSE';
+    if $/.keys.contains(<date-list-diagram>) { $opts = $<date-list-diagram>.made; }
+    make 'QRMonPlot( ' ~ $opts ~ ')';
+  }
+
+  method date-list-diagram($/) {
+    my Str $opts = '';
+    if $/.keys.contains(<date-origin>) { $opts = ', ' ~ $<date-origin>.made; }
+    make 'datePlotQ = TRUE' ~ $opts;
+  }
+  method date-origin($/) { make 'dateOrigin = ' ~ $<date-spec>.made; }
+  method date-spec($/) { make "'" ~ $/.Str ~ "'"; }
+
+  # Error plot command
+  method plot-errors-command($/) { make $/.values[0].made; }
+  method plot-errors-with-directive($/) {
+    my $err_type = 'TRUE';
+    if $<errors-type> && $<errors-type>.trim eq 'absolute' { $err_type = 'FALSE'  }
+    make 'QRMonErrorsPlot( relativeErrorsQ = ' ~ $err_type ~ ')';
+  }
+
+  # Pipeline command
+  method pipeline-command($/) { make $/.values[0].made; }
+  method take-pipeline-value($/) { make 'QRMonTakeValue'; }
+  method echo-pipeline-value($/) { make 'QRMonEchoValue'; }
 }
