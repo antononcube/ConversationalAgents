@@ -62,14 +62,21 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
   method data-load-command($/) { make $/.values[0].made; }
   method load-data($/) { make 'LSAMonSetData[' ~ $/.values[0].made ~ ']'; }
   method data-location-spec($/) { make $<dataset-name>.made; }
-  method use-lsa-object($/) { make $<variable-name>.made; }
+  method use-lsa-object($/) { make $<dataset-name>.made; }
 
   # Create command
-  method make-doc-term-matrix-command($/) { make $/.values[0].made; }
-  method create-by-dataset($/) { make 'LSAMonMakeDocumentTermMatrix[]'; }
+  method create-command($/) { make $/.values[0].made; }
+  method create-simple($/) { make 'LSAMonUnit[]'; }
+  method create-by-dataset($/) { make 'LSAMonUnit[' ~ $<dataset-name> ~ ']'; }
+
+  # Make document-term matrix command
+  method make-doc-term-matrix-command($/) { make 'LSAMonMakeDocumentTermMatrix[]'; }
 
   # Data transformation commands
   method data-transformation-command($/) { make 'LSMonFailure["Not implemented yet."]'; }
+
+  # LSI command is programmed as a role.
+  method statistics-command($/) { make 'LSAMonEchoDocumentTermMatrixStatistics[ ]'; }
 
   # LSI command is programmed as a role.
   method lsi-apply-command($/) { make 'LSAMonApplyTermWeightFunctions[' ~ $/.values[0].made ~ ']'; }
@@ -92,6 +99,63 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
   method lsi-normalizer-func-max($/) { make '"Max"'; }
   method lsi-normalizer-func-cosine($/) { make '"Cosine"'; }
 
+  # Topics extraction
+  method topics-extraction-command($/) {
+    if $<topics-parameters-spec> {
+      make 'LSAMonExtractTopics["NumberOfTopics" -> ' ~ $<topics-spec>.made ~ ", " ~ $<topics-parameters-spec>.made ~ "]";
+    } else {
+      make 'LSAMonExtractTopics["NumberOfTopics" -> ' ~ $<topics-spec>.made ~ "]";
+    }
+  }
 
+  method topics-spec($/) { make $<number-value>.made; }
+
+  method topics-parameters-spec($/) { make $<topics-parameters-list>.made; }
+  method topics-parameters-list($/) { make $<topics-parameter>>>.made.join(', '); }
+  method topics-parameter($/) { make $/.values[0].made; }
+
+
+  method topics-max-iterations($/) { make '"MaxSteps" -> ' ~ $<number-value>.made; }
+
+  method topics-initialization($/) { make '"NumberOfInitializingDocuments" ->' ~ $<number-value>.made; }
+
+  method min-number-of-documents-per-term($/) { make '"MinNumberOfDocumentsPerTerm" -> ' ~ $<number-value>.made; }
+
+  method topics-method($/) { make $/.values[0].made; }
+  method topics-method-name($/) { make 'Method -> ' ~ $/.values[0].made; }
+  method topics-method-SVD($/){ make '"SVD"'; }
+  method topics-method-PCA($/){ make '"SVD"'; }
+  method topics-method-NNMF($/){ make '"NNMF"'; }
+  method topics-method-ICA($/){ make '"ICA"'; }
+
+  # Show table command
+  method show-table-command($/) { make $/.values[0].made;  }
+
+  # Show topic table command
+  method show-topics-table-command($/) {
+    if $<topics-table-parameters-spec> {
+      make 'LSAMonEchoTopicsTable[' ~ $<topics-table-parameters-spec>.made ~ ']';
+    } else {
+      make 'LSAMonEchoTopicsTable[ ]';
+    }
+  }
+
+  method topics-table-parameters-spec($/) { make $/.values[0].made; }
+  method topics-table-parameters-list($/) { make $<topics-table-parameter>>>.made.join(', '); }
+  method topics-table-parameter($/) { make $/.values[0].made; }
+  method topics-table-number-of-table-columns($/) { make '"NumberOfTableColumns" -> ' ~ $<integer-value>.made; }
+  method topics-table-number-of-terms($/) { make '"NumberOfTerms" -> ' ~  $<integer-value>.made; }
+
+  # Show thesaurus table command
+  method show-thesaurus-table-command($/) {
+    if $<thesaurus-words-spec> {
+      make 'LSAMonEchoStatisticalThesaurus[ "Words" -> ' ~ $<thesaurus-words-spec>.made ~ ']';
+    } else {
+      make 'LSAMonEchoStatisticalThesaurus[ ]';
+    }
+  }
+
+  method thesaurus-words-spec($/) { make $/.values[0].made; }
+  method thesaurus-words-list($/) { make '{ "' ~ $<variable-name>>>.made.join('", "') ~ '" }'; }
 
 }
