@@ -93,8 +93,8 @@ role LatentSemanticAnalysisWorkflowsGrammar::CommonParts {
 
     # LSA and LSI specific
     rule the-outliers { <the-determiner> <outliers> }
-    rule lsa-phrase { 'latent' 'semantic' 'analysis' | 'lsa' }
-    rule lsi-phrase { 'latent' 'semantic' 'indexing' | 'lsi' }
+    rule lsa-phrase { 'latent' 'semantic' 'analysis' | 'lsa' | 'LSA' }
+    rule lsi-phrase { 'latent' 'semantic' 'indexing' | 'lsi' | 'LSI' }
     token ingest { 'ingest' | 'load' | 'use' | 'get' }
     rule lsa-object { <lsa-phrase>? 'object' }
     token threshold { 'threshold' }
@@ -255,17 +255,17 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
     rule lsi-global-func { <.global-function-phrase>? [ <lsi-global-func-idf> | <lsi-global-func-entropy> | <lsi-global-func-sum> | <lsi-func-none> ] }
     rule lsi-global-func-idf { 'IDF' | 'idf' | 'inverse' 'document' <frequency> }
     rule lsi-global-func-entropy { 'Entropy' | 'entropy' }
-    rule lsi-global-func-sum {  'sum' }
+    rule lsi-global-func-sum {  'sum' | 'Sum' }
 
     rule lsi-local-func { <.local-function-phrase>? [ <lsi-local-func-frequency> | <lsi-local-func-binary> | <lsi-local-func-log> | <lsi-func-none> ] }
     rule lsi-local-func-frequency {  <term>? <frequency> }
-    rule lsi-local-func-binary { 'binary' <frequency>? }
-    rule lsi-local-func-log { 'log' | 'logarithmic' }
+    rule lsi-local-func-binary { 'binary' <frequency>? | 'Binary' }
+    rule lsi-local-func-log { 'log' | 'logarithmic' | 'Log' }
 
     rule lsi-normalizer-func { <.normalizer-function-phrase>? [ <lsi-normalizer-func-sum> | <lsi-normalizer-func-max> | <lsi-normalizer-func-cosine> | <lsi-func-none> ] <.normalization>? }
-    rule lsi-normalizer-func-sum {'sum'}
-    rule lsi-normalizer-func-max {'max' | 'maximum' }
-    rule lsi-normalizer-func-cosine {'cosine'}
+    rule lsi-normalizer-func-sum {'sum' | 'Sum' }
+    rule lsi-normalizer-func-max {'max' | 'maximum' | 'Max' }
+    rule lsi-normalizer-func-cosine {'cosine' | 'Cosine' }
 
     # Statistics command
     rule statistics-command {<statistics-preamble> [ <statistic-spec> | [ <docs-per-term> | <terms-per-doc> ] [ <statistic-spec> ]? ] }
