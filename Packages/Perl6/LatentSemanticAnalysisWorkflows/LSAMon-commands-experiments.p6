@@ -19,14 +19,21 @@ use LatentSemanticAnalysisWorkflowsGrammar;
 say "\n=======\n";
 #
 
-say to_LSAMon_WL('
-use lsa object lsaObj;
-apply lsi functions idf, none, cosine
-');
+# say to_LSAMon_WL('
+# use lsa object lsaObj;
+# apply lsi functions idf, none, cosine;
+# extract 12 topics;
+# ');
+
+say "\n=======\n";
 
 say to_LSAMon_WL('
-use lsa object lsaObj;
-apply lsi functions global weight function idf, local term weight function none, normalizer function cosine
+create from aText;
+make document term matrix;
+apply lsi functions global weight function idf, local term weight function none, normalizer function cosine;
+extract 12 topics using method NNMF and max steps 12;
+show topics table with 12 columns and 10 terms;
+show thesaurus table for sing, left, home;
 ');
 
 
