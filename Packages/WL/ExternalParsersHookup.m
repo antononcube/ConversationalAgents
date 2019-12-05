@@ -53,6 +53,8 @@ ToQRMonWLCommand::usage = "Translates a natural language command into a QRMon-WL
 
 ToSMRMonWLCommand::usage = "Translates a natural language command into a SMRMon-WL pipeline.";
 
+ToLSAMonWLCommand::usage = "Translates a natural language command into a LSAMon-WL pipeline.";
+
 Begin["`Private`"];
 
 (*===========================================================*)
@@ -162,6 +164,44 @@ ToSMRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern
         True, pres
       ]
     ];
+
+
+(*===========================================================*)
+(* ToLSAMonWLCommand                                         *)
+(*===========================================================*)
+
+Clear[ToLSAMonWLCommand];
+
+Options[ToLSAMonWLCommand] = {
+  "Perl6LSAMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "LatentSemanticAnalysisWorkflows", "lib"}],
+  "StringResult" -> False
+};
+
+ToLSAMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
+    Block[{pres, lib, stringResultQ, res},
+
+      lib = OptionValue[ ToLSAMonWLCommand, "Perl6LSAMonParsingLib" ];
+      stringResultQ = TrueQ[ OptionValue[ ToLSAMonWLCommand, "StringResult" ] ];
+
+      pres =
+          Perl6Command[
+            StringJoin["say to_LSAMon_WL('", command, "')"],
+            lib,
+            "LatentSemanticAnalysisWorkflows"];
+
+      pres = StringReplace[ pres, "\\\"" -> "\""];
+
+      Which[
+        parse, ToExpression[pres],
+
+        !stringResultQ,
+        res = ToExpression[pres, StandardForm, Hold];
+        If[ TrueQ[res === $Failed], pres, res],
+
+        True, pres
+      ]
+    ];
+
 
 End[]; (* `Private` *)
 
