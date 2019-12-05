@@ -3,10 +3,39 @@ use lib '../lib';
 use lib './lib';
 use LatentSemanticAnalysisWorkflowsGrammar;
 
-plan 22;
+plan 35;
 
 # Shortcut
 my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand;
+
+
+#-----------------------------------------------------------
+# Creation
+#-----------------------------------------------------------
+
+ok $pLSAMONCOMMAND.parse('use lsa object lsaObj'),
+'use lsa object lsaObj';
+
+ok $pLSAMONCOMMAND.parse('use object lsaObj2'),
+'use object lsaObj2';
+
+
+#-----------------------------------------------------------
+# Creation
+#-----------------------------------------------------------
+
+ok $pLSAMONCOMMAND.parse('create from aText'),
+'create from aText';
+
+ok $pLSAMONCOMMAND.parse('create a simple object'),
+'create a simple object';
+
+ok $pLSAMONCOMMAND.parse('create object'),
+'create object';
+
+ok $pLSAMONCOMMAND.parse('simple object creation'),
+'simple object creation';
+
 
 #-----------------------------------------------------------
 # Make document-term matrix command tests
@@ -81,12 +110,20 @@ ok $pLSAMONCOMMAND.parse('extract 23 topics using max steps 12'),
 ok $pLSAMONCOMMAND.parse('extract 23 topics using 20 maximum iterations'),
 'extract 23 topics using 20 maximum iterations';
 
-ok $pLSAMONCOMMAND.parse('extract 23 topics with the method NNMF'),
-'extract 23 topics with the method NNMF';
+ok $pLSAMONCOMMAND.parse('extract 23 topics with the method NonNegativeMatrixFactorization'),
+'extract 23 topics with the method NonNegativeMatrixFactorization';
 
-ok $pLSAMONCOMMAND.parse('extract 30 topics with the method NNMF and 20 max steps'),
+ok $pLSAMONCOMMAND.parse('extract 30 topics with the method ica and 20 max steps'),
+'extract 23 topics with the method ica and 20 max steps';
+
+ok $pLSAMONCOMMAND.parse('extract 30 topics with method SVD and maximum iterations 20'),
 'extract 23 topics with the method NNMF and 20 max steps';
 
+ok $pLSAMONCOMMAND.parse('extract 30 topics with NNMF and steps 20'),
+'extract 23 topics with NNMF and steps 20';
+
+ok $pLSAMONCOMMAND.parse('extract 30 topics with nnmf, max steps 20, and min number of documents per term 100'),
+'extract 30 topics with nnmf, max steps 20, and min number of documents per term 100';
 
 #-----------------------------------------------------------
 # Extract statistical thesaurus command tests
@@ -98,5 +135,21 @@ ok $pLSAMONCOMMAND.parse('extract statistical thesaurus'),
 ok $pLSAMONCOMMAND.parse('extract statistical thesaurus with 12 synonyms'),
 'extract statistical thesaurus with 12 synonyms';
 
+
+#-----------------------------------------------------------
+# Show topics table
+#-----------------------------------------------------------
+
+ok $pLSAMONCOMMAND.parse('show topics table'),
+'show topics table';
+
+ok $pLSAMONCOMMAND.parse('show topics table with 6 columns'),
+'show topics table with 6 columns';
+
+ok $pLSAMONCOMMAND.parse('show topics table with 12 columns and 10 terms'),
+'show topics table with 12 columns and 10 terms';
+
+ok $pLSAMONCOMMAND.parse('echo topics table with number of table columns 12 and number of terms 20'),
+'echo topics table with number of table columns 12 and number of terms 20';
 
 done-testing;
