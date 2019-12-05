@@ -195,13 +195,17 @@ role LatentSemanticAnalysisWorkflowsGrammar::PipelineCommand {
 grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand does PipelineCommand does CommonParts {
     # TOP
     regex TOP {
-        <load-data> | <make-doc-term-matrix-command> | <data-transformation-command> |
+        <data-load-command> | <create-command> |
+        <make-doc-term-matrix-command> | <data-transformation-command> |
         <statistics-command> | <lsi-apply-command> |
         <topics-extraction-command> | <thesaurus-extraction-command> |
+        <show-table-command> |
         <pipeline-command> }
 
     # Load data
-    rule load-data { <use-lsa-object> | <load-data-opening> <the-determiner>? <data-kind> [ <data>? <load-preposition> ]? <location-specification> | <load-data-opening> [ <the-determiner> ]? <location-specification> <data>? }
+    rule data-load-command { <load-data> | <use-lsa-object> }
+
+    rule load-data { <load-data-opening> <the-determiner>? <data-kind> [ <data>? <load-preposition> ]? <location-specification> | <load-data-opening> [ <the-determiner> ]? <location-specification> <data>? }
     rule data-reference {[ 'data' | [ 'texts' | 'text' [ [ 'corpus' | 'collection' ] ]? [ 'data' ]? ] ]}
     rule load-data-opening {[ 'load' | 'get' | 'consider' ] [ 'the' ]? <data-reference>}
     rule load-preposition { 'for' | 'of' | 'at' | 'from' }
@@ -210,13 +214,14 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
     rule dataset-name { <variable-name> }
     rule database-name { <variable-name> }
     rule data-kind { <variable-name> }
-    rule use-lsa-object { <.use-verb> <.the-determiner>? <.lsa-object> <variable-name> }
 
+    rule use-lsa-object { <.use-verb> <.the-determiner>? <.lsa-object> <dataset-name> }
 
     # Create command
-    # rule create-command { <create-by-dataset> }
-    # rule create-simple { <create-directive> <.a-determiner>? <object> <simple-way-phrase> | <simple> <object> [ 'creation' | 'making' ] }
-    # rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
+    rule create-command { <create-simple> | <create-by-dataset> }
+    rule simple-way-phrase { 'in' <a-determiner>? <simple> 'way' | 'directly' | 'simply' }
+    rule create-simple { <create-directive> <.a-determiner>? <simple>? <object> <simple-way-phrase>? | <simple> <object> [ 'creation' | 'making' ] }
+    rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
 
     # Make document-term matrix command
     rule make-doc-term-matrix-command { [ <compute-directive> | <generate-directive> ] [ <the-determiner> | <a-determiner> ]? <doc-term-mat> }
@@ -263,7 +268,7 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
     rule lsi-normalizer-func-cosine {'cosine'}
 
     # Statistics command
-    rule statistics-command {<statistics-preamble> [ <docs-per-term> | <terms-per-doc> ] [ <statistic-spec> ]?}
+    rule statistics-command {<statistics-preamble> [ <statistic-spec> | [ <docs-per-term> | <terms-per-doc> ] [ <statistic-spec> ]? ] }
     rule statistics-preamble {[ <compute-and-display> | <display-directive> ] [ 'the' | 'a' | 'some' ]?}
     rule docs-per-term {<docs> [ 'per' ]? <terms>}
     rule terms-per-doc {<terms> [ 'per' ]? <docs>}
@@ -281,13 +286,42 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
 
     # Topics extraction
     rule topics-extraction-command {[ <compute-directive> | 'extract' ] <topics-spec> [ <topics-parameters-spec> ]?}
-    rule topics-spec {<number-value> 'topics'}
-    rule topics-parameters-spec {<with-preposition> <topics-parameters-list>}
-    rule topics-parameters-list {<topics-parameter> [ [ <list-separator> <topics-parameter> ]+ ]?}
-    rule topics-parameter {[ <topics-max-iterations> | <topics-initialization> | <topics-method> ]}
-    rule topics-max-iterations {[ <max-iterations-phrase> <number-value> | <number-value> <max-iterations-phrase> ]}
-    rule max-iterations-phrase {[ 'max' | 'maximum' ] [ 'iterations' | 'steps' ]}
+    rule topics-spec { <number-value> 'topics' | 'topics' <number-value> }
+    rule topics-parameters-spec { <.with-preposition> <topics-parameters-list>}
+    rule topics-parameters-list { <topics-parameter>+ % <list-separator> }
+
+    rule topics-parameter { <topics-max-iterations> | <topics-initialization> | <min-number-of-documents-per-term> | <topics-method>}
+    rule topics-max-iterations { <max-iterations-phrase> <number-value> | <number-value> <max-iterations-phrase> }
+    rule max-iterations-phrase { [ 'max' | 'maximum' ]? [ 'iterations' | 'steps' ] }
     rule topics-initialization {[ 'random' ]? <number-value> 'columns' 'clusters'}
-    rule topics-method {[ [ 'the' ]? 'method' ]? [ 'svd' | 'SVD' | 'pca' | 'PCA' | 'nnmf' | 'NNMF' | 'nmf' | 'NMF' ]}
+    rule min-number-of-documents-per-term { <min-number-of-documents-per-term-phrase> <number-value> | <number-value> <min-number-of-documents-per-term-phrase> }
+    rule min-number-of-documents-per-term-phrase { [ 'min' | 'minimum' ] 'number' 'of' 'documents' 'per' [ 'term' | 'word' ]}
+    rule topics-method {[ [ 'the' ]? 'method' ]? <topics-method-name> }
+
+    ## May be this should be slot?
+    ## Also, note that the method names are hard-coded.
+    rule topics-method-name { <topics-method-SVD> | <topics-method-PCA> | <topics-method-NNMF> | <topics-method-ICA> }
+    rule topics-method-SVD { 'svd' | 'SVD' | 'SingularValueDecomposition' | 'singular' 'value' 'decomposition' }
+    rule topics-method-PCA { 'pca' | 'PCA' | 'PrincipalComponentAnalysis' | 'principal' 'component' 'analysis' }
+    rule topics-method-NNMF { 'nmf' | 'nnmf' | 'NonNegativeMatrixFactorization' | 'NonnegativeMatrixFactorization' | 'NMF' | 'NNMF' | [ 'non' 'negative' | 'non-negative' | 'nonnegative' ] 'matrix' 'facotrization' }
+    rule topics-method-ICA { 'ica' | 'ICA' | 'IndependentComponentAnalysis' | 'independent' 'component' 'analysis' }
+
+    # Show tables commands
+    rule show-table-command { <show-topics-table-command> | <show-thesaurus-table-command> }
+
+    rule show-topics-table-command { <display-directive> 'topics' 'table' <topics-table-parameters-spec>? }
+    rule topics-table-parameters-spec { <.using-preposition> <topics-table-parameters-list> }
+    rule topics-table-parameters-list { <topics-table-parameter>+ % <list-separator> }
+    rule topics-table-parameter { <topics-table-number-of-table-columns> | <topics-table-number-of-terms> }
+
+    rule number-of-table-columns-phrase { ['number' 'of']? ['table']? 'columns' }
+    rule topics-table-number-of-table-columns { <.number-of-table-columns-phrase> <integer-value> | <integer-value> <.number-of-table-columns-phrase> }
+
+    rule number-of-terms-phrase { ['number' 'of']? [ 'terms' | 'words' ] }
+    rule topics-table-number-of-terms {  <.number-of-terms-phrase> <integer-value> | <integer-value> <.number-of-terms-phrase> }
+
+    rule show-thesaurus-table-command { [ <compute-and-display> | <display-directive> ] ['statistical']? 'thesaurus' ['table']? <thesaurus-words-spec>? }
+    rule thesaurus-words-spec { <.for-preposition> <thesaurus-words-list>}
+    rule thesaurus-words-list { <variable-name>+ % <list-separator> }
 
 }
