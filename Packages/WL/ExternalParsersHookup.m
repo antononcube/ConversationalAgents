@@ -49,11 +49,11 @@ BeginPackage["ExternalParsersHookup`"];
 
 Perl6Command::usage = "Raku Perl 6 command invocation.";
 
-ToQRMonWLCommand::usage = "Translates a natural language command into a QRMon-WL pipeline.";
+ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline.";
 
-ToSMRMonWLCommand::usage = "Translates a natural language command into a SMRMon-WL pipeline.";
+ToSMRMonWLCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline.";
 
-ToLSAMonWLCommand::usage = "Translates a natural language command into a LSAMon-WL pipeline.";
+ToLSAMonWLCommand::usage = "Translates a natural language commands into a LSAMon-WL pipeline.";
 
 Begin["`Private`"];
 
