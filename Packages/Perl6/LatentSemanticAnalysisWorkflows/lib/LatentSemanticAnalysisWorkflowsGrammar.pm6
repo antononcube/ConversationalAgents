@@ -224,15 +224,32 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
     rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
 
     # Make document-term matrix command
-    rule make-doc-term-matrix-command { [ <compute-directive> | <generate-directive> ] [ <the-determiner> | <a-determiner> ]? <doc-term-mat> }
+    rule make-doc-term-matrix-command { [ <compute-directive> | <generate-directive> ] [ <.the-determiner> | <.a-determiner> ]? <doc-term-mat> <doc-term-matrix-parameters-spec>? }
+
+    rule doc-term-matrix-parameters-spec { <.using-preposition> <doc-term-matrix-parameters-list> }
+    rule doc-term-matrix-parameters-list { <doc-term-matrix-parameter>+ % <list-separator> }
+    rule doc-term-matrix-parameter { <doc-term-matrix-stemming-rules> | <doc-term-matrix-stop-words> }
+
+    rule stemming-rules-phrase { 'stemming' ['rules']? }
+    rule doc-term-matrix-stemming-rules { <.stemming-rules-phrase> <stemming-rules-spec> | <stemming-rules-spec> <.stemming-rules-phrase> }
+    rule stemming-rules-spec { <variable-name> | <trivial-parameter> }
+
+    rule stop-words-phrase { 'stop' 'words' }
+    rule doc-term-matrix-stop-words { <.stop-words-phrase> <stop-words-spec> | <stop-words-spec> <.stop-words-phrase> }
+    rule stop-words-spec { <variable-name> | <trivial-parameter> }
+
+    rule trivial-parameter { <trivial-parameter-none> | <trivial-parameter-empty> | <trivial-parameter-automatic> }
+    rule trivial-parameter-none { 'none' | 'no' | 'NA' }
+    rule trivial-parameter-empty { 'empty' | '{}' | 'c()' }
+    rule trivial-parameter-automatic { 'automatic' | 'NULL' }
 
     # Data transformation command
-    rule data-transformation-command {<data-partition>}
+    rule data-transformation-command { <data-partition> }
     rule data-partition {'partition' [ <data-reference> ]? [ 'to' | 'into' ] <data-elements>}
-    rule data-element {[ 'sentence' | 'paragraph' | 'section' | 'chapter' | 'word' ]}
-    rule data-elements {[ 'sentences' | 'paragraphs' | 'sections' | 'chapters' | 'words' ]}
+    rule data-element { 'sentence' | 'paragraph' | 'section' | 'chapter' | 'word' }
+    rule data-elements { 'sentences' | 'paragraphs' | 'sections' | 'chapters' | 'words' }
     rule data-spec-opening {<transform-verb>}
-    rule data-type-filler {[ 'data' | 'records' ]}
+    rule data-type-filler { 'data' | 'records' }
 
     # Data statistics command
     rule data-statistics-command { <summarize-data> }

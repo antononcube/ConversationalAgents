@@ -57,6 +57,12 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
 
+  # Trivial
+  method trivial-parameter($/) { make $/.values[0].made; }
+  method trivial-parameter-none($/) { make 'None'; }
+  method trivial-parameter-empty($/) { make '{}'; }
+  method trivial-parameter-automatic($/) { make 'Automatic'; }
+
 
   # Data load commands
   method data-load-command($/) { make $/.values[0].made; }
@@ -70,7 +76,23 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
   method create-by-dataset($/) { make 'LSAMonUnit[' ~ $<dataset-name> ~ ']'; }
 
   # Make document-term matrix command
-  method make-doc-term-matrix-command($/) { make 'LSAMonMakeDocumentTermMatrix[]'; }
+  method make-doc-term-matrix-command($/) {
+    if $<doc-term-matrix-parameters-spec> {
+      make 'LSAMonMakeDocumentTermMatrix[ ' ~ $<doc-term-matrix-parameters-spec>.made ~ ']';
+    } else {
+      make 'LSAMonMakeDocumentTermMatrix[]';
+    }
+  }
+
+  method doc-term-matrix-parameters-spec($/) { make $/.values[0].made; }
+  method doc-term-matrix-parameters-list($/) { make $<doc-term-matrix-parameter>>>.made.join(', '); }
+  method doc-term-matrix-parameter($/) { make $/.values[0].made; }
+
+  method doc-term-matrix-stemming-rules($/) { make $/.values[0].made; }
+  method stemming-rules-spec($/) { make '"StemmingRules" -> ' ~ $/.values[0].made; }
+
+  method doc-term-matrix-stop-words($/) { make $/.values[0].made; }
+  method stop-words-spec($/) { make '"StopWords" -> ' ~ $/.values[0].made; }
 
   # Data transformation commands
   method data-transformation-command($/) { make 'LSMonFailure["Not implemented yet."]'; }
