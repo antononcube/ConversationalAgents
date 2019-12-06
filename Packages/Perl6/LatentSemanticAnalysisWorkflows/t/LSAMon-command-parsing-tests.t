@@ -3,7 +3,7 @@ use lib '../lib';
 use lib './lib';
 use LatentSemanticAnalysisWorkflowsGrammar;
 
-plan 35;
+plan 38;
 
 # Shortcut
 my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand;
@@ -47,6 +47,14 @@ ok $pLSAMONCOMMAND.parse('create a document term matrix'),
 ok $pLSAMONCOMMAND.parse('make the document word matrix'),
 'make the document word matrix';
 
+ok $pLSAMONCOMMAND.parse('make the document word matrix using no stop words'),
+'make the document word matrix using no stop words';
+
+ok $pLSAMONCOMMAND.parse('make the document term matrix using automatic stop words and automatic stemming rules'),
+'make the document term matrix using automatic stop words and automatic stemming rules';
+
+ok $pLSAMONCOMMAND.parse('make document term matrix with no stemming rules and no stop words'),
+'make document term matrix with no stemming rules and no stop words';
 
 #-----------------------------------------------------------
 # Statistics command tests
