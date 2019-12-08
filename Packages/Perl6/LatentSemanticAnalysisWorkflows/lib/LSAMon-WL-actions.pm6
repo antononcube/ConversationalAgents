@@ -62,6 +62,8 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
   method trivial-parameter-none($/) { make 'None'; }
   method trivial-parameter-empty($/) { make '{}'; }
   method trivial-parameter-automatic($/) { make 'Automatic'; }
+  method trivial-parameter-false($/) { make 'False'; }
+  method trivial-parameter-true($/) { make 'True'; }
 
 
   # Data load commands
@@ -102,7 +104,7 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
 
   # LSI command is programmed as a role.
   method lsi-apply-command($/) { make 'LSAMonApplyTermWeightFunctions[' ~ $/.values[0].made ~ ']'; }
-  method lsi-funcs-simple-list($/) { say 'simple'; make $<lsi-global-func>.made ~ ", " ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>; }
+  method lsi-funcs-simple-list($/) { make $<lsi-global-func>.made ~ ', ' ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>; }
   method lsi-funcs-list($/) { make $<lsi-func>>>.made.join(', '); }
   method lsi-func($/) { make $/.values[0].made; }
   method lsi-global-func($/) { make '"GlobalWeightFunction" -> ' ~  $/.values[0].made; }
