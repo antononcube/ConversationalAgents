@@ -238,10 +238,12 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
     rule doc-term-matrix-stop-words { <.stop-words-phrase> <stop-words-spec> | <stop-words-spec> <.stop-words-phrase> }
     rule stop-words-spec { <variable-name> | <trivial-parameter> }
 
-    rule trivial-parameter { <trivial-parameter-none> | <trivial-parameter-empty> | <trivial-parameter-automatic> }
+    rule trivial-parameter { <trivial-parameter-none> | <trivial-parameter-empty> | <trivial-parameter-automatic> | <trivial-parameter-false> | <trivial-parameter-true> }
     rule trivial-parameter-none { 'none' | 'no' | 'NA' }
     rule trivial-parameter-empty { 'empty' | '{}' | 'c()' }
     rule trivial-parameter-automatic { 'automatic' | 'NULL' }
+    rule trivial-parameter-false { 'False' | 'FALSE' | 'F' | 'false' }
+    rule trivial-parameter-true { 'True' | 'TRUE' | 'T' | 'true' }
 
     # Data transformation command
     rule data-transformation-command { <data-partition> }
