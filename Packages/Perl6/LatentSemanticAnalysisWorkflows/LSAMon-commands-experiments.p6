@@ -13,17 +13,6 @@ use LatentSemanticAnalysisWorkflowsGrammar;
 # say "\n=======\n";
 #
 
-say "\n=======\n";
-
-say to_LSAMon_R('
-create from aText;
-make document term matrix with no stemming and automatic stop words;
-apply lsi functions global weight function idf, local term weight function none, normalizer function cosine;
-extract 12 topics using method NNMF and max steps 12;
-show topics table with 12 columns and 10 terms;
-show thesaurus table for sing, left, home;
-');
-
 #
 say "\n=======\n";
 #
@@ -45,10 +34,13 @@ show topics table with 12 columns and 10 terms;
 show thesaurus table for sing, left, home;
 ');
 
+say "\n=======\n";
 
-# say to_LSAMon_WL('
-# create the document term matrix;
-# apply to the matrix entries idf;
-# extract 23 topics with the method NNMF and max steps 12;
-# extract statistical thesaurus with 12 synonyms
-# ')
+say to_LSAMon_R('
+create from aText;
+make document term matrix with no stemming and automatic stop words;
+apply lsi functions global weight function idf, local term weight function none, normalizer function cosine;
+extract 12 topics using method NNMF and max steps 12;
+show topics table with 12 columns and 10 terms;
+show thesaurus table for sing, left, home;
+');

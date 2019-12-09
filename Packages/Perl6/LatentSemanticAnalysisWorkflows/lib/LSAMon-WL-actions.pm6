@@ -152,8 +152,8 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
   method topics-method-NNMF($/){ make '"NNMF"'; }
   method topics-method-ICA($/){ make '"ICA"'; }
 
-  # Show table command
-  method show-table-command($/) { make $/.values[0].made;  }
+  # Show topics command
+  method show-topics-command($/) { make $/.values[0].made;  }
 
   # Show topic table command
   method show-topics-table-command($/) {
@@ -170,6 +170,9 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
   method topics-table-number-of-table-columns($/) { make '"NumberOfTableColumns" -> ' ~ $<integer-value>.made; }
   method topics-table-number-of-terms($/) { make '"NumberOfTerms" -> ' ~  $<integer-value>.made; }
 
+  # Show thesaurus command
+  method show-thesaurus-command($/) { make $/.values[0].made;  }
+
   # Show thesaurus table command
   method show-thesaurus-table-command($/) {
     if $<thesaurus-words-spec> {
@@ -178,6 +181,9 @@ class LSAMon-WL-actions::LSAMon-WL-actions {
       make 'LSAMonEchoStatisticalThesaurus[ ]';
     }
   }
+
+  # What the term NN's command
+  method what-are-the-term-nns($/) { make 'LSAMonEchoStatisticalThesaurus[ "Words" -> ' ~ $<thesaurus-words-spec>.made ~ ']'; }
 
   method thesaurus-words-spec($/) { make $/.values[0].made; }
   method thesaurus-words-list($/) { make '{ "' ~ $<variable-name>>>.made.join('", "') ~ '" }'; }

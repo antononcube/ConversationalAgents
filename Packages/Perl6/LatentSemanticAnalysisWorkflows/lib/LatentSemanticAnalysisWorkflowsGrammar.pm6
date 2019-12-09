@@ -199,7 +199,7 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
         <make-doc-term-matrix-command> | <data-transformation-command> |
         <statistics-command> | <lsi-apply-command> |
         <topics-extraction-command> | <thesaurus-extraction-command> |
-        <show-table-command> |
+        <show-topics-command> | <show-thesaurus-command> |
         <pipeline-command> }
 
     # Load data
@@ -325,9 +325,8 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
     rule topics-method-NNMF { 'nmf' | 'nnmf' | 'NonNegativeMatrixFactorization' | 'NonnegativeMatrixFactorization' | 'NMF' | 'NNMF' | [ 'non' 'negative' | 'non-negative' | 'nonnegative' ] 'matrix' 'facotrization' }
     rule topics-method-ICA { 'ica' | 'ICA' | 'IndependentComponentAnalysis' | 'independent' 'component' 'analysis' }
 
-    # Show tables commands
-    rule show-table-command { <show-topics-table-command> | <show-thesaurus-table-command> }
-
+    # Show topics table commands
+    rule show-topics-command { <show-topics-table-command> }
     rule show-topics-table-command { <display-directive> 'topics' 'table' <topics-table-parameters-spec>? }
     rule topics-table-parameters-spec { <.using-preposition> <topics-table-parameters-list> }
     rule topics-table-parameters-list { <topics-table-parameter>+ % <list-separator> }
@@ -339,8 +338,10 @@ grammar LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflo
     rule number-of-terms-phrase { ['number' 'of']? [ 'terms' | 'words' ] }
     rule topics-table-number-of-terms {  <.number-of-terms-phrase> <integer-value> | <integer-value> <.number-of-terms-phrase> }
 
+    rule show-thesaurus-command { <show-thesaurus-table-command> | <what-are-the-term-nns> }
     rule show-thesaurus-table-command { [ <compute-and-display> | <display-directive> ] ['statistical']? 'thesaurus' ['table']? <thesaurus-words-spec>? }
-    rule thesaurus-words-spec { <.for-preposition> <thesaurus-words-list>}
+    rule what-are-the-term-nns { 'what' 'are' <.the-determiner>? ['top']? [ 'nearest' 'neighbors' | 'nns' ] <thesaurus-words-spec> }
+    rule thesaurus-words-spec { [ <.for-preposition> | <.of-preposition> ] <thesaurus-words-list>}
     rule thesaurus-words-list { <variable-name>+ % <list-separator> }
 
 }
