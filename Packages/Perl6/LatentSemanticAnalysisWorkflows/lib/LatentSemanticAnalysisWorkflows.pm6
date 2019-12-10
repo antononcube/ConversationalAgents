@@ -15,11 +15,33 @@ interpretation of English natural speech commands that specify Latent Semantic A
 unit module LatentSemanticAnalysisWorkflows;
 
 use LatentSemanticAnalysisWorkflowsGrammar;
+use LSAMon-Py-actions;
 use LSAMon-R-actions;
 use LSAMon-WL-actions;
 
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
+}
+
+proto to_LSAMon_Py($) is export {*}
+
+multi to_LSAMon_Py ( Str $command where not has-semicolon($command) ) {
+  #say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-commmand.parse($command);
+  my $match = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse($command, actions => LSAMon-Py-actions::LSAMon-Py-actions );
+  die 'Cannot parse the given command.' unless $match;
+  return $match.made;
+}
+
+multi to_LSAMon_Py ( Str $command where has-semicolon($command) ) {
+
+  my @commandLines = $command.trim.split(/ ';' \s* /);
+
+  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
+
+  my @smrLines =
+  map { to_LSAMon_Py($_) }, @commandLines;
+
+  return @smrLines.join(";\n");
 }
 
 proto to_LSAMon_R($) is export {*}

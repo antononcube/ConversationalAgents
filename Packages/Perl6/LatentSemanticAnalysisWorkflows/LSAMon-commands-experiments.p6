@@ -44,3 +44,23 @@ extract 12 topics using method NNMF and max steps 12;
 show topics table with 12 columns and 10 terms;
 show thesaurus table for sing, left, home;
 ');
+
+say "\n=======\n";
+
+say to_LSAMon_Py('
+create from aText;
+make document term matrix with no stemming and automatic stop words;
+apply lsi functions global weight function idf, local term weight function none, normalizer function cosine;
+extract 12 topics using method NNMF and max steps 12;
+show topics table with 12 columns and 10 terms;
+show thesaurus table for sing, left, home;
+');
+
+# obj = class(...).instance()
+#
+# obj = LSAMonUnit(aText);
+# obj = LSAMonMakeDocumentTermMatrix( lsaObj = obj, stemWordsQ = NA, stopWords = NULL)
+# obj = LSAMonApplyTermWeightFunctions( lsaObj = obj, globalWeightFunction = "IDF", localWeightFunction = "None", normalizerFunction = "Cosine")
+# obj = LSAMonExtractTopics( lsaObj = obj, numberOfTopics = 12, method = "NNMF",  maxSteps = 12)
+# obj = LSAMonEchoTopicsTable( lsaObj = obj, numberOfTableColumns = 12, numberOfTerms = 10)
+# obj = LSAMonEchoStatisticalThesaurus( lsaObj = obj, words = c("sing", "left", "home"))
