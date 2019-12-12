@@ -14,10 +14,11 @@ interpretation of English natural speech commands that specify Latent Semantic A
 
 unit module LatentSemanticAnalysisWorkflows;
 
-use LatentSemanticAnalysisWorkflowsGrammar;
-use LSAMon-Py-actions;
-use LSAMon-R-actions;
-use LSAMon-WL-actions;
+use LatentSemanticAnalysisWorkflows::Grammar;
+use LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py;
+use LatentSemanticAnalysisWorkflows::Actions::LSAMon-R;
+use LatentSemanticAnalysisWorkflows::Actions::LSAMon-WL;
+
 
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
@@ -26,8 +27,8 @@ sub has-semicolon (Str $word) {
 proto to_LSAMon_Py($) is export {*}
 
 multi to_LSAMon_Py ( Str $command where not has-semicolon($command) ) {
-  #say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-commmand.parse($command);
-  my $match = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse($command, actions => LSAMon-Py-actions::LSAMon-Py-actions );
+
+  my $match = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand.parse($command, actions => LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py );
   die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }
@@ -48,7 +49,7 @@ proto to_LSAMon_R($) is export {*}
 
 multi to_LSAMon_R ( Str $command where not has-semicolon($command) ) {
   #say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-commmand.parse($command);
-  my $match = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse($command, actions => LSAMon-R-actions::LSAMon-R-actions );
+  my $match = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand.parse($command, actions => LatentSemanticAnalysisWorkflows::Actions::LSAMon-R );
   die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }
@@ -68,7 +69,7 @@ multi to_LSAMon_R ( Str $command where has-semicolon($command) ) {
 proto to_LSAMon_WL($) is export {*}
 
 multi to_LSAMon_WL ( Str $command where not has-semicolon($command) ) {
-  my $match = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand.parse($command, actions => LSAMon-WL-actions::LSAMon-WL-actions );
+  my $match = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand.parse($command, actions => LatentSemanticAnalysisWorkflows::Actions::LSAMon-WL );
   die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }

@@ -1,7 +1,7 @@
 use lib './lib';
 use lib '.';
 use LatentSemanticAnalysisWorkflows;
-use LatentSemanticAnalysisWorkflowsGrammar;
+
 
 # my $*HIGHWATER = 0;
 # my $*LASTRULE = 0;
@@ -55,12 +55,3 @@ extract 12 topics using method NNMF and max steps 12;
 show topics table with 12 columns and 10 terms;
 show thesaurus table for sing, left, home;
 ');
-
-# obj = class(...).instance()
-#
-# obj = LSAMonUnit(aText);
-# obj = LSAMonMakeDocumentTermMatrix( lsaObj = obj, stemWordsQ = NA, stopWords = NULL)
-# obj = LSAMonApplyTermWeightFunctions( lsaObj = obj, globalWeightFunction = "IDF", localWeightFunction = "None", normalizerFunction = "Cosine")
-# obj = LSAMonExtractTopics( lsaObj = obj, numberOfTopics = 12, method = "NNMF",  maxSteps = 12)
-# obj = LSAMonEchoTopicsTable( lsaObj = obj, numberOfTableColumns = 12, numberOfTerms = 10)
-# obj = LSAMonEchoStatisticalThesaurus( lsaObj = obj, words = c("sing", "left", "home"))
