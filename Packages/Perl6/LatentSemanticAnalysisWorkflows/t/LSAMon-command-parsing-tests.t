@@ -1,12 +1,12 @@
 use Test;
 use lib '../lib';
 use lib './lib';
-use LatentSemanticAnalysisWorkflowsGrammar;
+use LatentSemanticAnalysisWorkflows::Grammar;
 
 plan 42;
 
 # Shortcut
-my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-workflow-commmand;
+my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand;
 
 
 #-----------------------------------------------------------
