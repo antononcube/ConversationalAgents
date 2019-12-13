@@ -1,8 +1,19 @@
 use lib './lib';
 #use lib '.';
 use RecommenderWorkflows;
-use RecommenderWorkflowsGrammar;
-use SMRMon-R-actions;
+use RecommenderWorkflows::Grammar;
+use RecommenderWorkflows::Actions::SMRMon-R;
+
+
+# say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('find proximity anomalies using 20 nns');
+#
+# say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('20 nns and SPLUS outlier identifier', :rule<proximity-anomalies-spec-list>);
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('make with dataset ds2');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('generate the recommender system');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('generate the recommender system directly');
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('load data dfTitanic');
 
@@ -128,6 +139,14 @@ use SMRMon-R-actions;
 
 #say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the item column name');
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('filter the recommendation matrix with rr, jj, kk, pp');
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('filter the recommendation matrix with rr, jj, kk, pp');
 
-say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('filter the recommendation matrix with rr, jj, kk, pp', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('filter the recommendation matrix with rr, jj, kk, pp', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the recommender matrix properties', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('display the recommender properties', actions => SMRMon-R-actions::SMRMon-R-actions).made;
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('show the tag type passengerClass density');
+
+#say RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse('show pipeline value');

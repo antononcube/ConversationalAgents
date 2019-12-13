@@ -15,9 +15,9 @@ interpretation of English natural speech commands that specify recommender workf
 
 unit module RecommenderWorkflows;
 
-use RecommenderWorkflowsGrammar;
-use SMRMon-R-actions;
-use SMRMon-WL-actions;
+use RecommenderWorkflows::Grammar;
+use RecommenderWorkflows::Actions::SMRMon-R;
+use RecommenderWorkflows::Actions::SMRMon-WL;
 
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
@@ -26,9 +26,9 @@ sub has-semicolon (Str $word) {
 proto to_SMRMon_R($) is export {*}
 
 multi to_SMRMon_R ( Str $command where not has-semicolon($command) ) {
-  #say DataTransformationWorkflowsGrammar::Spoken-dplyr-command.parse($command);
-  my $match = RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse($command, actions => SMRMon-R-actions::SMRMon-R-actions );
-  die 'Cannot parse input given command.' unless $match;
+
+  my $match = RecommenderWorkflows::Grammar::WorkflowCommand.parse($command, actions => RecommenderWorkflows::Actions::SMRMon-R );
+  die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }
 
@@ -48,8 +48,8 @@ proto to_SMRMon_WL($) is export {*}
 
 multi to_SMRMon_WL ( Str $command where not has-semicolon($command) ) {
   #say DataTransformationWorkflowsGrammar::Spoken-dplyr-command.parse($command);
-  my $match = RecommenderWorkflowsGrammar::Recommender-workflow-commmand.parse($command, actions => SMRMon-WL-actions::SMRMon-WL-actions );
-  die 'Cannot parse input given command.' unless $match;
+  my $match = RecommenderWorkflows::Grammar::WorkflowCommand.parse($command, actions => RecommenderWorkflows::Actions::SMRMon-WL );
+  die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }
 

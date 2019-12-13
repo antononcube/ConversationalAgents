@@ -39,11 +39,9 @@
 use v6;
 #use lib ".";
 #use lib "../../../EBNF/English/RakuPerl6/";
-use RecommenderWorkflowsGrammar;
+use RecommenderWorkflows::Grammar;
 
-unit module SMRMon-WL-actions;
-
-class SMRMon-WL-actions::SMRMon-WL-actions {
+class RecommenderWorkflows::Actions::SMRMon-WL {
 
   # Top
   method TOP($/) { make $/.values[0].made; }
@@ -78,8 +76,8 @@ class SMRMon-WL-actions::SMRMon-WL-actions {
   # Create commands
   method create-command($/) { make $/.values[0].made; }
   method create-simple($/) { make 'SMRMonCreate[]'; }
-  method create-by-dataset($/) { make 'SMRMonCreate[ ' ~ $<dataset-name>.made ~ ']'; }
-  method create-by-matrices($/) { make 'SMRMonCreateFromMatrices[ ' ~ $<variable-names-list>.made ~ ']'; }
+  method create-by-dataset($/) { make 'SMRMonUnit[] ==> SMRMonCreate[' ~ $<dataset-name>.made ~ ']'; }
+  method create-by-matrices($/) { make 'SMRMonUnit[] ==> SMRMonCreateFromMatrices[' ~ $<variable-names-list>.made ~ ']'; }
 
   # Data statistics command
   method statistics-command($/) { make $/.values[0].made; }
@@ -90,23 +88,23 @@ class SMRMon-WL-actions::SMRMon-WL-actions {
 
   # Recommend by history command
   method recommend-by-history-command($/) { make $/.values[0].made; }
-  method recommend-by-history($/) { make 'SMRMonRecommend[ ' ~ $<history-spec>.made ~ ']'; }
+  method recommend-by-history($/) { make 'SMRMonRecommend[' ~ $<history-spec>.made ~ ']'; }
   method top-recommendations($/) { make 'SMRMonGetTopRecommendations[ spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ']'; }
-  method top-recommendations-by-history($/) { make 'SMRMonRecommend[ ' ~ $<history-spec>.made ~ ', ' ~ $<top-recommendations><integer-value>.made ~ ']'; }
+  method top-recommendations-by-history($/) { make 'SMRMonRecommend[' ~ $<history-spec>.made ~ ', ' ~ $<top-recommendations><integer-value>.made ~ ']'; }
   method history-spec($/) { make $/.values[0].made; }
 
   # Recommend by profile command
   method recommend-by-profile-command($/) { make $/.values[0].made; }
-  method recommend-by-profile($/) { make 'SMRMonRecommendByProfile[ ' ~ $<profile-spec>.made ~ ']'; }
+  method recommend-by-profile($/) { make 'SMRMonRecommendByProfile[' ~ $<profile-spec>.made ~ ']'; }
   method top-profile-recommendations($/) { make 'SMRMonGetTopRecommendations[ spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ']'; }
-  method top-recommendations-by-profile($/) { make 'SMRMonRecommendByProfile[ ' ~ $<profile-spec>.made ~ ',  ' ~ $<top-recommendations><integer-value>.made ~ ']'; }
+  method top-recommendations-by-profile($/) { make 'SMRMonRecommendByProfile[' ~ $<profile-spec>.made ~ ',  ' ~ $<top-recommendations><integer-value>.made ~ ']'; }
   method profile-spec($/) { make $/.values[0].made; }
 
   # Make profile
-  method make-profile-command($/) { make 'SMRMonProfile[ ' ~ $<history-spec>.made ~ ']'; }
+  method make-profile-command($/) { make 'SMRMonProfile[' ~ $<history-spec>.made ~ ']'; }
 
   # Process recommendations command
-  method extend-recommendations-command($/) { make 'SMRMonJoinAcross[ ' ~ $<dataset-name>.made ~ ']' }
+  method extend-recommendations-command($/) { make 'SMRMonJoinAcross[' ~ $<dataset-name>.made ~ ']' }
 
   # Classifications command
   method classify-command($/) { make $/.values[0].made; }
@@ -119,9 +117,9 @@ class SMRMon-WL-actions::SMRMon-WL-actions {
   }
   method classify-by-profile-rev($/) {
     if $<ntop-nns> {
-      make 'SMRMonClassifyByProfile[ \"TagType\" -> ' ~ $<tag-type-id>.made ~ ', \"Profile\" -> ' ~ $<profile-spec>.made ~ ', \"NumberOfNearestNeighbors\" = ' ~ $<ntop-nns>.made ~ ']';
+      make 'SMRMonClassify[ \"TagType\" -> ' ~ $<tag-type-id>.made ~ ', \"Profile\" -> ' ~ $<profile-spec>.made ~ ', \"NumberOfNearestNeighbors\" = ' ~ $<ntop-nns>.made ~ ']';
     } else {
-      make 'SMRMonClassifyByProfile[ \"TagType\" -> ' ~ $<tag-type-id>.made ~ ', \"Profile\" -> ' ~ $<profile-spec>.made ~ ']';
+      make 'SMRMonClassify[ \"TagType\" -> ' ~ $<tag-type-id>.made ~ ', \"Profile\" -> ' ~ $<profile-spec>.made ~ ']';
     }
   }
   method ntop-nns($/) { make $<integer-value>.Str; }
@@ -152,7 +150,7 @@ class SMRMon-WL-actions::SMRMon-WL-actions {
   method dimensions($/) { make '\"dimensions\"'; }
   method density($/) { make '\"density\"'; }
 
-  method smr-filter-matrix($/) { make 'SMRMonFilterMatrix[ ' ~ $<profile-spec>.made ~ ']';  }
+  method smr-filter-matrix($/) { make 'SMRMonFilterMatrix[' ~ $<profile-spec>.made ~ ']';  }
 
   # Find anomalies command
   method find-anomalies-command($/) { make $/.values[0].made; }

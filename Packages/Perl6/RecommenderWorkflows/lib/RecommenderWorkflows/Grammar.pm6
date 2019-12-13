@@ -32,147 +32,16 @@
 #
 #==============================================================================
 use v6;
-unit module RecommenderWorkflowsGrammar;
+unit module RecommenderWorkflows::Grammar;
 
+use RecommenderWorkflows::Grammar::PipelineCommand;
+use RecommenderWorkflows::Grammar::RecommenderPhrases;
+use RecommenderWorkflows::Grammar::CommonParts;
 
-# This role class has common command parts.
-role RecommenderWorkflowsGrammar::CommonParts {
-
-  # Speech parts
-  token do-verb { 'do' }
-  token with-preposition { 'using' | 'with' | 'by' }
-  token using-preposition { 'using' | 'with' | 'over' }
-  token by-preposition { 'by' | 'with' | 'using' }
-  token for-preposition { 'for' | 'with' }
-  token of-preposition { 'of' }
-  token from-preposition { 'from' }
-  token to-preposition { 'to' | 'into' }
-  token assign { 'assign' | 'set' }
-  token a-determiner { 'a' | 'an'}
-  token and-conjuction { 'and' }
-  token the-determiner { 'the' }
-  rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
-  rule number-of { [ 'number' | 'count' ] 'of' }
-  token per { 'per' }
-  token results { 'results' }
-  token simple { 'simple' | 'direct' }
-  token use-verb { 'use' | 'utilize' }
-  token get-verb { 'obtain' | 'get' | 'take' }
-  token object { 'object' }
-  token system { 'system' }
-
-  # Data
-  rule records { 'rows' | 'records' }
-  rule time-series-data { 'time' 'series' [ 'data' ]? }
-  rule data-frame { 'data' 'frame' }
-  token dataset { 'dataset' }
-  rule data { <data-frame> | 'data' | <dataset> | <time-series-data> }
-  token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
-  token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
-
-  # Directives
-  rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
-  token create-directive { 'create' | 'make' }
-  token generate-directive { 'generate' | 'create' | 'make' }
-  token compute-directive { 'compute' | 'find' | 'calculate' }
-  token display-directive { 'display' | 'show' | 'echo' }
-  rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
-  token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
-  rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
-  rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
-  token classify { 'classify' }
-
-  # Value types
-  token number-value { (\d+ ['.' \d+]?  [ [e|E] \d+]?) }
-  token integer-value { \d+ }
-  token percent { '%' | 'percent' }
-  token percent-value { <number-value> <.percent> }
-  token boolean-value { 'True' | 'False' | 'true' | 'false' }
-
-  # Lists of things
-  token list-separator-symbol { ',' | '&' | 'and' }
-  token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
-  token list { 'list' }
-
-  # Variables list
-  rule variable-names-list { <variable-name>+ % <list-separator> }
-
-  # Number list
-  rule number-value-list { <number-value>+ % <list-separator> }
-
-  # Range
-  rule range-spec-step { <with-preposition> | <with-preposition>? 'step' }
-  rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step> <number-value> ]? }
-
-}
-
-# Recommender specific phrases
-role RecommenderWorkflowsGrammar::RecommenderPhrases {
-
-  # Proto tokens
-  proto token item-slot { * }
-  token item-slot:sym<item> { 'item' }
-
-  proto token items-slot { * }
-  token items-slot:sym<items> { 'items' }
-
-  proto token consumption-slot { * }
-  token consumption-slot:sym<consumption> { 'consumption' }
-
-
-  proto token history-slot { * }
-  token history-slot:sym<history> { 'history' }
-
-  # Regular tokens / rules
-  rule history-phrase { [ <item-slot> ]? <history-slot> }
-  rule consumption-profile { <consumption-slot>? 'profile' }
-  rule consumption-history { <consumption-slot>? <history-slot> }
-  token profile { 'profile' }
-  token recommend-directive { 'recommend' | 'suggest' }
-  token recommendation { 'recommendation' }
-  token recommendations { 'recommendations' }
-  rule recommender { 'recommender' | 'smr' }
-  rule recommender-object { <recommender> [ <object> | <system> ]? }
-  rule recommended-items { 'recommended' 'items' | [ 'recommendations' | 'recommendation' ]  <.results>?  }
-  rule recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
-  rule recommendation-matrix { [ <recommendation> | <recommender> ]? 'matrix' }
-  rule recommendation-matrices { [ <recommendation> | <recommender> ]? 'matrices' }
-  rule sparse-matrix { 'sparse' 'matrix' }
-  token column { 'column' }
-  token columns { 'columns' }
-  token row { 'row' }
-  token rows { 'rows' }
-  token dimensions { 'dimensions' }
-  token density  { 'density' }
-  rule most-relevant { 'most' 'relevant' }
-  rule tag-type { 'tag' 'type' }
-  rule tag-types { 'tag' 'types' }
-  rule nearest-neighbors { 'nearest' [ 'neighbors' | 'neighbours' ] | 'nns' }
-  token outlier { 'outlier' }
-  token outliers { 'outliers' | 'outlier' }
-  token anomaly { 'anomaly' }
-  token anomalies { 'anomalies' }
-  token threshold { 'threshold' }
-  token identifier { 'identifier' }
-  token proximity { 'proximity' }
-  token aggregation { 'aggregation' }
-  token aggregate { 'aggregate' }
-  token function { 'function' }
-  token property { 'property' }
-
-}
-
-# This role class has pipeline commands.
-role RecommenderWorkflowsGrammar::PipelineCommand {
-
-  rule pipeline-command { <get-pipeline-value> }
-  rule get-pipeline-value { <display-directive> <pipeline-value> }
-  rule pipeline-value { <.pipeline-filler-phrase>? 'value'}
-  rule pipeline-filler-phrase { <the-determiner>? [ 'current' ]? 'pipeline' }
-
-}
-
-grammar RecommenderWorkflowsGrammar::Recommender-workflow-commmand does PipelineCommand does RecommenderPhrases does CommonParts {
+grammar RecommenderWorkflows::Grammar::WorkflowCommand
+        does RecommenderWorkflows::Grammar::PipelineCommand
+        does RecommenderWorkflows::Grammar::RecommenderPhrases
+        does RecommenderWorkflows::Grammar::CommonParts {
 
   # TOP
   rule TOP { <pipeline-command> |

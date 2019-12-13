@@ -39,11 +39,9 @@
 use v6;
 #use lib ".";
 #use lib "../../../EBNF/English/RakuPerl6/";
-use RecommenderWorkflowsGrammar;
+use RecommenderWorkflows::Grammar;
 
-unit module SMRMon-R-actions;
-
-class SMRMon-R-actions::SMRMon-R-actions {
+class RecommenderWorkflows::Actions::SMRMon-R {
 
   # Top
   method TOP($/) { make $/.values[0].made; }

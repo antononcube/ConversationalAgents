@@ -1,12 +1,12 @@
 use Test;
 use lib '../lib';
 use lib './lib';
-use RecommenderWorkflowsGrammar;
+use RecommenderWorkflows::Grammar;
 
-plan 85;
+plan 84;
 
 # Shortcut
-my $pSMRMONCOMMAND = RecommenderWorkflowsGrammar::Recommender-workflow-commmand;
+my $pSMRMONCOMMAND = RecommenderWorkflowsGrammar::WorkflowCommand;
 
 #-----------------------------------------------------------
 # Creation commands

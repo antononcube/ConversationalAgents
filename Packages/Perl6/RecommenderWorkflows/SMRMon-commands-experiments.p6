@@ -1,7 +1,9 @@
 use lib './lib';
 use lib '.';
 use RecommenderWorkflows;
-use RecommenderWorkflowsGrammar;
+use RecommenderWorkflows::Grammar;
+
+say to_SMRMon_WL("create from dfTitanic; recommnd for histry 1");
 
 say to_SMRMon_WL("find anomalies by proximity using 20 nns, the aggregation function Mean and the property Distances");
 
