@@ -6,7 +6,7 @@ use RecommenderWorkflows::Grammar;
 plan 84;
 
 # Shortcut
-my $pSMRMONCOMMAND = RecommenderWorkflowsGrammar::WorkflowCommand;
+my $pSMRMONCOMMAND = RecommenderWorkflows::Grammar::WorkflowCommand;
 
 #-----------------------------------------------------------
 # Creation commands
