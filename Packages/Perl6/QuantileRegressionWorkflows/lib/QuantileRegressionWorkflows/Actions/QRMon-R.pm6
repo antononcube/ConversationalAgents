@@ -40,11 +40,11 @@
 use v6;
 #use lib '.';
 #use lib '../../../EBNF/English/RakuPerl6/';
-use QuantileRegressionWorkflowsGrammar;
+use QuantileRegressionWorkflows::Grammar;
 
-unit module QRMon-R-actions;
+unit module QuantileRegressionWorkflows::Actions::QRMon-R;
 
-class QRMon-R-actions::QRMon-R-actions {
+class QuantileRegressionWorkflows::Actions::QRMon-R {
 
   # Top
   method TOP($/) { make $/.values[0].made; }

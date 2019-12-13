@@ -14,9 +14,9 @@ interpretation of English natural speech commands that specify Quantile Regressi
 
 unit module QuantileRegressionWorkflows;
 
-use QuantileRegressionWorkflowsGrammar;
-use QRMon-R-actions;
-use QRMon-WL-actions;
+use QuantileRegressionWorkflows::Grammar;
+use QuantileRegressionWorkflows::Actions::QRMon-R;
+use QuantileRegressionWorkflows::Actions::QRMon-WL;
 
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
@@ -25,8 +25,8 @@ sub has-semicolon (Str $word) {
 proto to_QRMon_R($) is export {*}
 
 multi to_QRMon_R ( Str $command where not has-semicolon($command) ) {
-  #say QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse($command);
-  my $match = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse($command, actions => QRMon-R-actions::QRMon-R-actions );
+
+  my $match = QuantileRegressionWorkflows::Grammar::WorkflowCommmand.parse($command, actions => QuantileRegressionWorkflows::Actions::QRMon-R );
   die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }
@@ -46,7 +46,8 @@ multi to_QRMon_R ( Str $command where has-semicolon($command) ) {
 proto to_QRMon_WL($) is export {*}
 
 multi to_QRMon_WL ( Str $command where not has-semicolon($command) ) {
-  my $match = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand.parse($command, actions => QRMon-WL-actions::QRMon-WL-actions );
+
+  my $match = QuantileRegressionWorkflows::Grammar::WorkflowCommmand.parse($command, actions => QuantileRegressionWorkflows::Actions::QRMon-WL );
   die 'Cannot parse the given command.' unless $match;
   return $match.made;
 }

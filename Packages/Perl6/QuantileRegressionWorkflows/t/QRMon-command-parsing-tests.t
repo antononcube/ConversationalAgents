@@ -1,12 +1,12 @@
 use Test;
 use lib '../lib';
 use lib './lib';
-use QuantileRegressionWorkflowsGrammar;
+use QuantileRegressionWorkflows::Grammar;
 
 plan 83;
 
 # Shortcut
-my $pQRMONCOMMAND = QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand;
+my $pQRMONCOMMAND = QuantileRegressionWorkflows::Grammar::WorkflowCommmand;
 
 #-----------------------------------------------------------
 # Data transformation
