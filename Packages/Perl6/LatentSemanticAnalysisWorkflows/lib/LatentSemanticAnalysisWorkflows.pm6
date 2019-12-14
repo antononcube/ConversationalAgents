@@ -24,6 +24,7 @@ sub has-semicolon (Str $word) {
     return defined index $word, ';';
 }
 
+#-----------------------------------------------------------
 proto to_LSAMon_Py($) is export {*}
 
 multi to_LSAMon_Py ( Str $command where not has-semicolon($command) ) {
@@ -45,6 +46,7 @@ multi to_LSAMon_Py ( Str $command where has-semicolon($command) ) {
   return @smrLines.join(";\n");
 }
 
+#-----------------------------------------------------------
 proto to_LSAMon_R($) is export {*}
 
 multi to_LSAMon_R ( Str $command where not has-semicolon($command) ) {
@@ -66,6 +68,7 @@ multi to_LSAMon_R ( Str $command where has-semicolon($command) ) {
   return @smrLines.join(" %>%\n");
 }
 
+#-----------------------------------------------------------
 proto to_LSAMon_WL($) is export {*}
 
 multi to_LSAMon_WL ( Str $command where not has-semicolon($command) ) {
