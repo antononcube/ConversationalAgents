@@ -26,9 +26,9 @@ sub candidates(Str $word) {
 proto is-fuzzy-match( $c, $a ) is export {*};
 
 multi is-fuzzy-match( Str $candidate, Str $actual ) {
-  if  candidates($actual).contains($candidate) {
-    say "Possible misspelling of '$actual' as '$candidate'.";
-    return True;
-  }
-  return False;
+    if  candidates($actual).contains($candidate) {
+        say "Possible misspelling of '$actual' as '$candidate'.";
+        return True;
+    }
+    return False;
 }

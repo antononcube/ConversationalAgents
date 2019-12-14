@@ -1,5 +1,7 @@
 use v6;
 
+use RecommenderWorkflows::Grammar::FuzzyMatch;
+
 # This role class has common command parts.
 role RecommenderWorkflows::Grammar::CommonParts {
 

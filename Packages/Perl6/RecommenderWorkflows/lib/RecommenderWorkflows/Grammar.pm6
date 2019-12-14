@@ -116,16 +116,16 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   # Recommend by profile
   rule recommend-by-profile-command { <recommend-by-profile> | <top-profile-recommendations> | <top-recommendations-by-profile> }
   rule recommend-by-profile { <.recommend-directive>
-                              [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile>
+                              [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile-slot>
                               <profile-spec> }
-  rule top-profile-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.profile> <.recommendations> }
+  rule top-profile-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.profile-slot> <.recommendations> }
   rule top-recommendations-by-profile { <top-recommendations>
-                                        [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile>
+                                        [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile-slot>
                                         <profile-spec> }
 
   # Make profile
   rule make-profile-command {  <make-profile-command-opening> <.the-determiner>? [ <history-phrase> <.list>? | <items-slot> ] <history-spec> }
-  rule make-profile-command-opening { <compute-directive> [ <a-determiner> | <the-determiner> ]? <profile>
+  rule make-profile-command-opening { <compute-directive> [ <a-determiner> | <the-determiner> ]? <profile-slot>
                                       [ <using-preposition> | <by-preposition> | <for-preposition> ] }
 
   # Recommendations processing command
@@ -134,11 +134,11 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   # Classifications command
   rule classify-command { <classify-by-profile> | <classify-by-profile-rev> }
   rule ntop-nns { [ 'top' ]? <integer-value> [ 'top' ]? <.nearest-neighbors> }
-  rule classify-by-profile { <.classify> <.the-determiner>? <.profile>? <profile-spec>
+  rule classify-by-profile { <.classify> <.the-determiner>? <.profile-slot>? <profile-spec>
                              <.to-preposition> <.tag-type>? <tag-type-id>
                              [ <.using-preposition> <ntop-nns> ]? }
   rule classify-by-profile-rev { <.classify> [ <.for-preposition> | <.to-preposition>] <.the-determiner>? <.tag-type>? <tag-type-id>
-                                 [ <.by-preposition> | <.for-preposition> | <.using-preposition> ]? <.the-determiner>? <.profile>?
+                                 [ <.by-preposition> | <.for-preposition> | <.using-preposition> ]? <.the-determiner>? <.profile-slot>?
                                  <profile-spec>
                                  [ <.and-conjuction>? <.using-preposition>? <ntop-nns> ]? }
 
