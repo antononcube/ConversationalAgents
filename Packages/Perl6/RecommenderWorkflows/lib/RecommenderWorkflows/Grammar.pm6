@@ -64,8 +64,8 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule create-preamble-phrase { <generate-directive> [ <.a-determiner> | <.the-determiner> ]? <recommender-object> }
   rule simple-way-phrase { 'in' <a-determiner> <simple> 'way' | 'directly' | 'simply' }
   rule create-simple { <create-preamble-phrase> <simple-way-phrase>? | <simple> <recommender-object> [ 'creation' | 'making' ] }
-  rule create-by-dataset { [ <generate-directive> | <create-preamble-phrase> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ] <.the-determiner>? <dataset>? <dataset-name> }
-  rule create-by-matrices { [ <generate-directive> | <create-preamble-phrase> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ] <.the-determiner>? 'matrices' <variable-names-list> }
+  rule create-by-dataset { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <dataset>? <dataset-name> }
+  rule create-by-matrices { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <matrices> <variable-names-list> }
 
   # Data transformation command
   rule data-transformation-command { <cross-tabulate-command> }
@@ -199,6 +199,14 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
        $*LASTRULE = callframe(1).code.name;
      }
      callsame;
+   }
+
+     method subparse($target, |c) {
+     my $*HIGHWATER = 0;
+     my $*LASTRULE;
+     my $match = callsame;
+     self.error_msg($target) unless $match;
+     return $match;
    }
 
    method parse($target, |c) {

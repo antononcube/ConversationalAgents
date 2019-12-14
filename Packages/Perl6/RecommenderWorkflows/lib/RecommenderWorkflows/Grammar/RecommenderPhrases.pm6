@@ -37,7 +37,7 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
     token matrix { 'matrix' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'matrix') }> }
     token matrices { 'matrices' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'matrices') }> }
     token sparse { 'sparse' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'sparse') }> }
-    rule recommender-object { <recommender> [ <object> | <system> ]? | 'smr' }
+    rule recommender-object { [ <recommender> | <recommendation> ] [ <object> | <system> ]? | <recommender> | 'smr' }
     rule recommended-items { <recommended> <items-slot> | [ <recommendations> | <recommendation> ]  <.results>?  }
     rule recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
     rule recommendation-matrix { [ <recommendation> | <recommender> ]? <matrix> }

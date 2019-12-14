@@ -20,7 +20,11 @@ sub edits2(Str $word) {
 
 # Generate possible spelling corrections for word
 sub candidates(Str $word) {
-    edits1($word) || edits2($word) || ($word,);
+    if $word.chars < 5 {
+        edits1($word) || ($word,);
+    } else {
+        edits1($word) || edits2($word) || ($word,);
+    }
 }
 
 proto is-fuzzy-match( $c, $a ) is export {*};
