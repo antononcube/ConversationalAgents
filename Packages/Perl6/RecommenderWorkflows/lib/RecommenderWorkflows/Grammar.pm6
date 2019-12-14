@@ -40,8 +40,7 @@ use RecommenderWorkflows::Grammar::CommonParts;
 
 grammar RecommenderWorkflows::Grammar::WorkflowCommand
         does RecommenderWorkflows::Grammar::PipelineCommand
-        does RecommenderWorkflows::Grammar::RecommenderPhrases
-        does RecommenderWorkflows::Grammar::CommonParts {
+        does RecommenderWorkflows::Grammar::RecommenderPhrases {
 
   # TOP
   rule TOP { <pipeline-command> |
