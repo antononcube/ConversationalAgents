@@ -5,25 +5,25 @@ use RecommenderWorkflows::Grammar::FuzzyMatch;
 # This role class has common command parts.
 role RecommenderWorkflows::Grammar::CommonParts {
     # Speech parts
-    token do-verb { 'do' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'do') }> }
-    token with-preposition { 'using' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'using') }> | 'with' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'with') }> | 'by' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'by') }> }
-    token using-preposition { 'using' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'using') }> | 'with' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'with') }> | 'over' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'over') }> }
-    token by-preposition { 'by' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'by') }> | 'with' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'with') }> | 'using' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'using') }> }
-    token for-preposition { 'for' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'for') }> | 'with' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'with') }> }
-    token of-preposition { 'of' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'of') }> }
-    token from-preposition { 'from' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'from') }> }
-    token to-preposition { 'to' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'to') }> | 'into' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'into') }> }
-    token assign { 'assign' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'assign') }> | 'set' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'set') }> }
-    token a-determiner { 'a' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'a') }> | 'an' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'an') }> }
-    token and-conjuction { 'and' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'and') }> }
-    token the-determiner { 'the' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'the') }> }
+    token do-verb { 'do' }
+    token with-preposition { 'using' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'using') }> | 'with' | 'by' }
+    token using-preposition { 'using' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'using') }> | 'with' | 'over' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'over') }> }
+    token by-preposition { 'by' | 'with' | 'using' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'using') }> }
+    token for-preposition { 'for' | 'with' }
+    token of-preposition { 'of' }
+    token from-preposition { 'from' }
+    token to-preposition { 'to' | 'into' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'into') }> }
+    token assign { 'assign' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'assign') }> | 'set' }
+    token a-determiner { 'a' | 'an' }
+    token and-conjuction { 'and' }
+    token the-determiner { 'the' }
     rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
     rule number-of { [ 'number' | 'count' ] 'of' }
-    token per { 'per' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'per') }> }
+    token per { 'per' }
     token results { 'results' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'results') }> }
     token simple { 'simple' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'simple') }> | 'direct' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'direct') }> }
-    token use-verb { 'use' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'use') }> | 'utilize' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'utilize') }> }
-    token get-verb { 'obtain' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'obtain') }> | 'get' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'get') }> | 'take' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'take') }> }
+    token use-verb { 'use' | 'utilize' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'utilize') }> }
+    token get-verb { 'obtain' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'obtain') }> | 'get' | 'take' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'take') }> }
     token object { 'object' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'object') }> }
     token system { 'system' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'system') }> }
 
