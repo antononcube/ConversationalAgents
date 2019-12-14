@@ -3,7 +3,7 @@ use lib '../lib';
 use lib './lib';
 use RecommenderWorkflows::Grammar;
 
-plan 84;
+plan 85;
 
 # Shortcut
 my $pSMRMONCOMMAND = RecommenderWorkflows::Grammar::WorkflowCommand;
@@ -233,6 +233,9 @@ ok $pSMRMONCOMMAND.parse('show the recommender matrix density'),
 
 ok $pSMRMONCOMMAND.parse('show the recommendation matrix density'),
 'show the recommendation matrix density';
+
+ok $pSMRMONCOMMAND.parse('show the recommendation matrix properties'),
+'show the recommendation matrix properties';
 
 # ok $pSMRMONCOMMAND.parse('display the item column name'),
 # 'display the item column name';
