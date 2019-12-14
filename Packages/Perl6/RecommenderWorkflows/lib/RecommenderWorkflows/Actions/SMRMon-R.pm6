@@ -28,17 +28,17 @@
 #
 #   The actions are implemented for the grammar:
 #
-#     RecommenderWorkflowsGrammar::Recommender-workflow-commmand
+#     RecommenderWorkflows::Grammar::WorkflowCommand
 #
 #   and the software monad SMRMon-R:
 #
+#     https://github.com/antononcube/R-packages/tree/master/SMRMon-R
 #
 #==============================================================================
 
 
 use v6;
-#use lib ".";
-#use lib "../../../EBNF/English/RakuPerl6/";
+
 use RecommenderWorkflows::Grammar;
 
 class RecommenderWorkflows::Actions::SMRMon-R {
@@ -133,6 +133,8 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   method smr-query-command($/) { make $/.values[0].made; }
 
   method smr-recommender-query($/) { make $<smr-property-spec>.made; }
+  method smr-recommender-matrix-query($/) { make $<smr-matrix-property-spec>.made; }
+
   method smr-property-spec($/) { make $/.values[0].made; }
   method smr-context-property-spec($/) { make 'SMRMonGetProperty(' ~ $/.values[0].made ~ ') %>% SMRMonEchoValue()'; }
   method smr-recommendation-matrix($/) { make '\"sparseMatrix\"'; }
@@ -149,6 +151,7 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   method columns($/) { make '\"columns\"'; }
   method dimensions($/) { make '\"dimensions\"'; }
   method density($/) { make '\"density\"'; }
+  method properties($/) { make '\"properties\"';}
 
   method smr-filter-matrix($/) { make 'SMRMonFilterMatrix( profile = ' ~ $<profile-spec>.made ~ ')';  }
 

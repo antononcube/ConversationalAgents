@@ -66,4 +66,5 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
     token aggregate { 'aggregate' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'aggregate') }> }
     token function { 'function' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'function') }> }
     token property { 'property' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'property') }> }
+    token properties { 'properties' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'properties') }> }
 }

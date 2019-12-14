@@ -146,25 +146,26 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule plot-recommendation-scores { <plot-directive> <.the-determiner>? <recommendation-results> }
 
   # SMR query command
-  rule smr-query-command { <smr-recommender-query> | <smr-filter-matrix> }
+  rule smr-query-command { <smr-recommender-matrix-query>  | <smr-recommender-query> | <smr-filter-matrix> }
+  rule smr-recommender-matrix-query { <display-directive> <.the-determiner>? <.smr-matrix-property-spec-openning> <smr-matrix-property-spec> }
   rule smr-recommender-query { <display-directive> <.the-determiner>? <.recommender>? <smr-property-spec> }
   rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> | <smr-sub-matrix-property-spec> }
 
   token smr-property-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' || $0 eq 'pipeline' }> }
 
-  rule smr-context-property-spec { <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> }
+  rule smr-context-property-spec { <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> | <properties> }
   rule smr-tag-types { <tag-types> }
   rule smr-item-column-name { <item-slot> <column> 'name' | 'itemColumnName' }
-  rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub' ]? 'matrices' ] }
+  rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub' ]? <matrices> ] }
   rule smr-recommendation-matrix { <recommendation-matrix> }
 
-  rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> | 'matrix' }
+  rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> | <matrix> }
   rule smr-matrix-property-spec { <.smr-matrix-property-spec-openning>? <smr-matrix-property> }
 
-  rule smr-sub-matrix-property-spec-openning { 'sub-matrix' | 'sub' 'matrix' | <tag-type> }
+  rule smr-sub-matrix-property-spec-openning { 'sub-matrix' | 'sub' <matrix> | <tag-type> }
   rule smr-sub-matrix-property-spec { <.smr-sub-matrix-property-spec-openning>? <tag-type-id> <smr-matrix-property> }
 
-  rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> | <smr-property-id> }
+  rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> | <smr-property-id> | <properties> }
   rule number-of-columns { <number-of> <columns> }
   rule number-of-rows { <number-of> <rows> }
 

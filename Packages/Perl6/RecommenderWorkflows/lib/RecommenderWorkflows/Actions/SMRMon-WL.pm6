@@ -28,17 +28,17 @@
 #
 #   The actions are implemented for the grammar:
 #
-#     RecommenderWorkflowsGrammar::Recommender-workflow-commmand
+#     RecommenderWorkflows::Grammar::WorkflowCommand
 #
 #   and the software monad SMRMon-WL:
 #
+#     https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicSparseMatrixRecommender.m
 #
 #==============================================================================
 
 
 use v6;
-#use lib ".";
-#use lib "../../../EBNF/English/RakuPerl6/";
+
 use RecommenderWorkflows::Grammar;
 
 class RecommenderWorkflows::Actions::SMRMon-WL {
@@ -131,6 +131,7 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
 
   # SMR query command
   method smr-query-command($/) { make $/.values[0].made; }
+  method smr-recommender-matrix-query($/) { make $<smr-matrix-property-spec>.made; }
 
   method smr-recommender-query($/) { make $<smr-property-spec>.made; }
   method smr-property-spec($/) { make $/.values[0].made; }
@@ -149,6 +150,7 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   method columns($/) { make '\"columns\"'; }
   method dimensions($/) { make '\"dimensions\"'; }
   method density($/) { make '\"density\"'; }
+  method properties($/) { make '\"properties\"';}
 
   method smr-filter-matrix($/) { make 'SMRMonFilterMatrix[' ~ $<profile-spec>.made ~ ']';  }
 

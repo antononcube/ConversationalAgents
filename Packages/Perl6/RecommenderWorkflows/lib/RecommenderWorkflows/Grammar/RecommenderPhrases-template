@@ -68,5 +68,6 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
   token aggregate { 'aggregate' }
   token function { 'function' }
   token property { 'property' }
+  token properties { 'properties' }
 
 }
