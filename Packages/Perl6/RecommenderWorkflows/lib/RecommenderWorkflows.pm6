@@ -16,6 +16,7 @@ interpretation of English natural speech commands that specify recommender workf
 unit module RecommenderWorkflows;
 
 use RecommenderWorkflows::Grammar;
+use RecommenderWorkflows::Actions::SMRMon-Py;
 use RecommenderWorkflows::Actions::SMRMon-R;
 use RecommenderWorkflows::Actions::SMRMon-WL;
 
@@ -23,6 +24,29 @@ sub has-semicolon (Str $word) {
     return defined index $word, ';';
 }
 
+#-----------------------------------------------------------
+proto to_SMRMon_Py($) is export {*}
+
+multi to_SMRMon_Py ( Str $command where not has-semicolon($command) ) {
+
+  my $match = RecommenderWorkflows::Grammar::WorkflowCommand.parse($command, actions => RecommenderWorkflows::Actions::SMRMon-Py );
+  die 'Cannot parse the given command.' unless $match;
+  return $match.made;
+}
+
+multi to_SMRMon_Py ( Str $command where has-semicolon($command) ) {
+
+  my @commandLines = $command.trim.split(/ ';' \s* /);
+
+  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
+
+  my @smrLines =
+  map { to_SMRMon_Py($_) }, @commandLines;
+
+  return @smrLines.join(" \n");
+}
+
+#-----------------------------------------------------------
 proto to_SMRMon_R($) is export {*}
 
 multi to_SMRMon_R ( Str $command where not has-semicolon($command) ) {
@@ -44,6 +68,7 @@ multi to_SMRMon_R ( Str $command where has-semicolon($command) ) {
   return @smrLines.join(" %>%\n");
 }
 
+#-----------------------------------------------------------
 proto to_SMRMon_WL($) is export {*}
 
 multi to_SMRMon_WL ( Str $command where not has-semicolon($command) ) {
