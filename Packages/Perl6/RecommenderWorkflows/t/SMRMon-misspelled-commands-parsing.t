@@ -18,8 +18,8 @@ ok $pSMRMONCOMMAND.parse('crate with ds2'),
 ok $pSMRMONCOMMAND.parse('create recomender with ds2'),
 'create recomender with ds2';
 
-ok $pSMRMONCOMMAND.parse('crate recomender obejct with ds2'),
-'crate recommnder obejct with ds2';
+ok $pSMRMONCOMMAND.parse('crate recomender obect with ds2'),
+'crate recommnder obect with ds2';
 
 ok $pSMRMONCOMMAND.parse('generate the recommender'),
 'generate the recommender';
@@ -27,8 +27,8 @@ ok $pSMRMONCOMMAND.parse('generate the recommender'),
 ok $pSMRMONCOMMAND.parse('create the recommender wiff dataset ds1 uzing the colum id'),
 'create the recommender wiff dataset ds1 uzing the colum id';
 
-ok $pSMRMONCOMMAND.parse('create using da matrixes <||>'),
-'create using da matrixes <||>';
+ok $pSMRMONCOMMAND.parse('create using the matrixes <||>'),
+'create using the matrixes <||>';
 
 
 #-----------------------------------------------------------
