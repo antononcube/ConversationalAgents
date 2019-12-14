@@ -4,7 +4,7 @@ use RecommenderWorkflows::Grammar::FuzzyMatch;
 use RecommenderWorkflows::Grammar::CommonParts;
 
 # Recommender specific phrases
-role RecommenderWorkflows::Grammar::RecommenderPhrases does use RecommenderWorkflows::Grammar::CommonParts {
+role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows::Grammar::CommonParts {
 
   token word-spec { \w+ }
 
