@@ -1,5 +1,7 @@
 use v6;
 
+use Text::Levenshtein::Damerau;
+
 unit module RecommenderWorkflows::Grammar::FuzzyMatch;
 
 # All edits that are one edit from `word`
@@ -20,19 +22,30 @@ sub edits2(Str $word) {
 
 # Generate possible spelling corrections for word
 sub candidates(Str $word) {
-    if $word.chars < 5 {
-        edits1($word) || ($word,);
-    } else {
-        edits1($word) || edits2($word) || ($word,);
-    }
+    edits1($word) || edits2($word) || ($word,);
 }
 
 proto is-fuzzy-match( $c, $a ) is export {*};
 
 multi is-fuzzy-match( Str $candidate, Str $actual ) {
-    if  candidates($actual).contains($candidate) {
+    my $dist = dld( $candidate, $actual );
+
+    if 0 == $dist {
+        return True;
+    } elsif 0 < $dist and $dist <= 2  {
         say "Possible misspelling of '$actual' as '$candidate'.";
         return True;
     }
+
     return False;
 }
+
+#multi is-fuzzy-match( Str $candidate, Str $actual ) {
+#    if $actual.chars < 5 {
+#        return dld( $candidate, $actual ) <= 2;
+#    } elsif candidates($actual).contains($candidate) {
+#        say "Possible misspelling of '$actual' as '$candidate'.";
+#        return True;
+#    }
+#    return False;
+#}
