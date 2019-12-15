@@ -35,14 +35,17 @@
 use v6;
 use LatentSemanticAnalysisWorkflows::Grammar::CommonParts;
 use LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand;
-
+use LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand;
 
 # LSI command should be programmed as a role in order to use in SMRMon.
 # grammar LatentSemanticAnalysisWorkflowsGrammar::LSIFunctionsApplicationCommand {
 # ...
 # }
 
-grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand does LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand does LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
+grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
+        does LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand
+        does LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand
+        does LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     # TOP
     regex TOP {
         <data-load-command> | <create-command> |
@@ -108,33 +111,7 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand does LatentSe
     rule summarize-data { 'summarize' <.the-determiner>? <data> | <display-directive> <data>? ( 'summary' | 'summaries' ) }
 
     # LSI command is programmed as a role.
-    regex lsi-apply-command { <.lsi-apply-phrase> [ <lsi-funcs-list> | <lsi-funcs-simple-list> ] }
-
-    rule lsi-funcs-simple-list { <lsi-global-func> <lsi-local-func> <lsi-normalizer-func> }
-
-    rule lsi-apply-verb { <apply-verb> 'to'? | <transform-verb> | <use-verb> }
-    rule lsi-apply-phrase { <lsi-apply-verb> <the-determiner>? [ <matrix> | <matrix-entries> ]? <the-determiner>? <lsi-phrase>? <functions>? }
-
-    rule lsi-funcs-list { <lsi-func>+ % <list-separator> }
-
-    rule lsi-func { <lsi-global-func> | <lsi-local-func> | <lsi-normalizer-func> }
-
-    rule lsi-func-none { 'None' | 'none' }
-
-    rule lsi-global-func { <.global-function-phrase>? [ <lsi-global-func-idf> | <lsi-global-func-entropy> | <lsi-global-func-sum> | <lsi-func-none> ] }
-    rule lsi-global-func-idf { 'IDF' | 'idf' | 'inverse' 'document' <frequency> }
-    rule lsi-global-func-entropy { 'Entropy' | 'entropy' }
-    rule lsi-global-func-sum {  'sum' | 'Sum' }
-
-    rule lsi-local-func { <.local-function-phrase>? [ <lsi-local-func-frequency> | <lsi-local-func-binary> | <lsi-local-func-log> | <lsi-func-none> ] }
-    rule lsi-local-func-frequency {  <term>? <frequency> }
-    rule lsi-local-func-binary { 'binary' <frequency>? | 'Binary' }
-    rule lsi-local-func-log { 'log' | 'logarithmic' | 'Log' }
-
-    rule lsi-normalizer-func { <.normalizer-function-phrase>? [ <lsi-normalizer-func-sum> | <lsi-normalizer-func-max> | <lsi-normalizer-func-cosine> | <lsi-func-none> ] <.normalization>? }
-    rule lsi-normalizer-func-sum {'sum' | 'Sum' }
-    rule lsi-normalizer-func-max {'max' | 'maximum' | 'Max' }
-    rule lsi-normalizer-func-cosine {'cosine' | 'Cosine' }
+    # <lsi-apply-command>
 
     # Statistics command
     rule statistics-command {<statistics-preamble> [ <statistic-spec> | [ <docs-per-term> | <terms-per-doc> ] [ <statistic-spec> ]? ] }
@@ -193,5 +170,51 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand does LatentSe
     rule what-are-the-term-nns { 'what' 'are' <.the-determiner>? ['top']? [ 'nearest' 'neighbors' | 'nns' ] <thesaurus-words-spec> }
     rule thesaurus-words-spec { [ <.for-preposition> | <.of-preposition> ] <thesaurus-words-list>}
     rule thesaurus-words-list { <variable-name>+ % <list-separator> }
+
+    # Error message
+    # method error($msg) {
+    #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
+    #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
+    #   my $line-no = $parsed.lines.elems;
+    #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
+    # }
+
+    method ws() {
+      if self.pos > $*HIGHWATER {
+        $*HIGHWATER = self.pos;
+        $*LASTRULE = callframe(1).code.name;
+      }
+      callsame;
+    }
+
+    method parse($target, |c) {
+      my $*HIGHWATER = 0;
+      my $*LASTRULE;
+      my $match = callsame;
+      self.error_msg($target) unless $match;
+      return $match;
+    }
+
+    method subparse($target, |c) {
+      my $*HIGHWATER = 0;
+      my $*LASTRULE;
+      my $match = callsame;
+      self.error_msg($target) unless $match;
+      return $match;
+    }
+
+    method error_msg($target) {
+      my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
+      my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
+      my $line-no = $parsed.lines.elems;
+      my $msg = "Cannot parse the command";
+      # say 'un-parsed : ', $un-parsed;
+      # say '$*LASTRULE : ', $*LASTRULE;
+      $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
+      $msg ~= "; target '$target' position $*HIGHWATER";
+      $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
+      $msg ~= ' .';
+      say $msg;
+    }
 
 }

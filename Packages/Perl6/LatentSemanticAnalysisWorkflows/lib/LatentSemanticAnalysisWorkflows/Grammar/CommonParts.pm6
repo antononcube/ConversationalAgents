@@ -54,23 +54,32 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     token integer-value { \d+ }
     token percent { '%' | 'percent' }
     token percent-value { <number-value> <.percent> }
-    token boolean-value { 'True' | 'False' | 'true' | 'false' }
+    token boolean-value { 'True' | 'False' | 'true' | 'false' | 'TRUE' | 'FALSE' }
 
-    # LSA and LSI specific
-    rule the-outliers { <the-determiner> <outliers> }
-    rule lsa-phrase { 'latent' 'semantic' 'analysis' | 'lsa' | 'LSA' }
-    rule lsi-phrase { 'latent' 'semantic' 'indexing' | 'lsi' | 'LSI' }
+    # LSA specific
+    token document { 'document' }
+    token latent { 'latent' }
+    token semantic { 'semantic' }
+    token analysis { 'analysis' }
+    token indexing { 'indexing' }
     token ingest { 'ingest' | 'load' | 'use' | 'get' }
-    rule lsa-object { <lsa-phrase>? 'object' }
     token threshold { 'threshold' }
     token identifier { 'identifier' }
     token weight { 'weight' }
     token term { 'term' }
+    token word { 'word' }
+    token item { 'item' } # For some reason using <item> below gives the error: "Too many positionals passed; expected 1 argument but got 2".
     token entries { 'entries' }
     token matrix { 'matrix' }
-    rule doc-term-mat {[ 'document' | 'item' ] [ 'term' | 'word' ] <matrix> }
-    rule matrix-entries { [ <matrix> | <doc-term-mat> ]? <entries> }
 
+    rule lsa-object { <lsa-phrase>? 'object' }
+    rule lsa-phrase { <latent> <semantic> <analysis> | 'lsa' | 'LSA' }
+    rule lsi-phrase { <latent> <semantic> <indexing> | 'lsi' | 'LSI' }
+    rule doc-term-mat { [ <document> | 'item' ] [ <term> | <word> ] <matrix> }
+    rule matrix-entries { [ <doc-term-mat> | <matrix> ]? <entries> }
+    rule the-outliers { <the-determiner> <outliers> }
+
+    # LSI specific
     token normalization { 'normalization' }
     token normalizing { 'normalizing' }
     token normalizer { 'normalizer' }
@@ -96,51 +105,5 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
 
     # Expressions
     token wl-expr { \S+ }
-
-    # Error message
-    # method error($msg) {
-    #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
-    #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
-    #   my $line-no = $parsed.lines.elems;
-    #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
-    # }
-
-    method ws() {
-      if self.pos > $*HIGHWATER {
-        $*HIGHWATER = self.pos;
-        $*LASTRULE = callframe(1).code.name;
-      }
-      callsame;
-    }
-
-    method parse($target, |c) {
-      my $*HIGHWATER = 0;
-      my $*LASTRULE;
-      my $match = callsame;
-      self.error_msg($target) unless $match;
-      return $match;
-    }
-
-    method subparse($target, |c) {
-      my $*HIGHWATER = 0;
-      my $*LASTRULE;
-      my $match = callsame;
-      self.error_msg($target) unless $match;
-      return $match;
-    }
-
-    method error_msg($target) {
-      my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
-      my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
-      my $line-no = $parsed.lines.elems;
-      my $msg = "Cannot parse the command";
-      # say 'un-parsed : ', $un-parsed;
-      # say '$*LASTRULE : ', $*LASTRULE;
-      $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
-      $msg ~= "; target '$target' position $*HIGHWATER";
-      $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
-      $msg ~= ' .';
-      say $msg;
-    }
 
 }
