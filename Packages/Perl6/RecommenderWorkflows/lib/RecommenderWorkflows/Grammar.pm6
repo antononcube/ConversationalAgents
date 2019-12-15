@@ -60,7 +60,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule use-recommender { <.use-verb> <.the-determiner>? <.recommender-object> <variable-name> }
 
   # Create command
-  rule create-command { <create-by-dataset> | <create-by-matrices> | <create-simple> }
+  rule create-command { <create-by-matrices> | <create-by-dataset> | <create-simple> }
   rule create-preamble-phrase { <generate-directive> [ <.a-determiner> | <.the-determiner> ]? <recommender-object> }
   rule simple-way-phrase { 'in' <a-determiner> <simple> 'way' | 'directly' | 'simply' }
   rule create-simple { <create-preamble-phrase> <simple-way-phrase>? | <simple> <recommender-object> [ 'creation' | 'making' ] }
