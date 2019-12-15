@@ -47,7 +47,7 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand does LatentSe
     regex TOP {
         <data-load-command> | <create-command> |
         <make-doc-term-matrix-command> | <data-transformation-command> |
-        <statistics-command> | <lsi-apply-command> |
+        <data-statistics-command> | <lsi-apply-command> |
         <topics-extraction-command> | <thesaurus-extraction-command> |
         <show-topics-command> | <show-thesaurus-command> |
         <pipeline-command> }
@@ -177,7 +177,7 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand does LatentSe
 
     # Show topics table commands
     rule show-topics-command { <show-topics-table-command> }
-    rule show-topics-table-command { <display-directive> 'topics' 'table' <topics-table-parameters-spec>? }
+    rule show-topics-table-command { <display-directive> <.the-determiner>? 'topics' 'table' <topics-table-parameters-spec>? }
     rule topics-table-parameters-spec { <.using-preposition> <topics-table-parameters-list> }
     rule topics-table-parameters-list { <topics-table-parameter>+ % <list-separator> }
     rule topics-table-parameter { <topics-table-number-of-table-columns> | <topics-table-number-of-terms> }

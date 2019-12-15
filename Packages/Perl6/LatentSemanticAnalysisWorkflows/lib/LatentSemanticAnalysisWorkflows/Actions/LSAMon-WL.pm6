@@ -97,8 +97,8 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-WL {
   # Data transformation commands
   method data-transformation-command($/) { make 'LSMonFailure["Not implemented yet."]'; }
 
-  # LSI command is programmed as a role.
-  method statistics-command($/) { make 'LSAMonEchoDocumentTermMatrixStatistics[ ]'; }
+  # Data statistics commands.
+  method data-statistics-command($/) { make 'LSAMonEchoDocumentTermMatrixStatistics[ ]'; }
 
   # LSI command is programmed as a role.
   method lsi-apply-command($/) { make 'LSAMonApplyTermWeightFunctions[' ~ $/.values[0].made ~ ']'; }

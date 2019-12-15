@@ -98,8 +98,8 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py {
   # Data transformation commands
   method data-transformation-command($/) { make 'obj = LSMonFailure( lsaObj = obj, "Not implemented yet.")'; }
 
-  # LSI command is programmed as a role.
-  method statistics-command($/) { make 'obj = LSAMonEchoDocumentTermMatrixStatistics( lsaObj = obj )'; }
+  # Data statistics commands.
+  method data-statistics-command($/) { make 'obj = LSAMonEchoDocumentTermMatrixStatistics( lsaObj = obj )'; }
 
   # LSI command is programmed as a role.
   method lsi-apply-command($/) { make 'obj = LSAMonApplyTermWeightFunctions( lsaObj = obj, ' ~ $/.values[0].made ~ ')'; }
