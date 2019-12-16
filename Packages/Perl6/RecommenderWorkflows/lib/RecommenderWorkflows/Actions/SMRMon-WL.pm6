@@ -86,6 +86,28 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   method items-per-tag($/) { make 'SMRMonItemsPerTagDistribution[]'; }
   method tags-per-items($/) { make 'SMRMonTagsPerItemDistribution[]'; }
 
+  # LSI command is programmed as a role.
+  method lsi-apply-command($/) { make 'SMRMonApplyTermWeightFunctions[' ~ $/.values[0].made ~ ']'; }
+  method lsi-apply-verb($/) { make $/.Str; }
+  method lsi-funcs-simple-list($/) { make $<lsi-global-func>.made ~ ', ' ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>; }
+  method lsi-funcs-list($/) { make $<lsi-func>>>.made.join(', '); }
+  method lsi-func($/) { make $/.values[0].made; }
+  method lsi-global-func($/) { make '"GlobalWeightFunction" -> ' ~  $/.values[0].made; }
+  method lsi-global-func-idf($/) { make '"IDF"'; }
+  method lsi-global-func-entropy($/) { make '"Entropy"'; }
+  method lsi-global-func-sum($/) { make '"ColummStochastic"'; }
+  method lsi-func-none($/) { make '"None"';}
+
+  method lsi-local-func($/) { make '"LocalWeightFunction" -> ' ~  $/.values[0].made; }
+  method lsi-local-func-frequency($/) { make '"TermFrequency"'; }
+  method lsi-local-func-binary($/) { make '"Binary"'; }
+  method lsi-local-func-log($/) { make '"Log"'; }
+
+  method lsi-normalizer-func($/) { make '"NormalizerFunction" -> ' ~  $/.values[0].made; }
+  method lsi-normalizer-func-sum($/) { make '"Sum"'; }
+  method lsi-normalizer-func-max($/) { make '"Max"'; }
+  method lsi-normalizer-func-cosine($/) { make '"Cosine"'; }
+
   # Recommend by history command
   method recommend-by-history-command($/) { make $/.values[0].made; }
   method recommend-by-history($/) { make 'SMRMonRecommend[' ~ $<history-spec>.made ~ ']'; }
