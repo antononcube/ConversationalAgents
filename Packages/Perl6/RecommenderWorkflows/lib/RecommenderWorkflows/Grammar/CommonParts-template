@@ -24,6 +24,8 @@ role RecommenderWorkflows::Grammar::CommonParts {
   token results { 'results' }
   token simple { 'simple' | 'direct' }
   token use-verb { 'use' | 'utilize' }
+  token apply-verb { 'apply' }
+  token transform-verb { 'apply' }
   token get-verb { 'obtain' | 'get' | 'take' }
   token object { 'object' }
   token system { 'system' }

@@ -22,7 +22,7 @@
 #
 #==============================================================================
 #
-#   For more details about Raku Perl6 see https://perl6.org/ .
+#   For more details about Raku Perl6 see https://raku.org/ (https://perl6.org/) .
 #
 #==============================================================================
 #
@@ -34,18 +34,21 @@
 use v6;
 unit module RecommenderWorkflows::Grammar;
 
-use RecommenderWorkflows::Grammar::PipelineCommand;
-use RecommenderWorkflows::Grammar::RecommenderPhrases;
 use RecommenderWorkflows::Grammar::CommonParts;
+use RecommenderWorkflows::Grammar::LSIApplyCommand;
+use RecommenderWorkflows::Grammar::RecommenderPhrases;
+use RecommenderWorkflows::Grammar::PipelineCommand;
 
 grammar RecommenderWorkflows::Grammar::WorkflowCommand
+        does RecommenderWorkflows::Grammar::LSIApplyCommand
         does RecommenderWorkflows::Grammar::PipelineCommand
         does RecommenderWorkflows::Grammar::RecommenderPhrases {
 
   # TOP
   rule TOP { <pipeline-command> |
              <data-load-command> | <create-command> |
-             <data-transformation-command> | <data-statistics-command> |
+             <data-transformation-command> | <lsi-apply-command> |
+             <data-statistics-command> |
              <recommend-by-profile-command> | <recommend-by-history-command> |
              <make-profile-command> |
              <extend-recommendations-command> |

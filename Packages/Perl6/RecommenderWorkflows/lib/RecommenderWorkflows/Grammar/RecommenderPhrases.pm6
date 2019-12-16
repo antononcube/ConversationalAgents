@@ -67,4 +67,41 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
     token function { 'function' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'function') }> }
     token property { 'property' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'property') }> }
     token properties { 'properties' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'properties') }> }
+
+    # LSA specific
+    token document { 'document' }
+    token latent { 'latent' }
+    token semantic { 'semantic' }
+    token analysis { 'analysis' }
+    token indexing { 'indexing' }
+    token ingest { 'ingest' | 'load' | 'use' | 'get' }
+    # token threshold { 'threshold' }
+    # token identifier { 'identifier' }
+    token weight { 'weight' }
+    token term { 'term' }
+    token word { 'word' }
+    token item { 'item' } # For some reason using <item> below gives the error: "Too many positionals passed; expected 1 argument but got 2".
+    token entries { 'entries' }
+    # token matrix { 'matrix' }
+
+    rule lsa-object { <lsa-phrase>? 'object' }
+    rule lsa-phrase { <latent> <semantic> <analysis> | 'lsa' | 'LSA' }
+    rule lsi-phrase { <latent> <semantic> <indexing> | 'lsi' | 'LSI' }
+    rule doc-term-mat { [ <document> | 'item' ] [ <term> | <word> ] <matrix> }
+    rule matrix-entries { [ <doc-term-mat> | <matrix> ]? <entries> }
+    rule the-outliers { <the-determiner> <outliers> }
+
+    # LSI specific
+    token normalization { 'normalization' }
+    token normalizing { 'normalizing' }
+    token normalizer { 'normalizer' }
+    token global { 'global' }
+    token local { 'local' }
+    # token function { 'function' }
+    token functions { 'function' | 'functions' }
+    token frequency { 'frequency' }
+    rule global-function-phrase { <global> <term> ?<weight>? <function> }
+    rule local-function-phrase { <local> <term>? <weight>? <function> }
+    rule normalizer-function-phrase { [ <normalizer> | <normalizing> | <normalization> ] <term>? <weight>? <function>? }
+
 }

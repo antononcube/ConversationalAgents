@@ -23,6 +23,8 @@ role RecommenderWorkflows::Grammar::CommonParts {
     token results { 'results' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'results') }> }
     token simple { 'simple' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'simple') }> | 'direct' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'direct') }> }
     token use-verb { 'use' | 'utilize' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'utilize') }> }
+    token apply-verb { 'apply' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'apply') }>}
+    token transform-verb { 'transform' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'transform') }>}
     token get-verb { 'obtain' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'obtain') }> | 'get' | 'take' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'take') }> }
     token object { 'object' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'object') }> }
     token system { 'system' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'system') }> }
