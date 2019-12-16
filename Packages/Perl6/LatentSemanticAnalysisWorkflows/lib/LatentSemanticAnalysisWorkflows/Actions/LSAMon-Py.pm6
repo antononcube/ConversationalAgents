@@ -55,6 +55,7 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py {
   method variable-names-list($/) { make 'c(' ~ $<variable-name>>>.made.join(', ') ~ ')'; }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
+  method apply-verb($/) { make $/.Str; }
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
@@ -103,6 +104,7 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py {
 
   # LSI command is programmed as a role.
   method lsi-apply-command($/) { make 'obj = LSAMonApplyTermWeightFunctions( lsaObj = obj, ' ~ $/.values[0].made ~ ')'; }
+  method lsi-apply-verb($/) { make $/.Str; }
   method lsi-funcs-simple-list($/) { make $<lsi-global-func>.made ~ ', ' ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>; }
   method lsi-funcs-list($/) { make $<lsi-func>>>.made.join(', '); }
   method lsi-func($/) { make $/.values[0].made; }

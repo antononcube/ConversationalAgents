@@ -102,6 +102,7 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-R {
 
   # LSI command is programmed as a role.
   method lsi-apply-command($/) { make 'LSAMonApplyTermWeightFunctions(' ~ $/.values[0].made ~ ')'; }
+  method lsi-apply-verb($/) { make $/.Str; }
   method lsi-funcs-simple-list($/) { make $<lsi-global-func>.made ~ ', ' ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>; }
   method lsi-funcs-list($/) { make $<lsi-func>>>.made.join(', '); }
   method lsi-func($/) { make $/.values[0].made; }

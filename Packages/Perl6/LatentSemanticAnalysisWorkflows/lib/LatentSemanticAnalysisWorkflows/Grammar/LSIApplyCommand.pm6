@@ -28,7 +28,7 @@ role LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand {
     rule lsi-global-func-sum {  'sum' | 'Sum' }
 
     rule lsi-local-func { <.local-function-phrase>? [ <lsi-local-func-frequency> | <lsi-local-func-binary> | <lsi-local-func-log> | <lsi-func-none> ] }
-    rule lsi-local-func-frequency {  <term>? <frequency> }
+    rule lsi-local-func-frequency {  <term>? <frequency> | 'TermFreq' | 'TermFrequency' }
     rule lsi-local-func-binary { 'binary' <frequency>? | 'Binary' }
     rule lsi-local-func-log { 'log' | 'logarithmic' | 'Log' }
 
