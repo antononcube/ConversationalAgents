@@ -59,7 +59,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
   token boolean-value { 'True' | 'False' | 'true' | 'false' }
 
   # Lists of things
-  token list-separator-symbol { ',' | '&' | 'and' }
+  token list-separator-symbol { ',' | '&' | 'and' | ',' \h* 'and' }
   token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
   token list { 'list' }
 

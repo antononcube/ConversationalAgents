@@ -58,7 +58,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
     token boolean-value { 'True' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'True') }> | 'False' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'False') }> | 'true' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'true') }> | 'false' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'false') }> }
 
     # Lists of things
-    token list-separator-symbol { ',' | '&' | 'and' }
+    token list-separator-symbol { ',' | '&' | 'and' | ',' \h* 'and' }
     token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
     token list { 'list' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'list') }> }
 
