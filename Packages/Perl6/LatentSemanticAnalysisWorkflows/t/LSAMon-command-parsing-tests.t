@@ -1,9 +1,9 @@
-use Test;
-use lib '../lib';
-use lib './lib';
+use v6;
+use lib 'lib';
 use LatentSemanticAnalysisWorkflows::Grammar;
+use Test;
 
-plan 42;
+plan 43;
 
 # Shortcut
 my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand;
@@ -101,6 +101,8 @@ ok $pLSAMONCOMMAND.parse('use the lsi functions idf none cosine'),
 ok $pLSAMONCOMMAND.parse('apply lsi functions global weight function idf, local term weight function none, normalizer function cosine'),
 'apply lsi functions global weight function idf, local term weight function none, normalizer function cosine';
 
+ok $pLSAMONCOMMAND.parse('apply the lsi normalization function cosine'),
+'apply the lsi normalization function cosine';
 
 #-----------------------------------------------------------
 # Extract topics command tests
