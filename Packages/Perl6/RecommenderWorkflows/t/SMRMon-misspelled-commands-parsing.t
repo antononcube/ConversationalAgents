@@ -1,12 +1,12 @@
-use Test;
-use lib '../lib';
-use lib './lib';
+use v6;
+use lib 'lib';
 use RecommenderWorkflows::Grammar;
+use Test;
 
 plan 10;
 
 # Shortcut
-my $pSMRMONCOMMAND = RecommenderWorkflows::Grammar::WorkflowCommand;
+my $pSMRMONCOMMAND = RecommenderWorkflows::Grammar::WorkflowCommand.new;
 
 #-----------------------------------------------------------
 # Creation commands
@@ -46,3 +46,5 @@ ok $pSMRMONCOMMAND.parse('sugest by historie hr:3, rr:4, ra:1'),
 
 ok $pSMRMONCOMMAND.parse('find recommendations for history hr:3, rr:4, ra:1'),
 'find recommendations for history hr:3, rr:4, ra:1';
+
+done-testing;
