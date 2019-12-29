@@ -52,7 +52,7 @@ class RecommenderWorkflows::Actions::SMRMon-Py {
   # General
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
-  method variable-names-list($/) { make 'c(' ~ $<variable-name>>>.made.join(', ') ~ ')'; }
+  method variable-names-list($/) { make '[' ~ $<variable-name>>>.made.join(', ') ~ ']'; }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
 

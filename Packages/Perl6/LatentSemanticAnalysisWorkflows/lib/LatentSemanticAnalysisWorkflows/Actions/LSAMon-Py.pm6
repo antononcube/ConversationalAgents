@@ -52,7 +52,7 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py {
   method dataset-name($/) { make $/.values[0].made; }
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
-  method variable-names-list($/) { make 'c(' ~ $<variable-name>>>.made.join(', ') ~ ')'; }
+  method variable-names-list($/) { make '[' ~ $<variable-name>>>.made.join(', ') ~ ']'; }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
   method apply-verb($/) { make $/.Str; }
@@ -60,7 +60,7 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py {
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
   method trivial-parameter-none($/) { make 'NA'; }
-  method trivial-parameter-empty($/) { make 'c()'; }
+  method trivial-parameter-empty($/) { make '[]'; }
   method trivial-parameter-automatic($/) { make 'NULL'; }
   method trivial-parameter-false($/) { make 'FALSE'; }
   method trivial-parameter-true($/) { make 'TRUE'; }
