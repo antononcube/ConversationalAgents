@@ -67,20 +67,20 @@ If[Length[DownValues[NeuralNetworkSpecificationsGrammar`pNETMONCOMMAND]] == 0,
 (* Net chain                                               *)
 (***********************************************************)
 
-Clear[TLayerName]
+Clear[TLayerName];
 TLayerName[parsed_List] :=
     ToExpression[StringJoin@StringReplace[parsed, WordBoundary ~~ x_ :> ToUpperCase[x]]];
 
-Clear[TLayer]
+Clear[TLayer];
 TLayer[parsed_] := ToExpression[parsed];
 
-Clear[TLayerCommonFunc]
+Clear[TLayerCommonFunc];
 TLayerCommonFunc[parsed_] := ToExpression[parsed];
 
-Clear[TLayerFuncName]
+Clear[TLayerFuncName];
 TLayerFuncName[parsed_] := parsed;
 
-Clear[TLayerNameSpec]
+Clear[TLayerNameSpec];
 TLayerNameSpec[parsed_] :=
     Which[
 
@@ -95,13 +95,13 @@ TLayerNameSpec[parsed_] :=
 
     ];
 
-Clear[TLayerSpec]
+Clear[TLayerSpec];
 TLayerSpec = TLayerNameSpec;
 
-Clear[TLayerList]
+Clear[TLayerList];
 TLayerList[parsed_] := parsed;
 
-Clear[TNetLayerChain]
+Clear[TNetLayerChain];
 TNetLayerChain[parsed_List] := NetMonSetNet[ NetChain[parsed] ];
 
 
@@ -112,7 +112,7 @@ TNetLayerChain[parsed_List] := NetMonSetNet[ NetChain[parsed] ];
 Clear[TNetMonTokenizer];
 TNetMonTokenizer = (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "⟹", "->"}, {" ", "\t", "\n"}] &)
 
-ClearAll[TranslateToNetMon]
+ClearAll[TranslateToNetMon];
 
 Options[TranslateToNetMon] = { "TokenizerFunction" -> (ParseToTokens[#, {",", "'", "%", "-", "/", "[", "]", "⟹", "->"}, {" ", "\t", "\n"}] &) };
 
@@ -146,7 +146,7 @@ TranslateToNetMon[pres_] :=
 
 (* This code is very similar / same as the one for ToNetMonPipelineFunction. *)
 
-ClearAll[ToNetMonPipelineFunction]
+ClearAll[ToNetMonPipelineFunction];
 
 Options[ToNetMonPipelineFunction] =
     { "Trace" -> False,
