@@ -250,7 +250,7 @@ ToRakuPerl6[ebnfCode_String, opts : OptionsPattern[]] :=
         topRule = "";
       ];
 
-      res = ParseEBNF[ParseToTokens[GrammarNormalize[ebnfCode]]];
+      res = ParseEBNF[ParseToEBNFTokens[GrammarNormalize[ebnfCode]]];
 
       res = Cases[res, EBNF[___], Infinity];
       If[Length[res] == 0, Return[$Failed]];
