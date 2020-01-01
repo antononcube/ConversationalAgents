@@ -45,6 +45,6 @@ use NeuralNetworkWorkflows::Grammar;
 class NeuralNetworkWorkflows::Actions::LSAMon-Py {
 
   # Top
-  # method TOP($/) { make "Not implemented"; }
+  method TOP($/) { make "Not implemented"; }
 
 }
