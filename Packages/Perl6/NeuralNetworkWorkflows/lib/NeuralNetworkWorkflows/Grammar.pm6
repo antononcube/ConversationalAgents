@@ -55,8 +55,8 @@ grammar NeuralNetworkWorkflows::Grammar::WorkflowCommmand
     rule net-layer-chain { <net-layer-chain-opening>? <layer-list>}
     rule net-layer-chain-opening {['net']? 'chain' <with-preposition> }
     rule layer-list {[ <layer-spec> | <layer-name-spec> ]+ % <layer-list-delimiter> }
-    rule layer-list-delimiter { <list-separator> | 'then' | '->' |  '==>' | '⟹' | '\[DoubleLongRightArrow]' }
-    rule layer-spec {<layer> [ [ '[' ']' | '[' [ <layer-func-name> | <layer-common-func> | <number-value> ] ']' ] ]?}
+    rule layer-list-delimiter { <list-separator> | 'then' | '->' |  '==>' | '⟹' | '%>%' | '\[DoubleLongRightArrow]' }
+    rule layer-spec { <layer> [ [ '[]' | '[' ']' | '[' [ <layer-func-name> | <layer-common-func> | <number-value> ] ']' ] ]? }
     rule layer-name-spec { [ <a-determiner> | <the-determiner> ]? <layer-name> [ <using-preposition> [ <layer-func-name> | <layer-common-func> | <number-value> ] ]?}
     rule layer {
         'AggregationLayer' | 'AppendLayer' |
@@ -124,15 +124,15 @@ grammar NeuralNetworkWorkflows::Grammar::WorkflowCommmand
     # Net coder command
     rule net-coder-command { <set-directive> [ <encoder-spec> | <decoder-spec> ] }
     rule decoder-type {'decoder'}
-    rule decoder-spec {[ <decoder-type> [ <decoder> | <decoder-name> ] | [ <decoder> | <decoder-name> ] <decoder-type> ] [ <with-preposition> <parameters-list> ]?}
+    rule decoder-spec {[ <decoder-type> [ <decoder> | <decoder-name> ] | [ <decoder> | <decoder-name> ] <decoder-type> ] [ <.with-preposition> <parameters-list> ]?}
 
     rule decoder { 'Boolean' | 'Characters' | 'Class' | 'CTCBeamSearch' | 'Image' | 'Image3D' | 'Scalar' | 'Tokens' }
-    rule decoder-name { 'boolean' | 'characters' | 'class' | 'ctc' 'beam' 'search' | 'image' | 'image' '3d' | 'scalar' | 'tokens' }
+    rule decoder-name { 'boolean' | 'characters' | 'class' | 'ctc' 'beam' 'search' |  'image' '3d' | 'image' | 'scalar' | 'tokens' }
     rule encoder-type {'encoder'}
     rule encoder-spec {[ <encoder-type> [ <encoder> | <encoder-name> ] | [ <encoder> | <encoder-name> ] <encoder-type> ] [ <with-preposition> <parameters-list> ]?}
     rule encoder { 'Audio' | 'AudioMelSpectrogram' | 'AudioMFCC' | 'AudioSpectrogram' | 'AudioSTFT' | 'Boolean' | 'Characters' | 'Class' | 'Function' | 'Image' | 'Image3D' | 'Scalar' | 'Tokens' | 'UTF8' }
-    rule encoder-name { 'audio' | 'audio' 'mel' 'spectrogram' | 'audio' 'mfcc' | 'audio' 'spectrogram' | 'audio' 'stft' | 'boolean' | 'characters' | 'class' | 'function' | 'image' | 'image' '3d' | 'scalar' | 'tokens' | 'utf8' }
-    rule parameters-list {[ <parameter> ]+}
+    rule encoder-name { 'audio' 'mel' 'spectrogram' | 'audio' 'mfcc' | 'audio' 'spectrogram' | 'audio' 'stft' | 'audio' | 'boolean' | 'characters' | 'class' | 'function' | 'image' '3d' | 'image' | 'scalar' | 'tokens' | 'utf8' }
+    rule parameters-list { <parameter>+ }
     rule parameter { <variable-name> }
 
     # Net Loss Func Command
@@ -140,7 +140,7 @@ grammar NeuralNetworkWorkflows::Grammar::WorkflowCommmand
     rule loss-function-phrase {'loss' 'function'}
     rule loss-func-spec {[ <loss-func> | <loss-func-name> ]}
     rule loss-func { 'MeanAbsoluteLossLayer' | 'MeanSquaredLossLayer' | 'CrossEntropyLossLayer' | 'CTCLossLayer' | 'ContrastiveLossLayer' }
-    rule loss-func-name {[ 'mean' 'absolute' 'loss' 'layer' | 'mean' 'squared' 'loss' 'layer' | 'cross' 'entropy' 'loss' 'layer' | 'ctc' 'loss' 'layer' | 'contrastive' 'loss' 'layer' ]}
+    rule loss-func-name { 'mean' 'absolute' 'loss' 'layer' | 'mean' 'squared' 'loss' 'layer' | 'cross' 'entropy' 'loss' 'layer' | 'ctc' 'loss' 'layer' | 'contrastive' 'loss' 'layer' }
 
     # Net info command
     rule net-info-command { <display-directive>? <net-info-spec>}
@@ -156,6 +156,18 @@ grammar NeuralNetworkWorkflows::Grammar::WorkflowCommmand
         'MXNetNodeGraphPlot' | 'OutputPortNames' | 'OutputPorts' |
         'Properties' | 'RecurrentStatesCount' | 'RecurrentStatesPositionList'|
         'SharedArraysCount' | 'SummaryGraphic' | 'TopologyHash' }
+    rule net-info-property-name {
+        'arrays' | 'arrays' 'byte' 'counts' |
+        'arrays' 'count' | 'arrays' 'dimensions' | 'arrays' 'element''counts' |
+        'arrays' 'list' | 'arrays' 'position' 'list' | 'arrays' 'sizes' |
+        'arrays' 'total' 'byte' 'count' | 'arrays' 'total' 'element' 'count' |
+        'arrays' 'total' 'size' | 'full' 'summary' 'graphic' | 'input' 'form' |
+        'input' 'port' 'names' | 'input' 'ports' |
+        'layers' | 'layers' 'count' | 'layers' 'graph' | 'layers' 'list' |
+        'layer' 'type' 'counts' | 'net' 'node' 'graph' | 'net' 'node' 'graph' 'plot' |
+        'output' 'port' 'names' | 'output' 'ports' | 'properties' |
+        'recurrent' 'states' 'count' | 'recurrent' 'states' 'position' 'list' |
+        'shared' 'arrays' 'count' | 'summary' 'graphic' | 'topology' 'hash'}
 
     # Error message
     # method error($msg) {
