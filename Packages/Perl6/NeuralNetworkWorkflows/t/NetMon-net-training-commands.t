@@ -1,7 +1,5 @@
 use v6;
 use lib 'lib';
-use lib '../lib';
-use lib './lib';
 use NeuralNetworkWorkflows::Grammar;
 use Test;
 

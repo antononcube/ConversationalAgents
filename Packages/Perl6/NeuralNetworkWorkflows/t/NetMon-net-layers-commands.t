@@ -1,7 +1,5 @@
 use v6;
 use lib 'lib';
-use lib '../lib';
-use lib './lib';
 use NeuralNetworkWorkflows::Grammar;
 use Test;
 
@@ -26,7 +24,7 @@ ok $pNETMONCOMMAND.parse('ElementwiseLayer[HardTanh]->ConvolutionLayer[]->Softma
 ok $pNETMONCOMMAND.parse('ElementwiseLayer[HardTanh]⟹ConvolutionLayer[]⟹SoftmaxLayer[]'),
 'ElementwiseLayer[HardTanh]⟹ConvolutionLayer[]⟹SoftmaxLayer[]';
 
-ok $pNETMONCOMMAND.parse('ElementwiseLayer[HardSigmoid]->ConvolutionLayer[]->SoftmaxLayer[\"Input\"\[Rule]{3,2}]'),
+ok $pNETMONCOMMAND.parse('ElementwiseLayer[HardSigmoid]->ConvolutionLayer[]->SoftmaxLayer[Input->{3,2}]'),
 'ElementwiseLayer[HardSigmoid]->ConvolutionLayer[]->SoftmaxLayer[Input->{3,2}]';
 
 ok $pNETMONCOMMAND.parse('an elementwise layer with Tanh then a convolution layer and softmax layer'),
