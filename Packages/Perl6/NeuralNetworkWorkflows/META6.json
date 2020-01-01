@@ -1,0 +1,25 @@
+{
+  "api": "0",
+  "authors": [
+    "Anton Antonov <antononcube@gmail.com>"
+  ],
+  "depends": [
+
+  ],
+  "description": "Neural networks specifications workflows.",
+  "license": "GPL-3.0",
+  "meta-version": 0,
+  "name": "NeuralNetworkWorkflows",
+  "perl": "6.d",
+  "provides": {
+
+  },
+  "resources": [
+
+  ],
+  "source-url": "",
+  "tags": [
+
+  ],
+  "version": "0.0.0"
+}
