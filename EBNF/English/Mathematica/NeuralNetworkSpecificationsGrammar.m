@@ -170,7 +170,7 @@ ebnfNetOperationCommand = "
 ebnfNetLayerChain = "
   <net-layer-chain> = [ <net-layer-chain-opening> ] &> <layer-list> <@ NetLayerChain ;
   <net-layer-chain-opening> = [ 'net' ] , 'chain' , <with-preposition> ;
-  <layer-list> = ( <layer-spec> | <layer-name-spec> ), [ { <layer-list-delimiter> &> ( <layer-spec> | <layer-name-spec> ) } ]
+  <layer-list> = ( <layer-spec> | <layer-name-spec> ) , [ { <layer-list-delimiter> &> ( <layer-spec> | <layer-name-spec> ) } ]
                  <@ LayerList@*Flatten@*List ;
   <layer-list-delimiter> = <list-delimiter> | 'then' | '->' | '\[DoubleLongRightArrow]' ;
   <layer-spec> = <layer> , [ '[' , ']' | '[' &> ( <layer-func-name> | <layer-common-func> | <number-value> ) <& ']' ]
@@ -344,7 +344,7 @@ res =
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[NetMonCommandsSubGrammars]
+Clear[NetMonCommandsSubGrammars];
 
 Options[NetMonCommandsSubGrammars] = { "Normalize" -> False };
 
@@ -363,7 +363,7 @@ NetMonCommandsSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[NetMonCommandsGrammar]
+Clear[NetMonCommandsGrammar];
 
 Options[NetMonCommandsGrammar] = Options[NetMonCommandsSubGrammars];
 
