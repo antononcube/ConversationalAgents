@@ -77,7 +77,8 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   method create-command($/) { make $/.values[0].made; }
   method create-simple($/) { make 'SMRMonCreate()'; }
   method create-by-dataset($/) { make 'SMRMonCreate( data = ' ~ $<dataset-name>.made ~ ')'; }
-  method create-by-matrices($/) { make 'SMRMonCreateFromMatrices( matrices = ' ~ $<variable-names-list>.made ~ ')'; }
+  method create-by-matrices($/) { make 'SMRMonCreateFromMatrices( matrices = ' ~ $<creation-matrices-spec>.made ~ ')'; }
+  method creation-matrices-spec($/) { make $/.values[0].made; }
 
   # Data statistics command
   method statistics-command($/) { make $/.values[0].made; }

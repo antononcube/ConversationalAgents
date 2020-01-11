@@ -60,7 +60,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule data-load-command { <load-data> | <use-recommender> }
   rule data-location-spec { <dataset-name> }
   rule load-data { <.load-data-directive> <data-location-spec> }
-  rule use-recommender { <.use-verb> <.the-determiner>? <.recommender-object> <variable-name> }
+  rule use-recommender { [<.use-verb> | <.using-preposition>] <.the-determiner>? <.recommender-object> <variable-name> }
 
   # Create command
   rule create-command { <create-by-matrices> | <create-by-dataset> | <create-simple> }
@@ -68,7 +68,8 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule simple-way-phrase { 'in' <a-determiner> <simple> 'way' | 'directly' | 'simply' }
   rule create-simple { <create-preamble-phrase> <simple-way-phrase>? | <simple> <recommender-object> [ 'creation' | 'making' ] }
   rule create-by-dataset { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <dataset>? <dataset-name> }
-  rule create-by-matrices { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <matrices> <variable-names-list> }
+  rule create-by-matrices { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <matrices> <creation-matrices-spec> }
+  rule creation-matrices-spec { <variable-name> | <variable-names-list> }
 
   # Data transformation command
   rule data-transformation-command { <cross-tabulate-command> }
@@ -82,17 +83,17 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule tags-per-item { <number-of> <tags> 'per' <item-slot> }
 
   # (Scored) items lists
-  token score-association-symbol { '=' | '->' }
+  token score-association-symbol { '=' | '->' | '→' }
   token score-association-separator { <.ws>? <score-association-symbol> <.ws>? }
-  token item-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
+  regex item-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
   rule item-ids-list { <item-id>+ % <list-separator> }
-  token scored-item-id { <item-id> <.score-association-separator> <number-value> }
+  regex scored-item-id { <item-id> <.score-association-separator> <number-value> }
   rule scored-item-ids-list { <scored-item-id>+ % <list-separator> }
 
   # (Scored) tags lists
-  token tag-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
+  regex tag-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
   rule tag-ids-list { <tag-id>+ % <list-separator> }
-  token scored-tag-id { <tag-id> <.score-association-separator> <number-value> }
+  regex scored-tag-id { <tag-id> <.score-association-separator> <number-value> }
   rule scored-tag-ids-list { <scored-tag-id>+ % <list-separator> }
   token tag-type-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
 

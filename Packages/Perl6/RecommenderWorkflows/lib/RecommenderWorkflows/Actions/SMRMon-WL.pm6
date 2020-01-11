@@ -56,14 +56,14 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   # (Scored) item lists
   method item-id($/) { make '\"' ~ $/.Str ~ '\"'; }
   method item-ids-list($/) { make '{' ~ $<item-id>>>.made.join(', ') ~ '}'; }
-  method scored-item-id($/) { make '\"' ~ $<item-id> ~ '\"' ~ '=' ~ $<number-value>; }
+  method scored-item-id($/) { make '\"' ~ $<item-id> ~ '\"' ~ '->' ~ $<number-value>; }
   method scored-item-ids-list($/) { make '{' ~ $<scored-item-id>>>.made.join(', ') ~ '}'; }
 
   # (Scored) tag lists
   method tag-id($/) { make '\"' ~ $/.Str ~ '\"'; }
   method tag-ids-list($/) { make '{' ~ $<tag-id>>>.made.join(', ') ~ '}'; }
-  method scored-tag-id($/) { make '\"' ~ $<tag-id> ~ '\"' ~ '=' ~ $<number-value>; }
-  method scored-tag-ids-list($/) { make '{' ~ $<scored-tag-id>>>.made.join(', ') ~ '}'; }
+  method scored-tag-id($/) { make '\"' ~ $<tag-id> ~ '\"' ~ '->' ~ $<number-value>; }
+  method scored-tag-ids-list($/) { make '<|' ~ $<scored-tag-id>>>.made.join(', ') ~ '|>'; }
   method tag-type-id($/) { make '\"' ~ $/.Str ~ '\"'; }
 
   # Data load commands
@@ -77,7 +77,8 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   method create-command($/) { make $/.values[0].made; }
   method create-simple($/) { make 'SMRMonCreate[]'; }
   method create-by-dataset($/) { make 'SMRMonUnit[] ==> SMRMonCreate[' ~ $<dataset-name>.made ~ ']'; }
-  method create-by-matrices($/) { make 'SMRMonUnit[] ==> SMRMonCreateFromMatrices[' ~ $<variable-names-list>.made ~ ']'; }
+  method create-by-matrices($/) { make 'SMRMonUnit[] ==> SMRMonCreate[' ~ $<creation-matrices-spec>.made ~ ']'; }
+  method creation-matrices-spec($/) { make $/.values[0].made; }
 
   # Data statistics command
   method statistics-command($/) { make $/.values[0].made; }
