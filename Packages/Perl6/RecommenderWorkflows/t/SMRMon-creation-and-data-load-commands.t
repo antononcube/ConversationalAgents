@@ -3,7 +3,7 @@ use lib 'lib';
 use RecommenderWorkflows::Grammar;
 use Test;
 
-plan 10;
+plan 12;
 
 # Shortcut
 my $pSMRMONCOMMAND = RecommenderWorkflows::Grammar::WorkflowCommand;
@@ -29,6 +29,12 @@ ok $pSMRMONCOMMAND.parse('create the recommender with dataset ds1 using the colu
 
 ok $pSMRMONCOMMAND.parse('create using the matrices <||>'),
 'create using the matrices <||>';
+
+ok $pSMRMONCOMMAND.parse('create using the matrices mat1, mat2, mat3'),
+'create using the matrices mat1, mat2, mat3';
+
+ok $pSMRMONCOMMAND.parse('create with matrices smats'),
+'create with matrices smats';
 
 
 #-----------------------------------------------------------
