@@ -53,6 +53,7 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
         <data-statistics-command> | <lsi-apply-command> |
         <topics-extraction-command> | <thesaurus-extraction-command> |
         <show-topics-command> | <show-thesaurus-command> |
+        <represent-query-command> |
         <pipeline-command> }
 
     # Load data
@@ -170,6 +171,15 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule what-are-the-term-nns { 'what' 'are' <.the-determiner>? ['top']? [ 'nearest' 'neighbors' | 'nns' ] <thesaurus-words-spec> }
     rule thesaurus-words-spec { [ <.for-preposition> | <.of-preposition> ] <thesaurus-words-list>}
     rule thesaurus-words-list { <variable-name>+ % <list-separator> }
+
+    # Representation command
+    rule represent-query-command { <represent-query-by-topics> | <represent-query-by-terms> }
+    rule represent-query-by-topics { <represent-directive> <by-preposition> <topics> <.the-determiner>? <.query>? <query-spec> }
+    rule represent-query-by-terms { <represent-directive> <by-preposition> <terms> <.the-determiner>? <.query>? <query-spec> }
+    rule query-spec { <query-text> | <query-words-list> | <query-variable> }
+    rule query-words-list { <variable-name>+ % ( <list-separator> | \h+ )  }
+    rule query-variable { <variable-name> }
+    token query-text { [\" ([ \w | '_' | '-' | '.' | \d ]+ | [\h]+)+ \"]  }
 
     # Error message
     # method error($msg) {
