@@ -48,6 +48,7 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
     rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
     token classify { 'classify' }
+    token represent-directive { <represent> | 'render' | 'reflect' }
 
     # Value types
     token number-value { (\d+ ['.' \d*]?  [ [e|E] \d+]?) }
@@ -57,20 +58,24 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     token boolean-value { 'True' | 'False' | 'true' | 'false' | 'TRUE' | 'FALSE' }
 
     # LSA specific
-    token document { 'document' }
-    token latent { 'latent' }
-    token semantic { 'semantic' }
     token analysis { 'analysis' }
+    token document { 'document' }
+    token entries { 'entries' }
+    token identifier { 'identifier' }
     token indexing { 'indexing' }
     token ingest { 'ingest' | 'load' | 'use' | 'get' }
-    token threshold { 'threshold' }
-    token identifier { 'identifier' }
-    token weight { 'weight' }
-    token term { 'term' }
-    token word { 'word' }
     token item { 'item' } # For some reason using <item> below gives the error: "Too many positionals passed; expected 1 argument but got 2".
-    token entries { 'entries' }
+    token latent { 'latent' }
     token matrix { 'matrix' }
+    token represent { 'represent' }
+    token semantic { 'semantic' }
+    token term { 'term' }
+    token threshold { 'threshold' }
+    token topic { 'topic' }
+    token topics { 'topics' }
+    token query { 'query' }
+    token weight { 'weight' }
+    token word { 'word' }
 
     rule lsa-object { <lsa-phrase>? 'object' }
     rule lsa-phrase { <latent> <semantic> <analysis> | 'lsa' | 'LSA' }
