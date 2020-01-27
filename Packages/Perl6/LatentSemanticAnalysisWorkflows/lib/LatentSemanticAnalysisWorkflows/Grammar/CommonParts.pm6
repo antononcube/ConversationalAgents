@@ -4,51 +4,54 @@ use v6;
 role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
 
     # Speech parts
-    token do-verb { 'do' }
-    token with-preposition { 'using' | 'with' | 'by' }
-    token using-preposition { 'using' | 'with' | 'over' }
-    token by-preposition { 'by' | 'with' | 'using' }
-    token for-preposition { 'for' | 'with' }
-    token of-preposition { 'of' }
-    token from-preposition { 'from' }
-    token to-preposition { 'to' | 'into' }
-    token assign { 'assign' | 'set' }
     token a-determiner { 'a' | 'an'}
     token and-conjuction { 'and' }
-    token the-determiner { 'the' }
-    rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
-    rule number-of { [ 'number' | 'count' ] 'of' }
-    token per { 'per' }
-    token results { 'results' }
-    token simple { 'simple' | 'direct' }
-    token use-verb { 'use' | 'utilize' }
     token apply-verb { 'apply' }
-    token transform-verb { 'transform' }
+    token assign { 'assign' | 'set' }
+    token by-preposition { 'by' | 'with' | 'using' }
+    token do-verb { 'do' }
+    token for-preposition { 'for' | 'with' }
+    token from-preposition { 'from' }
     token get-verb { 'obtain' | 'get' | 'take' }
     token object { 'object' }
+    token of-preposition { 'of' }
+    token per { 'per' }
     token plot { 'plot' }
     token plots { 'plot' | 'plots' }
+    token results { 'results' }
+    token simple { 'simple' | 'direct' }
+    token the-determiner { 'the' }
+    token to-preposition { 'to' | 'into' }
+    token transform-verb { 'transform' }
+    token use-verb { 'use' | 'utilize' }
+    token using-preposition { 'using' | 'with' | 'over' }
+    token with-preposition { 'using' | 'with' | 'by' }
+
+    rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
+    rule number-of { [ 'number' | 'count' ] 'of' }
 
     # Data
-    token records { 'rows' | 'records' }
-    rule time-series-data { 'time' 'series' 'data'? }
-    rule data-frame { 'data' 'frame' }
-    rule data { <data-frame> | 'data' | 'dataset' }
     token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
+    token records { 'rows' | 'records' }
     token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
 
+    rule data { <data-frame> | 'data' | 'dataset' }
+    rule data-frame { 'data' 'frame' }
+    rule time-series-data { 'time' 'series' 'data'? }
+
     # Directives
-    rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
-    token create-directive { 'create' | 'make' }
-    token generate-directive { 'generate' | 'create' | 'make' }
+    token classify { 'classify' }
     token compute-directive { 'compute' | 'find' | 'calculate' }
-    token display-directive { 'display' | 'show' | 'echo' }
-    rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
+    token create-directive { 'create' | 'make' }
     token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
+    token display-directive { 'display' | 'show' | 'echo' }
+    token generate-directive { 'generate' | 'create' | 'make' }
+    token represent-directive { <represent> | 'render' | 'reflect' }
+
+    rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
+    rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
     rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
     rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
-    token classify { 'classify' }
-    token represent-directive { <represent> | 'render' | 'reflect' }
 
     # Value types
     token number-value { (\d+ ['.' \d*]?  [ [e|E] \d+]?) }
@@ -85,14 +88,15 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     rule the-outliers { <the-determiner> <outliers> }
 
     # LSI specific
-    token normalization { 'normalization' }
-    token normalizing { 'normalizing' }
-    token normalizer { 'normalizer' }
-    token global { 'global' }
-    token local { 'local' }
+    token frequency { 'frequency' }
     token function { 'function' }
     token functions { 'function' | 'functions' }
-    token frequency { 'frequency' }
+    token global { 'global' }
+    token local { 'local' }
+    token normalization { 'normalization' }
+    token normalizer { 'normalizer' }
+    token normalizing { 'normalizing' }
+
     rule global-function-phrase { <global> <term> ?<weight>? <function> }
     rule local-function-phrase { <local> <term>? <weight>? <function> }
     rule normalizer-function-phrase { [ <normalizer> | <normalizing> | <normalization> ] <term>? <weight>? <function>? }
