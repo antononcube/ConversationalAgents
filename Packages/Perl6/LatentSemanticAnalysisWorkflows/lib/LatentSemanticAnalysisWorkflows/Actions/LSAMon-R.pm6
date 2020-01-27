@@ -181,10 +181,19 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-R {
     }
   }
 
-  # What the term NN's command
+  # What are the term NN's command
   method what-are-the-term-nns($/) { make 'LSAMonEchoStatisticalThesaurus( words = ' ~ $<thesaurus-words-spec>.made ~ ')'; }
 
   method thesaurus-words-spec($/) { make $/.values[0].made; }
   method thesaurus-words-list($/) { make 'c("' ~ $<variable-name>>>.made.join('", "') ~ '")'; }
+
+  # Representation commands
+  method represent-query-command($/) { make $/.values[0].made; }
+  method represent-query-by-topics($/) { make 'LSAMonRepresentByTopics( query = ' ~ $<query-spec>.made ~ ')'; }
+  method represent-query-by-terms($/) { make 'LSAMonRepresentByTerms( query = ' ~ $<query-spec>.made ~ ')'; }
+  method query-spec($/) { make $/.values[0].made; }
+  method query-words-list($/) { make '"' ~ $<variable-name>>>.made.join(' ') ~ '"'; }
+  method query-variable($/) { make $/.Str; }
+  method query-text($/) { make $/.Str; }
 
 }
