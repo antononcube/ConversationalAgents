@@ -196,4 +196,8 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-R {
   method query-variable($/) { make $/.Str; }
   method query-text($/) { make $/.Str; }
 
+  # Pipeline command
+  method pipeline-command($/) { make  $/.values[0].made; }
+  method get-pipeline-value($/) { make 'LSAMonEchoValue()'; }
+
 }
