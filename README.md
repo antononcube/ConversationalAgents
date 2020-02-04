@@ -9,14 +9,22 @@ the generation of programming code for Machine Learning (ML) workflows.
 
 The generation is done through dedicated grammar parsers and ML software monads.
 
-The follow example shows a monadic pipeline generation for Latent Semantic Analysis (LSA) workflows
-using: 
+### Example 
+
+The following example shows a monadic pipeline generation of a Latent Semantic Analysis (LSA) workflows
+in both R and Wolfram Language (WL) using: 
 
 - the Raku (Perl 6) package [LatentSemanticAnalysisWorkflows](./Packages/Perl6/LatentSemanticAnalysisWorkflows),
 
-- the Mathematica package [MonadicLatentSemanticAnalysis.m](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicLatentSemanticAnalysis.m), and
+- the R package [LSAMon-R](https://github.com/antononcube/R-packages/tree/master/LSAMon-R), and
 
-- the R package [LSAMon-R](https://github.com/antononcube/R-packages/tree/master/LSAMon-R).
+- the WL package [MonadicLatentSemanticAnalysis.m](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicLatentSemanticAnalysis.m).
+
+Note that:
+
+- the sequences of natural commands are the same;
+
+- the generated R and WL code pipelines are similar because the corresponding packages have similar implementations.
 
 ---
 
@@ -62,7 +70,7 @@ show thesaurus table for sing, left, home;
 ');
 ```
 
-generates this Mathematica (Wolfram Language) code:
+generates this WL code:
 
 ```mathematica
 LSAMonUnit[aText] ⟹
