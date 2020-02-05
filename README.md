@@ -5,23 +5,23 @@ Articles, designs, and code for making conversational agents.
 ## Conversational agents for Machine Learning workflows
 
 Currently the primary focus in this repository is the making of grammars and interpreters that 
-generate programming codes for Machine Learning (ML) workflows using sequences of natural language commands. 
+generate programming code for Machine Learning (ML) workflows from sequences of natural language commands. 
 
 The code generation is done through dedicated grammar parsers, ML software monads, and interpreters that map
-the parser-derived abstract syntax trees into the corresponding ML monads. 
+the parser-derived abstract syntax trees into corresponding ML monads. 
 
 Here is a diagram for the general, "big picture" approach:
 
 ![Monadic-making-of-ML-conversational-agents](./ConceptualDiagrams/Monadic-making-of-ML-conversational-agents.jpg)
 
-We primarily target the programming languages R and Wolfram Language (WL). 
+The primary target are the programming languages R and Wolfram Language (WL). 
 (Some of the Raku packages generate Python code, but at this point that is just for illustration purposes. 
 There are no actual implementations for the generated Python pipelines.)
 
 
 ### Example 
 
-The following example shows a monadic pipeline generation of a Latent Semantic Analysis (LSA) workflows
+The following example shows monadic pipeline generation of Latent Semantic Analysis (LSA) workflows
 in both R and WL using: 
 
 - the Raku (Perl 6) package [LatentSemanticAnalysisWorkflows](./Packages/Perl6/LatentSemanticAnalysisWorkflows),
