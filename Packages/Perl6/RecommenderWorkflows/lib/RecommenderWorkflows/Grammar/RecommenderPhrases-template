@@ -28,81 +28,82 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
 
 
   # Regular tokens / rules
-  rule history-phrase { [ <item-slot> ]? <history-slot> }
-  rule consumption-profile { <consumption-slot>? 'profile' }
-  rule consumption-history { <consumption-slot>? <history-slot> }
+  token aggregate { 'aggregate' }
+  token aggregation { 'aggregation' }
+  token anomalies { 'anomalies' }
+  token anomaly { 'anomaly' }
+  token column { 'column' }
+  token columns { 'columns' }
+  token density  { 'density' }
+  token dimensions { 'dimensions' }
+  token function { 'function' }
+  token identifier { 'identifier' }
+  token matrices { 'matrices' }
+  token matrix { 'matrix' }
+  token nearest { 'nearest' }
+  token neighbors { 'neighbors' }
+  token outlier { 'outlier' }
+  token outliers { 'outliers' | 'outlier' }
+  token properties { 'properties' }
+  token property { 'property' }
+  token proximity { 'proximity' }
   token recommend-directive { <recommend-slot> }
   token recommendation { 'recommendation' }
   token recommendations { 'recommendations' }
-  token recommender { 'recommender' }
   token recommended { 'recommended' }
-  token matrix { 'matrix' }
-  token matrices { 'matrices' }
-  token sparse { 'sparse' }
-  rule recommender-object { <recommender> [ <object> | <system> ]? | 'smr' }
-  rule recommended-items { <recommended> <items-slot> | [ <recommendations> | <recommendation> ]  <.results>?  }
-  rule recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
-  rule recommendation-matrix { [ <recommendation> | <recommender> ]? <matrix> }
-  rule recommendation-matrices { [ <recommendation> | <recommender> ]? <matrices> }
-  rule sparse-matrix { <sparse> <matrix> }
-  token column { 'column' }
-  token columns { 'columns' }
+  token recommender { 'recommender' }
   token row { 'row' }
   token rows { 'rows' }
-  token dimensions { 'dimensions' }
-  token density  { 'density' }
+  token sparse { 'sparse' }
+  token threshold { 'threshold' }
+
+  rule consumption-history { <consumption-slot>? <history-slot> }
+  rule consumption-profile { <consumption-slot>? 'profile' }
+  rule history-phrase { [ <item-slot> ]? <history-slot> }
   rule most-relevant { 'most' 'relevant' }
+  rule nearest-neighbors { <nearest> <neighbors> | 'nns' }
+  rule recommendation-matrices { [ <recommendation> | <recommender> ]? <matrices> }
+  rule recommendation-matrix { [ <recommendation> | <recommender> ]? <matrix> }
+  rule recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
+  rule recommended-items { <recommended> <items-slot> | [ <recommendations> | <recommendation> ]  <.results>?  }
+  rule recommender-object { <recommender> [ <object> | <system> ]? | 'smr' }
+  rule sparse-matrix { <sparse> <matrix> }
   rule tag-type { 'tag' 'type' }
   rule tag-types { 'tag' 'types' }
-  token nearest { 'nearest' }
-  token neighbors { 'neighbors' }
-  rule nearest-neighbors { <nearest> <neighbors> | 'nns' }
-  token outlier { 'outlier' }
-  token outliers { 'outliers' | 'outlier' }
-  token anomaly { 'anomaly' }
-  token anomalies { 'anomalies' }
-  token threshold { 'threshold' }
-  token identifier { 'identifier' }
-  token proximity { 'proximity' }
-  token aggregation { 'aggregation' }
-  token aggregate { 'aggregate' }
-  token function { 'function' }
-  token property { 'property' }
-  token properties { 'properties' }
-
 
   # LSA specific
-  token document { 'document' }
-  token latent { 'latent' }
-  token semantic { 'semantic' }
   token analysis { 'analysis' }
+  token document { 'document' }
+  token entries { 'entries' }
+  # token identifier { 'identifier' }
   token indexing { 'indexing' }
   token ingest { 'ingest' | 'load' | 'use' | 'get' }
-  # token threshold { 'threshold' }
-  # token identifier { 'identifier' }
-  token weight { 'weight' }
-  token term { 'term' }
-  token word { 'word' }
   token item { 'item' } # For some reason using <item> below gives the error: "Too many positionals passed; expected 1 argument but got 2".
-  token entries { 'entries' }
+  token latent { 'latent' }
   # token matrix { 'matrix' }
+  token semantic { 'semantic' }
+  token term { 'term' }
+  # token threshold { 'threshold' }
+  token weight { 'weight' }
+  token word { 'word' }
 
+  rule doc-term-mat { [ <document> | 'item' ] [ <term> | <word> ] <matrix> }
   rule lsa-object { <lsa-phrase>? 'object' }
   rule lsa-phrase { <latent> <semantic> <analysis> | 'lsa' | 'LSA' }
   rule lsi-phrase { <latent> <semantic> <indexing> | 'lsi' | 'LSI' }
-  rule doc-term-mat { [ <document> | 'item' ] [ <term> | <word> ] <matrix> }
   rule matrix-entries { [ <doc-term-mat> | <matrix> ]? <entries> }
   rule the-outliers { <the-determiner> <outliers> }
 
   # LSI specific
-  token normalization { 'normalization' }
-  token normalizing { 'normalizing' }
-  token normalizer { 'normalizer' }
-  token global { 'global' }
-  token local { 'local' }
+  token frequency { 'frequency' }
   # token function { 'function' }
   token functions { 'function' | 'functions' }
-  token frequency { 'frequency' }
+  token global { 'global' }
+  token local { 'local' }
+  token normalization { 'normalization' }
+  token normalizer { 'normalizer' }
+  token normalizing { 'normalizing' }
+
   rule global-function-phrase { <global> <term> ?<weight>? <function> }
   rule local-function-phrase { <local> <term>? <weight>? <function> }
   rule normalizer-function-phrase { [ <normalizer> | <normalizing> | <normalization> ] <term>? <weight>? <function>? }
