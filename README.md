@@ -38,10 +38,10 @@ Note that:
 
 ---
 
-This Raku (Perl 6) command:
+This Raku (Perl 6) command assigns a sequence of natural commands to a variables:
 
 ```perl6
-say to_LSAMon_R('
+my $command ='
 create from aText;
 make document term matrix with no stemming and automatic stop words;
 echo data summary;
@@ -49,7 +49,13 @@ apply lsi functions global weight function idf, local term weight function none,
 extract 12 topics using method NNMF and max steps 12;
 show topics table with 12 columns and 10 terms;
 show thesaurus table for sing, left, home;
-');
+';
+```
+
+---
+
+```perl6
+say to_LSAMon_R($command);
 ```
 
 generates this R code:
@@ -69,15 +75,7 @@ LSAMonEchoStatisticalThesaurus( words = c("sing", "left", "home"))
 This Raku (Perl 6) command:
 
 ```perl6
-say to_LSAMon_WL('
-create from aText;
-make document term matrix with no stemming and automatic stop words;
-echo data summary;
-apply lsi functions global weight function idf, local term weight function none, normalizer function cosine;
-extract 12 topics using method NNMF and max steps 12;
-show topics table with 12 columns and 10 terms;
-show thesaurus table for sing, left, home;
-');
+say to_LSAMon_WL($command);
 ```
 
 generates this WL code:
@@ -91,3 +89,26 @@ LSAMonExtractTopics["NumberOfTopics" -> 12, Method -> "NNMF", "MaxSteps" -> 12] 
 LSAMonEchoTopicsTable["NumberOfTableColumns" -> 12, "NumberOfTerms" -> 10] ⟹
 LSAMonEchoStatisticalThesaurus[ "Words" -> { "sing", "left", "home" }]
 ```
+
+--- 
+
+This Raku (Perl 6) command:
+
+```perl6
+say to_LSAMon_Py($command);
+```
+
+generates this Python code:
+
+```python
+obj = LSAMonUnit(aText);
+obj = LSAMonMakeDocumentTermMatrix( lsaObj = obj, stemWordsQ = NA, stopWords = NULL);
+obj = LSAMonEchoDocumentTermMatrixStatistics( lsaObj = obj );
+obj = LSAMonApplyTermWeightFunctions( lsaObj = obj, globalWeightFunction = "IDF", localWeightFunction = "None", normalizerFunction = "Cosine");
+obj = LSAMonExtractTopics( lsaObj = obj, numberOfTopics = 12, method = "NNMF",  maxSteps = 12);
+obj = LSAMonEchoTopicsTable( lsaObj = obj, numberOfTableColumns = 12, numberOfTerms = 10);
+obj = LSAMonEchoStatisticalThesaurus( lsaObj = obj, words = c("sing", "left", "home"))
+```
+
+Note the Python code above shows how to interpret R and WL monadic pipelines into 
+sequences of imperative commands.
