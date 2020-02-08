@@ -38,7 +38,7 @@ Note that:
 
 ---
 
-This Raku (Perl 6) command assigns a sequence of natural commands to a variables:
+This Raku (Perl 6) command assigns a sequence of natural commands to a variable:
 
 ```perl6
 my $command ='
@@ -53,6 +53,8 @@ show thesaurus table for sing, left, home;
 ```
 
 ---
+
+This Raku (Perl 6) command:
 
 ```perl6
 say to_LSAMon_R($command);
@@ -110,5 +112,5 @@ obj = LSAMonEchoTopicsTable( lsaObj = obj, numberOfTableColumns = 12, numberOfTe
 obj = LSAMonEchoStatisticalThesaurus( lsaObj = obj, words = c("sing", "left", "home"))
 ```
 
-Note the Python code above shows how to interpret R and WL monadic pipelines into 
-sequences of imperative commands.
+Note that the Python code above shows how to interpret the R and WL monadic pipelines above
+into sequences of imperative commands.
