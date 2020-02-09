@@ -3,7 +3,23 @@ use lib '.';
 use RecommenderWorkflows;
 use RecommenderWorkflows::Grammar;
 
-#say RecommenderWorkflows::Grammar::WorkflowCommand.parse("show recommender matrix properties");
+say RecommenderWorkflows::Grammar::WorkflowCommand.parse("explain recommended item id.122 using metadata");
+
+#say to_SMRMon_R('
+#     use recommender smrObj2;
+#     recomend by profile female, 30;
+#     extend recommendations with dfTitanic;
+#     echo value;
+#     classify to passengerSurvival the profile male, 1st using 30 nns;
+#     echo value' );
+
+#say to_SMRMon_R('
+#     use recommender smrObj2;
+#     compute profile for the history id.5, id.993;
+#     echo value;
+#     find top 5 recommendations;
+#     extend recommendations with dfTitanic;
+#     echo value;');
 
 #say to_SMRMon_R('
 #    use recommender smrObj;
@@ -22,36 +38,36 @@ use RecommenderWorkflows::Grammar;
 #);
 
 
-say "\n=======\n";
-
-say to_SMRMon_WL('
-     use recommender smrObj2;
-     recommend by profile female, 30;
-     extend recommendations with dfTitanic;
-     echo value;
-     classify to passengerSurvival the profile male, 1st using 30 nns;
-     echo value
-');
-
-say "\n=======\n";
-
-say to_SMRMon_R('
-     use recommender smrObj2;
-     recommend by profile female, 30;
-     extend recommendations with dfTitanic;
-     echo value;
-     classify to passengerSurvival the profile male, 1st using 30 nns;
-     echo value
-');
-
-say "\n=======\n";
-
-say to_SMRMon_Py('
-     use recommender smrObj2;
-     recommend by profile female, 30;
-     extend recommendations with dfTitanic;
-     echo value;
-     classify to passengerSurvival the profile male, 1st using 30 nns;
-     echo value
-');
+#say "\n=======\n";
+#
+#say to_SMRMon_WL('
+#     use recommender smrObj2;
+#     recommend by profile female, 30;
+#     extend recommendations with dfTitanic;
+#     echo value;
+#     classify to passengerSurvival the profile male, 1st using 30 nns;
+#     echo value
+#');
+#
+#say "\n=======\n";
+#
+#say to_SMRMon_R('
+#     use recommender smrObj2;
+#     recommend by profile female, 30;
+#     extend recommendations with dfTitanic;
+#     echo value;
+#     classify to passengerSurvival the profile male, 1st using 30 nns;
+#     echo value
+#');
+#
+#say "\n=======\n";
+#
+#say to_SMRMon_Py('
+#     use recommender smrObj2;
+#     recommend by profile female, 30;
+#     extend recommendations with dfTitanic;
+#     echo value;
+#     classify to passengerSurvival the profile male, 1st using 30 nns;
+#     echo value
+#');
 
