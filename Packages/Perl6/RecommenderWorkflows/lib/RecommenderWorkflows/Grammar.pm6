@@ -52,6 +52,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
              <recommend-by-profile-command> | <recommend-by-history-command> |
              <make-profile-command> |
              <extend-recommendations-command> |
+             <prove-recommendations-command> |
              <classify-command> |
              <smr-query-command> |
              <find-anomalies-command> }
@@ -133,6 +134,19 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
 
   # Recommendations processing command
   rule extend-recommendations-command { [ 'extend' | 'join' [ 'across' ]? ] <recommendations>? <.with-preposition> <.the-determiner>? <.data>? <dataset-name> }
+
+  # Prove command
+  rule prove-recommendations-command { <prove-by-metadata> | <prove-by-history> }
+  rule proof-item-spec { <item-id> | <item-ids-list> }
+  rule recommendation-items-phrase { [ <recommendation> | <recommended> ] [ <item-slot> | <items-slot> ]? }
+  rule prove-by-metadata {
+      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? <.by-preposition> [ <metadata> | <.the-determiner>? <profile-slot> ] |
+      <prove-directive> <.by-preposition> [ <metadata> | <profile-slot> ] <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
+  }
+  rule prove-by-history {
+      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? <.by-preposition> <.the-determiner>? <consumption-history> |
+      <prove-directive> <.by-preposition> <consumption-history> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
+  }
 
   # Classifications command
   rule classify-command { <classify-by-profile> | <classify-by-profile-rev> }
