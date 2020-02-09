@@ -36,6 +36,8 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
   token columns { 'columns' }
   token density  { 'density' }
   token dimensions { 'dimensions' }
+  token explain { 'explain' }
+  token explanations { 'explanation' | 'explanations' }
   token function { 'function' }
   token identifier { 'identifier' }
   token matrices { 'matrices' }
@@ -46,6 +48,8 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
   token outliers { 'outliers' | 'outlier' }
   token properties { 'properties' }
   token property { 'property' }
+  token proofs { 'proof' | 'proofs' }
+  token prove { 'prove' }
   token proximity { 'proximity' }
   token recommend-directive { <recommend-slot> }
   token recommendation { 'recommendation' }
@@ -57,6 +61,7 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
   token sparse { 'sparse' }
   token threshold { 'threshold' }
 
+  rule prove-directive { <prove> | <explain> }
   rule consumption-history { <consumption-slot>? <history-slot> }
   rule consumption-profile { <consumption-slot>? 'profile' }
   rule history-phrase { [ <item-slot> ]? <history-slot> }

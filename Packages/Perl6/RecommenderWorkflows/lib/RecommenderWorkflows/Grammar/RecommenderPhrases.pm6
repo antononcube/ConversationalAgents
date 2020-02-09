@@ -26,82 +26,89 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
     token profile-slot:sym<profile> { 'profile' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'profile' ) }> }
 
     # Regular tokens / rules
-    rule history-phrase { [ <item-slot> ]? <history-slot> }
-    rule consumption-profile { <consumption-slot>? 'profile' }
-    rule consumption-history { <consumption-slot>? <history-slot> }
+    token aggregate { 'aggregate' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'aggregate') }> }
+    token aggregation { 'aggregation' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'aggregation') }> }
+    token anomalies { 'anomalies' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'anomalies') }> }
+    token anomaly { 'anomaly' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'anomaly') }> }
+    token column { 'column' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'column') }> }
+    token columns { 'columns' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'columns') }> }
+    token density { 'density' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'density') }> }
+    token dimensions { 'dimensions' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'dimensions') }> }
+    token explain { 'explain' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'explain') }> }
+    token explanations { 'explanation' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'explanation') }> | 'explanations' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'explanations') }> }
+    token function { 'function' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'function') }> }
+    token identifier { 'identifier' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'identifier') }> }
+    token matrices { 'matrices' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'matrices') }> }
+    token matrix { 'matrix' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'matrix') }> }
+    token nearest { 'nearest' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'nearest') }> }
+    token neighbors { 'neighbors' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'neighbors') }> }
+    token outlier { 'outlier' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'outlier') }> }
+    token outliers { 'outliers' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'outliers') }> | 'outlier' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'outlier') }> }
+    token properties { 'properties' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'properties') }> }
+    token property { 'property' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'property') }> }
+    token proofs { 'proof' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'proof') }> | 'proofs' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'proofs') }> }
+    token prove { 'prove' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'prove') }> }
+    token proximity { 'proximity' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'proximity') }> }
     token recommend-directive { <recommend-slot> }
     token recommendation { 'recommendation' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'recommendation') }> }
     token recommendations { 'recommendations' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'recommendations') }> }
-    token recommender { 'recommender' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'recommender') }> }
     token recommended { 'recommended' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'recommended') }> }
-    token matrix { 'matrix' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'matrix') }> }
-    token matrices { 'matrices' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'matrices') }> }
-    token sparse { 'sparse' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'sparse') }> }
-    rule recommender-object { <recommender> [ <object> | <system> ]? | 'smr' }
-    rule recommended-items { <recommended> <items-slot> | [ <recommendations> | <recommendation> ]  <.results>?  }
-    rule recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
-    rule recommendation-matrix { [ <recommendation> | <recommender> ]? <matrix> }
-    rule recommendation-matrices { [ <recommendation> | <recommender> ]? <matrices> }
-    rule sparse-matrix { <sparse> <matrix> }
-    token column { 'column' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'column') }> }
-    token columns { 'columns' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'columns') }> }
+    token recommender { 'recommender' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'recommender') }> }
     token row { 'row' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'row') }> }
     token rows { 'rows' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'rows') }> }
-    token dimensions { 'dimensions' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'dimensions') }> }
-    token density { 'density' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'density') }> }
+    token sparse { 'sparse' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'sparse') }> }
+    token threshold { 'threshold' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'threshold') }> }
+
+    rule prove-directive { <prove> | <explain> }
+    rule consumption-history { <consumption-slot>? <history-slot> }
+    rule consumption-profile { <consumption-slot>? 'profile' }
+    rule history-phrase { [ <item-slot> ]? <history-slot> }
     rule most-relevant { 'most' 'relevant' }
+    rule nearest-neighbors { <nearest> <neighbors> | 'nns' }
+    rule recommendation-matrices { [ <recommendation> | <recommender> ]? <matrices> }
+    rule recommendation-matrix { [ <recommendation> | <recommender> ]? <matrix> }
+    rule recommendation-results { [ <recommendation> | <recommendations> | 'recommendation\'s' ] <results> }
+    rule recommended-items { <recommended> <items-slot> | [ <recommendations> | <recommendation> ]  <.results>?  }
+    rule recommender-object { <recommender> [ <object> | <system> ]? | 'smr' }
+    rule sparse-matrix { <sparse> <matrix> }
     rule tag-type { 'tag' 'type' }
     rule tag-types { 'tag' 'types' }
-    token nearest { 'nearest' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'nearest') }> }
-    token neighbors { 'neighbors' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'neighbors') }> }
-    rule nearest-neighbors { <nearest> <neighbors> | 'nns' }
-    token outlier { 'outlier' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'outlier') }> }
-    token outliers { 'outliers' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'outliers') }> | 'outlier' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'outlier') }> }
-    token anomaly { 'anomaly' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'anomaly') }> }
-    token anomalies { 'anomalies' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'anomalies') }> }
-    token threshold { 'threshold' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'threshold') }> }
-    token identifier { 'identifier' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'identifier') }> }
-    token proximity { 'proximity' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'proximity') }> }
-    token aggregation { 'aggregation' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'aggregation') }> }
-    token aggregate { 'aggregate' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'aggregate') }> }
-    token function { 'function' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'function') }> }
-    token property { 'property' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'property') }> }
-    token properties { 'properties' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'properties') }> }
 
     # LSA specific
-    token document { 'document' }
-    token latent { 'latent' }
-    token semantic { 'semantic' }
-    token analysis { 'analysis' }
-    token indexing { 'indexing' }
-    token ingest { 'ingest' | 'load' | 'use' | 'get' }
-    # token threshold { 'threshold' }
+    token analysis { 'analysis' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'analysis') }> }
+    token document { 'document' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'document') }> }
+    token entries { 'entries' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'entries') }> }
     # token identifier { 'identifier' }
-    token weight { 'weight' }
-    token term { 'term' }
-    token word { 'word' }
-    token item { 'item' } # For some reason using <item> below gives the error: "Too many positionals passed; expected 1 argument but got 2".
-    token entries { 'entries' }
+    token indexing { 'indexing' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'indexing') }> }
+    token ingest { 'ingest' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'ingest') }> | 'load' | 'use' | 'get' }
+    token item { 'item' }
+    # For some reason using <item> below gives the error: "Too many positionals passed; expected 1 argument but got 2".
+    token latent { 'latent' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'latent') }> }
     # token matrix { 'matrix' }
+    token semantic { 'semantic' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'semantic') }> }
+    token term { 'term' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'term') }> }
+    # token threshold { 'threshold' }
+    token weight { 'weight' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'weight') }> }
+    token word { 'word' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'word') }> }
 
+    rule doc-term-mat { [ <document> | 'item' ] [ <term> | <word> ] <matrix> }
     rule lsa-object { <lsa-phrase>? 'object' }
     rule lsa-phrase { <latent> <semantic> <analysis> | 'lsa' | 'LSA' }
     rule lsi-phrase { <latent> <semantic> <indexing> | 'lsi' | 'LSI' }
-    rule doc-term-mat { [ <document> | 'item' ] [ <term> | <word> ] <matrix> }
     rule matrix-entries { [ <doc-term-mat> | <matrix> ]? <entries> }
     rule the-outliers { <the-determiner> <outliers> }
 
     # LSI specific
-    token normalization { 'normalization' }
-    token normalizing { 'normalizing' }
-    token normalizer { 'normalizer' }
-    token global { 'global' }
-    token local { 'local' }
+    token frequency { 'frequency' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'frequency') }> }
     # token function { 'function' }
-    token functions { 'function' | 'functions' }
-    token frequency { 'frequency' }
+    token functions { 'function' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'function') }> | 'functions' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'functions') }> }
+    token global { 'global' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'global') }> }
+    token local { 'local' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'local') }> }
+    token normalization { 'normalization' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'normalization') }> }
+    token normalizer { 'normalizer' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'normalizer') }> }
+    token normalizing { 'normalizing' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'normalizing') }> }
+
     rule global-function-phrase { <global> <term> ?<weight>? <function> }
     rule local-function-phrase { <local> <term>? <weight>? <function> }
     rule normalizer-function-phrase { [ <normalizer> | <normalizing> | <normalization> ] <term>? <weight>? <function>? }
-
 }
