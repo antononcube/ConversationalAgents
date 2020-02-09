@@ -188,7 +188,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule number-of-rows { <number-of> <rows> }
 
   rule smr-filter-matrix { [ 'filter' | 'reduce' ] <.the-determiner>? <.smr-matrix-property-spec-openning>
-                           [ <.using-preposition> | <.with-preposition> | <.by-preposition> ]
+                           [ <.using-preposition> | <.with-preposition> | <.by-preposition> ] <.the-determiner>? <profile-slot>?
                            <profile-spec> }
 
   # Find anomalies command
