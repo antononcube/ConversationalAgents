@@ -23,7 +23,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
   token system { 'system' }
   token the-determiner { 'the' }
   token to-preposition { 'to' | 'into' }
-  token transform-verb { 'apply' }
+  token transform-verb { 'transform' }
   token use-verb { 'use' | 'utilize' }
   token using-preposition { 'using' | 'with' | 'over' }
   token with-preposition { 'using' | 'with' | 'by' }
