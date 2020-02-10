@@ -140,11 +140,11 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule proof-item-spec { <item-id> | <item-ids-list> }
   rule recommendation-items-phrase { [ <recommendation> | <recommended> ] [ <item-slot> | <items-slot> ]? }
   rule prove-by-metadata {
-      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? <.by-preposition> [ <metadata> | <.the-determiner>? <profile-slot> ] |
+      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? <.by-preposition> [ <metadata> | <.the-determiner>? <profile-slot> ] <profile-spec>? |
       <prove-directive> <.by-preposition> [ <metadata> | <profile-slot> ] <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
   }
   rule prove-by-history {
-      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? <.by-preposition> <.the-determiner>? <consumption-history> |
+      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? [ <.by-preposition> | <.for-preposition> ] <.the-determiner>? <consumption-history> <history-spec>? |
       <prove-directive> <.by-preposition> <consumption-history> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
   }
 
