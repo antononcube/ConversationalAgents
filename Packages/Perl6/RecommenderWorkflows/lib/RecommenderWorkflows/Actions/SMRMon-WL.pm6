@@ -57,7 +57,7 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   method item-id($/) { make '\"' ~ $/.Str ~ '\"'; }
   method item-ids-list($/) { make '{' ~ $<item-id>>>.made.join(', ') ~ '}'; }
   method scored-item-id($/) { make '\"' ~ $<item-id> ~ '\"' ~ '->' ~ $<number-value>; }
-  method scored-item-ids-list($/) { make '{' ~ $<scored-item-id>>>.made.join(', ') ~ '}'; }
+  method scored-item-ids-list($/) { make '<|' ~ $<scored-item-id>>>.made.join(', ') ~ '|>'; }
 
   # (Scored) tag lists
   method tag-id($/) { make '\"' ~ $/.Str ~ '\"'; }
@@ -129,6 +129,35 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   # Process recommendations command
   method extend-recommendations-command($/) { make 'SMRMonJoinAcross[' ~ $<dataset-name>.made ~ ']' }
 
+  # Prove recommendations command
+  method prove-recommendations-command($/) { make $/.values[0].made; }
+
+  method proof-item-spec($/) { make $/.values[0].made; }
+
+  method prove-by-metadata($/) {
+    if ( $<profile-spec> && $<proof-item-spec> ) {
+      make 'SMRMonProveByMetadata[ \"Profile\" -> ' ~ $<profile-spec>.made ~ ', \"Items\" -> ' ~ $<proof-item-spec>.made ~ ']';
+    } elsif ( $<profile-spec> ) {
+      make 'SMRMonProveByMetadata[ \"Profile\" -> ' ~ $<profile-spec>.made ~ ', \"Items\" -> Automatic ]';
+    } elsif ( $<proof-item-spec> ) {
+      make 'SMRMonProveByMetadata[ \"Profile\" -> Automatic, \"Items\" -> ' ~ $<proof-item-spec>.made ~ ']';
+    } else {
+      make 'SMRMonProveByMetadata[ \"Profile\" -> Automatic, \"Items\" -> Automatic ]';
+    }
+  }
+
+  method prove-by-history($/) {
+    if ( $<history-spec> && $<proof-item-spec> ) {
+      make 'SMRMonProveByHistory[ \"History\" -> ' ~ $<history-spec>.made ~ ', \"Items\" -> ' ~ $<proof-item-spec>.made ~ ']';
+    } elsif ( $<profile-spec> ) {
+      make 'SMRMonProveByHistory[ \"History\" -> ' ~ $<history-spec>.made ~ ', \"Items\" -> Automatic ]';
+    } elsif ( $<proof-item-spec> ) {
+      make 'SMRMonProveByHistory[ \"History\" -> Automatic, \"Items\" -> ' ~ $<proof-item-spec>.made ~ ']';
+    } else {
+      make 'SMRMonProveByHistory[ \"History\" -> Automatic, \"Items\" -> Automatic ]';
+    }
+  }
+
   # Classifications command
   method classify-command($/) { make $/.values[0].made; }
   method classify-by-profile($/) {
@@ -190,6 +219,12 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
 
   # Pipeline command
   method pipeline-command($/) { make  $/.values[0].made; }
+
   method get-pipeline-value($/) { make 'SMRMonEchoValue[]'; }
 
+  method echo-command($/) { make 'SMRMonEcho[ ' ~ $<echo-message-spec>.made ~ ' ]'; }
+  method echo-message-spec($/) { make $/.values[0].made; }
+  method echo-words-list($/) { make '"' ~ $<variable-name>>>.made.join(' ') ~ '"'; }
+  method echo-variable($/) { make $/.Str; }
+  method echo-text($/) { make $/.Str; }
 }

@@ -129,6 +129,35 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   # Process recommendations command
   method extend-recommendations-command($/) { make 'SMRMonJoinAcross( data = ' ~ $<dataset-name>.made ~ ')' }
 
+  # Prove recommendations command
+  method prove-recommendations-command($/) { make $/.values[0].made; }
+
+  method proof-item-spec($/) { make $/.values[0].made; }
+
+  method prove-by-metadata($/) {
+    if ( $<profile-spec> && $<proof-item-spec> ) {
+      make 'SMRMonProveByMetadata( profile = ' ~ $<profile-spec>.made ~ ', items = ' ~ $<proof-item-spec>.made ~ ')';
+    } elsif ( $<profile-spec> ) {
+      make 'SMRMonProveByMetadata( profile = ' ~ $<profile-spec>.made ~ ', items = NULL )';
+    } elsif ( $<proof-item-spec> ) {
+      make 'SMRMonProveByMetadata( profile = NULL, items = ' ~ $<proof-item-spec>.made ~ ')';
+    } else {
+      make 'SMRMonProveByMetadata( profile = NULL, items = NULL )';
+    }
+  }
+
+  method prove-by-history($/) {
+    if ( $<history-spec> && $<proof-item-spec> ) {
+      make 'SMRMonProveByHistory( history = ' ~ $<history-spec>.made ~ ', items = ' ~ $<proof-item-spec>.made ~ ')';
+    } elsif ( $<profile-spec> ) {
+      make 'SMRMonProveByHistory( history = ' ~ $<history-spec>.made ~ ', items = NULL )';
+    } elsif ( $<proof-item-spec> ) {
+      make 'SMRMonProveByHistory( history = NULL, items = ' ~ $<proof-item-spec>.made ~ ')';
+    } else {
+      make 'SMRMonProveByHistory( history = NULL, items = NULL )';
+    }
+  }
+
   # Classifications command
   method classify-command($/) { make $/.values[0].made; }
   method classify-by-profile($/) {
@@ -182,4 +211,9 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   method pipeline-command($/) { make  $/.values[0].made; }
   method get-pipeline-value($/) { make 'SMRMonEchoValue()'; }
 
+  method echo-command($/) { make 'SMRMonEcho( ' ~ $<echo-message-spec>.made ~ ' )'; }
+  method echo-message-spec($/) { make $/.values[0].made; }
+  method echo-words-list($/) { make '"' ~ $<variable-name>>>.made.join(' ') ~ '"'; }
+  method echo-variable($/) { make $/.Str; }
+  method echo-text($/) { make $/.Str; }
 }
