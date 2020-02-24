@@ -62,22 +62,22 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
 ];
 
 
-BeginPackage["WordedNumbersGrammar`"]
+BeginPackage["WordedNumbersGrammar`"];
 (* Exported symbols added here with SymbolName::usage *)
 
-pWORDEDNUMBER::usage = "Parses (and interprets) numbers in word form into numbers."
+pWORDEDNUMBER::usage = "Parses (and interprets) numbers in word form into numbers.";
 
-WordedNumbersSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing numbers in word form."
+WordedNumbersSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing numbers in word form.";
 
-WordedNumbersGrammar::usage = "Gives as a string an EBNF grammar for parsing numbers in word form."
+WordedNumbersGrammar::usage = "Gives as a string an EBNF grammar for parsing numbers in word form.";
 
-TimesFlatten::usage = "Flattens and applies Times."
+TimesFlatten::usage = "Flattens and applies Times.";
 
-TotalFlatten::usage = "Flattens and applies Total."
+TotalFlatten::usage = "Flattens and applies Total.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
-Needs["FunctionalParsers`"]
+Needs["FunctionalParsers`"];
 
 (************************************************************)
 (* Generate rules                                           *)
@@ -139,7 +139,7 @@ res = GenerateParsersFromEBNF[ToTokens[allRules]];
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[WordedNumbersSubGrammars]
+Clear[WordedNumbersSubGrammars];
 
 Options[WordedNumbersSubGrammars] = { "Normalize" -> False };
 
@@ -158,7 +158,7 @@ WordedNumbersSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[WordedNumbersGrammar]
+Clear[WordedNumbersGrammar];
 
 Options[WordedNumbersGrammar] = Options[WordedNumbersSubGrammars];
 
@@ -178,6 +178,6 @@ WordedNumbersGrammar[opts:OptionsPattern[]] :=
 
 
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]
