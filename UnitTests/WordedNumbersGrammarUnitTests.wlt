@@ -31,7 +31,7 @@
 *)
 
 
-BeginTestSection["WordedNumbersGrammarUnitTests.wlt"]
+BeginTestSection["WordedNumbersGrammarUnitTests.wlt"];
 
 VerificationTest[(* 1 *)
   CompoundExpression[
@@ -42,7 +42,7 @@ VerificationTest[(* 1 *)
   True
   ,
   TestID->"LoadPackage"
-]
+];
 
 
 VerificationTest[(* 2 *)
@@ -52,7 +52,7 @@ VerificationTest[(* 2 *)
   Null
   ,
   TestID->"DefineTestFunc"
-]
+];
 
 VerificationTest[
   rInts =
@@ -74,7 +74,7 @@ VerificationTest[
   {True, True, True}
   ,
   TestID -> "random-integers-and-corner-cases"
-]
+];
 
 
 VerificationTest[
@@ -84,6 +84,6 @@ VerificationTest[
   ,
   True,
   TestID -> "Same-integers"
-]
+];
 
 EndTestSection[]
