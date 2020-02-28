@@ -3,7 +3,7 @@ use lib 'lib';
 use LatentSemanticAnalysisWorkflows::Grammar;
 use Test;
 
-plan 43;
+plan 2;
 
 # Shortcut
 my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand;
