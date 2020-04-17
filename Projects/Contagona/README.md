@@ -11,4 +11,8 @@ Here is a mind-map that outlines of the scope of the project:
 
 [![](./Diagrams/Contagona-design-mind-map.png)](./Diagrams/Contagona-design-mind-map.pdf) 
  
+## Similarities with Glukoza
  
+Contagona is very similar to the conversational agent 
+[Glukoza](../Glukoza)
+in both component design and grammar design and elements.
