@@ -1,3 +1,4 @@
+=begin comment
 #==============================================================================
 #
 #   Recommender workflows grammar in Raku Perl 6
@@ -31,6 +32,8 @@
 #    https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/English/Mathematica/RecommenderWorkflowsGrammar.m
 #
 #==============================================================================
+=end comment
+
 use v6;
 unit module RecommenderWorkflows::Grammar;
 

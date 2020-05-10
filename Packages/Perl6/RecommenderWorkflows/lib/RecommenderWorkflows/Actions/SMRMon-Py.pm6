@@ -1,3 +1,4 @@
+=begin comment
 #==============================================================================
 #
 #   SMRMon-Py actions in Raku Perl 6
@@ -38,7 +39,7 @@
 #   unfolding of the monadic pipeline into assignment.
 #
 #==============================================================================
-
+=end comment
 
 use v6;
 

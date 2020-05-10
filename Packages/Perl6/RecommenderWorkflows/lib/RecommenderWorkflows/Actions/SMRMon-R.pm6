@@ -1,3 +1,4 @@
+=begin comment
 #==============================================================================
 #
 #   SMRMon-R actions in Raku Perl 6
@@ -35,7 +36,7 @@
 #     https://github.com/antononcube/R-packages/tree/master/SMRMon-R
 #
 #==============================================================================
-
+=end comment
 
 use v6;
 
