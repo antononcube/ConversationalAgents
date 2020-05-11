@@ -5,7 +5,7 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
 
     # Speech parts
     token a-determiner { 'a' | 'an'}
-    token and-conjuction { 'and' }
+    token and-conjunction { 'and' }
     token apply-verb { 'apply' }
     token assign { 'assign' | 'set' }
     token by-preposition { 'by' | 'with' | 'using' }
@@ -51,7 +51,7 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
     rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
     rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
-    rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
+    rule use-directive { [ <get-verb> <and-conjunction>? ]? <use-verb> }
 
     # Value types
     token number-value { (\d+ ['.' \d*]?  [ [e|E] \d+]?) }

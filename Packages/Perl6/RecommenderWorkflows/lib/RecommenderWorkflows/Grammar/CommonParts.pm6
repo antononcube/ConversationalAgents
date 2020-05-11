@@ -6,7 +6,7 @@ use RecommenderWorkflows::Grammar::FuzzyMatch;
 role RecommenderWorkflows::Grammar::CommonParts {
     # Speech parts
     token a-determiner { 'a' | 'an' }
-    token and-conjuction { 'and' }
+    token and-conjunction { 'and' }
     token apply-verb { 'apply' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'apply') }>}
     token assign { 'assign' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'assign') }> | 'set' }
     token by-preposition { 'by' | 'with' | 'using' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'using') }> }
@@ -51,7 +51,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
     rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
     rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
     rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
-    rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
+    rule use-directive { [ <get-verb> <and-conjunction>? ]? <use-verb> }
 
     # Value types
     token boolean-value { 'True' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'True') }> | 'False' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'False') }> | 'true' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'true') }> | 'false' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'false') }> }

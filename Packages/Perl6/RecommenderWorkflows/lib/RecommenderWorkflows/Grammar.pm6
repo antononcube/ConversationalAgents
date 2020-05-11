@@ -160,7 +160,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
   rule classify-by-profile-rev { <.classify> [ <.for-preposition> | <.to-preposition>] <.the-determiner>? <.tag-type>? <tag-type-id>
                                  [ <.by-preposition> | <.for-preposition> | <.using-preposition> ]? <.the-determiner>? <.profile-slot>?
                                  <profile-spec>
-                                 [ <.and-conjuction>? <.using-preposition>? <ntop-nns> ]? }
+                                 [ <.and-conjunction>? <.using-preposition>? <ntop-nns> ]? }
 
   # Plot command
   rule plot-command { <plot-recommendation-scores> }

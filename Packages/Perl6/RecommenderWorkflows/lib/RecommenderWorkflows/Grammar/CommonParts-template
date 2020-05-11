@@ -7,7 +7,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
 
   # Speech parts
   token a-determiner { 'a' | 'an'}
-  token and-conjuction { 'and' }
+  token and-conjunction { 'and' }
   token apply-verb { 'apply' }
   token assign { 'assign' | 'set' }
   token by-preposition { 'by' | 'with' | 'using' }

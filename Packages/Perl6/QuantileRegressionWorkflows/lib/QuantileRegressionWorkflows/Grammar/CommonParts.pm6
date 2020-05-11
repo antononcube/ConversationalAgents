@@ -14,7 +14,7 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token to-preposition { 'to' | 'into' }
     token assign { 'assign' | 'set' }
     token a-determiner { 'a' | 'an'}
-    token and-conjuction { 'and' }
+    token and-conjunction { 'and' }
     token the-determiner { 'the' }
     rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
     rule number-of { [ 'number' | 'count' ] 'of' }
@@ -46,7 +46,7 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
     token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
     rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
-    rule use-directive { [ <get-verb> <and-conjuction>? ]? <use-verb> }
+    rule use-directive { [ <get-verb> <and-conjunction>? ]? <use-verb> }
     token classify { 'classify' }
 
     # Value types
