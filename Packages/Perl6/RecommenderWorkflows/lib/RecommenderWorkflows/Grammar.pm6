@@ -46,211 +46,220 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
         does RecommenderWorkflows::Grammar::LSIApplyCommand
         does RecommenderWorkflows::Grammar::PipelineCommand
         does RecommenderWorkflows::Grammar::RecommenderPhrases {
+    # TOP
+    rule TOP {
+        <pipeline-command> |
+        <data-load-command> |
+        <create-command> |
+        <data-transformation-command> | <lsi-apply-command> |
+        <data-statistics-command> |
+        <recommend-by-profile-command> | <recommend-by-history-command> |
+        <make-profile-command> |
+        <extend-recommendations-command> |
+        <prove-recommendations-command> |
+        <classify-command> |
+        <smr-query-command> |
+        <find-anomalies-command> |
+        <make-metadata-recommender-command> }
 
-  # TOP
-  rule TOP { <pipeline-command> |
-             <data-load-command> | <create-command> |
-             <data-transformation-command> | <lsi-apply-command> |
-             <data-statistics-command> |
-             <recommend-by-profile-command> | <recommend-by-history-command> |
-             <make-profile-command> |
-             <extend-recommendations-command> |
-             <prove-recommendations-command> |
-             <classify-command> |
-             <smr-query-command> |
-             <find-anomalies-command> }
+    # Load data
+    rule data-load-command { <load-data> | <use-recommender> }
+    rule data-location-spec { <dataset-name> }
+    rule load-data { <.load-data-directive> <data-location-spec> }
+    rule use-recommender { [<.use-verb> | <.using-preposition>] <.the-determiner>? <.recommender-object> <variable-name> }
 
-  # Load data
-  rule data-load-command { <load-data> | <use-recommender> }
-  rule data-location-spec { <dataset-name> }
-  rule load-data { <.load-data-directive> <data-location-spec> }
-  rule use-recommender { [<.use-verb> | <.using-preposition>] <.the-determiner>? <.recommender-object> <variable-name> }
+    # Create command
+    rule create-command { <create-by-matrices> | <create-by-dataset> | <create-simple> }
+    rule create-preamble-phrase { <generate-directive> [ <.a-determiner> | <.the-determiner> ]? <recommender-object> }
+    rule simple-way-phrase { 'in' <a-determiner> <simple> 'way' | 'directly' | 'simply' }
+    rule create-simple { <create-preamble-phrase> <simple-way-phrase>? | <simple> <recommender-object> [ 'creation' | 'making' ] }
+    rule create-by-dataset { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <dataset>? <dataset-name> }
+    rule create-by-matrices { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <matrices> <creation-matrices-spec> }
+    rule creation-matrices-spec { <variable-name> | <variable-names-list> }
 
-  # Create command
-  rule create-command { <create-by-matrices> | <create-by-dataset> | <create-simple> }
-  rule create-preamble-phrase { <generate-directive> [ <.a-determiner> | <.the-determiner> ]? <recommender-object> }
-  rule simple-way-phrase { 'in' <a-determiner> <simple> 'way' | 'directly' | 'simply' }
-  rule create-simple { <create-preamble-phrase> <simple-way-phrase>? | <simple> <recommender-object> [ 'creation' | 'making' ] }
-  rule create-by-dataset { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <dataset>? <dataset-name> }
-  rule create-by-matrices { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <matrices> <creation-matrices-spec> }
-  rule creation-matrices-spec { <variable-name> | <variable-names-list> }
+    # Data transformation command
+    rule data-transformation-command { <cross-tabulate-command> }
+    rule cross-tabulate-command { 'cross' 'tabulate' <.data>? }
 
-  # Data transformation command
-  rule data-transformation-command { <cross-tabulate-command> }
-  rule cross-tabulate-command { 'cross' 'tabulate' <.data>? }
+    # Data statistics command
+    rule data-statistics-command { <show-data-summary> | <summarize-data> | <items-per-tag> | <tags-per-item> }
+    rule show-data-summary { <display-directive> <data>? 'summary' }
+    rule summarize-data { 'summarize' <.the-determiner>? <data> | <display-directive> <data>? ( 'summary' | 'summaries' ) }
+    rule items-per-tag { <number-of> <items-slot> 'per' <tag> }
+    rule tags-per-item { <number-of> <tags> 'per' <item-slot> }
 
-  # Data statistics command
-  rule data-statistics-command { <show-data-summary> | <summarize-data> | <items-per-tag> | <tags-per-item> }
-  rule show-data-summary { <display-directive> <data>? 'summary' }
-  rule summarize-data { 'summarize' <.the-determiner>? <data> | <display-directive> <data>? ( 'summary' | 'summaries' ) }
-  rule items-per-tag { <number-of> <items-slot> 'per' <tag> }
-  rule tags-per-item { <number-of> <tags> 'per' <item-slot> }
+    # (Scored) items lists
+    token score-association-symbol { '=' | '->' | '→' }
+    token score-association-separator { <.ws>? <score-association-symbol> <.ws>? }
+    regex item-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
+    rule item-ids-list { <item-id>+ % <list-separator> }
+    regex scored-item-id { <item-id> <.score-association-separator> <number-value> }
+    rule scored-item-ids-list { <scored-item-id>+ % <list-separator> }
 
-  # (Scored) items lists
-  token score-association-symbol { '=' | '->' | '→' }
-  token score-association-separator { <.ws>? <score-association-symbol> <.ws>? }
-  regex item-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
-  rule item-ids-list { <item-id>+ % <list-separator> }
-  regex scored-item-id { <item-id> <.score-association-separator> <number-value> }
-  rule scored-item-ids-list { <scored-item-id>+ % <list-separator> }
+    # (Scored) tags lists
+    regex tag-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
+    rule tag-ids-list { <tag-id>+ % <list-separator> }
+    regex scored-tag-id { <tag-id> <.score-association-separator> <number-value> }
+    rule scored-tag-ids-list { <scored-tag-id>+ % <list-separator> }
+    token tag-type-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
+    rule tag-type-ids-list { <tag-type-id>+ % <list-separator> }
 
-  # (Scored) tags lists
-  regex tag-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
-  rule tag-ids-list { <tag-id>+ % <list-separator> }
-  regex scored-tag-id { <tag-id> <.score-association-separator> <number-value> }
-  rule scored-tag-ids-list { <scored-tag-id>+ % <list-separator> }
-  token tag-type-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' }> }
+    # History spec
+    rule history-spec { <item-ids-list> | <scored-item-ids-list> }
 
-  # History spec
-  rule history-spec { <item-ids-list> | <scored-item-ids-list> }
+    # Profile spec
+    rule profile-spec { <tag-ids-list> | <scored-tag-ids-list> }
 
-  # Profile spec
-  rule profile-spec { <tag-ids-list> | <scored-tag-ids-list> }
-
-  # Recommend by history
-  rule recommend-by-history-command { <recommend-by-history> | <top-recommendations-by-history> | <top-recommendations> | <simple-recommend> }
-  rule recommend-by-history { <.recommend-directive>
+    # Recommend by history
+    rule recommend-by-history-command { <recommend-by-history> | <top-recommendations-by-history> | <top-recommendations> | <simple-recommend> }
+    rule recommend-by-history { <.recommend-directive>
                               [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
                               <history-spec> }
-  rule top-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.recommendations> }
-  rule top-recommendations-by-history { <top-recommendations>
+    rule top-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.recommendations> }
+    rule top-recommendations-by-history { <top-recommendations>
                                         [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
                                         <history-spec> }
-  rule most-relevant-phrase { <most-relevant> | 'top' <most-relevant>? }
-  rule simple-recommend { <.recommend-directive> | <compute-directive> <recommendations> }
+    rule most-relevant-phrase { <most-relevant> | 'top' <most-relevant>? }
+    rule simple-recommend { <.recommend-directive> | <compute-directive> <recommendations> }
 
-
-  # Recommend by profile
-  rule recommend-by-profile-command { <recommend-by-profile> | <top-profile-recommendations> | <top-recommendations-by-profile> }
-  rule recommend-by-profile { <.recommend-directive>
+    # Recommend by profile
+    rule recommend-by-profile-command { <recommend-by-profile> | <top-profile-recommendations> | <top-recommendations-by-profile> }
+    rule recommend-by-profile { <.recommend-directive>
                               [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile-slot>
                               <profile-spec> }
-  rule top-profile-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.profile-slot> <.recommendations> }
-  rule top-recommendations-by-profile { <top-recommendations>
+    rule top-profile-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.profile-slot> <.recommendations> }
+    rule top-recommendations-by-profile { <top-recommendations>
                                         [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile-slot>
                                         <profile-spec> }
 
-  # Make profile
-  rule make-profile-command {  <make-profile-command-opening> <.the-determiner>? [ <history-phrase> <.list>? | <items-slot> ] <history-spec> }
-  rule make-profile-command-opening { <compute-directive> [ <a-determiner> | <the-determiner> ]? <profile-slot>
+    # Make profile
+    rule make-profile-command {  <make-profile-command-opening> <.the-determiner>? [ <history-phrase> <.list>? | <items-slot> ] <history-spec> }
+    rule make-profile-command-opening { <compute-directive> [ <a-determiner> | <the-determiner> ]? <profile-slot>
                                       [ <using-preposition> | <by-preposition> | <for-preposition> ] }
 
-  # Recommendations processing command
-  rule extend-recommendations-command { [ 'extend' | 'join' [ 'across' ]? ] <recommendations>? <.with-preposition> <.the-determiner>? <.data>? <dataset-name> }
+    # Recommendations processing command
+    rule extend-recommendations-command { [ 'extend' | 'join' [ 'across' ]? ] <recommendations>? <.with-preposition> <.the-determiner>? <.data>? <dataset-name> }
 
-  # Prove command
-  rule prove-recommendations-command { <prove-by-metadata> | <prove-by-history> }
-  rule proof-item-spec { <item-id> | <item-ids-list> }
-  rule recommendation-items-phrase { [ <recommendation> | <recommended> ] [ <item-slot> | <items-slot> ]? }
-  rule prove-by-metadata {
-      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? <.by-preposition> [ <metadata> | <.the-determiner>? <profile-slot> ] <profile-spec>? |
-      <prove-directive> <.by-preposition> [ <metadata> | <profile-slot> ] <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
+    # Prove command
+    rule prove-recommendations-command { <prove-by-metadata> | <prove-by-history> }
+    rule proof-item-spec { <item-id> | <item-ids-list> }
+    rule recommendation-items-phrase { [ <recommendation> | <recommended> ] [ <item-slot> | <items-slot> ]? }
+    rule prove-by-metadata {
+        <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? <.by-preposition> [ <metadata> | <.the-determiner>? <profile-slot> ] <profile-spec>? |
+        <prove-directive> <.by-preposition> [ <metadata> | <profile-slot> ] <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
   }
-  rule prove-by-history {
-      <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? [ <.by-preposition> | <.for-preposition> ] <.the-determiner>? <consumption-history> <history-spec>? |
-      <prove-directive> <.by-preposition> <consumption-history> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
+    rule prove-by-history {
+        <prove-directive> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>? [ <.by-preposition> | <.for-preposition> ] <.the-determiner>? <consumption-history> <history-spec>? |
+        <prove-directive> <.by-preposition> <consumption-history> <.the-determiner>? <recommendation-items-phrase> <proof-item-spec>
   }
 
-  # Classifications command
-  rule classify-command { <classify-by-profile> | <classify-by-profile-rev> }
-  rule ntop-nns { [ 'top' ]? <integer-value> [ 'top' ]? <.nearest-neighbors> }
-  rule classify-by-profile { <.classify> <.the-determiner>? <.profile-slot>? <profile-spec>
+    # Classifications command
+    rule classify-command { <classify-by-profile> | <classify-by-profile-rev> }
+    rule ntop-nns { [ 'top' ]? <integer-value> [ 'top' ]? <.nearest-neighbors> }
+    rule classify-by-profile { <.classify> <.the-determiner>? <.profile-slot>? <profile-spec>
                              <.to-preposition> <.tag-type>? <tag-type-id>
                              [ <.using-preposition> <ntop-nns> ]? }
-  rule classify-by-profile-rev { <.classify> [ <.for-preposition> | <.to-preposition>] <.the-determiner>? <.tag-type>? <tag-type-id>
+    rule classify-by-profile-rev { <.classify> [ <.for-preposition> | <.to-preposition>] <.the-determiner>? <.tag-type>? <tag-type-id>
                                  [ <.by-preposition> | <.for-preposition> | <.using-preposition> ]? <.the-determiner>? <.profile-slot>?
                                  <profile-spec>
                                  [ <.and-conjunction>? <.using-preposition>? <ntop-nns> ]? }
 
-  # Plot command
-  rule plot-command { <plot-recommendation-scores> }
-  rule plot-recommendation-scores { <plot-directive> <.the-determiner>? <recommendation-results> }
+    # Plot command
+    rule plot-command { <plot-recommendation-scores> }
+    rule plot-recommendation-scores { <plot-directive> <.the-determiner>? <recommendation-results> }
 
-  # SMR query command
-  rule smr-query-command { <smr-recommender-matrix-query>  | <smr-recommender-query> | <smr-filter-matrix> }
-  rule smr-recommender-matrix-query { <display-directive> <.the-determiner>? <.smr-matrix-property-spec-openning> <smr-matrix-property-spec> }
-  rule smr-recommender-query { <display-directive> <.the-determiner>? <.recommender>? <smr-property-spec> }
-  rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> | <smr-sub-matrix-property-spec> }
+    # SMR query command
+    rule smr-query-command { <smr-recommender-matrix-query>  | <smr-recommender-query> | <smr-filter-matrix> }
+    rule smr-recommender-matrix-query { <display-directive> <.the-determiner>? <.smr-matrix-property-spec-openning> <smr-matrix-property-spec> }
+    rule smr-recommender-query { <display-directive> <.the-determiner>? <.recommender>? <smr-property-spec> }
+    rule smr-property-spec { <smr-context-property-spec> | <smr-matrix-property-spec> | <smr-sub-matrix-property-spec> }
 
-  token smr-property-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' || $0 eq 'pipeline' }> }
+    token smr-property-id { ([ \w | '-' | '_' | '.' | ':' | \d ]+) <!{ $0 eq 'and' || $0 eq 'pipeline' }> }
 
-  rule smr-context-property-spec { <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> | <properties> }
-  rule smr-tag-types { <tag-types> }
-  rule smr-item-column-name { <item-slot> <column> 'name' | 'itemColumnName' }
-  rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub' ]? <matrices> ] }
-  rule smr-recommendation-matrix { <recommendation-matrix> }
+    rule smr-context-property-spec { <smr-tag-types> | <smr-item-column-name> | <smr-sub-matrices> | <smr-recommendation-matrix> | <properties> }
+    rule smr-tag-types { <tag-types> }
+    rule smr-item-column-name { <item-slot> <column> 'name' | 'itemColumnName' }
+    rule smr-sub-matrices { [ 'sparse' ]? [ 'contingency' ]? [ 'sub-matrices' | [ 'sub' ]? <matrices> ] }
+    rule smr-recommendation-matrix { <recommendation-matrix> }
 
-  rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> | <matrix> }
-  rule smr-matrix-property-spec { <.smr-matrix-property-spec-openning>? <smr-matrix-property> }
+    rule smr-matrix-property-spec-openning { <recommendation-matrix> | <sparse-matrix> | <matrix> }
+    rule smr-matrix-property-spec { <.smr-matrix-property-spec-openning>? <smr-matrix-property> }
 
-  rule smr-sub-matrix-property-spec-openning { 'sub-matrix' | 'sub' <matrix> | <tag-type> }
-  rule smr-sub-matrix-property-spec { <.smr-sub-matrix-property-spec-openning>? <tag-type-id> <smr-matrix-property> }
+    rule smr-sub-matrix-property-spec-openning { 'sub-matrix' | 'sub' <matrix> | <tag-type> }
+    rule smr-sub-matrix-property-spec { <.smr-sub-matrix-property-spec-openning>? <tag-type-id> <smr-matrix-property> }
 
-  rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> | <smr-property-id> | <properties> }
-  rule number-of-columns { <number-of> <columns> }
-  rule number-of-rows { <number-of> <rows> }
+    rule smr-matrix-property { <columns> | <rows> | <dimensions> | <density> | <number-of-columns> | <number-of-rows> | <smr-property-id> | <properties> }
+    rule number-of-columns { <number-of> <columns> }
+    rule number-of-rows { <number-of> <rows> }
 
-  rule smr-filter-matrix { [ 'filter' | 'reduce' ] <.the-determiner>? <.smr-matrix-property-spec-openning>
+    rule smr-filter-matrix { [ 'filter' | 'reduce' ] <.the-determiner>? <.smr-matrix-property-spec-openning>
                            [ <.using-preposition> | <.with-preposition> | <.by-preposition> ] <.the-determiner>? <profile-slot>?
                            <profile-spec> }
 
-  # Find anomalies command
-  rule find-anomalies-command { <find-proximity-anomalies> | <find-proximity-anomalies-simple> }
-  rule find-proximity-anomalies-simple { <find-proximity-anomalies-preamble> }
-  rule find-proximity-anomalies-preamble { <compute-directive> [ <.anomalies> [ <.by-preposition> <.proximity> ]? | <.proximity> <.anomalies> ] }
-  rule find-proximity-anomalies { <find-proximity-anomalies-preamble> <.using-preposition> <proximity-anomalies-spec-list> }
-  rule proximity-anomalies-spec-list { <proximity-anomalies-spec>* % <.list-separator> }
-  rule proximity-anomalies-spec { <proximity-anomalies-nns-spec> | <proximity-anomalies-outlier-identifier-spec> | <proximity-anomalies-aggr-func-spec> | <proximity-anomalies-property-spec> }
-  rule proximity-anomalies-nns-spec { <integer-value> <nearest-neighbors> }
-  rule proximity-anomalies-aggr-func-spec { <.the-determiner>? <.aggregation> <.function> <variable-name> |
-                                            <.aggregate> [ <.by-preposition> | <.using-preposition> ] <.the-determiner>? <.function> <variable-name> }
-  rule proximity-anomalies-outlier-identifier-spec { <.the-determiner>? [ <.outlier> <.identifier> <variable-name> | <variable-name> <.outlier> <.identifier> ]}
-  rule proximity-anomalies-property-spec { <.the-determiner>? <.property> <variable-name> }
+    # Find anomalies command
+    rule find-anomalies-command { <find-proximity-anomalies> | <find-proximity-anomalies-simple> }
+    rule find-proximity-anomalies-simple { <find-proximity-anomalies-preamble> }
+    rule find-proximity-anomalies-preamble { <compute-directive> [ <.anomalies> [ <.by-preposition> <.proximity> ]? | <.proximity> <.anomalies> ] }
+    rule find-proximity-anomalies { <find-proximity-anomalies-preamble> <.using-preposition> <proximity-anomalies-spec-list> }
+    rule proximity-anomalies-spec-list { <proximity-anomalies-spec>* % <.list-separator> }
+    rule proximity-anomalies-spec { <proximity-anomalies-nns-spec> | <proximity-anomalies-outlier-identifier-spec> | <proximity-anomalies-aggr-func-spec> | <proximity-anomalies-property-spec> }
+    rule proximity-anomalies-nns-spec { <integer-value> <nearest-neighbors> }
+    rule proximity-anomalies-aggr-func-spec {
+        <.the-determiner>? <.aggregation> <.function> <variable-name> |
+        <.aggregate> [ <.by-preposition> | <.using-preposition> ] <.the-determiner>? <.function> <variable-name> }
+    rule proximity-anomalies-outlier-identifier-spec { <.the-determiner>? [ <.outlier> <.identifier> <variable-name> | <variable-name> <.outlier> <.identifier> ]}
+    rule proximity-anomalies-property-spec { <.the-determiner>? <.property> <variable-name> }
 
-   # Error message
-   # method error($msg) {
-   #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
-   #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
-   #   my $line-no = $parsed.lines.elems;
-   #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
-   # }
+    # Metadata recommender making command
+    rule make-metadata-recommender-command { <make-metadata-recommender-full> | <make-metadata-recommender-simple> }
+    rule make-metadata-recommender-preamble { <create-directive> <a-determiner>? [ <metadata> | <tag-type> ] <recommender> }
+    rule make-metadata-recommender-simple { <.make-metadata-recommender-preamble> <.for-preposition> <.the-determiner>? <.tag-type>? <tag-type-id> }
+    rule make-metadata-recommender-full {
+        <.make-metadata-recommender-preamble> <.for-preposition> <.the-determiner>? <.tag-type>? <tag-type-id> <.over-preposition> <.the-determiner>? <.tag-types>? <tag-type-ids-list> }
 
-   method ws() {
-     if self.pos > $*HIGHWATER {
-       $*HIGHWATER = self.pos;
-       $*LASTRULE = callframe(1).code.name;
-     }
-     callsame;
-   }
+    # Error message
+    # method error($msg) {
+    #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
+    #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
+    #   my $line-no = $parsed.lines.elems;
+    #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
+    # }
 
-     method subparse($target, |c) {
-     my $*HIGHWATER = 0;
-     my $*LASTRULE;
-     my $match = callsame;
-     self.error_msg($target) unless $match;
-     return $match;
-   }
+    method ws() {
+        if self.pos > $*HIGHWATER {
+            $*HIGHWATER = self.pos;
+            $*LASTRULE = callframe(1).code.name;
+        }
+        callsame;
+    }
 
-   method parse($target, |c) {
-     my $*HIGHWATER = 0;
-     my $*LASTRULE;
-     my $match = callsame;
-     self.error_msg($target) unless $match;
-     return $match;
-   }
+    method subparse($target, |c) {
+        my $*HIGHWATER = 0;
+        my $*LASTRULE;
+        my $match = callsame;
+        self.error_msg($target) unless $match;
+        return $match;
+    }
 
-   method error_msg($target) {
-     my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
-     my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
-     my $line-no = $parsed.lines.elems;
-     my $msg = "Cannot parse the command";
-     # say 'un-parsed : ', $un-parsed;
-     # say '$*LASTRULE : ', $*LASTRULE;
-     $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
-     $msg ~= "; target '$target' position $*HIGHWATER";
-     $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
-     $msg ~= ' .';
-     say $msg;
-   }
+    method parse($target, |c) {
+        my $*HIGHWATER = 0;
+        my $*LASTRULE;
+        my $match = callsame;
+        self.error_msg($target) unless $match;
+        return $match;
+    }
 
+    method error_msg($target) {
+        my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
+        my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
+        my $line-no = $parsed.lines.elems;
+        my $msg = "Cannot parse the command";
+        # say 'un-parsed : ', $un-parsed;
+        # say '$*LASTRULE : ', $*LASTRULE;
+        $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
+        $msg ~= "; target '$target' position $*HIGHWATER";
+        $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
+        $msg ~= ' .';
+        say $msg;
+    }
 }
