@@ -3,7 +3,42 @@ use lib '.';
 use RecommenderWorkflows;
 use RecommenderWorkflows::Grammar;
 
-say RecommenderWorkflows::Grammar::WorkflowCommand.parse("explain recommended item id.122 using metadata");
+#say RecommenderWorkflows::Grammar::WorkflowCommand.parse("prove the recommendation id.123 using the profile");
+#
+#say "\n=======\n";
+#
+#say RecommenderWorkflows::Grammar::WorkflowCommand.parse("prove the recommendation id.123 using the profile tag.1->1, tag.2->1, and tag.3->0.5");
+#
+#say "\n=======\n";
+
+say to_SMRMon_R('
+     use recommender smrObj2;
+     make metadata recommender for tag type passengerClass over passengerAge and passengerSex' );
+
+say "\n=======\n";
+
+#say to_SMRMon_R('
+#     use recommender smrObj2;
+#     recommend by profile female, 30;
+#     echo value;
+#     prove recommendations by metadata' );
+#
+#say "\n=======\n";
+#
+#say to_SMRMon_R('
+#     use recommender smrObj2;
+#     recommend by profile female, 30;
+#     echo value;
+#     prove recommended items id.123, id.99 by metadata' );
+#
+#say "\n=======\n";
+#
+#say to_SMRMon_R('
+#     use recommender smrObj2;
+#     recommend by profile female, 30;
+#     echo value;
+#     display proof follows;
+#     prove recommended items id.123, id.99 with the profile tag.1, tag.23' );
 
 #say to_SMRMon_R('
 #     use recommender smrObj2;
@@ -45,6 +80,7 @@ say RecommenderWorkflows::Grammar::WorkflowCommand.parse("explain recommended it
 #     recommend by profile female, 30;
 #     extend recommendations with dfTitanic;
 #     echo value;
+#     prove the recommendated item
 #     classify to passengerSurvival the profile male, 1st using 30 nns;
 #     echo value
 #');
