@@ -66,6 +66,7 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   method scored-tag-id($/) { make '\"' ~ $<tag-id> ~ '\"' ~ '=' ~ $<number-value>; }
   method scored-tag-ids-list($/) { make 'c(' ~ $<scored-tag-id>>>.made.join(', ') ~ ')'; }
   method tag-type-id($/) { make '\"' ~ $/.Str ~ '\"'; }
+  method tag-type-ids-list($/) { make 'c(' ~ $<tag-type-id>>>.made.join(', ') ~ ')'; }
 
   # Data load commands
   method data-load-command($/) { make $/.values[0].made; }
@@ -207,6 +208,13 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   method properties($/) { make '\"properties\"';}
 
   method smr-filter-matrix($/) { make 'SMRMonFilterMatrix( profile = ' ~ $<profile-spec>.made ~ ')';  }
+
+  # Find anomalies command
+
+  # Make metadata recommender command
+  method make-metadata-recommender-command($/) { make $/.values[0].made; }
+  method make-metadata-recommender-simple($/) { make 'SMRMonMakeTagTypeRecommender( tagTypeTo = ' ~ $<tag-type-id>.made ~ ' )'; }
+  method make-metadata-recommender-full($/) { make 'SMRMonMakeTagTypeRecommender( tagTypeTo = ' ~ $<tag-type-id>.made ~ ', tagTypes = ' ~ $<tag-type-ids-list>.made ~ ' )'; }
 
   # Pipeline command
   method pipeline-command($/) { make  $/.values[0].made; }
