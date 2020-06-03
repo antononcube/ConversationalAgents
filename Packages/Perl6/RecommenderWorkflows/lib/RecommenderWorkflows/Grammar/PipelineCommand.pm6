@@ -13,8 +13,8 @@ role RecommenderWorkflows::Grammar::PipelineCommand {
 
   rule echo-command { <display-directive> <echo-message-spec> }
   rule echo-message-spec { <echo-text> | <echo-words-list> | <echo-variable> }
-  rule echo-words-list { <variable-name>+ % ( <list-separator> | \h+ )  }
-  rule echo-variable { <variable-name> }
+  rule echo-words-list { [ 'text' | 'message' | 'the' 'words' ] <variable-name>+ % ( <list-separator> | \h+ )  }
+  rule echo-variable { 'variable' <variable-name> }
   token echo-text { [\" ([ \w | '_' | '-' | '.' | \d ]+ | [\h]+)+ \"]  }
 
 }
