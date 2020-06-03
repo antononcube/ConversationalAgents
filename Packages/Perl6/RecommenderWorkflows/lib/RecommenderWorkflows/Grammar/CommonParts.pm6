@@ -16,6 +16,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
     token get-verb { 'obtain' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'obtain') }> | 'get' | 'take' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'take') }> }
     token object { 'object' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'object') }> }
     token of-preposition { 'of' }
+    token over-preposition { 'over' }
     token per { 'per' }
     token results { 'results' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'results') }> }
     token simple { 'simple' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'simple') }> | 'direct' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'direct') }> }

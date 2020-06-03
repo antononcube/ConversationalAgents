@@ -17,6 +17,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
   token get-verb { 'obtain' | 'get' | 'take' }
   token object { 'object' }
   token of-preposition { 'of' }
+  token over-preposition { 'over' }
   token per { 'per' }
   token results { 'results' }
   token simple { 'simple' | 'direct' }
