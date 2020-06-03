@@ -30,6 +30,7 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
     token aggregation { 'aggregation' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'aggregation') }> }
     token anomalies { 'anomalies' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'anomalies') }> }
     token anomaly { 'anomaly' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'anomaly') }> }
+    token colnames { 'colnames' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'colnames') }> }
     token column { 'column' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'column') }> }
     token columns { 'columns' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'columns') }> }
     token density { 'density' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'density') }> }
@@ -57,6 +58,7 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
     token recommender { 'recommender' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'recommender') }> }
     token row { 'row' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'row') }> }
     token rows { 'rows' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'rows') }> }
+    token rownames { 'rownames' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'rownames') }> }
     token sparse { 'sparse' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'sparse') }> }
     token threshold { 'threshold' | ([\w]+) <?{ is-fuzzy-match( $0.Str, 'threshold') }> }
 

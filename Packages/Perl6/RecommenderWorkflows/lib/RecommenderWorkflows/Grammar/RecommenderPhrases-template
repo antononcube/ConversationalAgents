@@ -32,6 +32,7 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
   token aggregation { 'aggregation' }
   token anomalies { 'anomalies' }
   token anomaly { 'anomaly' }
+  token colnames { 'colnames' }
   token column { 'column' }
   token columns { 'columns' }
   token density  { 'density' }
@@ -59,6 +60,7 @@ role RecommenderWorkflows::Grammar::RecommenderPhrases does RecommenderWorkflows
   token recommender { 'recommender' }
   token row { 'row' }
   token rows { 'rows' }
+  token rownames { 'rownames' }
   token sparse { 'sparse' }
   token threshold { 'threshold' }
 
