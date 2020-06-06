@@ -1,3 +1,4 @@
+=begin comment
 #==============================================================================
 #
 #   LSAMon-WL actions in Raku Perl 6
@@ -35,6 +36,7 @@
 #     https://github.com/antononcube/ConversationalAgents/blob/master/Packages/Perl6/LatentSemanticAnalysisWorkflows/lib/LatentSemanticAnalysisWorkflowsGrammar.pm6
 #
 #==============================================================================
+=begin comment
 
 use v6;
 #use lib '.';

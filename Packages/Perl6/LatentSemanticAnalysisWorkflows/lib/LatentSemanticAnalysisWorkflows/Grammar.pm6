@@ -1,3 +1,4 @@
+=begin comment
 #==============================================================================
 #
 #   Latent Semantic Analysis workflows grammar in Raku Perl 6
@@ -31,6 +32,7 @@
 #    https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/English/Mathematica/LatentSemanticAnalysisWorkflowsGrammar.m
 #
 #==============================================================================
+=end comment
 
 use v6;
 use LatentSemanticAnalysisWorkflows::Grammar::CommonParts;
