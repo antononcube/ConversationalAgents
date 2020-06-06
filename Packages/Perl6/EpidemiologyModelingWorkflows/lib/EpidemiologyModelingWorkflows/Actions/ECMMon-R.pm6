@@ -67,6 +67,10 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method trivial-parameter-false($/) { make 'FALSE'; }
     method trivial-parameter-true($/) { make 'TRUE'; }
 
+      # Data load commands
+    method data-load-command($/) { make $/.values[0].made; }
+    method use-object($/) { make $<variable-name>.made; }
+
     # Creation
     method create-command($/) { make $/.values[0].made; }
     method create-simple($/) { make 'ECMMonUnit()'; }

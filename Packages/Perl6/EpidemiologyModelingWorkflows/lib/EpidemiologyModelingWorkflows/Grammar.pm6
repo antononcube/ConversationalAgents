@@ -39,14 +39,20 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
         does EpidemiologyModelingWorkflows::Grammar::PipelineCommand
         does EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases {
     # TOP
-    rule TOP { <pipeline-command> |
-    <create-command> |
-    <assign-initial-conditions-command> |
-    <assign-parameters-command> |
-    <simulate-command> |
-    <batch-simulate-command> |
-    <plot-command> |
-    <sensitivity-analysis-command> }
+    rule TOP {
+        <pipeline-command> |
+        <data-load-command> |
+        <create-command> |
+        <assign-initial-conditions-command> |
+        <assign-parameters-command> |
+        <simulate-command> |
+        <batch-simulate-command> |
+        <plot-command> |
+        <sensitivity-analysis-command> }
+
+    # Load data
+    rule data-load-command { <use-object> }
+    rule use-object { [<.use-verb> | <.using-preposition>] <.the-determiner>? [ <.object> | <.simulation-object-phrase> ] <variable-name> }
 
     # Create command
     rule create-command { <create-by-single-site-model> | <create-simple> }
