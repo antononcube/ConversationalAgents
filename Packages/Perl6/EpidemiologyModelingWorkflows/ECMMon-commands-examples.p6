@@ -10,9 +10,21 @@ use EpidemiologyModelingWorkflows::Actions::ECMMon-R;
 
 my $pECMMONCOMMAND = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand;
 
+#say $pECMMONCOMMAND.parse('batch simulate using max time 240 over dfParameters' );
+
+#say $pECMMONCOMMAND.parse('batch simulate with aip = seq(20, 40, 10), aincp = seq(6, 18, 6), lpcr = 0 using max time 365');
+
+#say $pECMMONCOMMAND.parse('batch simulate with aincp in c(6, 18, 6) using max time 240');
+
+say $pECMMONCOMMAND.parse('batch simulate with aincp in c(6, 18, 6) for 300 days');
+
+#say $pECMMONCOMMAND.parse('batch simulate with aip in c(10, 40, 60) for max time 365');
+
+#say $pECMMONCOMMAND.subparse('batch simulate with aincp = 12 and lpcr = 0 using max time 365');
+
 #say $pECMMONCOMMAND.parse('assign 0.56 to contact rate issp');
 
-say $pECMMONCOMMAND.parse('assign 0.56 to the contact rate for infected severely symptomatic population');
+#say $pECMMONCOMMAND.parse('assign 0.56 to the contact rate for infected severely symptomatic population');
 
 #say $pECMMONCOMMAND.parse('assign 10 to the infected severely symptomatic population');
 

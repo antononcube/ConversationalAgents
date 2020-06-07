@@ -121,12 +121,12 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule population-death-rate-spec { <population> <death> <rate> | 'deathRateTP' | 'μ[TP]' | 'μTP' }
     rule infected-normally-symptomatic-population-death-rate-spec { <infected> <normally> <symptomatic> <population> <death> <rate> | 'deathRateINSP' | 'μ[INSP]' | 'μINSP' }
     rule infected-severely-symptomatic-population-death-rate-spec { <infected> <severely> <symptomatic> <population> <death> <rate> | 'deathRateISSP' | 'μ[ISSP]' | 'μISSP' }
-    rule severely-symptomatic-population-fraction-spec { <severely> <symptomatic> <population> <fraction> | 'sspf[SP]' | 'sspfSP' }
+    rule severely-symptomatic-population-fraction-spec { <severely> <symptomatic> <population> <fraction> | 'sspf[SP]' | 'sspfSP' | 'sspf' }
     rule contact-rate-for-the-normally-symptomatic-population-spec { <contact> <rate> <for-preposition> <the-determiner>? <infected>? <normally> <symptomatic> <population> | 'contactRateINSP' | 'β[INSP]' | 'βINSP' }
     rule contact-rate-for-the-severely-symptomatic-population-spec { <contact> <rate> <for-preposition> <the-determiner>? <infected>? <severely> <symptomatic> <population> | 'contactRateISSP' | 'β[ISSP]' | 'βISSP' }
     rule average-infectious-period-spec { <average> <infectious> <period> | 'aip' }
     rule average-incubation-period-spec { <average> <incubation> <period> | 'aincp' }
-    rule lost-productivity-cost-rate-spec { <lost> <productivity> <cost> <rate> | 'lpcr[ISSP,INSP]' | 'lpcrISSP_INSP' }
+    rule lost-productivity-cost-rate-spec { <lost> <productivity> <cost> <rate> | 'lpcr[ISSP,INSP]' | 'lpcrISSP_INSP' | 'lpcr' }
     rule hospitalized-population-death-rate-spec { <hospitalized> <population> <death> <rate> | 'deathRateHP' | 'μ[HP]' | 'μHP' }
     rule contact-rate-for-the-hospitalized-population-spec { <contact> <rate> <for-preposition> <the-determiner> <hospitalized> <population> | 'contactRateHP' | 'β[HP]' | 'βHP' }
     rule number-of-hospital-beds-rate-spec { <number> <of-preposition> <hospital> <beds> <rate> | 'nhbr[TP]' | 'nhbrTP' }
@@ -173,16 +173,32 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule time-range-phrase-ext { <time-range-phrase> | <time> }
     rule time-range-element-list { <time-range-element>+ % <list-separator> }
     rule time-range-element { <time-range-min> | <time-range-max> | <time-range-step> }
-    rule time-range-min { [ <time-range-phrase> <minimum> | <minimum> <.of-preposition>? <.the-determiner>? <.time>? ] <number-value> }
-    rule time-range-max { [ <time-range-phrase> <maximum> | <maximum> <.of-preposition>? <.the-determiner>? <.time>? ] <number-value> }
-    rule time-range-step { [ <time-range-phrase> <step> | <step> <.of-preposition>? <.the-determiner>?  <.time>? ] <number-value> }
+    rule time-range-min { [ <.time-range-phrase> <.minimum> | <.minimum> <.of-preposition>? <.the-determiner>? <.time>? ] <number-value> }
+    rule time-range-max { [ <.time-range-phrase> <.maximum> | <.maximum> <.of-preposition>? <.the-determiner>? <.time>? ] <number-value> }
+    rule time-range-step { [ <.time-range-phrase> <.step> | <.step> <.of-preposition>? <.the-determiner>?  <.time>? ] <number-value> }
 
-    rule max-time { <max> <time> <number-value> | <time-range-phrase> <number-value> }
+    rule max-time { <.maximum> <.time> <number-value> | <.time-range-phrase> <number-value> }
 
     # Batch simulate
-    rule batch-simulate-command { <batch-simulate-over-parameters-spec> }
-    rule batch-simulate-preamble { [ <batch> | <bulk> ] <simulate-directive> }
-    rule batch-simulate-over-parameters-spec { <batch-simulate-preamble> <batch-parameters-spec> <time-range-spec> }
+    rule batch-simulate-command { <batch-simulate-over-parameters> }
+    rule batch-simulate-preamble { [ <batch-noun> | <bulk-noun> ] <simulate-directive> }
+    #    rule batch-simulate-over-parameters {
+    #        <.batch-simulate-preamble> <.over-phrase>? <batch-simulation-parameters-spec> [ <.for-phrase>? <time-range-spec> ]? |
+    #        <.batch-simulate-preamble> <.for-phrase>? <time-range-spec> <.over-phrase>? <batch-simulation-parameters-spec>
+    #    }
+    rule batch-simulate-over-parameters { <.batch-simulate-preamble> <.over-phrase>? <batch-simulation-parameters-spec> [ <.for-phrase>? <time-range-spec> ]? }
+    rule over-phrase { <over-preposition> | <with-preposition> }
+    rule for-phrase { <over-preposition> | <with-preposition> | <for-preposition> }
+
+    # Batch simulation parameters
+    rule batch-simulation-parameters-spec { <batch-parameters-data-frame-spec> | <batch-parameter-outer-form-spec> }
+    rule batch-parameters-data-frame-spec { <dataset-name> }
+    rule batch-parameter-outer-form-spec { <parameter-range-spec-list> }
+    rule parameter-range-spec-list { <parameter-range-spec>+ % <list-separator> }
+    rule parameter-spec { <stock-spec> | <rate-spec> }
+    rule parameter-values { <number-value-list> | <r-range-spec> | <r-numeric-list-spec> }
+    rule parameter-range-spec { <parameter-spec> [ <.running-over-phrase> | <.in-preposition> | <.equal-symbol> ] <parameter-values> }
+    rule running-over-phrase { <that>? <is-verb>? <run-verb>? <over-preposition> }
 
     # Sensitivity analysis command
     rule sensitivity-analysis-command { <sensitivity> <analysis> }

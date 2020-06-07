@@ -16,6 +16,7 @@ role EpidemiologyModelingWorkflows::Grammar::CommonParts {
     token get-verb { 'obtain' | 'get' | 'take' }
     token histogram { 'histogram' }
     token histograms { 'histograms' }
+    token in-preposition { 'in' }
     token model { 'model' }
     token object { 'object' }
     token of-preposition { 'of' }
@@ -24,10 +25,14 @@ role EpidemiologyModelingWorkflows::Grammar::CommonParts {
     token plot { 'plot' }
     token plots { 'plot' | 'plots' }
     token results { 'results' }
+    token run-verb { 'run' | 'runs' }
+    token running-verb { 'running' }
     token simple { 'simple' | 'direct' }
     token simulate { 'simulate' }
     token simulation { 'simulation' }
+    token that-pronoun { 'that' }
     token the-determiner { 'the' }
+    token this-pronoun { 'this' }
     token to-preposition { 'to' | 'into' }
     token transform-verb { 'transform' }
     token use-verb { 'use' | 'utilize' }
@@ -39,9 +44,9 @@ role EpidemiologyModelingWorkflows::Grammar::CommonParts {
     rule simple-way-phrase { 'simple' [ 'way' | 'manner' ] }
 
     # Data
-    token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
+    token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' || $0 eq 'max' || $0 eq 'min' }> }
     token records { 'rows' | 'records' }
-    token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
+    token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' || $0 eq 'max' || $0 eq 'min' }> }
 
     rule data { <data-frame> | 'data' | 'dataset' }
     rule data-frame { 'data' 'frame' }
@@ -86,6 +91,13 @@ role EpidemiologyModelingWorkflows::Grammar::CommonParts {
 
     rule range-spec-step { <with-preposition>? 'step' | <with-preposition> }
     rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step> <number-value> ]? }
+    rule r-range-spec { [ 'seq' '(' | 'seq(' ] <number-value-list> ')' }
+    rule r-numeric-list-spec { [ [ 'c' | 'list' ] '(' | 'c(' | 'list(' ] <number-value-list> ')' }
+
+    # Operators
+    token equal-symbol { '=' }
+    token equal2-symbol { '==' }
+    token assign-to-operator { ':=' | '<-' }
 
     # Expressions
     token wl-expr { \S+ }

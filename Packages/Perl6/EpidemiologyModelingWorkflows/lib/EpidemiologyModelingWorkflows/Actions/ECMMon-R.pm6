@@ -58,6 +58,9 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method variable-names-list($/) { make 'c(' ~ $<variable-name>>>.made.join(', ') ~ ')'; }
     method integer-value($/) { make $/.Str; }
     method number-value($/) { make $/.Str; }
+    method number-value-list($/) { make 'c(' ~ $<number-value>>>.made.join(', ') ~ ')'; }
+    method r-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
+    method r-numeric-list-spec($/) { make $<number-value-list>.made; }
 
     # Trivial
     method trivial-parameter($/) { make $/.values[0].made; }
@@ -87,8 +90,37 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method SEI2HREcon-spec($/) { make 'SEI2HREconModel()'; }
 
     # Stock specification
+    method stock-spec($/){ make 'stock';} # { make $/.values[0].made; }
 
     # Rate specification
+    method rate-spec($/){ make $/.values[0].made; }
+    method population-death-rate-spec($/) { make 'deathRateTP'; }
+    method infected-normally-symptomatic-population-death-rate-spec($/) { make 'deathRateINSP'; }
+    method infected-severely-symptomatic-population-death-rate-spec($/) { make 'deathRateISSP'; }
+    method severely-symptomatic-population-fraction-spec($/) { make 'sspf'; }
+    method contact-rate-for-the-normally-symptomatic-population-spec($/) { make 'contactRateINSP'; }
+    method contact-rate-for-the-severely-symptomatic-population-spec($/) { make 'contactRateISSP'; }
+    method average-infectious-period-spec($/) { make 'aip'; }
+    method average-incubation-period-spec($/) { make 'aincp'; }
+    method lost-productivity-cost-rate-spec($/) { make 'lpcr'; }
+    method hospitalized-population-death-rate-spec($/) { make 'deathRateHP'; }
+    method contact-rate-for-the-hospitalized-population-spec($/) { make 'contactRateHP'; }
+    method number-of-hospital-beds-rate-spec($/) { make 'nhbrTP'; }
+    method hospital-services-cost-rate-spec($/) { make 'hscr'; }
+    method number-of-hospital-beds-change-rate-spec($/) { make 'nhbcr'; }
+    method hospitalized-population-medical-supplies-consumption-rate-spec($/) { make  'hpmscr'; }
+    method un-hospitalized-population-medical-supplies-consumption-rate-spec($/) { make 'upmscr'; }
+    method medical-supplies-production-rate-spec($/) { make  'msprHB'; }
+    method medical-supplies-production-cost-rate-spec($/) { make  'mspcrHB'; }
+    method medical-supplies-delivery-rate-spec($/) { make 'msdrHB'; }
+    method medical-supplies-delivery-period-spec($/) { make  'msdpHB'; }
+    method medical-supplies-consumption-rate-tp-spec($/) { make 'mscrTP'; }
+    method medical-supplies-consumption-rate-insp-spec($/) { make 'mscrINSP'; }
+    method medical-supplies-consumption-rate-issp-spec($/) { make 'mscrISSP'; }
+    method medical-supplies-consumption-rate-hp-spec($/) { make 'mscrHP'; }
+    method capacity-to-store-hospital-medical-supplies-spec($/) { make 'capacityHMS'; }
+    method capacity-to-store-produced-medical-supplies-spec($/) { make 'capacityMS'; }
+    method capacity-to-transport-produced-medical-supplies-spec($/) { make 'capacityMSD'; }
 
     # Assign parameters command
 
@@ -115,6 +147,18 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method time-range-step($/) { make 'step = ' ~ $<number-value>.made; }
 
     method max-time($/) { make 'maxTime = ' ~ $<number-value>.made; }
+
+    # Batch Simulate
+    method batch-simulate-command($/) { make $/.values[0].made; }
+    method batch-simulate-over-parameters($/) { make 'ECMMonBatchSimulate( ' ~ $<batch-simulation-parameters-spec>.made ~ ', ' ~ $<time-range-spec>.made ~ ')'; }
+
+    method batch-simulation-parameters-spec($/) { make $/.values[0].made; }
+    method batch-parameters-data-frame-spec($/) { make 'params = ' ~ $<dataset-name>.made; }
+    method batch-parameter-outer-form-spec($/) { make 'params = ' ~ $<parameter-range-spec-list>.made; }
+    method parameter-range-spec-list($/) { make 'list(' ~ $<parameter-range-spec>>>.made.join(', ') ~ ')'; }
+    method parameter-spec($/) { make $/.values[0].made; }
+    method parameter-values($/) { make $/.values[0].made; }
+    method parameter-range-spec($/) { make $<parameter-spec>.made ~ ' = ' ~ $<parameter-values>.made; }
 
     # Plot command
     method plot-command($/) { make $/.values[0].made; }

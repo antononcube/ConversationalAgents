@@ -16,8 +16,8 @@ role EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases
     token average { 'average' }
     token bed { 'bed' }
     token beds { 'beds' }
-    token batch { 'batch' }
-    token bulk { 'bulk' }
+    token batch-noun { 'batch' }
+    token bulk-noun { 'bulk' }
     token capacity { 'capacity' }
     token change { 'change' }
     token consumption { 'consumption' }
@@ -64,6 +64,7 @@ role EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases
     token simulation { 'simulation' }
     token solution { 'solution' }
     token solutions { 'solutions' }
+    token span { 'span' }
     token spec { 'spec' }
     token store { 'store' }
     token supplies { 'supplies' }
@@ -78,6 +79,6 @@ role EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases
 
     # Rules
     rule simulation-object-phrase { <simulation> <object> }
-    rule time-range-phrase { <time> <range> }
+    rule time-range-phrase { <time> [ <range> | <span> ] }
     rule simulation-results-phrase { <simulation>? <results> | <solution> | <solutions> }
 }

@@ -3,12 +3,18 @@ use lib '.';
 use EpidemiologyModelingWorkflows;
 use EpidemiologyModelingWorkflows::Grammar;
 
-
 say to_ECMMon_R('
 create object with model SEI2HR;
-simulate for 365 days;
+batch simulate over lpcr = 0 and aincp = c(12, 16, 21) for 365 days;
 plot population results;
 plot solution histograms' );
+
+
+#say to_ECMMon_R('
+#create object with model SEI2HR;
+#simulate for 365 days;
+#plot population results;
+#plot solution histograms' );
 
 #
 #say to_ECMMon_R('
