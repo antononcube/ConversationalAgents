@@ -36,8 +36,8 @@ ok $pQRMONCOMMAND.parse('tabular de forma cruzada los datos'),
 ok $pQRMONCOMMAND.parse('variable de tiempo de tabla cruzada vs variable dependiente'),
 'variable de tiempo de tabla cruzada vs variable dependiente';
 
-ok $pQRMONCOMMAND.parse('Tabulación cruzada de la variable de tiempo vs la dependiente'),
-'Tabulación cruzada de la variable de tiempo vs la dependiente';
+ok $pQRMONCOMMAND.parse('tabulación cruzada de la variable de tiempo vs la dependiente'),
+'tabulación cruzada de la variable de tiempo vs la dependiente';
 
 
 done-testing;
