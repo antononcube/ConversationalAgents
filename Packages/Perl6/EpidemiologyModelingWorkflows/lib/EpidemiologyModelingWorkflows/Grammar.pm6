@@ -196,9 +196,9 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule batch-parameter-outer-form-spec { <parameter-range-spec-list> }
     rule parameter-range-spec-list { <parameter-range-spec>+ % <list-separator> }
     rule parameter-spec { <stock-spec> | <rate-spec> }
-    rule parameter-values { <number-value-list> | <r-range-spec> | <r-numeric-list-spec> }
+    rule parameter-values { <number-value-list> | <range-spec> | <r-range-spec> | <r-numeric-list-spec> }
     rule parameter-range-spec { <parameter-spec> [ <.running-over-phrase> | <.in-preposition> | <.equal-symbol> ] <parameter-values> }
-    rule running-over-phrase { <that>? <is-verb>? <run-verb>? <over-preposition> }
+    rule running-over-phrase { <that-pronoun>? <is-verb>? <run-verb>? <over-preposition> }
 
     # Sensitivity analysis command
     rule sensitivity-analysis-command { <sensitivity> <analysis> }
