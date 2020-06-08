@@ -62,6 +62,18 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method r-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
     method r-numeric-list-spec($/) { make $<number-value-list>.made; }
 
+    # Range spec
+    method range-spec($/) {
+        if $<range-spec-step> {
+            make 'seq(' ~ $<range-spec-from>.made ~ ', ' ~ $<range-spec-to>.made ~ ', ' ~ $<range-spec-step>.made ~ ')';
+        } else {
+            make 'seq(' ~ $<range-spec-from>.made ~ ', ' ~ $<range-spec-to>.made ~ ')';
+        }
+    }
+    method range-spec-from($/) { make $<number-value>.made; }
+    method range-spec-to($/) { make $<number-value>.made; }
+    method range-spec-step($/) { make $<number-value>.made; }
+
     # Trivial
     method trivial-parameter($/) { make $/.values[0].made; }
     method trivial-parameter-none($/) { make 'NA'; }
@@ -90,7 +102,22 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method SEI2HREcon-spec($/) { make 'SEI2HREconModel()'; }
 
     # Stock specification
-    method stock-spec($/){ make 'stock';} # { make $/.values[0].made; }
+    method stock-spec($/) { make $/.values[0].made; }
+    method total-population-spec($/) { make 'TPt'; }
+    method susceptible-population-spec($/) { make 'SPt'; }
+    method exposed-population-spec($/) { make 'EPt'; }
+    method infected-normally-symptomatic-population-spec($/) { make 'INSPt'; }
+    method infected-severely-symptomatic-population-spec($/) { make 'ISSPt'; }
+    method recovered-population-spec($/) { make 'RPt'; }
+    method money-of-lost-productivity-spec($/) { make 'MLPt'; }
+    method hospitalized-population-spec($/) { make 'HPt'; }
+    method deceased-infected-population-spec($/) { make 'DIPt'; }
+    method medical-supplies-spec($/) { make 'MSt'; }
+    method medical-supplies-demand-spec($/) { make 'MSDt'; }
+    method hospital-beds-spec($/) { make 'HBt'; }
+    method money-for-medical-supplies-production-spec($/) { make 'MMSPt'; }
+    method money-for-hospital-services-spec($/) { make 'MHSt'; }
+    method hospital-medical-supplies-spec($/) { make 'HMSt'; }
 
     # Rate specification
     method rate-spec($/){ make $/.values[0].made; }
