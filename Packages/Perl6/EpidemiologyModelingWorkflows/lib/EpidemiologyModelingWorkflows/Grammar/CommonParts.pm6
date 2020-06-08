@@ -17,6 +17,7 @@ role EpidemiologyModelingWorkflows::Grammar::CommonParts {
     token histogram { 'histogram' }
     token histograms { 'histograms' }
     token in-preposition { 'in' }
+    token is-verb { 'is' }
     token model { 'model' }
     token object { 'object' }
     token of-preposition { 'of' }
@@ -89,9 +90,17 @@ role EpidemiologyModelingWorkflows::Grammar::CommonParts {
     # Number list
     rule number-value-list { <number-value>+ % <list-separator>? }
 
-    rule range-spec-step { <with-preposition>? 'step' | <with-preposition> }
-    rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step> <number-value> ]? }
+    # Range spec
+    rule range-spec { <range-spec-from> <range-spec-to> <range-spec-step>? }
+    rule range-spec-from { <.from-preposition> <number-value> }
+    rule range-spec-to { <.to-preposition> <number-value> }
+    rule range-spec-step { <.range-spec-step-phrase> <number-value> }
+    rule range-spec-step-phrase { <with-preposition>? 'step' | <with-preposition> }
+
+    # Programming languages ranges
+    rule wl-range-spec { [ 'Range' '[' | 'Range[' ] <number-value-list> ']' }
     rule r-range-spec { [ 'seq' '(' | 'seq(' ] <number-value-list> ')' }
+    rule wl-numeric-list-spec { '{' <number-value-list> '}' }
     rule r-numeric-list-spec { [ [ 'c' | 'list' ] '(' | 'c(' | 'list(' ] <number-value-list> ')' }
 
     # Operators
