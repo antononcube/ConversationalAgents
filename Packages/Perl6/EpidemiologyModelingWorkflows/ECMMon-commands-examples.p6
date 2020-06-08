@@ -16,7 +16,11 @@ my $pECMMONCOMMAND = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand;
 
 #say $pECMMONCOMMAND.parse('batch simulate with aincp in c(6, 18, 6) using max time 240');
 
-say $pECMMONCOMMAND.parse('batch simulate with aincp in c(6, 18, 6) for 300 days');
+#say $pECMMONCOMMAND.parse('batch simulate with aincp in c(6, 18, 6) for 300 days');
+
+#say $pECMMONCOMMAND.parse('batch simulate with TPt in min 10^4 max 10^5 step 500, lpcr = 0 for max time 365');
+
+say $pECMMONCOMMAND.parse('batch simulate with TPt in from 100000 to 1000000 step 100000, lpcr = 0 for max time 365');
 
 #say $pECMMONCOMMAND.parse('batch simulate with aip in c(10, 40, 60) for max time 365');
 

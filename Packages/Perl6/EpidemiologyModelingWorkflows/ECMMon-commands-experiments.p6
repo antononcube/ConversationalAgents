@@ -5,7 +5,7 @@ use EpidemiologyModelingWorkflows::Grammar;
 
 say to_ECMMon_R('
 create object with model SEI2HR;
-batch simulate over lpcr = 0 and aincp = c(12, 16, 21) for 365 days;
+batch simulate over TPt in from 100000 to 1000000 step 100000, lpcr = 0 and aincp = c(12, 16, 21) for 365 days;
 plot population results;
 plot solution histograms' );
 
