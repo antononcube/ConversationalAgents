@@ -83,8 +83,8 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     # Number list
     rule number-value-list { <number-value>+ % <list-separator>? }
 
-    rule range-spec-step { <with-preposition>? 'step' | <with-preposition> }
-    rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step> <number-value> ]? }
+    rule range-spec-step-phrase { <with-preposition>? 'step' | <with-preposition> }
+    rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step-phrase> <number-value> ]? }
 
     # Expressions
     token wl-expr { \S+ }

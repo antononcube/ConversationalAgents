@@ -1,3 +1,4 @@
+=begin comment
 #==============================================================================
 #
 #   QRMon-R actions in Raku Perl 6
@@ -17,7 +18,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #   Written by Anton Antonov,
-#   antononcube @ gmai l . c om,
+#   antononcube @ gmail . com,
 #   Windermere, Florida, USA.
 #
 #==============================================================================
@@ -35,11 +36,9 @@
 #     https://github.com/antononcube/ConversationalAgents/blob/master/Packages/Perl6/QuantileRegressionWorkflows/lib/QuantileRegressionWorkflowsGrammar.pm6
 #
 #==============================================================================
-
+=end comment
 
 use v6;
-#use lib '.';
-#use lib '../../../EBNF/English/RakuPerl6/';
 use QuantileRegressionWorkflows::Grammar;
 
 unit module QuantileRegressionWorkflows::Actions::QRMon-R;
@@ -165,4 +164,10 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
   method pipeline-command($/) { make $/.values[0].made; }
   method take-pipeline-value($/) { make 'QRMonTakeValue'; }
   method echo-pipeline-value($/) { make 'QRMonEchoValue'; }
+
+  method echo-command($/) { make 'QRMonEcho( ' ~ $<echo-message-spec>.made ~ ' )'; }
+  method echo-message-spec($/) { make $/.values[0].made; }
+  method echo-words-list($/) { make '"' ~ $<variable-name>>>.made.join(' ') ~ '"'; }
+  method echo-variable($/) { make $/.Str; }
+  method echo-text($/) { make $/.Str; }
 }
