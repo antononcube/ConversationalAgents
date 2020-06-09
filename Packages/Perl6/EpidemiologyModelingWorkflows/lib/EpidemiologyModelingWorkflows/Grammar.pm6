@@ -152,14 +152,14 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     # Assign initial conditions command
     rule assign-initial-conditions-command { <assign-value-to-stock> }
     rule assign-value-to-stock {
-        <assign-directive> <number-value> <.to-preposition> <.the-determiner>? <stock-spec> |
-        <set-directive> <stock-spec>  <.to-preposition> <.be-verb>? <number-value> }
+        <.assign-directive> <number-value> <.to-preposition> <.the-determiner>? <stock-spec> |
+        <.set-directive> <stock-spec>  <.to-preposition> <.be-verb>? <number-value> }
 
     # Assign rate values command
     rule assign-rate-values-command { <assign-value-to-rate> }
     rule assign-value-to-rate {
-        <assign-directive> <number-value> <.to-preposition> <.the-determiner>? <rate-spec> |
-        <set-directive> <rate-spec>  <.to-preposition> <.be-verb>? <number-value> }
+        <.assign-directive> <number-value> <.to-preposition> <.the-determiner>? <rate-spec> |
+        <.set-directive> <rate-spec>  <.to-preposition> <.be-verb>? <number-value> }
 
     # Simulate
     rule simulate-command { <simulate-over-time-range> | <simulate-simple-spec> }
