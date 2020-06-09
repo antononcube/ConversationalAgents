@@ -152,10 +152,15 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method capacity-to-transport-produced-medical-supplies-spec($/) { make 'capacityMSD'; }
 
     # Assign parameters command
+    method assign-parameters-command($/) { make $/.values[0].made; }
 
     # Assign initial conditions command
+    method assign-initial-conditions-command ($/) { make $/.values[0].made; }
+    method assign-value-to-stock($/) { make 'ECMMonAssignInitialConditions(c(' ~ $<stock-spec>.made ~ ' = ' ~ $<number-value>.made ~ '))';}
 
     # Assign rates command
+    method assign-rate-values-command ($/) { make $/.values[0].made; }
+    method assign-value-to-rate($/) { make 'ECMMonAssignRateValues(c(' ~ $<rate-spec>.made ~ ' = ' ~ $<number-value>.made ~ '))';}
 
     # Simulate
     method simulate-command($/) { make $/.values[0].made; }
