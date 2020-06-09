@@ -99,7 +99,7 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method single-site-model-spec($/) { make $/.values[0].made; }
     method SIR-spec($/) { make 'SIRModel()'; }
     method SEIR-spec($/) { make 'SEIRModel()'; }
-    method SEI2R-spec($/) { make 'SEI2RMode()'; }
+    method SEI2R-spec($/) { make 'SEI2RModel()'; }
     method SEI2HR-spec($/) { make 'SEI2HRModel()'; }
     method SEI2HREcon-spec($/) { make 'SEI2HREconModel()'; }
 
