@@ -100,7 +100,7 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
     method single-site-model-spec($/) { make $/.values[0].made; }
     method SIR-spec($/) { make 'SIRModel[t]'; }
     method SEIR-spec($/) { make 'SEIRModel[t]'; }
-    method SEI2R-spec($/) { make 'SEI2RMode[t]'; }
+    method SEI2R-spec($/) { make 'SEI2RModel[t]'; }
     method SEI2HR-spec($/) { make 'SEI2HRModel[t]'; }
     method SEI2HREcon-spec($/) { make 'SEI2HREconModel[t]'; }
 
@@ -153,10 +153,15 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
     method capacity-to-transport-produced-medical-supplies-spec($/) { make 'κ[MSD]'; }
 
     # Assign parameters command
+    method assign-parameters-command($/) { make $/.values[0].made; }
 
     # Assign initial conditions command
+    method assign-initial-conditions-command ($/) { make $/.values[0].made; }
+    method assign-value-to-stock($/) { make 'ECMMonAssignInitialConditions[<|' ~ $<stock-spec>.made ~ ' -> ' ~ $<number-value>.made ~ '|>]';}
 
     # Assign rates command
+    method assign-rate-values-command ($/) { make $/.values[0].made; }
+    method assign-value-to-rate($/) { make 'ECMMonAssignRateRules[<|' ~ $<rate-spec>.made ~ ' -> ' ~ $<number-value>.made ~ '|>]';}
 
     # Simulate
     method simulate-command($/) { make $/.values[0].made; }
@@ -183,15 +188,15 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
     method batch-simulation-parameters-spec($/) { make $/.values[0].made; }
     method batch-parameters-data-frame-spec($/) { make ' "Parameters" -> ' ~ $<dataset-name>.made; }
     method batch-parameter-outer-form-spec($/) { make ' "Parameters" -> ' ~ $<parameter-range-spec-list>.made; }
-    method parameter-range-spec-list($/) { make '{' ~ $<parameter-range-spec>>>.made.join(', ') ~ '}'; }
+    method parameter-range-spec-list($/) { make '<|' ~ $<parameter-range-spec>>>.made.join(', ') ~ '|>'; }
     method parameter-spec($/) { make $/.values[0].made; }
     method parameter-values($/) { make $/.values[0].made; }
-    method parameter-range-spec($/) { make $<parameter-spec>.made ~ ' = ' ~ $<parameter-values>.made; }
+    method parameter-range-spec($/) { make $<parameter-spec>.made ~ ' -> ' ~ $<parameter-values>.made; }
 
     # Plot command
     method plot-command($/) { make $/.values[0].made; }
     method plot-solutions($/) { make 'ECMMonPlotSolutions[]'; }
-    method plot-population-solutions($/) { make 'ECMMonPlotSolutions[ "Stocks" -> ".*Population"]'; }
+    method plot-population-solutions($/) { make 'ECMMonPlotSolutions[ "Stocks" -> __ ~~ "Population"]'; }
     method plot-solution-histograms($/) { make 'ECMMonPlotSolutionHistograms[]'; }
 
     # Pipeline command
