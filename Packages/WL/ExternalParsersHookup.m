@@ -42,7 +42,10 @@
 (* :Mathematica Version: 12.0 *)
 (* :Copyright: (c) 2019 Anton Antonov *)
 (* :Keywords: *)
-(* :Discussion: *)
+(* :Discussion:
+
+   Needs refactoring!
+*)
 
 BeginPackage["ExternalParsersHookup`"];
 (* Exported symbols added here with SymbolName::usage *)
@@ -54,6 +57,8 @@ ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-W
 ToSMRMonWLCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline.";
 
 ToLSAMonWLCommand::usage = "Translates a natural language commands into a LSAMon-WL pipeline.";
+
+ToECMMonWLCommand::usage = "Translates a natural language commands into a ECMMon-WL pipeline.";
 
 Begin["`Private`"];
 
@@ -188,6 +193,43 @@ ToLSAMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern
             StringJoin["say to_LSAMon_WL('", command, "')"],
             lib,
             "LatentSemanticAnalysisWorkflows"];
+
+      pres = StringReplace[ pres, "\\\"" -> "\""];
+
+      Which[
+        parse, ToExpression[pres],
+
+        !stringResultQ,
+        res = ToExpression[pres, StandardForm, Hold];
+        If[ TrueQ[res === $Failed], pres, res],
+
+        True, pres
+      ]
+    ];
+
+
+(*===========================================================*)
+(* ToECMMonWLCommand                                         *)
+(*===========================================================*)
+
+Clear[ToECMMonWLCommand];
+
+Options[ToECMMonWLCommand] = {
+  "Perl6ECMMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "EpidemiologyModelingWorkflows", "lib"}],
+  "StringResult" -> False
+};
+
+ToECMMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
+    Block[{pres, lib, stringResultQ, res},
+
+      lib = OptionValue[ ToECMMonWLCommand, "Perl6ECMMonParsingLib" ];
+      stringResultQ = TrueQ[ OptionValue[ ToECMMonWLCommand, "StringResult" ] ];
+
+      pres =
+          Perl6Command[
+            StringJoin["say to_ECMMon_WL('", command, "')"],
+            lib,
+            "EpidemiologyModelingWorkflows"];
 
       pres = StringReplace[ pres, "\\\"" -> "\""];
 
