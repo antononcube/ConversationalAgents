@@ -166,15 +166,17 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
     # Simulate
     method simulate-command($/) { make $/.values[0].made; }
     method simulate-simple-spec($/) { make 'ECMMonSimulate[]'; }
-    method simulate-over-time-range($/) { make 'ECMMonSimulate[' ~ $<time-range-spec>.made ~ ']'; }
+    method simulate-over-time-range($/) { make 'ECMMonSimulate[' ~ $<time-range-spec-command-part>.made ~ ']'; }
 
     # Time range specification
+    method time-range-spec-command-part($/) { make $<time-range-spec>.made; }
     method time-range-spec($/) { make $/.values[0].made; }
 
     method time-range-simple-spec($/) { make '"MaxTime" -> ' ~ $<number-value>.made; }
 
-    method time-range-element-list($/) { make '' ~ $<variable-range-element>>>.made.join(', '); }
+    method time-range-element-list($/) { make $<time-range-element>>>.made.join(', '); }
 
+   method time-range-element($/) { make $/.values[0].made; }
     method time-range-max($/) { make '"MaxTime" -> ' ~ $<number-value>.made; }
     method time-range-min($/) { make '"MinTime" -> '  ~ $<number-value>.made; }
     method time-range-step($/) { make '"Step" -> ' ~ $<number-value>.made; }
@@ -195,9 +197,27 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
 
     # Plot command
     method plot-command($/) { make $/.values[0].made; }
-    method plot-solutions($/) { make 'ECMMonPlotSolutions[]'; }
-    method plot-population-solutions($/) { make 'ECMMonPlotSolutions[ "Stocks" -> __ ~~ "Population"]'; }
-    method plot-solution-histograms($/) { make 'ECMMonPlotSolutionHistograms[]'; }
+    method plot-solutions($/) {
+        if $<time-range-spec-command-part> {
+            make 'ECMMonPlotSolutions[' ~ $<time-range-spec-command-part>.made ~ ']';
+        } else {
+            make 'ECMMonPlotSolutions[]';
+        }
+    }
+    method plot-population-solutions($/) {
+        if $<time-range-spec-command-part> {
+            make 'ECMMonPlotSolutions[ "Stocks" -> __ ~~ "Population", ' ~ $<time-range-spec-command-part>.made ~ ']';
+        } else {
+            make 'ECMMonPlotSolutions[ "Stocks" -> __ ~~ "Population"]';
+        }
+    }
+    method plot-solution-histograms($/) {
+        if $<time-range-spec-command-part> {
+            make 'ECMMonPlotSolutionHistograms[' ~ $<time-range-spec-command-part>.made ~ ']';
+        } else {
+            make 'ECMMonPlotSolutionHistogramss[]';
+        }
+    }
 
     # Pipeline command
     method pipeline-command($/) { make  $/.values[0].made; }

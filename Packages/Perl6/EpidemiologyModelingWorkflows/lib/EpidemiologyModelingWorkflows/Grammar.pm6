@@ -67,7 +67,7 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule SEI2R-spec { 'SEI2R' | 'sei2r' | <susceptible> <exposed> <infected> [ 'two' | '2' ] <recovered> }
     rule SEI2HR-spec { 'SEI2HR' | 'sei2hr' | <susceptible> <exposed> <infected> [ 'two' | '2' ] <hospitalized> <recovered>  }
     rule SEI2HREcon-spec {
-        'SEI2REcon' | 'sei2hrecon' |
+        'SEI2HREcon' | 'sei2hrecon' |
         <susceptible> <exposed> <infected> [ 'two' | '2' ] <hospitalized> <recovered> <economics> |
         <economics> <SEI2HR-spec>
   }
@@ -163,8 +163,10 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
 
     # Simulate
     rule simulate-command { <simulate-over-time-range> | <simulate-simple-spec> }
-    rule simulate-simple-spec { <simulate-directive> }
-    rule simulate-over-time-range { <simulate-directive> [ <over-preposition> | <for-preposition> ] <.the-determiner>? <.time-range-phrase>? <time-range-spec> }
+    rule simulate-simple-spec { <.simulate-directive> }
+    rule simulate-over-time-range { <.simulate-directive> <time-range-spec-command-part> }
+
+    rule time-range-spec-command-part { [ <.over-preposition> | <.for-preposition> ] <.the-determiner>? <.time-range-phrase>? <time-range-spec> }
 
     rule time-range-spec { <max-time> | <time-range-simple-spec> | <time-range-element-list> }
 
@@ -205,9 +207,9 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
 
     # Plot command
     rule plot-command { <plot-solution-histograms> | <plot-solutions> | <plot-population-solutions> }
-    rule plot-solutions { <plot-directive> <.the-determiner>? <simulation-results-phrase> }
-    rule plot-population-solutions { <plot-directive> <.the-determiner>? [ <population> | <populations> ]  <simulation-results-phrase> }
-    rule plot-solution-histograms { <plot-directive> <.the-determiner>? <simulation-results-phrase> <.histograms> }
+    rule plot-solutions { <.plot-directive> <.the-determiner>? <.simulation-results-phrase> <time-range-spec-command-part>? }
+    rule plot-population-solutions { <.plot-directive> <.the-determiner>? [ <.population> | <.populations> ]  <.simulation-results-phrase> <time-range-spec-command-part>? }
+    rule plot-solution-histograms { <.plot-directive> <.the-determiner>? <.simulation-results-phrase> <.histograms> <time-range-spec-command-part>? }
 
     # Error message
     # method error($msg) {
