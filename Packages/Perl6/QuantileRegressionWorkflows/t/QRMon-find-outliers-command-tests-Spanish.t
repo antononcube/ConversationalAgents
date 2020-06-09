@@ -36,8 +36,8 @@ ok $pQRMONCOMMAND.parse('encontrar y mostrar valores atípicos inferiores con 0.
 ok $pQRMONCOMMAND.parse('calcular valores atípicos con probabilidades 0.1 y 0.9'),
         'calcular valores atípicos con probabilidades 0.1 y 0.9';
 
-# calcular valores atípicos con 0.1 0.2 0.5 0.7 0.9
-ok $pQRMONCOMMAND.parse('calcular valores atípicos con 0.1 0.2 0.5 0.7 0.9'),
-        'calcular valores atípicos con 0.1 0.2 0.5 0.7 0.9';
+# compute outliers with 0.1 0.2 0.5 0.7 0.9
+ok $pQRMONCOMMAND.parse('изчисли извънредни точки с 0.1 0.2 0.5 0.7 0.9'),
+        'изчисли извънредни точки с 0.1 0.2 0.5 0.7 0.9';
 
 done-testing;
