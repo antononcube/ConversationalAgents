@@ -31,7 +31,9 @@
 #
 #     EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
 #
-#   and a possible software monad ECMMon-R.
+#   and the software monad ECMMon-R:
+#
+#     https://github.com/antononcube/ECMMon-R
 #
 #==============================================================================
 #
@@ -47,9 +49,7 @@ use EpidemiologyModelingWorkflows::Grammar;
 
 class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     # Top
-    method TOP($/) {
-        make $/.values[0].made;
-    }
+    method TOP($/) { make $/.values[0].made; }
 
     # General
     method dataset-name($/) { make $/.values[0].made; }
@@ -60,7 +60,9 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method number-value($/) { make $/.Str; }
     method number-value-list($/) { make 'c(' ~ $<number-value>>>.made.join(', ') ~ ')'; }
     method r-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
+    method wl-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
     method r-numeric-list-spec($/) { make $<number-value-list>.made; }
+    method wl-numeric-list-spec($/) { make $<number-value-list>.made; }
 
     # Range spec
     method range-spec($/) {
@@ -165,9 +167,7 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
 
     method time-range-simple-spec($/) { make 'maxTime = ' ~ $<number-value>.made; }
 
-    method time-range-element-list($/) {
-        make '' ~ $<variable-range-element>>>.made.join(', ');
-    }
+    method time-range-element-list($/) { make $<variable-range-element>>>.made.join(', '); }
 
     method time-range-max($/) { make 'maxTime = ' ~ $<number-value>.made; }
     method time-range-min($/) { make 'minTime = ' ~ $<number-value>.made; }
@@ -192,7 +192,6 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method plot-solutions($/) { make 'ECMMonPlotSolutions()'; }
     method plot-population-solutions($/) { make 'ECMMonPlotSolutions( stocksSpec = ".*Population")'; }
     method plot-solution-histograms($/) { make 'ECMMonPlotSolutionHistograms()'; }
-
 
     # Pipeline command
     method pipeline-command($/) { make  $/.values[0].made; }
