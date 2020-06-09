@@ -34,11 +34,6 @@
 #   and a possible software monad ECMMon-Py.
 #
 #==============================================================================
-#
-#   The code below is derived from the code for ECMMon-Py by simple
-#   unfolding of the monadic pipeline into assignment.
-#
-#==============================================================================
 =end comment
 
 use v6;
