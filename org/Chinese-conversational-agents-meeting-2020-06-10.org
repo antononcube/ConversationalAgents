@@ -1,0 +1,20 @@
+#+TITLE: Raku Chinese-language support meeting [2020-06-10 Wed]
+#+AUTHOR: Anton Antonov
+#+EMAIL: antononcube@gmail.com
+#+TODO: TODO ONGOING MAYBE Anton Jia | DONE CANCELED 
+#+OPTIONS: toc:1 num:0
+
+* TODO Introductions
+- Anton
+  - Motivation
+- Jia
+  - Motivation
+  - General interests
+* MAYBE Monadic programming
+- [ ] Pipelines
+- [ ] Monads
+* TODO Ideal end result 
+- [ ] Recommender example
+- [ ] Epidemiology example
+* TODO Can Chinese be handled with the established approach?
+* TODO The concrete steps
