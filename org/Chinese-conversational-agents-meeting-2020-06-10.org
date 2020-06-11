@@ -10,11 +10,14 @@
 - Jia
   - Motivation
   - General interests
-* MAYBE Monadic programming
-- [ ] Pipelines
-- [ ] Monads
+  - Mandarin
+    - pingin
+  - English
+* Anton Monadic programming
+- [X] Pipelines
+- [X] Monads
 * TODO Ideal end result 
-- [ ] Recommender example
+- [X] Recommender example
 - [ ] Epidemiology example
-* TODO Can Chinese be handled with the established approach?
+* DONE Can Chinese be handled with the established approach?
 * TODO The concrete steps

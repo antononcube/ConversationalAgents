@@ -37,7 +37,7 @@
 ** Steps
 1. Copy the English Raku package.
 2. Re-write the English parsing unit tests into unit tests for LANG.
-3. Write at least a dozen commands with 
+3. Write at least a dozen commands with LANG.
 4. Verify that the commands in the file "Grammar.pm6" would work for commands with LANG.
 5. Re-write main commands that given to the rule TOP.
    - This includes re-writing and adding new terminals and phrases.
