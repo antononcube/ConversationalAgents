@@ -53,10 +53,10 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
   method list-separator($/) { make ','; }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
-  method percent-value($/) { make $<number-value> ~ "/100"; }
+  method percent-value($/) { make $<number-value>.made ~ '/100'; }
 
   method number-value-list($/) { make 'c(' ~ $<number-value>>>.made.join(', ') ~ ')'; }
-  method range-spec($/) { make 'seq(' ~ $/.values[0].made ~ ")"; }
+  method range-spec($/) { make 'seq(' ~ $/.values[0].made ~ ')'; }
 
   # Load data
   method data-load-command($/) { make $/.values[0].made; }
@@ -94,8 +94,8 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
   # Quantile Regression
   method regression-command($/) { make $/.values[0].made; }
   method quantile-regression-spec($/) { make $/.values[0].made; }
-  method quantile-regression-spec-simple($/) { make "QRMonQuantileRegression()"; }
-  method quantile-regression-spec-full($/) {  make "QRMonQuantileRegression(" ~ $<quantile-regression-spec-element-list>.made ~ ")"; }
+  method quantile-regression-spec-simple($/) { make 'QRMonQuantileRegression()'; }
+  method quantile-regression-spec-full($/) {  make 'QRMonQuantileRegression(' ~ $<quantile-regression-spec-element-list>.made ~ ')'; }
 
   method quantile-regression-spec-element-list($/) {
 
@@ -103,7 +103,7 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
 
     my @ks = $<quantile-regression-spec-element>>>.keys;
 
-    if @ks.first('knots-spec-phrase') {
+    if @ks.first('knots-spec-subcommand') {
       make $res;
     } else {
       make 'df = 12, ' ~ $res ;
@@ -113,29 +113,29 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
   method quantile-regression-spec-element($/) { make $/.values[0].made; }
 
   # QR element - list of probabilities.
-  method probabilities-spec-phrase($/) { make "probabilities = " ~ $<probabilities-spec>.made ; }
+  method probabilities-spec-subcommand($/) { make 'probabilities = ' ~ $<probabilities-spec>.made ; }
   method probabilities-spec($/) { make $/.values[0].made; }
 
   # QR element - knots.
-  method knots-spec-phrase($/) { make "df = " ~ $<knots-spec>.made; }
+  method knots-spec-subcommand($/) { make 'df = ' ~ $<knots-spec>.made; }
   method knots-spec($/) { make $/.values[0].made; }
 
   # QR element - interpolation order.
-  method interpolation-order-spec-phrase($/) { make "degree = " ~ $/.values[0].made; }
+  method interpolation-order-spec-subcommand($/) { make 'degree = ' ~ $<interpolation-order-spec>.made; }
   method interpolation-order-spec($/) { make $/.values[0].made; } # make $.<integer-value>.made;
 
   # Find outliers command
   method find-outliers-command($/) { make $/.values[0].made; }
-  method find-outliers-simple($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
+  method find-outliers-simple($/) { make 'QRMonOutliers() %>% QRMonOutliersPlot()'; }
 
-  method find-type-outliers($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
-  method find-outliers-spec($/) { make "QRMonOutliers() %>% QRMonOutliersPlot()"; }
+  method find-type-outliers($/) { make 'QRMonOutliers() %>% QRMonOutliersPlot()'; }
+  method find-outliers-spec($/) { make 'QRMonOutliers() %>% QRMonOutliersPlot()'; }
 
   # Find anomalies command
   method find-anomalies-command($/) { make $/.values[0].made; }
 
-  method find-anomalies-by-residuals-threshold($/) { make 'QRMonFindAnomaliesByResiduals( threshold = ' ~ $<number-value> ~ ')'; }
-  method find-anomalies-by-residuals-outliers($/) { make 'QRMonFindAnomaliesByResiduals( outlierIdentifier = ' ~ $<variable-name> ~ ')'; }
+  method find-anomalies-by-residuals-threshold($/) { make 'QRMonFindAnomaliesByResiduals( threshold = ' ~ $<number-value>.made ~ ')'; }
+  method find-anomalies-by-residuals-outliers($/) { make 'QRMonFindAnomaliesByResiduals( outlierIdentifier = ' ~ $<variable-name>.made ~ ')'; }
 
   # Plot command
   method plot-command($/) {

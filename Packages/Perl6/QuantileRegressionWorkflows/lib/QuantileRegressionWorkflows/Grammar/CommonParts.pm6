@@ -4,29 +4,74 @@ use v6;
 role QuantileRegressionWorkflows::Grammar::CommonParts {
 
     # Speech parts
-    token do-verb { 'do' }
-    token with-preposition { 'using' | 'with' | 'by' }
-    token using-preposition { 'using' | 'with' | 'over' }
-    token by-preposition { 'by' | 'with' | 'using' }
-    token for-preposition { 'for' | 'with' }
-    token of-preposition { 'of' }
-    token from-preposition { 'from' }
-    token to-preposition { 'to' | 'into' }
-    token assign { 'assign' | 'set' }
-    token a-determiner { 'a' | 'an'}
+       token a-determiner { 'a' | 'an'}
     token and-conjunction { 'and' }
-    token the-determiner { 'the' }
-    rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
-    rule number-of { [ 'number' | 'count' ] 'of' }
-    token per { 'per' }
-    token results { 'results' }
-    token simple { 'simple' | 'direct' }
-    token use-verb { 'use' | 'utilize' }
+    token apply-verb { 'apply' }
+    token assign { 'assign' | 'set' }
+    token automatic { 'automatic' }
+    token axes { 'axes' }
+    token axis { 'axis' }
+    token both-determiner { 'both' }
+    token bottom-noun { 'bottom' }
+    token by-preposition { 'by' | 'with' | 'using' }
+    token calculation { 'calculation' }
+    token columns { 'columns' }
+    token create { 'create' }
+    token default { 'default' }
+    token difference { 'difference' }
+    token directly-adverb { 'directly' }
+    token do-verb { 'do' }
+    token element { 'element' }
+    token elements { 'elements' }
+    token for-preposition { 'for' | 'with' }
+    token from-preposition { 'from' }
+    token function { 'function' }
+    token functions { 'functions' }
     token get-verb { 'obtain' | 'get' | 'take' }
+    token histogram { 'histogram' }
+    token histograms { 'histograms' }
+    token in-preposition { 'in' }
+    token is-verb { 'is' }
+    token missing-adjective { 'missing' }
+    token model { 'model' }
     token object { 'object' }
-
+    token of-preposition { 'of' }
+    token over-preposition { 'over' }
+    token per-preposition { 'per' }
     token plot { 'plot' }
     token plots { 'plot' | 'plots' }
+    token results { 'results' }
+    token rows { 'rows' }
+    token run-verb { 'run' | 'runs' }
+    token running-verb { 'running' }
+    token simple { 'simple' | 'direct' }
+    token simply-adverb { 'simply' }
+    token simulate { 'simulate' }
+    token simulation { 'simulation' }
+    token smallest { 'smallest' }
+    token step-noun { 'step' }
+    token summaries { 'summaries' }
+    token summary { 'summary' }
+    token that-pronoun { 'that' }
+    token the-determiner { 'the' }
+    token this-pronoun { 'this' }
+    token to-preposition { 'to' | 'into' }
+    token top-noun { 'top' }
+    token transform-verb { 'transform' }
+    token use-verb { 'use' | 'utilize' }
+    token using-preposition { 'using' | 'with' | 'over' }
+    token value-noun { 'value' }
+    token values-noun { 'values' }
+    token way-noun { 'way' }
+    token weight { 'weight' }
+    token weights { 'weights' }
+    token with-preposition { 'using' | 'with' | 'by' }
+
+    rule creation { 'creation' | 'making' <of-preposition>? }
+    rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
+    rule missing-values-phrase { <missing-adjective> <values-noun>? }
+    rule number-of { [ 'number' | 'count' ] 'of' }
+    rule simple-way-phrase { 'simple' [ 'way' | 'manner' ] }
 
     # Data
     token records { 'rows' | 'records' }
@@ -38,16 +83,20 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token date-spec { [ \d ** 4 ] '-' [ \d ** 2 ] '-' [ \d ** 2 ] }
 
     # Directives
-    rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
-    token create-directive { 'create' | 'make' }
-    token generate-directive { 'generate' | 'create' | 'make' }
+    token classify { 'classify' }
     token compute-directive { 'compute' | 'find' | 'calculate' }
-    token display-directive { 'display' | 'show' | 'echo' }
-    rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
+    token create-directive { 'create' | 'make' }
+    token delete-directive { 'delete' | 'drop' | 'erase' }
     token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
+    token display-directive { 'display' | 'show' | 'echo' }
+    token generate-directive { 'generate' | 'create' | 'make' }
+    token summarize-directive { 'summarize' }
+
+    rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
+    rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
     rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
     rule use-directive { [ <get-verb> <and-conjunction>? ]? <use-verb> }
-    token classify { 'classify' }
+
 
     # Value types
     token number-value { (\d+ ['.' \d*]?  [ [e|E] \d+]?) }
@@ -56,29 +105,11 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token percent-value { <number-value> <.percent> }
     token boolean-value { 'True' | 'False' | 'true' | 'false' }
 
-    # Time series and regression specific
-    token error { 'error' }
-    token errors { 'error' | 'errors' }
-    token outlier { 'outlier' }
-    token outliers { 'outliers' | 'outlier' }
-    rule the-outliers { <the-determiner> <outliers> }
-    token ingest { 'ingest' | 'load' | 'use' | 'get' }
-    token fit { 'fit' | 'fitting' }
-    token quantile { 'quantile' }
-    token quantiles { 'quantiles' }
-    token probability { 'probability' }
-    token probabilities { 'probabilities' }
-    rule qr-object { [ 'qr' | 'quantile' 'regression' ]? 'object' }
-    token anomaly { 'anomaly' }
-    token anomalies { 'anomalies' }
-    token threshold { 'threshold' }
-    token identifier { 'identifier' }
-    token residuals { 'residuals' }
 
     # Lists of things
     token list-separator-symbol { ',' | '&' | 'and' | ',' 'and' }
     token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
-    token list { 'list' }
+    token list-noun { 'list' }
 
     # Number list
     rule number-value-list { <number-value>+ % <list-separator>? }

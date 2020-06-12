@@ -53,7 +53,7 @@ class QuantileRegressionWorkflows::Actions::QRMon-WL {
   method list-separator($/) { make ','; }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
-  method percent-value($/) { make $<number-value> ~ "/100"; }
+  method percent-value($/) { make $<number-value>.made ~ "/100"; }
 
   method number-value-list($/) { make '{' ~ $<number-value>>>.made.join(', ') ~ '}'; }
   method range-spec($/) { make 'Range[' ~ $/.values[0].made ~ "]"; }
@@ -95,20 +95,20 @@ class QuantileRegressionWorkflows::Actions::QRMon-WL {
   method regression-command($/) { make $/.values[0].made; }
   method quantile-regression-spec($/) { make $/.values[0].made; }
   method quantile-regression-spec-simple($/) { make 'QRMonQuantileRegression[]'; }
-  method quantile-regression-spec-full($/) {  make 'QRMonQuantileRegression[' ~ $<quantile-regression-spec-element-list>.made ~ ']'; }
+  method quantile-regression-spec-full($/) { make 'QRMonQuantileRegression[' ~ $<quantile-regression-spec-element-list>.made ~ ']'; }
   method quantile-regression-spec-element-list($/) { make $<quantile-regression-spec-element>>>.made.join(', '); }
   method quantile-regression-spec-element($/) { make $/.values[0].made; }
 
   # QR element - list of probabilities.
-  method probabilities-spec-phrase($/) { make $<probabilities-spec>.made; }
+  method probabilities-spec-subcommand($/) { make $<probabilities-spec>.made; }
   method probabilities-spec($/) { make '"Probabilities" -> ' ~ $/.values[0].made; }
 
   # QR element - knots.
-  method knots-spec-phrase($/) { make $<knots-spec>.made; }
+  method knots-spec-subcommand($/) { make $<knots-spec>.made; }
   method knots-spec($/) { make '"Knots" -> ' ~ $/.values[0].made; }
 
   # QR element - interpolation order.
-  method interpolation-order-spec-phrase($/) { make '"InterpolationOrder" -> ' ~ $/.values[0].made; }
+  method interpolation-order-spec-subcommand($/) { make '"InterpolationOrder" -> ' ~ $<interpolation-order-spec>.made; }
   method interpolation-order-spec($/) { make $/.values[0].made; } # make $.<integer-value>.made;
 
   # Find outliers command
@@ -121,8 +121,8 @@ class QuantileRegressionWorkflows::Actions::QRMon-WL {
   # Find anomalies command
   method find-anomalies-command($/) { make $/.values[0].made; }
 
-  method find-anomalies-by-residuals-threshold($/) { make 'QRMonFindAnomaliesByResiduals[ "Threshold"->' ~ $<number-value> ~ ']'; }
-  method find-anomalies-by-residuals-outliers($/) { make 'QRMonFindAnomaliesByResiduals[ "OutlierIdentifier"->' ~ $<variable-name> ~ ']'; }
+  method find-anomalies-by-residuals-threshold($/) { make 'QRMonFindAnomaliesByResiduals[ "Threshold"->' ~ $<number-value>.made ~ ']'; }
+  method find-anomalies-by-residuals-outliers($/) { make 'QRMonFindAnomaliesByResiduals[ "OutlierIdentifier"->' ~ $<variable-name>.made ~ ']'; }
 
   # Plot command
   method plot-command($/) {
