@@ -5,9 +5,16 @@ use EpidemiologyModelingWorkflows::Grammar;
 
 say to_ECMMon_R('
 create object with model SEI2HR;
+extend by the adjacency matrix mat1 for the migrating stocks SPt, EPt, and RPt;
 batch simulate over TPt in from 100000 to 1000000 step 100000, lpcr = 0 and aincp = c(12, 16, 21) for 365 days;
 plot population results;
 plot solution histograms' );
+
+#say to_ECMMon_R('
+#create object with model SEI2HR;
+#batch simulate over TPt in from 100000 to 1000000 step 100000, lpcr = 0 and aincp = c(12, 16, 21) for 365 days;
+#plot population results;
+#plot solution histograms' );
 
 
 #say to_ECMMon_R('

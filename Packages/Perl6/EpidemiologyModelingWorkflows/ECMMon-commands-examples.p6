@@ -10,6 +10,8 @@ use EpidemiologyModelingWorkflows::Actions::ECMMon-R;
 
 my $pECMMONCOMMAND = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand;
 
+say $pECMMONCOMMAND.subparse('spread out with the matrix mat1 over the stock susceptible population' );
+
 #say $pECMMONCOMMAND.parse('batch simulate using max time 240 over dfParameters' );
 
 #say $pECMMONCOMMAND.parse('batch simulate with aip = seq(20, 40, 10), aincp = seq(6, 18, 6), lpcr = 0 using max time 365');
@@ -20,7 +22,7 @@ my $pECMMONCOMMAND = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand;
 
 #say $pECMMONCOMMAND.parse('batch simulate with TPt in min 10^4 max 10^5 step 500, lpcr = 0 for max time 365');
 
-say $pECMMONCOMMAND.parse('batch simulate with TPt in from 100000 to 1000000 step 100000, lpcr = 0 for max time 365');
+#say $pECMMONCOMMAND.parse('batch simulate with TPt in from 100000 to 1000000 step 100000, lpcr = 0 for max time 365');
 
 #say $pECMMONCOMMAND.parse('batch simulate with aip in c(10, 40, 60) for max time 365');
 

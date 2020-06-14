@@ -214,9 +214,27 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
         if $<time-range-spec-command-part> {
             make 'ECMMonPlotSolutionHistograms(' ~ $<time-range-spec-command-part>.made ~ ')';
         } else {
-            make 'ECMMonPlotSolutionHistogramss()';
+            make 'ECMMonPlotSolutionHistograms()';
         }
     }
+
+    # Extend single site model command
+    method extend-single-site-model-command($/) { make $/.values[0].made; }
+
+    method extend-by-matrix($/) {
+        if $<migrating-stocks-subcommand> {
+            make 'ECMMonExtendByAdjacencyMatrix( mat = ' ~ $<variable-name>.made ~ ', migratingStocks = ' ~ $<migrating-stocks-subcommand>.made ~ ')';
+        } else {
+            make 'ECMMonExtendByAdjacencyMatrix( mat = ' ~ $<variable-name>.made ~ ')';
+        }
+    }
+
+    method extend-by-traveling-patterns-dataframe($/) { make 'ECMMonExtendByDataFrame( data = ' ~ $<dataset-name>.made ~ ')'; }
+    method extend-by-country-spec($/) { make 'ECMMonExtendByCountry( country = ' ~ $<country-spec>.made ~ ')'; }
+    method country-spec($/) { make $<variable-name>; }
+
+    method migrating-stocks-subcommand($/) { make $<stock-specs-list>.made; }
+    method stock-specs-list($/) { make 'c("' ~ $<stock-spec>>>.made.join('", "') ~ '")'; }
 
     # Pipeline command
     method pipeline-command($/) { make  $/.values[0].made; }

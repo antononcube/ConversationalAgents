@@ -48,7 +48,8 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
         <simulate-command> |
         <batch-simulate-command> |
         <plot-command> |
-        <sensitivity-analysis-command> }
+        <sensitivity-analysis-command> |
+        <extend-single-site-model-command> }
 
     # Load data
     rule data-load-command { <use-object> }
@@ -58,7 +59,7 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule create-command { <create-by-single-site-model> | <create-simple> }
     rule create-preamble-phrase { <generate-directive> [ <.a-determiner> | <.the-determiner> ]? [ <object> | <simulation-object-phrase> ] }
     rule create-simple { <create-preamble-phrase> <simple-way-phrase>? | <simple> <simulation-object> [ 'creation' | 'making' ] }
-    rule create-by-single-site-model { [ <create-preamble-phrase> | <create> ] <.by-preposition> <.the-determiner>? <.model>? <single-site-model-spec> <.model>? }
+    rule create-by-single-site-model { [ <create-preamble-phrase> | <create-verb> ] <.by-preposition> <.the-determiner>? <.model>? <single-site-model-spec> <.model>? }
 
     # Single-site model spec
     rule single-site-model-spec { <SIR-spec> | <SEIR-spec> | <SEI2R-spec> | <SEI2HR-spec> | <SEI2HREcon-spec> }
@@ -119,7 +120,7 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
         <capacity-to-store-produced-medical-supplies-spec> |
         <capacity-to-transport-produced-medical-supplies-spec> }
     rule population-death-rate-spec { <population> <death> <rate> | 'deathRateTP' | 'μ[TP]' | 'μTP' }
-    rule infected-normally-symptomatic-population-death-rate-spec { <infected> <normally> <symptomatic> <population> <death> <rate> | 'deathRateINSP' | 'μ[INSP]' | 'μINSP' }
+    rule infected-normally-symptomatic-population-death-rate-spec { <infected> <normally> <symptomatic> <population> <death> <rate> | 'deathRateINSP' | 'death' 'rate' ['INSP' | 'insp' ] | 'μ[INSP]' | 'μINSP' }
     rule infected-severely-symptomatic-population-death-rate-spec { <infected> <severely> <symptomatic> <population> <death> <rate> | 'deathRateISSP' | 'μ[ISSP]' | 'μISSP' }
     rule severely-symptomatic-population-fraction-spec { <severely> <symptomatic> <population> <fraction> | 'sspf[SP]' | 'sspfSP' | 'sspf' }
     rule contact-rate-for-the-normally-symptomatic-population-spec { <contact> <rate> <for-preposition> <the-determiner>? <infected>? <normally> <symptomatic> <population> | 'contactRateINSP' | 'β[INSP]' | 'βINSP' }
@@ -177,7 +178,7 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule time-range-element { <time-range-min> | <time-range-max> | <time-range-step> }
     rule time-range-min { [ <.time-range-phrase> <.minimum> | <.minimum> <.of-preposition>? <.the-determiner>? <.time>? ] <number-value> }
     rule time-range-max { [ <.time-range-phrase> <.maximum> | <.maximum> <.of-preposition>? <.the-determiner>? <.time>? ] <number-value> }
-    rule time-range-step { [ <.time-range-phrase> <.step> | <.step> <.of-preposition>? <.the-determiner>?  <.time>? ] <number-value> }
+    rule time-range-step { [ <.time-range-phrase> <.step-noun> | <.step-noun> <.of-preposition>? <.the-determiner>?  <.time>? ] <number-value> }
 
     rule max-time { <.maximum> <.time> <number-value> | <.time-range-phrase> <number-value> }
 
@@ -210,6 +211,20 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule plot-solutions { <.plot-directive> <.the-determiner>? <.simulation-results-phrase> <time-range-spec-command-part>? }
     rule plot-population-solutions { <.plot-directive> <.the-determiner>? [ <.population> | <.populations> ]  <.simulation-results-phrase> <time-range-spec-command-part>? }
     rule plot-solution-histograms { <.plot-directive> <.the-determiner>? <.simulation-results-phrase> <.histograms> <time-range-spec-command-part>? }
+
+    # Extend single site model
+    rule extend-single-site-model-command { <extend-by-matrix> | <extend-by-traveling-patterns-dataframe> | <extend-by-country-spec> }
+    rule extend-single-site-model-by-preamble { <.extend-directive> <.the-determiner>? <.single-site-model-phrase>? [ <.by-preposition> | <.with-preposition> ] <.the-determiner>? }
+    rule extend-by-matrix {
+        <.extend-single-site-model-by-preamble> [ <.adjacency-matrix-phrase> | <.matrix-noun> ]
+        <variable-name> <migrating-stocks-subcommand>? }
+    rule extend-by-traveling-patterns-dataframe { <.extend-single-site-model-by-preamble> [ <.data-frame> | <.dataset> ] <dataset-name> }
+    rule extend-by-country-spec {
+      <.extend-single-site-model-by-preamble> <.traveling-patterns-phrase> <.of-preposition> <.the-determiner>? <country-spec> }
+    rule country-spec { <.country>? <variable-name> }
+
+    rule migrating-stocks-subcommand { [ <for-preposition> | <over-preposition> ] <.the-determiner>? [ <.migrating-stocks-phrase> | <.stocks-noun> | <.stock-noun> ] <stock-specs-list> }
+    rule stock-specs-list { <stock-spec>+ % <.list-separator> }
 
     # Error message
     # method error($msg) {
