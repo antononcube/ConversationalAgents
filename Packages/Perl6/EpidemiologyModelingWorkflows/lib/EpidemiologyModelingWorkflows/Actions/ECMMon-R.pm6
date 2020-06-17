@@ -92,7 +92,7 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
     method create-command($/) { make $/.values[0].made; }
     method create-simple($/) { make 'ECMMonUnit()'; }
     method create-by-single-site-model($/) {
-        make 'ECMMonUnit(' ~ $<single-site-model-spec>.made ~ ')';
+        make 'ECMMonUnit( model = ' ~ $<single-site-model-spec>.made ~ ')';
     }
 
     # Single site model spec
@@ -156,11 +156,11 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-R {
 
     # Assign initial conditions command
     method assign-initial-conditions-command ($/) { make $/.values[0].made; }
-    method assign-value-to-stock($/) { make 'ECMMonAssignInitialConditions(c(' ~ $<stock-spec>.made ~ ' = ' ~ $<number-value>.made ~ '))';}
+    method assign-value-to-stock($/) { make 'ECMMonAssignInitialConditions( initConds = c(' ~ $<stock-spec>.made ~ ' = ' ~ $<number-value>.made ~ ') )';}
 
     # Assign rates command
     method assign-rate-values-command ($/) { make $/.values[0].made; }
-    method assign-value-to-rate($/) { make 'ECMMonAssignRateValues(c(' ~ $<rate-spec>.made ~ ' = ' ~ $<number-value>.made ~ '))';}
+    method assign-value-to-rate($/) { make 'ECMMonAssignRateValues( rateValues = c(' ~ $<rate-spec>.made ~ ' = ' ~ $<number-value>.made ~ ') )';}
 
     # Simulate
     method simulate-command($/) { make $/.values[0].made; }

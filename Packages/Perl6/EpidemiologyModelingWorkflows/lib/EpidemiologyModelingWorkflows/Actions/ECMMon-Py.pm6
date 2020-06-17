@@ -149,11 +149,11 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
 
     # Assign initial conditions command
     method assign-initial-conditions-command ($/) { make $/.values[0].made; }
-    method assign-value-to-stock($/) { make 'obj = ECMMonAssignInitialConditions( ecmObj = obj, [' ~ $<stock-spec>.made ~ ' = ' ~ $<number-value>.made ~ '])';}
+    method assign-value-to-stock($/) { make 'obj = ECMMonAssignInitialConditions( ecmObj = obj, initConds = [' ~ $<stock-spec>.made ~ ' = ' ~ $<number-value>.made ~ '])';}
 
     # Assign rates command
     method assign-rate-values-command ($/) { make $/.values[0].made; }
-    method assign-value-to-rate($/) { make 'obj = ECMMonAssignRateValues( ecmObj = obj, [' ~ $<rate-spec>.made ~ ' = ' ~ $<number-value>.made ~ '])';}
+    method assign-value-to-rate($/) { make 'obj = ECMMonAssignRateValues( ecmObj = obj, rateValues = [' ~ $<rate-spec>.made ~ ' = ' ~ $<number-value>.made ~ '])';}
 
     # Simulate
     method simulate-command($/) { make $/.values[0].made; }
