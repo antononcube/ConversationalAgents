@@ -13,15 +13,15 @@ my $pQRMONCOMMAND = QuantileRegressionWorkflows::Grammar::WorkflowCommmand;
 #-----------------------------------------------------------
 
 ok $pQRMONCOMMAND.parse('display errors plot'),
-'display errors plots';
+        'display errors plots';
 
 ok $pQRMONCOMMAND.parse('show the relative errors plots'),
-'show the relative errors plots';
+        'show the relative errors plots';
 
 ok $pQRMONCOMMAND.parse('plot errors'),
-'plot errors';
+        'plot errors';
 
 ok $pQRMONCOMMAND.parse('plot absolute errors'),
-'plot absolute errors';
+        'plot absolute errors';
 
 done-testing;
