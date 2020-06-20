@@ -4,7 +4,7 @@ use v6;
 role QuantileRegressionWorkflows::Grammar::CommonParts {
 
     # Speech parts
-       token a-determiner { 'a' | 'an'}
+    token a-determiner { 'a' | 'an'}
     token and-conjunction { 'and' }
     token apply-verb { 'apply' }
     token assign { 'assign' | 'set' }
@@ -17,6 +17,8 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token calculation { 'calculation' }
     token columns { 'columns' }
     token create { 'create' }
+    token data-noun { 'data' }
+    token dataset-noun { 'dataset' }
     token default { 'default' }
     token difference { 'difference' }
     token directly-adverb { 'directly' }
@@ -24,6 +26,7 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token element { 'element' }
     token elements { 'elements' }
     token for-preposition { 'for' | 'with' }
+    token frame-noun { 'frame' }
     token from-preposition { 'from' }
     token function { 'function' }
     token functions { 'functions' }
@@ -75,9 +78,9 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
 
     # Data
     token records { 'rows' | 'records' }
-    rule time-series-data { 'time' 'series' 'data'? }
-    rule data-frame { 'data' 'frame' }
-    rule data { <data-frame> | 'data' | 'dataset' | <time-series-data> }
+    rule time-series-data { 'time' 'series' <data-noun>? }
+    rule data-frame { <data-noun> <frame-noun> }
+    rule data { <data-frame> | <data-noun> | <dataset-noun> | <time-series-data> }
     token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
     token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
     token date-spec { [ \d ** 4 ] '-' [ \d ** 2 ] '-' [ \d ** 2 ] }
@@ -87,14 +90,14 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token compute-directive { 'compute' | 'find' | 'calculate' }
     token create-directive { 'create' | 'make' }
     token delete-directive { 'delete' | 'drop' | 'erase' }
-    token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
+    token diagram { <plot> | 'plots' | 'graph' | 'chart' }
     token display-directive { 'display' | 'show' | 'echo' }
     token generate-directive { 'generate' | 'create' | 'make' }
     token summarize-directive { 'summarize' }
 
     rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
     rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
-    rule plot-directive { 'plot' | 'chart' | <display-directive> <diagram> }
+    rule plot-directive { <plot> | 'chart' | <display-directive> <diagram> }
     rule use-directive { [ <get-verb> <and-conjunction>? ]? <use-verb> }
 
 
@@ -103,11 +106,11 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token integer-value { \d+ }
     token percent { '%' | 'percent' }
     token percent-value { <number-value> <.percent> }
-    token boolean-value { 'True' | 'False' | 'true' | 'false' }
+    token boolean-value { 'True' | 'False' | 'true' | 'false' | 'TRUE' | 'FALSE' }
 
 
     # Lists of things
-    token list-separator-symbol { ',' | '&' | 'and' | ',' 'and' }
+    token list-separator-symbol { ',' | '&' | 'and' | ',' \h* 'and' }
     token list-separator { <.ws>? <list-separator-symbol> <.ws>? }
     token list-noun { 'list' }
 
