@@ -1,27 +1,30 @@
 {
     "perl" : "6.d",
-    "name" : "QuantileRegressionWorkflows",
+    "name" : "RecommenderWorkflows",
     "api"  : "1",
     "auth" : "github:antononcube",
     "version" : "0.8.0",
-    "description" : "Quantile Regression workflows building by natural language commands.",
+    "description" : "Recommender workflows building by natural language commands.",
     "authors" : [ "Anton Antonov" ],
     "license" : "GPL-3.0-or-later",
     "provides" : {
-        "QuantileRegressionWorkflows" : "lib/QuantileRegressionWorkflows.pm6",
-        "QuantileRegressionWorkflows::Grammar" : "lib/QuantileRegressionWorkflows/Grammar.pm6",
-        "QuantileRegressionWorkflows::Grammar::CommonParts" : "lib/QuantileRegressionWorkflows/Grammar/CommonParts.pm6",
-        "QuantileRegressionWorkflows::Grammar::PipelineCommand" : "lib/QuantileRegressionWorkflows/Grammar/PipelineCommand.pm6",
-        "QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases" : "lib/QuantileRegressionWorkflows/Grammar/TimeSeriesAndRegressionPhrases.pm6",
-        "QuantileRegressionWorkflows::Actions::QRMon-R" : "lib/QuantileRegressionWorkflows/Actions/QRMon-R.pm6",
-        "QuantileRegressionWorkflows::Actions::QRMon-WL" : "lib/QuantileRegressionWorkflows/Actions/QRMon-WL.pm6"
+        "RecommenderWorkflows" : "lib/RecommenderWorkflows.pm6",
+        "RecommenderWorkflows::Grammar" : "lib/RecommenderWorkflows/Grammar.pm6",
+        "RecommenderWorkflows::Grammar::CommonParts" : "lib/RecommenderWorkflows/Grammar/CommonParts.pm6",
+        "RecommenderWorkflows::Grammar::FuzzyMatch" : "lib/RecommenderWorkflows/Grammar/FuzzyMatch.pm6",
+        "RecommenderWorkflows::Grammar::LSIApplyCommand" : "lib/RecommenderWorkflows/Grammar/LSIApplyCommand.pm6",
+        "RecommenderWorkflows::Grammar::PipelineCommand" : "lib/RecommenderWorkflows/Grammar/PipelineCommand.pm6",
+        "RecommenderWorkflows::Grammar::RecommenderPhrases" : "lib/RecommenderWorkflows/Grammar/RecommenderPhrases.pm6",
+        "RecommenderWorkflows::Actions::SMRMon-Py" : "lib/RecommenderWorkflows/Actions/SMRMon-Py.pm6",
+        "RecommenderWorkflows::Actions::SMRMon-R" : "lib/RecommenderWorkflows/Actions/SMRMon-R.pm6",
+        "RecommenderWorkflows::Actions::SMRMon-WL" : "lib/RecommenderWorkflows/Actions/SMRMon-WL.pm6"
     },
     "depends" : [ ],
     "build-depends" : [ ],
     "test-depends" : [ ],
     "resources" : [ ],
     "tags": [
-      "Quantile regression", "Quantile", "Regression", "Parser", "Interpreter", "Monad"
+      "Recommender", "LSI", "Parser", "Interpreter", "Monad", "Workflow", "Pipeline"
     ],
-    "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/QuantileRegressionWorkflows"
+    "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/RecommenderWorkflows"
 }

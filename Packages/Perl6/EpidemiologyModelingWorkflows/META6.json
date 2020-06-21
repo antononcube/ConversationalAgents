@@ -1,27 +1,28 @@
 {
     "perl" : "6.d",
-    "name" : "QuantileRegressionWorkflows",
+    "name" : "EpidemiologyModelingWorkflows",
     "api"  : "1",
     "auth" : "github:antononcube",
-    "version" : "0.0.1",
-    "description" : "Quantile Regression workflows building by natural language commands.",
+    "version" : "0.5.0",
+    "description" : "Epidemiology Modeling workflows building by natural language commands.",
     "authors" : [ "Anton Antonov" ],
     "license" : "GPL-3.0-or-later",
     "provides" : {
-        "QuantileRegressionWorkflows" : "lib/QuantileRegressionWorkflows.pm6",
-        "QuantileRegressionWorkflows::Grammar" : "lib/QuantileRegressionWorkflows/Grammar.pm6",
-        "QuantileRegressionWorkflows::Grammar::CommonParts" : "lib/QuantileRegressionWorkflows/Grammar/CommonParts.pm6",
-        "QuantileRegressionWorkflows::Grammar::PipelineCommand" : "lib/QuantileRegressionWorkflows/Grammar/PipelineCommand.pm6",
-        "QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases" : "lib/QuantileRegressionWorkflows/Grammar/TimeSeriesAndRegressionPhrases.pm6",
-        "QuantileRegressionWorkflows::Actions::QRMon-R" : "lib/QuantileRegressionWorkflows/Actions/QRMon-R.pm6",
-        "QuantileRegressionWorkflows::Actions::QRMon-WL" : "lib/QuantileRegressionWorkflows/Actions/QRMon-WL.pm6"
+        "EpidemiologyModelingWorkflows" : "lib/EpidemiologyModelingWorkflows.pm6",
+        "EpidemiologyModelingWorkflows::Grammar" : "lib/EpidemiologyModelingWorkflows/Grammar.pm6",
+        "EpidemiologyModelingWorkflows::Grammar::CommonParts" : "lib/EpidemiologyModelingWorkflows/Grammar/CommonParts.pm6",
+        "EpidemiologyModelingWorkflows::Grammar::PipelineCommand" : "lib/EpidemiologyModelingWorkflows/Grammar/PipelineCommand.pm6",
+        "EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases" : "lib/EpidemiologyModelingWorkflows/Grammar/EpidemiologyPhrases.pm6",
+        "EpidemiologyModelingWorkflows::Actions::ECMMon-Py" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-Py.pm6",
+        "EpidemiologyModelingWorkflows::Actions::ECMMon-R" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-R.pm6",
+        "EpidemiologyModelingWorkflows::Actions::ECMMon-WL" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-WL.pm6"
     },
     "depends" : [ ],
     "build-depends" : [ ],
     "test-depends" : [ ],
     "resources" : [ ],
     "tags": [
-      "Quantile regression", "Quantile", "Regression", "Parser", "Interpreter", "Monad"
+      "Epidemiology modeling", "Epidemiology", "Modeling", "Parser", "Interpreter", "Monad", "Workflow", "Pipeline"
     ],
-    "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/QuantileRegressionWorkflows"
+    "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/EpidemiologyModelingWorkflows"
 }
