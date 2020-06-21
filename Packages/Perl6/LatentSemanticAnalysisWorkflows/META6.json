@@ -1,0 +1,28 @@
+{
+    "perl" : "6.d",
+    "name" : "LatentSemanticAnalysisWorkflows",
+    "api"  : "1",
+    "auth" : "github:antononcube",
+    "version" : "0.0.1",
+    "description" : "Latent Semantic Analysis workflows building by natural language commands.",
+    "authors" : [ "Anton Antonov" ],
+    "license" : "GPL-3.0-or-later",
+    "provides" : {
+        "LatentSemanticAnalysisWorkflows" : "lib/LatentSemanticAnalysisWorkflows.pm6",
+        "LatentSemanticAnalysisWorkflows::Grammar" : "lib/LatentSemanticAnalysisWorkflows/Grammar.pm6",
+        "LatentSemanticAnalysisWorkflows::Grammar::CommonParts" : "lib/LatentSemanticAnalysisWorkflows/Grammar/CommonParts.pm6",
+        "LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand" : "lib/LatentSemanticAnalysisWorkflows/Grammar/PipelineCommand.pm6",
+        "LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand" : "lib/LatentSemanticAnalysisWorkflows/Grammar/LSIApplyCommand.pm6",
+        "LatentSemanticAnalysisWorkflows::Actions::QRMon-Py" : "lib/LatentSemanticAnalysisWorkflows/Actions/QRMon-Py.pm6",
+        "LatentSemanticAnalysisWorkflows::Actions::QRMon-R" : "lib/LatentSemanticAnalysisWorkflows/Actions/QRMon-R.pm6",
+        "LatentSemanticAnalysisWorkflows::Actions::QRMon-WL" : "lib/LatentSemanticAnalysisWorkflows/Actions/QRMon-WL.pm6"
+    },
+    "depends" : [ ],
+    "build-depends" : [ ],
+    "test-depends" : [ ],
+    "resources" : [ ],
+    "tags": [
+      "Latent", "Semantic", "Analysis", "Indexing", "LSA", "LSI", "Parser", "Interpreter", "Monad"
+    ],
+    "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/LatentSemanticAnalysisWorkflows"
+}
