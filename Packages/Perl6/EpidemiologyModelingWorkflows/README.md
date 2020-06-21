@@ -11,6 +11,33 @@ programming languages: R, WL, Python, etc.
 In the first version(s) the workflows targeted are
 Epidemiology Compartmental Modeling workflows, \[AAr1, AAr2\].
 
+## Installation
+
+**1.** Install Raku (Perl 6) : https://raku.org/downloads . 
+
+**2.** Install Zef Module Installer : https://github.com/ugexe/zef .
+
+**3.** Open a command line program. (E.g. Terminal on Mac OS X.)
+
+**4.** Download or clone this repository,
+[ConversationalAgents at GitHub](https://github.com/antononcube/ConversationalAgents). E.g.
+
+```
+git clone https://github.com/antononcube/ConversationalAgents.git
+```
+
+**5.** Go to the directory "ConversationalAgents/Packages/Perl6/EpidemiologyModelingWorkflows". E.g.
+
+```
+cd ConversationalAgents/Packages/Perl6/EpidemiologyModelingWorkflows
+```
+
+**6.** Execute the command:
+ 
+```
+zef install . --force-install --force-test
+```
+
 ## Examples
 
 Change the 'use' line with the proper location of the package.
