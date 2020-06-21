@@ -3,10 +3,17 @@
 ## In brief
 
 This Raku Perl 6 package has grammar classes and action classes for the parsing and
-interpretation of spoken commands that specify Quantile Regression workflows.
+interpretation of spoken commands that specify Quantile Regression (QR) workflows.
 
 It is envisioned that the interpreters (actions) are going to target different
 programming languages: R, Mathematica, Python, etc.
+
+The generated pipelines are for the software monads 
+[`QRMon-R`](https://github.com/antononcube/QRMon-R) 
+and
+[`QRMon-WL`](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicQuantileRegression.m),
+\[AA1, AA2\].
+  
 
 ## Installation
 
@@ -46,9 +53,9 @@ say to_QRMon_R("compute quantile regression with 16 knots and probabilities 0.25
 # QRMonQuantileRegression(df = 16, probabilities = c(0.25, 0.5, 0.75))
 ``` 
     
-Here is a more complicated pipeline:
+Here is a more complicated pipeline specification:
 
-```
+```raku
 say to_QRMon_R(
     "create from dfTemperatureData;
      compute quantile regression with 16 knots and probability 0.5;
@@ -57,14 +64,28 @@ say to_QRMon_R(
      echo text anomalies finding follows;
      find anomalies by the threshold 5;
      take pipeline value;")
+```
 
-# QRMonUnit( data = dfTemperatureData) %>%
-# QRMonQuantileRegression(df = 16, probabilities = c(0.5)) %>%
-# QRMonPlot( datePlotQ = TRUE, dateOrigin = '1900-01-01') %>%
-# QRMonErrorsPlot( relativeErrorsQ = FALSE) %>%
-# QRMonEcho( "anomalies finding follows" ) %>%
-# QRMonFindAnomaliesByResiduals( threshold = 5) %>%
-# QRMonTakeValue
+The command above should print out R code for the R package `QRMon-R`, \[AA1\]:
+
+```r
+QRMonUnit( data = dfTemperatureData) %>%
+QRMonQuantileRegression(df = 16, probabilities = c(0.5)) %>%
+QRMonPlot( datePlotQ = TRUE, dateOrigin = '1900-01-01') %>%
+QRMonErrorsPlot( relativeErrorsQ = FALSE) %>%
+QRMonEcho( "anomalies finding follows" ) %>%
+QRMonFindAnomaliesByResiduals( threshold = 5) %>%
+QRMonTakeValue
 ```    
 
+## References
 
+\[AA1\] Anton Antonov,
+[Quantile Regression Monad in R](https://github.com/antononcube/QRMon-R), 
+(2019),
+[QRMon-R at GitHub](https://github.com/antononcube/QRMon-R).
+
+\[AA2\] Anton Antonov,
+[Monadic Quantile Regression Mathematica package](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicQuantileRegression.m), 
+(2018),
+[MathematicaForPrediction at GitHub](https://github.com/antononcube/MathematicaForPrediction).
