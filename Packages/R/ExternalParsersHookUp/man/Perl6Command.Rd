@@ -4,8 +4,12 @@
 \alias{Perl6Command}
 \title{Raku Perl 6 command}
 \usage{
-Perl6Command(command, moduleDirectory, moduleName,
-  perl6Location = "/Applications/Rakudo/bin/perl6")
+Perl6Command(
+  command,
+  moduleDirectory,
+  moduleName,
+  perl6Location = "/Applications/Rakudo/bin/perl6"
+)
 }
 \arguments{
 \item{command}{A command string to be parsed.}

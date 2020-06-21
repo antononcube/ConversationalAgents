@@ -22,7 +22,8 @@ interpretation of a spoken command or a list spoken commands separated with ";".
 Produces a character vector or an expression depending on \code{parse}.
 }
 \seealso{
-Other Spoken dplyr: \code{\link{DPLYRInterpret}},
-  \code{\link{DPLYRParse}}
+Other Spoken dplyr: 
+\code{\link{DPLYRInterpret}()},
+\code{\link{DPLYRParse}()}
 }
 \concept{Spoken dplyr}

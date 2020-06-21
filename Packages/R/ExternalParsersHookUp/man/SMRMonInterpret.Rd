@@ -16,9 +16,8 @@ A character vector
 Parses and interprets a command by directly invoking a pair of Raku Perl6 parser and actions classes.
 }
 \seealso{
-Other Spoken dplyr: \code{\link{DPLYRInterpret}},
-  \code{\link{DPLYRParse}}, \code{\link{SMRMonParse}},
-  \code{\link{to_SMRMon_R_command}},
-  \code{\link{to_dplyr_command}}
+Other Spoken SMRMon: 
+\code{\link{SMRMonParse}()},
+\code{\link{to_SMRMon_R_command}()}
 }
-\concept{Spoken dplyr}
+\concept{Spoken SMRMon}

@@ -1,9 +1,9 @@
 ##===========================================================
-## Raku Perl 6 hook-up for spoken SMRMon
+## Raku Perl 6 hook-up for spoken QRMon
 ##
 ## BSD 3-Clause License
 ##
-## Copyright (c) 2019, Anton Antonov
+## Copyright (c) 2020, Anton Antonov
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
 ##===========================================================
 ##
 ## This file has example functions for hooking-up with the functions in
-## the file Perl6-command-functions.R using the recommender workflows grammars.
+## the file Perl6-command-functions.R using the quantile regression workflows grammars.
 ##
 ##===========================================================
 
@@ -49,54 +49,55 @@
 #' Raku Perl 6 parser library
 #' @return A string
 #' @export
-Perl6SMRMonParsingLib <- function() {
-  #file.path( LocalUserDirName(), "ConversationalAgents", "Packages", "Perl6", "RecommenderWorkflows", "lib")
-  "RecommenderWorkflows"
+Perl6QRMonParsingLib <- function() {
+  #file.path( LocalUserDirName(), "ConversationalAgents", "Packages", "Perl6", "QuantileRegressionWorkflows", "lib")
+  "QuantileRegressionWorkflows"
 }
 
-#' Parse SMRMon natural speech command.
+#' Parse QRMon natural speech command.
 #' @description Parses a command by directly invoking a Raku Perl6 parser class.
 #' @param command A natural language command.
 #' @return A character vector
-#' @family Spoken SMRMon
+#' @family Spoken QRMon
 #' @export
-SMRMonParse <-
+QRMonParse <-
   function(command) {
     Perl6Parse(command = command,
-               moduleDirectory = Perl6SMRMonParsingLib(),
-               moduleName = "RecommenderWorkflows",
-               grammarClassName = "RecommenderWorkflows",
+               moduleDirectory = Perl6QRMonParsingLib(),
+               moduleName = "QuantileRegressionWorkflows",
+               grammarClassName = "QuantileRegressionWorkflows",
                actionsClassName = NULL)
   }
 
-#' Interpret SMRMon natural speech command.
+#' Interpret QRMon natural speech command.
 #' @description Parses and interprets a command by directly invoking a pair of Raku Perl6 parser and actions classes.
 #' @param cmd A natural language command.
 #' @return A character vector
-#' @family Spoken SMRMon
+#' @family Spoken QRMon
 #' @export
-SMRMonInterpret <-
+QRMonInterpret <-
   function(command) {
     Perl6Parse(command = command,
-               moduleDirectory = Perl6SMRMonParsingLib(),
-               moduleName = "RecommenderWorkflows",
-               grammarClassName = "RecommenderWorkflows",
-               actionsClassName = "SMRMon-R")
+               moduleDirectory = Perl6QRMonParsingLib(),
+               moduleName = "QuantileRegressionWorkflows",
+               grammarClassName = "QuantileRegressionWorkflows",
+               actionsClassName = "QRMon-R")
   }
 
-#' Interpret a SMRMon natural language command.
-#' @description Calls Raku Perl 6 module function `to_SMRMon_R_command` in order to get
+#' Interpret a QRMon natural language command.
+#' @description Calls Raku Perl 6 module function `to_QRMon_R_command` in order to get
 #' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A boolean should the result be parsed as an R expression.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
-#' @family Spoken SMRMon
+#' @family Spoken QRMon
 #' @export
-to_SMRMon_R_command <- function(command, parse=TRUE) {
-  pres <- Perl6Command( command = paste0( "say to_SMRMon_R(\"", command, "\")"),
-                        moduleDirectory = Perl6SMRMonParsingLib(),
-                        moduleName = "RecommenderWorkflows" )
+to_QRMon_R_command <- function(command, parse = TRUE) {
+  pres <- Perl6Command( command = paste0( "say to_QRMon_R(\"", command, "\")"),
+                        moduleDirectory =  "QuantileRegressionWorkflows",
+                        moduleName = "QuantileRegressionWorkflows" )
+  pres <- gsub( "\\\"", "\"", pres, fixed = T)
   if(parse) { parse(text = pres) }
   else { pres }
 }
