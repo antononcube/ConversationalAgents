@@ -8,6 +8,12 @@ interpretation of spoken commands that specify Latent Semantic Analysis (LSA) wo
 It is envisioned that the interpreters (actions) are going to target different
 programming languages: R, Mathematica, Python, etc.
 
+The generated pipelines are for the software monads 
+[`LSAMon-R`](https://github.com/antononcube/R-packages/tree/master/LSAMon-R) 
+and
+[`LSAMon-WL`](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicLatentSemanticAnalysis.m),
+\[AA1, AA2\].
+
 ## Installation
 
 **1.** Install Raku (Perl 6) : https://raku.org/downloads . 
