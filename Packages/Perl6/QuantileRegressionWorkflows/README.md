@@ -14,7 +14,6 @@ and
 [`QRMon-WL`](https://github.com/antononcube/MathematicaForPrediction/blob/master/MonadicProgramming/MonadicQuantileRegression.m),
 \[AA1, AA2\].
   
-
 ## Installation
 
 **1.** Install Raku (Perl 6) : https://raku.org/downloads . 
