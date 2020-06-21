@@ -93,10 +93,16 @@ ECMMonInterpret <-
 #' @return A string or an R expression
 #' @family Spoken ECMMon
 #' @export
-to_ECMMon_R_command <- function(command, parse = TRUE) {
+to_ECMMon_R_command <- function(command, parse=TRUE) {
   pres <- Perl6Command( command = paste0( "say to_ECMMon_R(\"", command, "\")"),
-                        moduleDirectory =  "EpidemiologyModelingWorkflows",
+                        moduleDirectory = Perl6ECMMonParsingLib(),
                         moduleName = "EpidemiologyModelingWorkflows" )
+  messageInds <- grep( "^Possible", pres )
+  if( length(messageInds) > 0 ) {
+    messageLines <- pres[messageInds]
+    print(messageLines)
+    pres <- pres[setdiff(1:length(pres), messageInds)]
+  }
   pres <- gsub( "\\\"", "\"", pres, fixed = T)
   if(parse) { parse(text = pres) }
   else { pres }

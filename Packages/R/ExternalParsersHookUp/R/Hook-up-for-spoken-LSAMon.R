@@ -97,6 +97,12 @@ to_LSAMon_R_command <- function(command, parse = TRUE) {
   pres <- Perl6Command( command = paste0( "say to_LSAMon_R(\"", command, "\")"),
                         moduleDirectory =  "LatentSemanticAnalysisWorkflows",
                         moduleName = "LatentSemanticAnalysisWorkflows" )
+  messageInds <- grep( "^Possible", pres )
+  if( length(messageInds) > 0 ) {
+    messageLines <- pres[messageInds]
+    print(messageLines)
+    pres <- pres[setdiff(1:length(pres), messageInds)]
+  }
   pres <- gsub( "\\\"", "\"", pres, fixed = T)
   if(parse) { parse(text = pres) }
   else { pres }

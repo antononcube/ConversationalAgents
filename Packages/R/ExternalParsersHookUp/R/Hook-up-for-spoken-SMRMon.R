@@ -95,7 +95,7 @@ SMRMonInterpret <-
 #' @export
 to_SMRMon_R_command <- function(command, parse=TRUE) {
   pres <- Perl6Command( command = paste0( "say to_SMRMon_R(\"", command, "\")"),
-                        moduleDirectory = "RecommenderWorkflows",
+                        moduleDirectory = Perl6SMRMonParsingLib(),
                         moduleName = "RecommenderWorkflows" )
   messageInds <- grep( "^Possible", pres )
   if( length(messageInds) > 0 ) {
