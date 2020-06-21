@@ -4,9 +4,9 @@
     "api"  : "1",
     "auth" : "github:antononcube",
     "version" : "0.0.1",
-    "description" : "Quantile Regression workflows specifications building by natural language commands.",
+    "description" : "Quantile Regression workflows building by natural language commands.",
     "authors" : [ "Anton Antonov" ],
-    "license" : "GPL-3",
+    "license" : "GPL-3.0-or-later",
     "provides" : {
         "QuantileRegressionWorkflows" : "lib/QuantileRegressionWorkflows.pm6",
         "QuantileRegressionWorkflows::Grammar" : "lib/QuantileRegressionWorkflows/Grammar.pm6",
