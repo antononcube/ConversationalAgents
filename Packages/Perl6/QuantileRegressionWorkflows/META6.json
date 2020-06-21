@@ -3,7 +3,7 @@
     "name" : "QuantileRegressionWorkflows",
     "api"  : "1",
     "auth" : "github:antononcube",
-    "version" : "0.0.1",
+    "version" : "0.8.0",
     "description" : "Quantile Regression workflows building by natural language commands.",
     "authors" : [ "Anton Antonov" ],
     "license" : "GPL-3.0-or-later",
@@ -21,7 +21,7 @@
     "test-depends" : [ ],
     "resources" : [ ],
     "tags": [
-      "Quantile regression", "Quantile", "Regression", "Parser", "Interpreter", "Monad"
+      "Quantile regression", "Quantile", "Regression", "Parser", "Interpreter", "Monad", "Workflow", "Pipeline"
     ],
     "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/QuantileRegressionWorkflows"
 }
