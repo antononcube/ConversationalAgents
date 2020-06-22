@@ -123,13 +123,13 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule infected-normally-symptomatic-population-death-rate-spec { <infected> <normally> <symptomatic> <population> <death> <rate> | 'deathRateINSP' | 'death' 'rate' ['INSP' | 'insp' ] | 'μ[INSP]' | 'μINSP' }
     rule infected-severely-symptomatic-population-death-rate-spec { <infected> <severely> <symptomatic> <population> <death> <rate> | 'deathRateISSP' | 'μ[ISSP]' | 'μISSP' }
     rule severely-symptomatic-population-fraction-spec { <severely> <symptomatic> <population> <fraction> | 'sspf[SP]' | 'sspfSP' | 'sspf' }
-    rule contact-rate-for-the-normally-symptomatic-population-spec { <contact> <rate> <for-preposition> <the-determiner>? <infected>? <normally> <symptomatic> <population> | 'contactRateINSP' | 'β[INSP]' | 'βINSP' }
-    rule contact-rate-for-the-severely-symptomatic-population-spec { <contact> <rate> <for-preposition> <the-determiner>? <infected>? <severely> <symptomatic> <population> | 'contactRateISSP' | 'β[ISSP]' | 'βISSP' }
+    rule contact-rate-for-the-normally-symptomatic-population-spec { <contact> <rate> [ <for-preposition> | <of-preposition> ]? <the-determiner>? <infected>? <normally> <symptomatic> <population> | 'contactRateINSP' | 'β[INSP]' | 'βINSP' }
+    rule contact-rate-for-the-severely-symptomatic-population-spec { <contact> <rate> [ <for-preposition> | <of-preposition> ]? <the-determiner>? <infected>? <severely> <symptomatic> <population> | 'contactRateISSP' | 'β[ISSP]' | 'βISSP' }
     rule average-infectious-period-spec { <average> <infectious> <period> | 'aip' }
     rule average-incubation-period-spec { <average> <incubation> <period> | 'aincp' }
     rule lost-productivity-cost-rate-spec { <lost> <productivity> <cost> <rate> | 'lpcr[ISSP,INSP]' | 'lpcrISSP_INSP' | 'lpcr' }
     rule hospitalized-population-death-rate-spec { <hospitalized> <population> <death> <rate> | 'deathRateHP' | 'μ[HP]' | 'μHP' }
-    rule contact-rate-for-the-hospitalized-population-spec { <contact> <rate> <for-preposition> <the-determiner> <hospitalized> <population> | 'contactRateHP' | 'β[HP]' | 'βHP' }
+    rule contact-rate-for-the-hospitalized-population-spec { <contact> <rate> [ <for-preposition> | <of-preposition> ]? <the-determiner>? <hospitalized> <population> | 'contactRateHP' | 'β[HP]' | 'βHP' }
     rule number-of-hospital-beds-rate-spec { <number> <of-preposition> <hospital> <beds> <rate> | 'nhbr[TP]' | 'nhbrTP' }
     rule hospital-services-cost-rate-spec { <hospital> <services> <cost> <rate> | 'hscr[ISSP,INSP]' | 'hscrISSP_INSP' }
     rule number-of-hospital-beds-change-rate-spec { <number> <of-preposition> <hospital> <beds> <change> <rate> | 'nhbcr[ISSP,INSP]' | 'nhbcrISSP_INSP' }
@@ -154,13 +154,13 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule assign-initial-conditions-command { <assign-value-to-stock> }
     rule assign-value-to-stock {
         <.assign-directive> <number-value> <.to-preposition> <.the-determiner>? <stock-spec> |
-        <.set-directive> <stock-spec>  <.to-preposition> <.be-verb>? <number-value> }
+        <.set-directive> <stock-spec> <.to-preposition> <.be-verb>? <number-value> }
 
     # Assign rate values command
     rule assign-rate-values-command { <assign-value-to-rate> }
     rule assign-value-to-rate {
         <.assign-directive> <number-value> <.to-preposition> <.the-determiner>? <rate-spec> |
-        <.set-directive> <rate-spec>  <.to-preposition> <.be-verb>? <number-value> }
+        <.set-directive> <rate-spec> <.to-preposition> <.be-verb>? <number-value> }
 
     # Simulate
     rule simulate-command { <simulate-over-time-range> | <simulate-simple-spec> }
