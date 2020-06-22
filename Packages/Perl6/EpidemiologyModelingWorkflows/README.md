@@ -48,24 +48,39 @@ use EpidemiologyModelingWorkflows;
 say to_ECMMon_R('
      create with SEI2HR;
      assign 100000 to total population;
-     set normally infected population to be 1 and severely infected population to be 1;
-     assign 0.56 to normally infected population contact rate;
-     assign 0.58 to severely infected population contact rate;
-     assign 0.1 to hospitalized population contact rate;  
+     set infected normally symptomatic population to be 0;
+     set infected severely symptomatic population to be 1;
+     assign 0.56 to contact rate of infected normally symptomatic population;
+     assign 0.58 to contact rate of infected severely symptomatic population;
+     assign 0.1 to contact rate of the hospitalized population;
      simulate for 240 days;
      plot results;
-     show deceased infected population evolution' );
+');
+```
+
+The command above should print out code of `ECMMon-R` :
+
+```r
+ECMMonUnit( model = SEI2HRModel()) %>%
+ECMMonAssignInitialConditions( initConds = c(TPt = 100000) ) %>%
+ECMMonAssignInitialConditions( initConds = c(INSPt = 0) ) %>%
+ECMMonAssignInitialConditions( initConds = c(ISSPt = 1) ) %>%
+ECMMonAssignRateValues( rateValues = c(contactRateINSP = 0.56) ) %>%
+ECMMonAssignRateValues( rateValues = c(contactRateISSP = 0.58) ) %>%
+ECMMonAssignRateValues( rateValues = c(contactRateHP = 0.1) ) %>%
+ECMMonSimulate(maxTime = 240) %>%
+ECMMonPlotSolutions()
 ```
 
 ## References 
 
 \[AAr1\] Anton Antonov, 
 [Coronavirus-propagation-dynamics](../../Projects/Coronavirus-propagation-dynamics), 
-2020,
+(2020),
 [SystemModeling at GitHub](https://github.com/antononcube/SystemModeling).
  
 \[AAr2\] Anton Antonov, 
 [Epidemiology Compartmental Modeling Monad in R](https://github.com/antononcube/ECMMon-R), 
-2020,
+(2020),
 [ECMMon-R at GitHub](https://github.com/antononcube/ECMMon-R). 
  
