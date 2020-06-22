@@ -9,6 +9,7 @@ role EpidemiologyModelingWorkflows::Grammar::CommonParts {
     token and-conjunction { 'and' }
     token apply-verb { 'apply' }
     token assign { 'assign' | 'set' }
+    token be-verb { 'be' }
     token broaden-verb { 'broaden' }
     token by-preposition { 'by' | 'with' | 'using' }
     token calculation { 'calculation' }
