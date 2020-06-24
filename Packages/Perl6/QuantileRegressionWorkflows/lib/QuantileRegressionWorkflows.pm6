@@ -15,11 +15,33 @@ interpretation of English natural speech commands that specify Quantile Regressi
 unit module QuantileRegressionWorkflows;
 
 use QuantileRegressionWorkflows::Grammar;
+use QuantileRegressionWorkflows::Actions::QRMon-Py;
 use QuantileRegressionWorkflows::Actions::QRMon-R;
 use QuantileRegressionWorkflows::Actions::QRMon-WL;
 
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
+}
+
+proto to_QRMon_Py($) is export {*}
+
+multi to_QRMon_Py ( Str $command where not has-semicolon($command) ) {
+
+  my $match = QuantileRegressionWorkflows::Grammar::WorkflowCommmand.parse($command, actions => QuantileRegressionWorkflows::Actions::QRMon-Py );
+  die 'Cannot parse the given command.' unless $match;
+  return $match.made;
+}
+
+multi to_QRMon_Py ( Str $command where has-semicolon($command) ) {
+
+  my @commandLines = $command.trim.split(/ ';' \s* /);
+
+  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
+
+  my @smrLines =
+  map { to_QRMon_Py($_) }, @commandLines;
+
+  return @smrLines.join("\n");
 }
 
 proto to_QRMon_R($) is export {*}
