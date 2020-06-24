@@ -23,6 +23,7 @@ sub has-semicolon (Str $word) {
     return defined index $word, ';';
 }
 
+#-----------------------------------------------------------
 proto to_QRMon_Py($) is export {*}
 
 multi to_QRMon_Py ( Str $command where not has-semicolon($command) ) {
@@ -44,6 +45,7 @@ multi to_QRMon_Py ( Str $command where has-semicolon($command) ) {
   return @smrLines.join("\n");
 }
 
+#-----------------------------------------------------------
 proto to_QRMon_R($) is export {*}
 
 multi to_QRMon_R ( Str $command where not has-semicolon($command) ) {
@@ -65,6 +67,7 @@ multi to_QRMon_R ( Str $command where has-semicolon($command) ) {
   return @smrLines.join(" %>%\n");
 }
 
+#-----------------------------------------------------------
 proto to_QRMon_WL($) is export {*}
 
 multi to_QRMon_WL ( Str $command where not has-semicolon($command) ) {
