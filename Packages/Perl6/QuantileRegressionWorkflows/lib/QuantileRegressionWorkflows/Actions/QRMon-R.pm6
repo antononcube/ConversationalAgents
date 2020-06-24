@@ -23,17 +23,17 @@
 #
 #==============================================================================
 #
-#   For more details about Raku Perl6 see https://perl6.org/ .
+#   For more details about Raku (Perl6) see https://rakue.org/ .
 #
 #==============================================================================
 #
 #   The actions are implemented for the grammar:
 #
-#     QuantileRegressionWorkflowsGrammar::Quantile-regression-workflow-commmand
+#     QuantileRegressionWorkflows::Grammar::WorkflowCommmand
 #
 #   in the file :
 #
-#     https://github.com/antononcube/ConversationalAgents/blob/master/Packages/Perl6/QuantileRegressionWorkflows/lib/QuantileRegressionWorkflowsGrammar.pm6
+#     https://github.com/antononcube/ConversationalAgents/blob/master/Packages/Perl6/QuantileRegressionWorkflows/lib/QuantileRegressionWorkflows/Grammar.pm6
 #
 #==============================================================================
 =end comment
@@ -162,8 +162,8 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
 
   # Pipeline command
   method pipeline-command($/) { make $/.values[0].made; }
-  method take-pipeline-value($/) { make 'QRMonTakeValue'; }
-  method echo-pipeline-value($/) { make 'QRMonEchoValue'; }
+  method take-pipeline-value($/) { make 'QRMonTakeValue()'; }
+  method echo-pipeline-value($/) { make 'QRMonEchoValue()'; }
 
   method echo-command($/) { make 'QRMonEcho( ' ~ $<echo-message-spec>.made ~ ' )'; }
   method echo-message-spec($/) { make $/.values[0].made; }
