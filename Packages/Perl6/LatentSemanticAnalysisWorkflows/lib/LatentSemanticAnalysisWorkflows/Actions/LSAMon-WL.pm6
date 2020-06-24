@@ -36,7 +36,7 @@
 #     https://github.com/antononcube/ConversationalAgents/blob/master/Packages/Perl6/LatentSemanticAnalysisWorkflows/lib/LatentSemanticAnalysisWorkflowsGrammar.pm6
 #
 #==============================================================================
-=begin comment
+=end comment
 
 use v6;
 #use lib '.';
