@@ -9,10 +9,12 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     token apply-verb { 'apply' }
     token assign { 'assign' | 'set' }
     token by-preposition { 'by' | 'with' | 'using' }
+    token data-noun { 'data' }
     token do-verb { 'do' }
     token for-preposition { 'for' | 'with' }
     token from-preposition { 'from' }
     token get-verb { 'obtain' | 'get' | 'take' }
+    token no-determiner { 'no' }
     token object { 'object' }
     token of-preposition { 'of' }
     token per { 'per' }
@@ -26,6 +28,7 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     token use-verb { 'use' | 'utilize' }
     token using-preposition { 'using' | 'with' | 'over' }
     token with-preposition { 'using' | 'with' | 'by' }
+    token without-preposition { 'without' }
 
     rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }
     rule number-of { [ 'number' | 'count' ] 'of' }
@@ -42,7 +45,7 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     # Directives
     token classify { 'classify' }
     token compute-directive { 'compute' | 'find' | 'calculate' }
-    token create-directive { 'create' | 'make' }
+    token create-directive { 'create' | 'make' | '創建' | '创建' | 'chuàngjiàn' }
     token diagram { 'plot' | 'plots' | 'graph' | 'chart' }
     token display-directive { 'display' | 'show' | 'echo' }
     token generate-directive { 'generate' | 'create' | 'make' }
