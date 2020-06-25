@@ -50,11 +50,16 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
         does LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     # TOP
     regex TOP {
-        <data-load-command> | <create-command> |
-        <make-doc-term-matrix-command> | <data-transformation-command> |
-        <data-statistics-command> | <lsi-apply-command> |
-        <topics-extraction-command> | <thesaurus-extraction-command> |
-        <show-topics-command> | <show-thesaurus-command> |
+        <data-load-command> |
+        <create-command> |
+        <make-doc-term-matrix-command> |
+        <data-transformation-command> |
+        <data-statistics-command> |
+        <lsi-apply-command> |
+        <topics-extraction-command> |
+        <thesaurus-extraction-command> |
+        <show-topics-command> |
+        <show-thesaurus-command> |
         <represent-query-command> |
         <pipeline-command> }
 
@@ -62,7 +67,7 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule data-load-command { <load-data> | <use-lsa-object> }
 
     rule load-data { <load-data-opening> <the-determiner>? <data-kind> [ <data>? <load-preposition> ]? <location-specification> | <load-data-opening> [ <the-determiner> ]? <location-specification> <data>? }
-    rule data-reference {[ 'data' | [ 'texts' | 'text' [ [ 'corpus' | 'collection' ] ]? [ 'data' ]? ] ]}
+    rule data-reference {[ <data-noun> | [ 'texts' | 'text' [ [ 'corpus' | 'collection' ] ]? [ <data-noun> ]? ] ]}
     rule load-data-opening {[ 'load' | 'get' | 'consider' ] [ 'the' ]? <data-reference>}
     rule load-preposition { 'for' | 'of' | 'at' | 'from' }
     rule location-specification {[ <dataset-name> | <web-address> | <database-name> ]}
@@ -77,7 +82,8 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule create-command { <create-simple> | <create-by-dataset> }
     rule simple-way-phrase { 'in' <a-determiner>? <simple> 'way' | 'directly' | 'simply' }
     rule create-simple { <create-directive> <.a-determiner>? <simple>? <object> <simple-way-phrase>? | <simple> <object> [ 'creation' | 'making' ] }
-    rule create-by-dataset { [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
+    rule create-by-dataset {
+        [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
 
     # Make document-term matrix command
     rule make-doc-term-matrix-command { [ <compute-directive> | <generate-directive> ] [ <.the-determiner> | <.a-determiner> ]? <doc-term-mat> <doc-term-matrix-parameters-spec>? }
@@ -87,7 +93,8 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule doc-term-matrix-parameter { <doc-term-matrix-stemming-rules> | <doc-term-matrix-stop-words> }
 
     rule stemming-rules-phrase { 'stemming' ['rules']? }
-    rule doc-term-matrix-stemming-rules { <.stemming-rules-phrase> <stemming-rules-spec> | <stemming-rules-spec> <.stemming-rules-phrase> }
+    rule no-stemming-rules-spec { [ <.no-determiner> | <.without-preposition> ] <.stemming-rules-phrase> }
+    rule doc-term-matrix-stemming-rules { <no-stemming-rules-spec> | <.stemming-rules-phrase> <stemming-rules-spec> | <stemming-rules-spec> <.stemming-rules-phrase> }
     rule stemming-rules-spec { <variable-name> | <trivial-parameter> }
 
     rule stop-words-phrase { 'stop' 'words' }
@@ -107,7 +114,7 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule data-element { 'sentence' | 'paragraph' | 'section' | 'chapter' | 'word' }
     rule data-elements { 'sentences' | 'paragraphs' | 'sections' | 'chapters' | 'words' }
     rule data-spec-opening {<transform-verb>}
-    rule data-type-filler { 'data' | 'records' }
+    rule data-type-filler { <data-noun> | 'records' }
 
     # Data statistics command
     rule data-statistics-command { <summarize-data> }
@@ -192,41 +199,40 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     # }
 
     method ws() {
-      if self.pos > $*HIGHWATER {
-        $*HIGHWATER = self.pos;
-        $*LASTRULE = callframe(1).code.name;
-      }
-      callsame;
+        if self.pos > $*HIGHWATER {
+            $*HIGHWATER = self.pos;
+            $*LASTRULE = callframe(1).code.name;
+        }
+        callsame;
     }
 
     method parse($target, |c) {
-      my $*HIGHWATER = 0;
-      my $*LASTRULE;
-      my $match = callsame;
-      self.error_msg($target) unless $match;
-      return $match;
+        my $*HIGHWATER = 0;
+        my $*LASTRULE;
+        my $match = callsame;
+        self.error_msg($target) unless $match;
+        return $match;
     }
 
     method subparse($target, |c) {
-      my $*HIGHWATER = 0;
-      my $*LASTRULE;
-      my $match = callsame;
-      self.error_msg($target) unless $match;
-      return $match;
+        my $*HIGHWATER = 0;
+        my $*LASTRULE;
+        my $match = callsame;
+        self.error_msg($target) unless $match;
+        return $match;
     }
 
     method error_msg($target) {
-      my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
-      my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
-      my $line-no = $parsed.lines.elems;
-      my $msg = "Cannot parse the command";
-      # say 'un-parsed : ', $un-parsed;
-      # say '$*LASTRULE : ', $*LASTRULE;
-      $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
-      $msg ~= "; target '$target' position $*HIGHWATER";
-      $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
-      $msg ~= ' .';
-      say $msg;
+        my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
+        my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
+        my $line-no = $parsed.lines.elems;
+        my $msg = "Cannot parse the command";
+        # say 'un-parsed : ', $un-parsed;
+        # say '$*LASTRULE : ', $*LASTRULE;
+        $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
+        $msg ~= "; target '$target' position $*HIGHWATER";
+        $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
+        $msg ~= ' .';
+        say $msg;
     }
-
 }
