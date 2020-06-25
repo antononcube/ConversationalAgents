@@ -94,6 +94,7 @@ class LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py {
 
   method doc-term-matrix-stemming-rules($/) { make $/.values[0].made; }
   method stemming-rules-spec($/) { make 'stemWordsQ = ' ~ $/.values[0].made; }
+  method no-stemming-rules-spec($/) { make 'stemWordsQ = false'; }
 
   method doc-term-matrix-stop-words($/) { make $/.values[0].made; }
   method stop-words-spec($/) { make 'stopWords = ' ~ $/.values[0].made; }
