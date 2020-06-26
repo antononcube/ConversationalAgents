@@ -7,10 +7,12 @@ use RecommenderWorkflows::Actions::SMRMon-R;
 # Shortcut
 my $pSMRMONCOMMAND = RecommenderWorkflows::Grammar::WorkflowCommand;
 
-#use MLWorflows::Recommender::Actions::SMRMon-R;
+#use Interpretation::English::RecommenderWorkflows::Actions::SMRMon-R;
 #use MLWorflows::QuantileRegression::Actions::SMRMon-R;
 
-say $pSMRMONCOMMAND.subparse( 'make a metadata recommender for passengerClass over passengerSex and passngerAge' );
+say $pSMRMONCOMMAND.parse('compute the top recommendations for profile female=1, 30=1, survived=0.1', actions => RecommenderWorkflows::Actions::SMRMon-WL ).made;
+
+#say $pSMRMONCOMMAND.subparse( 'make a metadata recommender for passengerClass over passengerSex and passngerAge' );
 
 # say $pSMRMONCOMMAND.parse('find proximity anomalies using 20 nns');
 #
@@ -45,6 +47,8 @@ say $pSMRMONCOMMAND.subparse( 'make a metadata recommender for passengerClass ov
 #say $pSMRMONCOMMAND.parse('create with ds2');
 
 #say $pSMRMONCOMMAND.parse('recommend with history id.12:3 and id.13:4');
+
+#say $pSMRMONCOMMAND.parse('recommend with history id.12=3 and id.13=4');
 
 #say $pSMRMONCOMMAND.parse('recommend with history id.12:3 and id.13:4', actions => SMRMon-R-actions::SMRMon-R-actions).made;
 

@@ -30,15 +30,33 @@ say "\n=======\n";
 #     recommend by profile female, 30;
 #     echo value;
 #     prove recommended items id.123, id.99 by metadata' );
-#
-#say "\n=======\n";
-#
+
+say "\n=======\n";
+
 #say to_SMRMon_R('
 #     use recommender smrObj2;
 #     recommend by profile female, 30;
 #     echo value;
 #     display proof follows;
 #     prove recommended items id.123, id.99 with the profile tag.1, tag.23' );
+
+say "\n=======\n";
+
+my $commands = '
+create from dfTitanic;
+recommend with history id.5=10, id.7=3;
+join across recommendations with the data frame dfTitanic;
+echo pipeline value';
+
+say to_SMRMon_R( $commands );
+
+say "\n=======\n";
+
+say to_SMRMon_Py( $commands );
+
+say "\n=======\n";
+
+say to_SMRMon_WL( $commands );
 
 #say to_SMRMon_R('
 #     use recommender smrObj2;
@@ -47,7 +65,7 @@ say "\n=======\n";
 #     echo value;
 #     classify to passengerSurvival the profile male, 1st using 30 nns;
 #     echo value' );
-
+#
 #say to_SMRMon_R('
 #     use recommender smrObj2;
 #     compute profile for the history id.5, id.993;
