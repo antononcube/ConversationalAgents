@@ -11,6 +11,7 @@ role RecommenderWorkflows::Grammar::CommonParts {
   token apply-verb { 'apply' }
   token assign { 'assign' | 'set' }
   token by-preposition { 'by' | 'with' | 'using' }
+  token directly-adverb { 'directly' }
   token do-verb { 'do' }
   token for-preposition { 'for' | 'with' }
   token from-preposition { 'from' }
@@ -18,15 +19,17 @@ role RecommenderWorkflows::Grammar::CommonParts {
   token object { 'object' }
   token of-preposition { 'of' }
   token over-preposition { 'over' }
-  token per { 'per' }
+  token per-preposition { 'per' }
   token results { 'results' }
   token simple { 'simple' | 'direct' }
+  token simply-adverb { 'simply' }
   token system { 'system' }
   token the-determiner { 'the' }
   token to-preposition { 'to' | 'into' }
   token transform-verb { 'transform' }
   token use-verb { 'use' | 'utilize' }
   token using-preposition { 'using' | 'with' | 'over' }
+  token way-noun { 'way' }
   token with-preposition { 'using' | 'with' | 'by' }
 
   rule for-which-phrase { 'for' 'which' | 'that' 'adhere' 'to' }

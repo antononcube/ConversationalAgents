@@ -51,9 +51,11 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
         <pipeline-command> |
         <data-load-command> |
         <create-command> |
-        <data-transformation-command> | <lsi-apply-command> |
+        <data-transformation-command> |
+        <lsi-apply-command> |
         <data-statistics-command> |
-        <recommend-by-profile-command> | <recommend-by-history-command> |
+        <recommend-by-profile-command> |
+        <recommend-by-history-command> |
         <make-profile-command> |
         <extend-recommendations-command> |
         <prove-recommendations-command> |
@@ -71,7 +73,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
     # Create command
     rule create-command { <create-by-matrices> | <create-by-dataset> | <create-simple> }
     rule create-preamble-phrase { <generate-directive> [ <.a-determiner> | <.the-determiner> ]? <recommender-object> }
-    rule simple-way-phrase { 'in' <a-determiner> <simple> 'way' | 'directly' | 'simply' }
+    rule simple-way-phrase { <in-preposition> <a-determiner> <simple> <way-noun> | <directly-adeverb> | <simply-adverb> }
     rule create-simple { <create-preamble-phrase> <simple-way-phrase>? | <simple> <recommender-object> [ 'creation' | 'making' ] }
     rule create-by-dataset { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <dataset>? <dataset-name> }
     rule create-by-matrices { [ <create-preamble-phrase> | <generate-directive> ] [ <.with-preposition> | <.from-preposition> ] <.the-determiner>? <matrices> <creation-matrices-spec> }
@@ -85,8 +87,8 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
     rule data-statistics-command { <show-data-summary> | <summarize-data> | <items-per-tag> | <tags-per-item> }
     rule show-data-summary { <display-directive> <data>? 'summary' }
     rule summarize-data { 'summarize' <.the-determiner>? <data> | <display-directive> <data>? ( 'summary' | 'summaries' ) }
-    rule items-per-tag { <number-of> <items-slot> 'per' <tag> }
-    rule tags-per-item { <number-of> <tags> 'per' <item-slot> }
+    rule items-per-tag { <number-of> <items-slot> <per-preposition> <tag> }
+    rule tags-per-item { <number-of> <tags> <per-preposition> <item-slot> }
 
     # (Scored) items lists
     token score-association-symbol { '=' | '->' | '→' }
@@ -115,7 +117,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
     rule recommend-by-history { <.recommend-directive>
                               [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
                               <history-spec> }
-    rule top-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.recommendations> }
+    rule top-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value>? <.recommendations> }
     rule top-recommendations-by-history { <top-recommendations>
                                         [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.history-phrase>?
                                         <history-spec> }
@@ -127,7 +129,7 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
     rule recommend-by-profile { <.recommend-directive>
                               [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile-slot>
                               <profile-spec> }
-    rule top-profile-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value> <.profile-slot> <.recommendations> }
+    rule top-profile-recommendations { <compute-directive> <.the-determiner>? <.most-relevant-phrase>? <integer-value>? <.profile-slot> <.recommendations> }
     rule top-recommendations-by-profile { <top-recommendations>
                                         [ <.using-preposition> | <.by-preposition> | <.for-preposition> ] <.the-determiner>? <.profile-slot>
                                         <profile-spec> }
