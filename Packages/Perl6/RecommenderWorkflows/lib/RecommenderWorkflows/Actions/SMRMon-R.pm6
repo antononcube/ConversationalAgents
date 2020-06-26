@@ -114,15 +114,39 @@ class RecommenderWorkflows::Actions::SMRMon-R {
   # Recommend by history command
   method recommend-by-history-command($/) { make $/.values[0].made; }
   method recommend-by-history($/) { make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ')'; }
-  method top-recommendations($/) { make 'SMRMonGetTopRecommendations( spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ')'; }
-  method top-recommendations-by-history($/) { make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ', nrecs = ' ~ $<top-recommendations><integer-value>.made ~ ')'; }
+  method top-recommendations($/) {
+    if $<integer-value> {
+      make 'SMRMonGetTopRecommendations( spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ')';
+    } else {
+      make 'SMRMonGetTopRecommendations( spec = NULL )';
+    }
+  }
+  method top-recommendations-by-history($/) {
+    if $<top-recommendations><integer-value> {
+      make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ', nrecs = ' ~ $<top-recommendations><integer-value>.made ~ ')';
+    } else {
+      make 'SMRMonRecommend( history = ' ~ $<history-spec>.made ~ ')';
+    }
+  }
   method history-spec($/) { make $/.values[0].made; }
 
   # Recommend by profile command
   method recommend-by-profile-command($/) { make $/.values[0].made; }
   method recommend-by-profile($/) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ')'; }
-  method top-profile-recommendations($/) { make 'SMRMonGetTopRecommendations( spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ')'; }
-  method top-recommendations-by-profile($/) { make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ', nrecs = ' ~ $<top-recommendations><integer-value>.made ~ ')'; }
+  method top-profile-recommendations($/) {
+    if $<integer-value> {
+      make 'SMRMonGetTopRecommendations( spec = NULL, nrecs = ' ~ $<integer-value>.made ~ ')';
+    } else {
+      make 'SMRMonGetTopRecommendations( spec = NULL )';
+    }
+  }
+  method top-recommendations-by-profile($/) {
+    if $<top-recommendations><integer-value> {
+      make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ', nrecs = ' ~ $<top-recommendations><integer-value>.made ~ ')';
+    } else {
+      make 'SMRMonRecommendByProfile( profile = ' ~ $<profile-spec>.made ~ ')';
+    }
+  }
   method profile-spec($/) { make $/.values[0].made; }
 
   # Make profile
