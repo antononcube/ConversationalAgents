@@ -13,6 +13,7 @@
         "QuantileRegressionWorkflows::Grammar::CommonParts" : "lib/QuantileRegressionWorkflows/Grammar/CommonParts.pm6",
         "QuantileRegressionWorkflows::Grammar::PipelineCommand" : "lib/QuantileRegressionWorkflows/Grammar/PipelineCommand.pm6",
         "QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases" : "lib/QuantileRegressionWorkflows/Grammar/TimeSeriesAndRegressionPhrases.pm6",
+        "QuantileRegressionWorkflows::Actions::QRMon-Py" : "lib/QuantileRegressionWorkflows/Actions/QRMon-Py.pm6",
         "QuantileRegressionWorkflows::Actions::QRMon-R" : "lib/QuantileRegressionWorkflows/Actions/QRMon-R.pm6",
         "QuantileRegressionWorkflows::Actions::QRMon-WL" : "lib/QuantileRegressionWorkflows/Actions/QRMon-WL.pm6"
     },
