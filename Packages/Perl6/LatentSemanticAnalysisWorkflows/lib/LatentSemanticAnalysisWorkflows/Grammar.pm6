@@ -35,7 +35,7 @@
 =end comment
 
 use v6;
-use LatentSemanticAnalysisWorkflows::Grammar::CommonParts;
+use LatentSemanticAnalysisWorkflows::Grammar::LatentSemanticAnalysisPhrases;
 use LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand;
 use LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand;
 
@@ -47,7 +47,7 @@ use LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand;
 grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
         does LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand
         does LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand
-        does LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
+        does LatentSemanticAnalysisWorkflows::Grammar::LatentSemanticAnalysisPhrases {
     # TOP
     regex TOP {
         <data-load-command> |
@@ -67,9 +67,9 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule data-load-command { <load-data> | <use-lsa-object> }
 
     rule load-data { <load-data-opening> <the-determiner>? <data-kind> [ <data>? <load-preposition> ]? <location-specification> | <load-data-opening> [ <the-determiner> ]? <location-specification> <data>? }
-    rule data-reference {[ <data-noun> | [ 'texts' | 'text' [ [ 'corpus' | 'collection' ] ]? [ <data-noun> ]? ] ]}
-    rule load-data-opening {[ 'load' | 'get' | 'consider' ] [ 'the' ]? <data-reference>}
-    rule load-preposition { 'for' | 'of' | 'at' | 'from' }
+    rule data-reference { <data-noun> | <text-corpus-phrase> <data-noun>? }
+    rule load-data-opening { <load-directive> <the-determiner>? <data-reference>}
+    rule load-preposition { <for-preposition> | <of-preposition> | <at-preposition> | <from-preposition> }
     rule location-specification {[ <dataset-name> | <web-address> | <database-name> ]}
     rule web-address { <variable-name> }
     rule dataset-name { <variable-name> }
@@ -80,8 +80,8 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
 
     # Create command
     rule create-command { <create-simple> | <create-by-dataset> }
-    rule simple-way-phrase { 'in' <a-determiner>? <simple> 'way' | 'directly' | 'simply' }
-    rule create-simple { <create-directive> <.a-determiner>? <simple>? <object> <simple-way-phrase>? | <simple> <object> [ 'creation' | 'making' ] }
+    rule simple-way-phrase { <in-preposition> <a-determiner>? <simple-way-phrase> | <directly> | <simply-adverb> }
+    rule create-simple { <create-directive> <a-determiner>? <simple>? <object> <simple-way-phrase>? | <simple> <object> [ <creation> | <making> ] }
     rule create-by-dataset {
         [ <create-simple> | <create-directive> ] [ <.by-preposition> | <.with-preposition> | <.from-preposition> ]? <dataset-name> }
 
@@ -92,12 +92,10 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule doc-term-matrix-parameters-list { <doc-term-matrix-parameter>+ % <list-separator> }
     rule doc-term-matrix-parameter { <doc-term-matrix-stemming-rules> | <doc-term-matrix-stop-words> }
 
-    rule stemming-rules-phrase { 'stemming' ['rules']? }
     rule no-stemming-rules-spec { [ <.no-determiner> | <.without-preposition> ] <.stemming-rules-phrase> }
     rule doc-term-matrix-stemming-rules { <no-stemming-rules-spec> | <.stemming-rules-phrase> <stemming-rules-spec> | <stemming-rules-spec> <.stemming-rules-phrase> }
     rule stemming-rules-spec { <variable-name> | <trivial-parameter> }
 
-    rule stop-words-phrase { 'stop' 'words' }
     rule doc-term-matrix-stop-words { <.stop-words-phrase> <stop-words-spec> | <stop-words-spec> <.stop-words-phrase> }
     rule stop-words-spec { <variable-name> | <trivial-parameter> }
 
@@ -110,74 +108,68 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
 
     # Data transformation command
     rule data-transformation-command { <data-partition> }
-    rule data-partition {'partition' [ <data-reference> ]? [ 'to' | 'into' ] <data-elements>}
-    rule data-element { 'sentence' | 'paragraph' | 'section' | 'chapter' | 'word' }
-    rule data-elements { 'sentences' | 'paragraphs' | 'sections' | 'chapters' | 'words' }
+    rule data-partition { <partition> <data-reference>? [ <to-preposition> | <into-preposition> ] <data-elements> }
     rule data-spec-opening {<transform-verb>}
-    rule data-type-filler { <data-noun> | 'records' }
+    rule data-type-filler { <data-noun> | <records> }
 
     # Data statistics command
     rule data-statistics-command { <summarize-data> }
-    rule summarize-data { 'summarize' <.the-determiner>? <data> | <display-directive> <data>? ( 'summary' | 'summaries' ) }
+    rule summarize-data { <summarize-directive> <the-determiner>? <data> | <display-directive> <data>? [ <summary> | <summaries> ] }
 
     # LSI command is programmed as a role.
     # <lsi-apply-command>
 
     # Statistics command
     rule statistics-command {<statistics-preamble> [ <statistic-spec> | [ <docs-per-term> | <terms-per-doc> ] [ <statistic-spec> ]? ] }
-    rule statistics-preamble {[ <compute-and-display> | <display-directive> ] [ 'the' | 'a' | 'some' ]?}
-    rule docs-per-term {<docs> [ 'per' ]? <terms>}
-    rule terms-per-doc {<terms> [ 'per' ]? <docs>}
-    rule docs { 'document' | 'documents' | 'item' | 'items' }
-    rule terms { 'word' | 'words' | 'term' | 'terms' }
+    rule statistics-preamble {[ <compute-and-display> | <display-directive> ] [ <the-determiner> | <a-determiner> | <some-determiner> ]?}
+    rule docs-per-term {<docs> <per-preposition>? <terms> }
+    rule terms-per-doc {<terms> <per-preposition>? <docs> }
     rule statistic-spec { <diagram-spec> | <summary-spec> }
-    rule diagram-spec {'histogram'}
-    rule summary-spec { 'summary' | 'statistics' }
+    rule diagram-spec { <histogram>}
+    rule summary-spec { <summary> | <statistics> }
 
     # Thesaurus command
-    rule thesaurus-extraction-command {[ <compute-directive> | 'extract' ] <thesaurus-spec>}
-    rule thesaurus-spec { [ [ 'statistical' ]? 'thesaurus' ] [ <with-preposition> <thesaurus-parameters-spec> ]? }
+    rule thesaurus-extraction-command {[ <compute-directive> | <extract-directive> ] <thesaurus-spec>}
+    rule thesaurus-spec { <statistical-thesaurus-phrase> [ <with-preposition> <thesaurus-parameters-spec> ]? }
     rule thesaurus-parameters-spec {<thesaurus-number-of-nns>}
-    rule thesaurus-number-of-nns {<number-value> [ [ 'number' 'of' ]? [ [ 'nearest' ]? 'neighbors' | 'synonyms' | 'synonym' [ 'words' | 'terms' ] ] [ 'per' [ 'word' | 'term' ] ]?] }
+    rule thesaurus-number-of-nns {<number-value> [ <number-of>? [ <nearest-neighbors-phrase> | <synonyms> | <synonym> <terms> ] [ <per-preposition> <terms> ]?] }
 
     # Topics extraction
-    rule topics-extraction-command {[ <compute-directive> | 'extract' ] <topics-spec> [ <topics-parameters-spec> ]?}
-    rule topics-spec { <number-value> 'topics' | 'topics' <number-value> }
+    rule topics-extraction-command {[ <compute-directive> | <extract-directive> ] <topics-spec> [ <topics-parameters-spec> ]?}
+    rule topics-spec { <number-value> <topics> | <topics> <number-value> }
     rule topics-parameters-spec { <.with-preposition> <topics-parameters-list>}
     rule topics-parameters-list { <topics-parameter>+ % <list-separator> }
 
     rule topics-parameter { <topics-max-iterations> | <topics-initialization> | <min-number-of-documents-per-term> | <topics-method>}
     rule topics-max-iterations { <max-iterations-phrase> <number-value> | <number-value> <max-iterations-phrase> }
-    rule max-iterations-phrase { [ 'max' | 'maximum' ]? [ 'iterations' | 'steps' ] }
-    rule topics-initialization {[ 'random' ]? <number-value> 'columns' 'clusters'}
+    rule topics-initialization {  <random-adjective>? <number-value> <columns> <clusters> }
     rule min-number-of-documents-per-term { <min-number-of-documents-per-term-phrase> <number-value> | <number-value> <min-number-of-documents-per-term-phrase> }
-    rule min-number-of-documents-per-term-phrase { [ 'min' | 'minimum' ] 'number' 'of' 'documents' 'per' [ 'term' | 'word' ]}
-    rule topics-method {[ [ 'the' ]? 'method' ]? <topics-method-name> }
+    rule min-number-of-documents-per-term-phrase { <minimum> <number-of> <documents> <per-preposition> <terms> }
+    rule topics-method {[ <.the-determiner>? <.method-noun> ]? <topics-method-name> }
 
     ## May be this should be slot?
     ## Also, note that the method names are hard-coded.
     rule topics-method-name { <topics-method-SVD> | <topics-method-PCA> | <topics-method-NNMF> | <topics-method-ICA> }
-    rule topics-method-SVD { 'svd' | 'SVD' | 'SingularValueDecomposition' | 'singular' 'value' 'decomposition' }
-    rule topics-method-PCA { 'pca' | 'PCA' | 'PrincipalComponentAnalysis' | 'principal' 'component' 'analysis' }
-    rule topics-method-NNMF { 'nmf' | 'nnmf' | 'NonNegativeMatrixFactorization' | 'NonnegativeMatrixFactorization' | 'NMF' | 'NNMF' | [ 'non' 'negative' | 'non-negative' | 'nonnegative' ] 'matrix' 'facotrization' }
-    rule topics-method-ICA { 'ica' | 'ICA' | 'IndependentComponentAnalysis' | 'independent' 'component' 'analysis' }
+    rule topics-method-SVD { 'svd' | 'SVD' | 'SingularValueDecomposition' | <SVD-phrase> }
+    rule topics-method-PCA { 'pca' | 'PCA' | 'PrincipalComponentAnalysis' | <PCA-phrase> }
+    rule topics-method-NNMF { 'nmf' | 'nnmf' | 'NMF' | 'NNMF' | 'NonNegativeMatrixFactorization' | 'NonnegativeMatrixFactorization' | <NNMF-phrase> }
+    rule topics-method-ICA { 'ica' | 'ICA' | 'IndependentComponentAnalysis' | <ICA-phrase> }
 
     # Show topics table commands
     rule show-topics-command { <show-topics-table-command> }
-    rule show-topics-table-command { <display-directive> <.the-determiner>? 'topics' 'table' <topics-table-parameters-spec>? }
+    rule show-topics-table-command { <display-directive> <the-determiner>? <topics-table-phrase> <topics-table-parameters-spec>? }
     rule topics-table-parameters-spec { <.using-preposition> <topics-table-parameters-list> }
     rule topics-table-parameters-list { <topics-table-parameter>+ % <list-separator> }
     rule topics-table-parameter { <topics-table-number-of-table-columns> | <topics-table-number-of-terms> }
 
-    rule number-of-table-columns-phrase { ['number' 'of']? ['table']? 'columns' }
+    rule number-of-table-columns-phrase { <number-of>? <table-noun>? <columns> }
     rule topics-table-number-of-table-columns { <.number-of-table-columns-phrase> <integer-value> | <integer-value> <.number-of-table-columns-phrase> }
 
-    rule number-of-terms-phrase { ['number' 'of']? [ 'terms' | 'words' ] }
     rule topics-table-number-of-terms {  <.number-of-terms-phrase> <integer-value> | <integer-value> <.number-of-terms-phrase> }
 
     rule show-thesaurus-command { <show-thesaurus-table-command> | <what-are-the-term-nns> }
-    rule show-thesaurus-table-command { [ <compute-and-display> | <display-directive> ] ['statistical']? 'thesaurus' ['table']? <thesaurus-words-spec>? }
-    rule what-are-the-term-nns { 'what' 'are' <.the-determiner>? ['top']? [ 'nearest' 'neighbors' | 'nns' ] <thesaurus-words-spec> }
+    rule show-thesaurus-table-command { [ <compute-and-display> | <display-directive> ] <statistical>? <thesaurus> <table-noun>? <thesaurus-words-spec>? }
+    rule what-are-the-term-nns { <what-pronoun> <are-verb> <the-determiner>? <top-noun>? <nearest-neighbors-phrase> <thesaurus-words-spec> }
     rule thesaurus-words-spec { [ <.for-preposition> | <.of-preposition> ] <thesaurus-words-list>}
     rule thesaurus-words-list { <variable-name>+ % <list-separator> }
 
@@ -189,50 +181,4 @@ grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
     rule query-words-list { <variable-name>+ % ( <list-separator> | \h+ )  }
     rule query-variable { <variable-name> }
     token query-text { [\" ([ \w | '_' | '-' | '.' | \d ]+ | [\h]+)+ \"]  }
-
-    # Error message
-    # method error($msg) {
-    #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
-    #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
-    #   my $line-no = $parsed.lines.elems;
-    #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
-    # }
-
-    method ws() {
-        if self.pos > $*HIGHWATER {
-            $*HIGHWATER = self.pos;
-            $*LASTRULE = callframe(1).code.name;
-        }
-        callsame;
-    }
-
-    method parse($target, |c) {
-        my $*HIGHWATER = 0;
-        my $*LASTRULE;
-        my $match = callsame;
-        self.error_msg($target) unless $match;
-        return $match;
-    }
-
-    method subparse($target, |c) {
-        my $*HIGHWATER = 0;
-        my $*LASTRULE;
-        my $match = callsame;
-        self.error_msg($target) unless $match;
-        return $match;
-    }
-
-    method error_msg($target) {
-        my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
-        my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
-        my $line-no = $parsed.lines.elems;
-        my $msg = "Cannot parse the command";
-        # say 'un-parsed : ', $un-parsed;
-        # say '$*LASTRULE : ', $*LASTRULE;
-        $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
-        $msg ~= "; target '$target' position $*HIGHWATER";
-        $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
-        $msg ~= ' .';
-        say $msg;
-    }
 }

@@ -11,6 +11,7 @@
         "LatentSemanticAnalysisWorkflows" : "lib/LatentSemanticAnalysisWorkflows.pm6",
         "LatentSemanticAnalysisWorkflows::Grammar" : "lib/LatentSemanticAnalysisWorkflows/Grammar.pm6",
         "LatentSemanticAnalysisWorkflows::Grammar::CommonParts" : "lib/LatentSemanticAnalysisWorkflows/Grammar/CommonParts.pm6",
+        "LatentSemanticAnalysisWorkflows::Grammar::LatentSemanticAnalysisPhrases" : "lib/LatentSemanticAnalysisWorkflows/Grammar/LatentSemanticAnalysisPhrases.pm6",
         "LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand" : "lib/LatentSemanticAnalysisWorkflows/Grammar/PipelineCommand.pm6",
         "LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand" : "lib/LatentSemanticAnalysisWorkflows/Grammar/LSIApplyCommand.pm6",
         "LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py" : "lib/LatentSemanticAnalysisWorkflows/Actions/LSAMon-Py.pm6",
