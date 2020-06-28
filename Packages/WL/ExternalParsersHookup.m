@@ -44,204 +44,239 @@
 (* :Keywords: *)
 (* :Discussion:
 
-   Needs refactoring!
+   [X] Needs refactoring!
 *)
 
 BeginPackage["ExternalParsersHookup`"];
 (* Exported symbols added here with SymbolName::usage *)
 
-Perl6Command::usage = "Raku Perl 6 command invocation.";
+RakuCommand::usage = "Raku (Perl 6) command invocation.";
 
-ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline.";
+ToMonadicCommand::usage = "Translates a natural language commands into a monadic pipeline.";
 
-ToSMRMonWLCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline.";
+ToQRMonCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline.";
 
-ToLSAMonWLCommand::usage = "Translates a natural language commands into a LSAMon-WL pipeline.";
+ToSMRMonCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline.";
 
-ToECMMonWLCommand::usage = "Translates a natural language commands into a ECMMon-WL pipeline.";
+ToLSAMonCommand::usage = "Translates a natural language commands into a LSAMon-WL pipeline.";
+
+ToECMMonCommand::usage = "Translates a natural language commands into a ECMMon-WL pipeline.";
+
+ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline. Obsolete.";
+
+ToSMRMonWLCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline. Obsolete.";
+
+ToLSAMonWLCommand::usage = "Translates a natural language commands into a LSAMon-WL pipeline. Obsolete.";
+
+ToECMMonWLCommand::usage = "Translates a natural language commands into a ECMMon-WL pipeline. Obsolete.";
 
 Begin["`Private`"];
 
 (*===========================================================*)
-(* Perl6Command                                              *)
+(* RakuCommand                                              *)
 (*===========================================================*)
 
-Clear[Perl6Command];
+Clear[RakuCommand];
 
-Perl6Command::nostr = "All arguments are expected to be strings.";
+RakuCommand::nostr = "All arguments are expected to be strings.";
 
-Perl6Command[command_String, moduleDirectory_String, moduleName_String, perl6Location_String : "/Applications/Rakudo/bin/perl6"] :=
-    Block[{p6CommandPart, p6Command, pres},
-      (*p6CommandPart=StringJoin["-I\"",moduleDirectory,"\" -M'",
+RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocation_String : "/Applications/Rakudo/bin/raku"] :=
+    Block[{rakuCommandPart, rakuCommand, pres},
+      (*rakuCommandPart=StringJoin["-I\"",moduleDirectory,"\" -M'",
       moduleName,"' -e 'XXXX'"];
-      p6Command=perl6Location<>" "<>StringReplace[p6CommandPart,"XXXX"->
+      rakuCommand=rakuLocation<>" "<>StringReplace[rakuCommandPart,"XXXX"->
       command];*)
-      p6Command = {
-        perl6Location,
+      rakuCommand = {
+        rakuLocation,
         StringJoin["-I\"", moduleDirectory, "\""],
         StringJoin["-M'", moduleName, "'"],
         StringJoin["-e \"" <> command <> "\""]
       };
-      (*pres=RunProcess[p6Command];*)
+      (*pres=RunProcess[rakuCommand];*)
 
-      p6Command = StringRiffle[p6Command, " "];
+      rakuCommand = StringRiffle[rakuCommand, " "];
 
-      pres = Import["! " <> p6Command, "String"];
+      pres = Import["! " <> rakuCommand, "String"];
       StringReplace[pres, "==>" -> "\[DoubleLongRightArrow]"]
     ];
 
-Perl6Command[___] :=
+RakuCommand[___] :=
     Block[{},
-      Message[Perl6Command::nostr];
+      Message[RakuCommand::nostr];
       $Failed
     ];
 
 
 (*===========================================================*)
-(* ToQRMonWLCommand                                          *)
+(* ToMonadicCommand                                          *)
 (*===========================================================*)
+
+Clear[ToMonadicCommand];
+
+SyntaxInformation[ToMonadicCommand] = { "ArgumentsPattern" -> { _, _, OptionsPattern[] } };
+
+ToMonadicCommand::nmon = "Unknown monad name: `1`. The known monad names are `2`.";
+
+Options[ToMonadicCommand] = {
+  "Target" -> "WL",
+  "Parse" -> True,
+  "StringResult" -> False
+};
+
+aRakuModules = <|
+  "QRMon" -> "QuantileRegressionWorkflows",
+  "SMRMon" -> "RecommenderWorkflows",
+  "LSAMon" -> "LatentSemanticAnalysisWorkflows",
+  "ECMMon" -> "EpidemiologyModelingWorkflows" |>;
+
+ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
+    Block[{pres, parseQ, target, stringResultQ, res},
+
+      parseQ = TrueQ[ OptionValue[ ToMonadicCommand, "Parse" ] ];
+
+      target = OptionValue[ ToMonadicCommand, "Target" ];
+
+      stringResultQ = TrueQ[ OptionValue[ ToMonadicCommand, "StringResult" ] ];
+
+      If[ !KeyExistsQ[aRakuModules, monadName],
+        Message[ToMonadicCommand::nmon, monadName, Keys[aRakuModules] ];
+        Return[$Failed]
+      ];
+
+      pres =
+          RakuCommand[
+            StringJoin["say to_" <> monadName <> "_" <> target <> "('", command, "')"],
+            aRakuModules[monadName],
+            aRakuModules[monadName]];
+
+      pres = StringReplace[ pres, "\\\"" -> "\""];
+
+      Which[
+        parseQ, ToExpression[pres],
+
+        !stringResultQ,
+        res = ToExpression[pres, StandardForm, Hold];
+        If[ TrueQ[res === $Failed], pres, res],
+
+        True, pres
+      ]
+    ];
+
+
+(*===========================================================*)
+(* ToQRMonCommand                                            *)
+(*===========================================================*)
+
+Clear[ToQRMonCommand];
+
+SyntaxInformation[ToQRMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToQRMonCommand] = Options[ToMonadicCommand];
+
+ToQRMonCommand[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "QRMon", opts];
+
+ToQRMonCommand[___] := $Failed;
+
+(*----*)
 
 Clear[ToQRMonWLCommand];
 
-Options[ToQRMonWLCommand] = {
-  "Perl6QRMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "QuantileRegressionWorkflows", "lib"}],
-  "StringResult" -> False
-};
+Options[ToQRMonWLCommand] = Options[ToMonadicCommand];
 
-ToQRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
-    Block[{pres, lib, stringResultQ, res},
+ToQRMonWLCommand::obs = "Obsolete function; use ToQRMonCommand instead.";
 
-      lib = OptionValue[ ToQRMonWLCommand, "Perl6QRMonParsingLib" ];
-      stringResultQ = TrueQ[ OptionValue[ ToQRMonWLCommand, "StringResult" ] ];
-
-      pres =
-          Perl6Command[
-            StringJoin["say to_QRMon_WL('", command, "')"],
-            lib,
-            "QuantileRegressionWorkflows"];
-
-      pres = StringReplace[ pres, "\\\"" -> "\""];
-
-      Which[
-        parse, ToExpression[pres],
-
-        !stringResultQ,
-        res = ToExpression[pres, StandardForm, Hold];
-        If[ TrueQ[res === $Failed], pres, res],
-
-        True, pres
-      ]
+ToQRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+    Block[{},
+      Message[ToQRMonWLCommand::obs];
+      ToMonadicCommand[ command, "QRMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
 (*===========================================================*)
-(* ToSMRMonWLCommand                                         *)
+(* ToSMRMonCommand                                           *)
 (*===========================================================*)
+
+Clear[ToSMRMonCommand];
+
+SyntaxInformation[ToSMRMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToSMRMonCommand] = Options[ToMonadicCommand];
+
+ToSMRMonCommand[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "SMRMon", opts];
+
+ToSMRMonCommand[___] := $Failed;
+
+(*----*)
 
 Clear[ToSMRMonWLCommand];
 
-Options[ToSMRMonWLCommand] = {
-  "Perl6SMRMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "RecommenderWorkflows", "lib"}],
-  "StringResult" -> False
-};
+Options[ToSMRMonWLCommand] = Options[ToMonadicCommand];
 
-ToSMRMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
-    Block[{pres, lib, stringResultQ, res},
+ToSMRMonWLCommand::obs = "Obsolete function; use ToSMRMonCommand instead.";
 
-      lib = OptionValue[ ToSMRMonWLCommand, "Perl6SMRMonParsingLib" ];
-      stringResultQ = TrueQ[ OptionValue[ ToSMRMonWLCommand, "StringResult" ] ];
-
-      pres =
-          Perl6Command[
-            StringJoin["say to_SMRMon_WL('", command, "')"],
-            lib,
-            "RecommenderWorkflows"];
-
-      pres = StringReplace[ pres, "\\\"" -> "\""];
-
-      Which[
-        parse, ToExpression[pres],
-
-        !stringResultQ,
-        res = ToExpression[pres, StandardForm, Hold];
-        If[ TrueQ[res === $Failed], pres, res],
-
-        True, pres
-      ]
+ToSMRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+    Block[{},
+      Message[ToSMRMonWLCommand::obs];
+      ToMonadicCommand[ command, "SMRMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
 (*===========================================================*)
-(* ToLSAMonWLCommand                                         *)
+(* ToLSAMonCommand                                           *)
 (*===========================================================*)
+
+Clear[ToLSAMonCommand];
+
+SyntaxInformation[ToLSAMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToLSAMonCommand] = Options[ToMonadicCommand];
+
+ToLSAMonCommand[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "LSAMon", opts];
+
+ToLSAMonCommand[___] := $Failed;
+
+(*----*)
 
 Clear[ToLSAMonWLCommand];
 
-Options[ToLSAMonWLCommand] = {
-  "Perl6LSAMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "LatentSemanticAnalysisWorkflows", "lib"}],
-  "StringResult" -> False
-};
+Options[ToLSAMonWLCommand] = Options[ToMonadicCommand];
 
-ToLSAMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
-    Block[{pres, lib, stringResultQ, res},
+ToLSAMonWLCommand::obs = "Obsolete function; use ToLSAMonCommand instead.";
 
-      lib = OptionValue[ ToLSAMonWLCommand, "Perl6LSAMonParsingLib" ];
-      stringResultQ = TrueQ[ OptionValue[ ToLSAMonWLCommand, "StringResult" ] ];
-
-      pres =
-          Perl6Command[
-            StringJoin["say to_LSAMon_WL('", command, "')"],
-            lib,
-            "LatentSemanticAnalysisWorkflows"];
-
-      pres = StringReplace[ pres, "\\\"" -> "\""];
-
-      Which[
-        parse, ToExpression[pres],
-
-        !stringResultQ,
-        res = ToExpression[pres, StandardForm, Hold];
-        If[ TrueQ[res === $Failed], pres, res],
-
-        True, pres
-      ]
+ToLSAMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+    Block[{},
+      Message[ToLSAMonWLCommand::obs];
+      ToMonadicCommand[ command, "LSAMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
 (*===========================================================*)
-(* ToECMMonWLCommand                                         *)
+(* ToECMMonCommand                                           *)
 (*===========================================================*)
+
+Clear[ToECMMonCommand];
+
+SyntaxInformation[ToECMMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToECMMonCommand] = Options[ToMonadicCommand];
+
+ToECMMonCommand[ command_, opts : OptionsPattern[] ] :=
+    ToMonadicCommand[ command, "ECMMon", opts];
+
+ToECMMonCommand[___] := $Failed;
+
+(*----*)
 
 Clear[ToECMMonWLCommand];
 
-Options[ToECMMonWLCommand] = {
-  "Perl6ECMMonParsingLib" -> FileNameJoin[{"/", "Volumes", "Macintosh HD", "Users", "antonov", "ConversationalAgents", "Packages", "Perl6", "EpidemiologyModelingWorkflows", "lib"}],
-  "StringResult" -> False
-};
+Options[ToECMMonWLCommand] = Options[ToMonadicCommand];
 
-ToECMMonWLCommand[command_, parse : (True | False) : True, opts : OptionsPattern[] ] :=
-    Block[{pres, lib, stringResultQ, res},
+ToECMMonWLCommand::obs = "Obsolete function; use ToECMMonCommand instead.";
 
-      lib = OptionValue[ ToECMMonWLCommand, "Perl6ECMMonParsingLib" ];
-      stringResultQ = TrueQ[ OptionValue[ ToECMMonWLCommand, "StringResult" ] ];
-
-      pres =
-          Perl6Command[
-            StringJoin["say to_ECMMon_WL('", command, "')"],
-            lib,
-            "EpidemiologyModelingWorkflows"];
-
-      pres = StringReplace[ pres, "\\\"" -> "\""];
-
-      Which[
-        parse, ToExpression[pres],
-
-        !stringResultQ,
-        res = ToExpression[pres, StandardForm, Hold];
-        If[ TrueQ[res === $Failed], pres, res],
-
-        True, pres
-      ]
+ToECMMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+    Block[{},
+      Message[ToECMMonWLCommand::obs];
+      ToMonadicCommand[ command, "ECMMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
