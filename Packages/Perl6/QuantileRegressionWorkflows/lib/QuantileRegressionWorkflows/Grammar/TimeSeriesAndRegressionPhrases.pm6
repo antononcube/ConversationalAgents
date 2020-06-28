@@ -3,7 +3,7 @@ use v6;
 #use QuantileRegressionWorkflows::Grammar::FuzzyMatch;
 use QuantileRegressionWorkflows::Grammar::CommonParts;
 
-# Epidemiology specific phrases
+# Time series and regression specific phrases
 role QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases
         does QuantileRegressionWorkflows::Grammar::CommonParts {
 
