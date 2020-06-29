@@ -9,8 +9,8 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token apply-verb { 'apply' }
     token assign { 'assign' | 'set' }
     token automatic { 'automatic' }
-    token axes { 'axes' }
-    token axis { 'axis' }
+    token axes-noun { 'axes' }
+    token axis-noun { 'axis' }
     token both-determiner { 'both' }
     token bottom-noun { 'bottom' }
     token by-preposition { 'by' | 'with' | 'using' }
@@ -56,6 +56,7 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token summaries { 'summaries' }
     token summary { 'summary' }
     token that-pronoun { 'that' }
+    token time-noun { 'time' }
     token the-determiner { 'the' }
     token this-pronoun { 'this' }
     token to-preposition { 'to' | 'into' }

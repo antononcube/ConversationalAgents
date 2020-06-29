@@ -40,9 +40,9 @@ role QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases
     token probability { 'probability' }
     token quantile { 'quantile' }
     token quantiles { 'quantiles' }
+    token regressand { 'regressand' }
     token regression { 'regression' }
     token regressor { 'regressor' }
-    token regressand { 'regressand' }
     token relative { 'relative' }
     token residuals { 'residuals' }
     token squares { 'squares' }
@@ -50,6 +50,7 @@ role QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases
     token x-symbol { 'x' | 'X' }
     token y-symbol { 'y' | 'Y' }
 
+    # Directives
     token resample-directive { 'resample' }
     token rescale-directive { 'rescale' }
 
@@ -59,4 +60,8 @@ role QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases
     rule qr-object { [ 'QR' | 'qr' | <quantile-regression-phrase> ]? <object> }
     rule the-outliers { <the-determiner> <outliers> }
     rule value-from-left-phrase { 'value' 'from' 'left' }
+
+    rule time-axis-phrase { <time-noun> <axis-noun> }
+    rule value-axis-phrase { <value-noun> <axis-noun> }
+
 }

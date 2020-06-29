@@ -73,11 +73,11 @@ grammar QuantileRegressionWorkflows::Grammar::WorkflowCommmand
     rule delete-missing { <delete-directive> [ <rows> <.with-preposition> ]? <missing-values-phrase> }
 
     rule rescale-command { <rescale-axis> | <rescale-both-axes> }
-    rule rescale-axis { <.rescale-directive> <.the-determiner>? <axis-spec> <axis>}
+    rule rescale-axis { <.rescale-directive> <.the-determiner>? <axis-spec> <.axis-noun> }
     rule axis-spec { <regressor-axis-spec> | <value-axis-spec> }
-    rule regressor-axis-spec { <x-symbol> | <regressor> }
+    rule regressor-axis-spec { <x-symbol> | <time-noun> | <regressor> }
     rule value-axis-spec { <y-symbol> | <value-noun> }
-    rule rescale-both-axes { <rescale-directive> [ <the-determiner> | <both-determiner> ]? <axes>}
+    rule rescale-both-axes { <rescale-directive> [ <the-determiner> | <both-determiner> ]? <axes-noun> }
 
     rule resample-command {<resample-directive> <.the-determiner>? [ <time-series-data> ]? [ <using-preposition> <resampling-method-spec> ]? [ <using-preposition> <sampling-step-spec> ]?}
     rule sampling-step-spec { <default-sampling-step> | <step-noun> <number-value> }
@@ -150,7 +150,7 @@ grammar QuantileRegressionWorkflows::Grammar::WorkflowCommmand
     rule diagram-type { <regression-curve-spec> | <error> | <outliers> };
     rule regression-curve-spec { <fitted>? [ <regression-function> | <regression-function-name> ] [ <curve> | <curves> | <function> | <functions> ]? }
     rule date-list-phrase { [ <date> | <dates> ]  <list-noun>? }
-    rule date-list-diagram { [ <date-list-phrase> <diagram> | <diagram> [ <with-preposition> [ <dates> | <date> <axis> ] ] ] [ <.with-preposition>? <date-origin> ]? }
+    rule date-list-diagram { [ <date-list-phrase> <diagram> | <diagram> [ <with-preposition> [ <dates> | <date> <axis-noun> ] ] ] [ <.with-preposition>? <date-origin> ]? }
     rule date-origin { [<date> <origin>] <date-spec> }
 
     rule regression-function-list { [ <regression-function> | <regression-function-name> ]+ % <list-separator> }
