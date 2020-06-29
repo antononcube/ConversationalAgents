@@ -79,7 +79,7 @@ class QuantileRegressionWorkflows::Actions::QRMon-WL {
   method rescale-axis($/) { make $/.values[0].made; }
   method axis-spec($/) { make $/.values[0].made; }
   method regressor-axis-spec($/) { make '"Axes"->{True, False}';  }
-  method value-axis-spec($/) { make '"Axes"->{False, True}'; ; }
+  method value-axis-spec($/) { make '"Axes"->{False, True}'; }
 
   method rescale-both-axes($/) { make '"Axes"->{True, True}'; }
 
