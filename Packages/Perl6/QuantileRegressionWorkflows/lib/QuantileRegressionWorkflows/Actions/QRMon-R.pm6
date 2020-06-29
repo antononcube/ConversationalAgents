@@ -75,7 +75,7 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
 
   method delete-missing($/) { make 'QRMonDeleteMissing()'; }
 
-  method rescale-command($/) { 'QRMonRescale(' ~ make $/.values[0].made ~ ')'; }
+  method rescale-command($/) { make 'QRMonRescale(' ~ $/.values[0].made ~ ')'; }
   method rescale-axis($/) { make $/.values[0].made; }
   method axis-spec($/) { make $/.values[0].made; }
   method regressor-axis-spec($/) { make 'regressorAxisQ = TRUE'; }
