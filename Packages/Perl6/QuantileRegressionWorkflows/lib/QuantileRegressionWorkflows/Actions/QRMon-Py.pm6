@@ -81,7 +81,7 @@ class QuantileRegressionWorkflows::Actions::QRMon-Py {
   method regressor-axis-spec($/) { make 'regressorAxisQ = true'; }
   method value-axis-spec($/) { make 'valueAxisQ = true'; }
 
-  method rescale-both-axes($/) { make 'obj = QRMonRescale( qrObj = obj, regressorAxisQ = true, valueAxisQ = true )'; }
+  method rescale-both-axes($/) { make 'regressorAxisQ = true, valueAxisQ = true'; }
 
   method resample-command($/) { make 'obj = QRMonFailure( qrObj = obj, \"Resampling is not implemented in QRMon-Py.\" )'; }
 

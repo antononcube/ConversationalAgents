@@ -81,7 +81,7 @@ class QuantileRegressionWorkflows::Actions::QRMon-R {
   method regressor-axis-spec($/) { make 'regressorAxisQ = TRUE'; }
   method value-axis-spec($/) { make 'valueAxisQ = TRUE'; }
 
-  method rescale-both-axes($/) { make 'QRMonRescale( regressorAxisQ = TRUE, valueAxisQ = TRUE )'; }
+  method rescale-both-axes($/) { make 'regressorAxisQ = TRUE, valueAxisQ = TRUE'; }
 
   method resample-command($/) { make 'QRMonFailure( \"Resampling is not implemented in QRMon-R.\" )'; }
 
