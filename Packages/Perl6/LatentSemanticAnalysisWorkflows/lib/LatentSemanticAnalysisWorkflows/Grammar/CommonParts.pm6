@@ -10,8 +10,8 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     token assign { 'assign' | 'set' }
     token at-determiner { 'at' }
     token automatic { 'automatic' }
-    token axes { 'axes' }
-    token axis { 'axis' }
+    token axes-noun { 'axes' }
+    token axis-noun { 'axis' }
     token both-determiner { 'both' }
     token bottom-noun { 'bottom' }
     token by-preposition { 'by' | 'with' | 'using' }
@@ -73,6 +73,7 @@ role LatentSemanticAnalysisWorkflows::Grammar::CommonParts {
     token that-pronoun { 'that' }
     token the-determiner { 'the' }
     token this-pronoun { 'this' }
+    token time-noun { 'time' }
     token to-preposition { 'to' | 'into' }
     token top-noun { 'top' }
     token transform-verb { 'transform' }
