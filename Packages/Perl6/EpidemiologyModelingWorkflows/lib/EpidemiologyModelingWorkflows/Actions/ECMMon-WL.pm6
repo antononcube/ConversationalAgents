@@ -157,7 +157,7 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
 
     # Assign initial conditions command
     method assign-initial-conditions-command ($/) { make $/.values[0].made; }
-    method assign-value-to-stock($/) { make 'ECMMonAssignInitialConditions[<|' ~ $<stock-spec>.made ~ ' -> ' ~ $<number-value>.made ~ '|>]';}
+    method assign-value-to-stock($/) { make 'ECMMonAssignInitialConditions[<|' ~ $<stock-spec>.made ~ '[0] -> ' ~ $<number-value>.made ~ '|>]';}
 
     # Assign rates command
     method assign-rate-values-command ($/) { make $/.values[0].made; }
