@@ -124,17 +124,17 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
 
     # Rate specification
     method rate-spec($/){ make $/.values[0].made; }
-    method population-death-rate-spec($/) { make 'µ[TP]'; }
-    method infected-normally-symptomatic-population-death-rate-spec($/) { make 'µ[INSP]'; }
-    method infected-severely-symptomatic-population-death-rate-spec($/) { make 'µ[ISSP]'; }
+    method population-death-rate-spec($/) { make '\[Mu][TP]'; }
+    method infected-normally-symptomatic-population-death-rate-spec($/) { make '\[Mu][INSP]'; }
+    method infected-severely-symptomatic-population-death-rate-spec($/) { make '\[Mu][ISSP]'; }
     method severely-symptomatic-population-fraction-spec($/) { make 'sspf'; }
-    method contact-rate-for-the-normally-symptomatic-population-spec($/) { make 'ß[INSP]'; }
-    method contact-rate-for-the-severely-symptomatic-population-spec($/) { make 'ß[ISSP]'; }
+    method contact-rate-for-the-normally-symptomatic-population-spec($/) { make '\[Beta][INSP]'; }
+    method contact-rate-for-the-severely-symptomatic-population-spec($/) { make '\[Beta][ISSP]'; }
     method average-infectious-period-spec($/) { make 'aip'; }
     method average-incubation-period-spec($/) { make 'aincp'; }
     method lost-productivity-cost-rate-spec($/) { make 'lpcr'; }
-    method hospitalized-population-death-rate-spec($/) { make 'µ[HP]'; }
-    method contact-rate-for-the-hospitalized-population-spec($/) { make 'ß[HP]'; }
+    method hospitalized-population-death-rate-spec($/) { make '\[Mu][HP]'; }
+    method contact-rate-for-the-hospitalized-population-spec($/) { make '\[Beta][HP]'; }
     method number-of-hospital-beds-rate-spec($/) { make 'nhbr[TP]'; }
     method hospital-services-cost-rate-spec($/) { make 'hscr'; }
     method number-of-hospital-beds-change-rate-spec($/) { make 'nhbcr'; }
@@ -148,9 +148,9 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
     method medical-supplies-consumption-rate-insp-spec($/) { make 'mscr[INSP]'; }
     method medical-supplies-consumption-rate-issp-spec($/) { make 'mscr[ISSP]'; }
     method medical-supplies-consumption-rate-hp-spec($/) { make 'mscr[HP]'; }
-    method capacity-to-store-hospital-medical-supplies-spec($/) { make 'κ[HMS]'; }
-    method capacity-to-store-produced-medical-supplies-spec($/) { make 'κ[MS]'; }
-    method capacity-to-transport-produced-medical-supplies-spec($/) { make 'κ[MSD]'; }
+    method capacity-to-store-hospital-medical-supplies-spec($/) { make '\[Kappa][HMS]'; }
+    method capacity-to-store-produced-medical-supplies-spec($/) { make '\[Kappa][MS]'; }
+    method capacity-to-transport-produced-medical-supplies-spec($/) { make '\[Kappa][MSD]'; }
 
     # Assign parameters command
     method assign-parameters-command($/) { make $/.values[0].made; }
