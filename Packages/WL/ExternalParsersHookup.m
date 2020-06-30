@@ -117,6 +117,8 @@ SyntaxInformation[ToMonadicCommand] = { "ArgumentsPattern" -> { _, _, OptionsPat
 
 ToMonadicCommand::nmon = "Unknown monad name: `1`. The known monad names are `2`.";
 
+ToMonadicCommand::ntgt = "The value of the option \"Target\" is expected to be a string. One of `1`.";
+
 Options[ToMonadicCommand] = {
   "Target" -> "WL",
   "Parse" -> Automatic,
@@ -135,6 +137,10 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
       parseQ = OptionValue[ ToMonadicCommand, "Parse" ];
 
       target = OptionValue[ ToMonadicCommand, "Target" ];
+      If[ !StringQ[target],
+        Message[ToMonadicCommand::ntgt, ToString[{"\"WL\"", "\"R\"", "\"Py\""}] ];
+        target = "WL";
+      ];
 
       stringResultQ = OptionValue[ ToMonadicCommand, "StringResult" ];
 
