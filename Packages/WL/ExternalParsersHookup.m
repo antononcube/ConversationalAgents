@@ -119,8 +119,8 @@ ToMonadicCommand::nmon = "Unknown monad name: `1`. The known monad names are `2`
 
 Options[ToMonadicCommand] = {
   "Target" -> "WL",
-  "Parse" -> True,
-  "StringResult" -> False
+  "Parse" -> Automatic,
+  "StringResult" -> Automatic
 };
 
 aRakuModules = <|
@@ -132,11 +132,21 @@ aRakuModules = <|
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, parseQ, target, stringResultQ, res},
 
-      parseQ = TrueQ[ OptionValue[ ToMonadicCommand, "Parse" ] ];
+      parseQ = OptionValue[ ToMonadicCommand, "Parse" ];
 
       target = OptionValue[ ToMonadicCommand, "Target" ];
 
-      stringResultQ = TrueQ[ OptionValue[ ToMonadicCommand, "StringResult" ] ];
+      stringResultQ = OptionValue[ ToMonadicCommand, "StringResult" ];
+
+      If[ TrueQ[parseQ===Automatic],
+        parseQ = If[ target == "WL", True, False, False]
+      ];
+      parseQ = TrueQ[parseQ];
+
+      If[ TrueQ[stringResultQ===Automatic],
+        stringResultQ = If[ target == "WL", False, True, True]
+      ];
+      stringResultQ = TrueQ[stringResultQ];
 
       If[ !KeyExistsQ[aRakuModules, monadName],
         Message[ToMonadicCommand::nmon, monadName, Keys[aRakuModules] ];
