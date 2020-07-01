@@ -165,7 +165,7 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
             aRakuModules[monadName],
             aRakuModules[monadName]];
 
-      pres = StringReplace[ pres, "\\\"" -> "\""];
+      pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];
 
       Which[
         parseQ, ToExpression[pres],
