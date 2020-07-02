@@ -15,6 +15,7 @@
         "RecommenderWorkflows::Grammar::LSIApplyCommand" : "lib/RecommenderWorkflows/Grammar/LSIApplyCommand.pm6",
         "RecommenderWorkflows::Grammar::PipelineCommand" : "lib/RecommenderWorkflows/Grammar/PipelineCommand.pm6",
         "RecommenderWorkflows::Grammar::RecommenderPhrases" : "lib/RecommenderWorkflows/Grammar/RecommenderPhrases.pm6",
+        "RecommenderWorkflows::Grammar::ErrorHandling" : "lib/RecommenderWorkflows/Grammar/ErrorHandling.pm6",
         "RecommenderWorkflows::Actions::SMRMon-Py" : "lib/RecommenderWorkflows/Actions/SMRMon-Py.pm6",
         "RecommenderWorkflows::Actions::SMRMon-R" : "lib/RecommenderWorkflows/Actions/SMRMon-R.pm6",
         "RecommenderWorkflows::Actions::SMRMon-WL" : "lib/RecommenderWorkflows/Actions/SMRMon-WL.pm6"

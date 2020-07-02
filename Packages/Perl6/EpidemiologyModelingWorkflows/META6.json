@@ -13,6 +13,7 @@
         "EpidemiologyModelingWorkflows::Grammar::CommonParts" : "lib/EpidemiologyModelingWorkflows/Grammar/CommonParts.pm6",
         "EpidemiologyModelingWorkflows::Grammar::PipelineCommand" : "lib/EpidemiologyModelingWorkflows/Grammar/PipelineCommand.pm6",
         "EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases" : "lib/EpidemiologyModelingWorkflows/Grammar/EpidemiologyPhrases.pm6",
+        "EpidemiologyModelingWorkflows::Grammar::ErrorHandling" : "lib/EpidemiologyModelingWorkflows/Grammar/ErrorHandling.pm6",
         "EpidemiologyModelingWorkflows::Actions::ECMMon-Py" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-Py.pm6",
         "EpidemiologyModelingWorkflows::Actions::ECMMon-R" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-R.pm6",
         "EpidemiologyModelingWorkflows::Actions::ECMMon-WL" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-WL.pm6"
