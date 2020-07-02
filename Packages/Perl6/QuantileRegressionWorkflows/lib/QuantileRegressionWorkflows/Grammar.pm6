@@ -37,10 +37,12 @@
 use v6;
 use QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases;
 use QuantileRegressionWorkflows::Grammar::PipelineCommand;
+use QuantileRegressionWorkflows::Grammar::ErrorHandling;
 
 grammar QuantileRegressionWorkflows::Grammar::WorkflowCommmand
         does QuantileRegressionWorkflows::Grammar::PipelineCommand
-        does QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases {
+        does QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases
+        does QuantileRegressionWorkflows::Grammar::ErrorHandling {
     # TOP
 
     regex TOP {
@@ -110,7 +112,7 @@ grammar QuantileRegressionWorkflows::Grammar::WorkflowCommmand
     # QR element - list of probabilities.
     rule probabilities-spec-subcommand { <.the-determiner>? [ <.probabilities-list-phrase> <probabilities-spec> | <probabilities-spec> <.probabilities-list-phrase>? ] }
     rule probabilities-list-phrase { <probabilities> | <probability> <list-noun>? | <probability> }
-    rule probabilities-spec { <number-value-list> | <range-spec> }
+    rule probabilities-spec { <number-value-list> | <range-spec> | <r-range-spec> | <wl-range-spec> }
 
     # QR element -- knots.
     rule knots-spec-subcommand { <.knots-phrase> <knots-spec> | <knots-spec> <.knots-phrase> }

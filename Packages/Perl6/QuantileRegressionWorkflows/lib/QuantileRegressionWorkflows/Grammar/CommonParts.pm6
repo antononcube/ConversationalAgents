@@ -118,48 +118,24 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     # Number list
     rule number-value-list { <number-value>+ % <list-separator>? }
 
-    rule range-spec-step-phrase { <with-preposition>? 'step' | <with-preposition> }
-    rule range-spec { [ <.from-preposition> <number-value> ] [ <.to-preposition> <number-value> ] [ <.range-spec-step-phrase> <number-value> ]? }
+    # Range spec
+    rule range-spec { <range-spec-from> <range-spec-to> <range-spec-step>? }
+    rule range-spec-from { <.from-preposition> <number-value> }
+    rule range-spec-to { <.to-preposition> <number-value> }
+    rule range-spec-step { <.range-spec-step-phrase> <number-value> }
+    rule range-spec-step-phrase { <with-preposition>? <step-noun> | <with-preposition> }
+
+    # Programming languages ranges
+    rule wl-range-spec { [ 'Range' '[' | 'Range[' ] <number-value-list> ']' }
+    rule r-range-spec { [ 'seq' '(' | 'seq(' ] <number-value-list> ')' }
+    rule wl-numeric-list-spec { '{' <number-value-list> '}' }
+    rule r-numeric-list-spec { [ [ 'c' | 'list' ] '(' | 'c(' | 'list(' ] <number-value-list> ')' }
+
+    # Operators
+    token equal-symbol { '=' }
+    token equal2-symbol { '==' }
+    token assign-to-operator { ':=' | '<-' }
 
     # Expressions
     token wl-expr { \S+ }
-
-    # Error message
-    # method error($msg) {
-    #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
-    #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
-    #   my $line-no = $parsed.lines.elems;
-    #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
-    # }
-
-    method ws() {
-      if self.pos > $*HIGHWATER {
-        $*HIGHWATER = self.pos;
-        $*LASTRULE = callframe(1).code.name;
-      }
-      callsame;
-    }
-
-    method parse($target, |c) {
-      my $*HIGHWATER = 0;
-      my $*LASTRULE;
-      my $match = callsame;
-      self.error_msg($target) unless $match;
-      return $match;
-    }
-
-    method error_msg($target) {
-      my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
-      my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
-      my $line-no = $parsed.lines.elems;
-      my $msg = "Cannot parse the command";
-      # say 'un-parsed : ', $un-parsed;
-      # say '$*LASTRULE : ', $*LASTRULE;
-      $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
-      $msg ~= "; target '$target' position $*HIGHWATER";
-      $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
-      $msg ~= ' .';
-      say $msg;
-    }
-
 }
