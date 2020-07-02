@@ -96,7 +96,7 @@ role QuantileRegressionWorkflows::Grammar::CommonParts {
     token generate-directive { 'generate' | 'create' | 'make' }
     token summarize-directive { 'summarize' }
 
-    rule compute-and-display { <compute-directive> [ 'and' <display-directive> ]? }
+    rule compute-and-display { <compute-directive> [ <and-conjunction> <display-directive> ]? }
     rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
     rule plot-directive { <plot> | 'chart' | <display-directive> <diagram> }
     rule use-directive { [ <get-verb> <and-conjunction>? ]? <use-verb> }
