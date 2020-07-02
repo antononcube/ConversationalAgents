@@ -38,6 +38,7 @@ use v6;
 use LatentSemanticAnalysisWorkflows::Grammar::LatentSemanticAnalysisPhrases;
 use LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand;
 use LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand;
+use LatentSemanticAnalysisWorkflows::Grammar::ErrorHandling;
 
 # LSI command should be programmed as a role in order to use in SMRMon.
 # grammar LatentSemanticAnalysisWorkflowsGrammar::LSIFunctionsApplicationCommand {
@@ -47,7 +48,8 @@ use LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand;
 grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
         does LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand
         does LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand
-        does LatentSemanticAnalysisWorkflows::Grammar::LatentSemanticAnalysisPhrases {
+        does LatentSemanticAnalysisWorkflows::Grammar::LatentSemanticAnalysisPhrases
+        does LatentSemanticAnalysisWorkflows::Grammar::ErrorHandling {
     # TOP
     regex TOP {
         <data-load-command> |
