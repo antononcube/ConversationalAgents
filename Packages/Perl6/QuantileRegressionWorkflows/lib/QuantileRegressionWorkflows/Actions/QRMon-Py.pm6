@@ -56,7 +56,23 @@ class QuantileRegressionWorkflows::Actions::QRMon-Py {
   method percent-value($/) { make $<number-value>.made ~ '/100'; }
 
   method number-value-list($/) { make '[' ~ $<number-value>>>.made.join(', ') ~ ']'; }
-  method range-spec($/) { make 'seq(' ~ $/.values[0].made ~ ')'; }
+
+  method r-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
+  method wl-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
+  method r-numeric-list-spec($/) { make $<number-value-list>.made; }
+  method wl-numeric-list-spec($/) { make $<number-value-list>.made; }
+
+  # Range spec
+  method range-spec($/) {
+    if $<range-spec-step> {
+      make 'seq(' ~ $<range-spec-from>.made ~ ', ' ~ $<range-spec-to>.made ~ ', ' ~ $<range-spec-step>.made ~ ')';
+    } else {
+      make 'seq(' ~ $<range-spec-from>.made ~ ', ' ~ $<range-spec-to>.made ~ ')';
+    }
+  }
+  method range-spec-from($/) { make $<number-value>.made; }
+  method range-spec-to($/) { make $<number-value>.made; }
+  method range-spec-step($/) { make $<number-value>.made; }
 
   # Load data
   method data-load-command($/) { make $/.values[0].made; }
