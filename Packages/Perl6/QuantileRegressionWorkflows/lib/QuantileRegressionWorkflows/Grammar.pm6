@@ -137,8 +137,8 @@ grammar QuantileRegressionWorkflows::Grammar::WorkflowCommmand
     rule the-probability { <the-determiner>? <probability> }
     rule the-probabilities { <the-determiner>? <probabilities> }
 
-    rule find-type-outliers { <.compute-and-display> <outlier-type> <.outliers-phrase> [ <.with-preposition> [ <probabilities-spec-subcommand> | <probabilities-spec-subcommand> ] ]? }
-    rule find-outliers-spec { <.compute-and-display> <.outliers-phrase> <.with-preposition> [ <probabilities-spec-subcommand> | <probabilities-spec-subcommand> ] }
+    rule find-type-outliers { <compute-and-display> <outlier-type> <.outliers-phrase> [ <.with-preposition> [ <probabilities-spec-subcommand> | <probabilities-spec-subcommand> ] ]? }
+    rule find-outliers-spec { <compute-and-display> <.outliers-phrase> <.with-preposition> [ <probabilities-spec-subcommand> | <probabilities-spec-subcommand> ] }
 
     # Find anomalies command
     rule find-anomalies-command { <find-anomalies-by-residuals-threshold> | <find-anomalies-by-residuals-outliers> }
