@@ -34,10 +34,12 @@ unit module EpidemiologyModelingWorkflows::Grammar;
 use EpidemiologyModelingWorkflows::Grammar::CommonParts;
 use EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases;
 use EpidemiologyModelingWorkflows::Grammar::PipelineCommand;
+use EpidemiologyModelingWorkflows::Grammar::ErrorHandling;
 
 grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
         does EpidemiologyModelingWorkflows::Grammar::PipelineCommand
-        does EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases {
+        does EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases
+        does EpidemiologyModelingWorkflows::Grammar::ErrorHandling {
     # TOP
     rule TOP {
         <pipeline-command> |
@@ -86,8 +88,8 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule total-population-spec { <total> <population> | 'TP[t]' | 'TPt' }
     rule susceptible-population-spec { <susceptible> <population> | 'SP[t]' | 'SPt' }
     rule exposed-population-spec { <exposed> <population> | 'EP[t]' | 'EPt' }
-    rule infected-normally-symptomatic-population-spec { <infected> <normally> <symptomatic> <population> | 'INSP[t]' | 'INSPt' }
-    rule infected-severely-symptomatic-population-spec { <infected> <severely> <symptomatic> <population> | 'ISSP[t]' | 'ISSPt' }
+    rule infected-normally-symptomatic-population-spec { <infected>? <normally> <symptomatic> <population> | 'INSP[t]' | 'INSPt' | 'INSP' }
+    rule infected-severely-symptomatic-population-spec { <infected>? <severely> <symptomatic> <population> | 'ISSP[t]' | 'ISSPt' | 'ISSP' }
     rule recovered-population-spec { <recovered> <population> | 'RP[t]' | 'RPt' }
     rule money-of-lost-productivity-spec { <money> <of-preposition> <lost> <productivity> | 'MLP[t]' | 'MLPt' }
     rule hospitalized-population-spec { <hospitalized> <population> | 'HP[t]' | 'HPt' }
@@ -123,7 +125,7 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
     rule infected-normally-symptomatic-population-death-rate-spec { <infected> <normally> <symptomatic> <population> <death> <rate> | 'deathRateINSP' | 'death' 'rate' ['INSP' | 'insp' ] | 'μ[INSP]' | 'μINSP' }
     rule infected-severely-symptomatic-population-death-rate-spec { <infected> <severely> <symptomatic> <population> <death> <rate> | 'deathRateISSP' | 'μ[ISSP]' | 'μISSP' }
     rule severely-symptomatic-population-fraction-spec { <severely> <symptomatic> <population> <fraction> | 'sspf[SP]' | 'sspfSP' | 'sspf' }
-    rule contact-rate-for-the-normally-symptomatic-population-spec { <contact> <rate> [ <for-preposition> | <of-preposition> ]? <the-determiner>? <infected>? <normally> <symptomatic> <population> | 'contactRateINSP' | 'β[INSP]' | 'βINSP' }
+    rule contact-rate-for-the-normally-symptomatic-population-spec { <contact> <rate> [ <for-preposition> | <of-preposition> ]? <the-determiner>? <infected-normally-symptomatic-population-spec> | 'contactRateINSP' | 'β[INSP]' | 'βINSP' }
     rule contact-rate-for-the-severely-symptomatic-population-spec { <contact> <rate> [ <for-preposition> | <of-preposition> ]? <the-determiner>? <infected>? <severely> <symptomatic> <population> | 'contactRateISSP' | 'β[ISSP]' | 'βISSP' }
     rule average-infectious-period-spec { <average> <infectious> <period> | 'aip' }
     rule average-incubation-period-spec { <average> <incubation> <period> | 'aincp' }
@@ -225,50 +227,4 @@ grammar EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
 
     rule migrating-stocks-subcommand { [ <for-preposition> | <over-preposition> ] <.the-determiner>? [ <.migrating-stocks-phrase> | <.stocks-noun> | <.stock-noun> ] <stock-specs-list> }
     rule stock-specs-list { <stock-spec>+ % <.list-separator> }
-
-    # Error message
-    # method error($msg) {
-    #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
-    #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
-    #   my $line-no = $parsed.lines.elems;
-    #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
-    # }
-
-    method ws() {
-        if self.pos > $*HIGHWATER {
-            $*HIGHWATER = self.pos;
-            $*LASTRULE = callframe(1).code.name;
-        }
-        callsame;
-    }
-
-    method subparse($target, |c) {
-        my $*HIGHWATER = 0;
-        my $*LASTRULE;
-        my $match = callsame;
-        self.error_msg($target) unless $match;
-        return $match;
-    }
-
-    method parse($target, |c) {
-        my $*HIGHWATER = 0;
-        my $*LASTRULE;
-        my $match = callsame;
-        self.error_msg($target) unless $match;
-        return $match;
-    }
-
-    method error_msg($target) {
-        my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
-        my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
-        my $line-no = $parsed.lines.elems;
-        my $msg = "Cannot parse the command";
-        # say 'un-parsed : ', $un-parsed;
-        # say '$*LASTRULE : ', $*LASTRULE;
-        $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
-        $msg ~= "; target '$target' position $*HIGHWATER";
-        $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
-        $msg ~= ' .';
-        say $msg;
-    }
 }
