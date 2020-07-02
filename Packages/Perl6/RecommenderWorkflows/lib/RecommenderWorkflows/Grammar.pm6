@@ -41,11 +41,13 @@ use RecommenderWorkflows::Grammar::CommonParts;
 use RecommenderWorkflows::Grammar::LSIApplyCommand;
 use RecommenderWorkflows::Grammar::RecommenderPhrases;
 use RecommenderWorkflows::Grammar::PipelineCommand;
+use RecommenderWorkflows::Grammar::ErrorHandling;
 
 grammar RecommenderWorkflows::Grammar::WorkflowCommand
         does RecommenderWorkflows::Grammar::LSIApplyCommand
         does RecommenderWorkflows::Grammar::PipelineCommand
-        does RecommenderWorkflows::Grammar::RecommenderPhrases {
+        does RecommenderWorkflows::Grammar::RecommenderPhrases
+        does RecommenderWorkflows::Grammar::ErrorHandling {
     # TOP
     rule TOP {
         <pipeline-command> |
@@ -218,50 +220,4 @@ grammar RecommenderWorkflows::Grammar::WorkflowCommand
     rule make-metadata-recommender-simple { <.make-metadata-recommender-preamble> <.for-preposition> <.the-determiner>? <.tag-type>? <tag-type-id> }
     rule make-metadata-recommender-full {
         <.make-metadata-recommender-preamble> <.for-preposition> <.the-determiner>? <.tag-type>? <tag-type-id> <.over-preposition> <.the-determiner>? <.tag-types>? <tag-type-ids-list> }
-
-    # Error message
-    # method error($msg) {
-    #   my $parsed = self.target.substr(0, self.pos).trim-trailing;
-    #   my $context = $parsed.substr($parsed.chars - 15 max 0) ~ '⏏' ~ self.target.substr($parsed.chars, 15);
-    #   my $line-no = $parsed.lines.elems;
-    #   die "Cannot parse code: $msg\n" ~ "at line $line-no, around " ~ $context.perl ~ "\n(error location indicated by ⏏)\n";
-    # }
-
-    method ws() {
-        if self.pos > $*HIGHWATER {
-            $*HIGHWATER = self.pos;
-            $*LASTRULE = callframe(1).code.name;
-        }
-        callsame;
-    }
-
-    method subparse($target, |c) {
-        my $*HIGHWATER = 0;
-        my $*LASTRULE;
-        my $match = callsame;
-        self.error_msg($target) unless $match;
-        return $match;
-    }
-
-    method parse($target, |c) {
-        my $*HIGHWATER = 0;
-        my $*LASTRULE;
-        my $match = callsame;
-        self.error_msg($target) unless $match;
-        return $match;
-    }
-
-    method error_msg($target) {
-        my $parsed = $target.substr(0, $*HIGHWATER).trim-trailing;
-        my $un-parsed = $target.substr($*HIGHWATER, $target.chars).trim-trailing;
-        my $line-no = $parsed.lines.elems;
-        my $msg = "Cannot parse the command";
-        # say 'un-parsed : ', $un-parsed;
-        # say '$*LASTRULE : ', $*LASTRULE;
-        $msg ~= "; error in rule $*LASTRULE at line $line-no" if $*LASTRULE;
-        $msg ~= "; target '$target' position $*HIGHWATER";
-        $msg ~= "; parsed '$parsed', un-parsed '$un-parsed'";
-        $msg ~= ' .';
-        say $msg;
-    }
 }
