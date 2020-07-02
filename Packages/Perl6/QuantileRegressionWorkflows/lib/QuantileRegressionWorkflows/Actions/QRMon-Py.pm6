@@ -142,10 +142,30 @@ class QuantileRegressionWorkflows::Actions::QRMon-Py {
 
   # Find outliers command
   method find-outliers-command($/) { make $/.values[0].made; }
-  method find-outliers-simple($/) { make 'obj = QRMonOutliers( qrObj = obj ); obj = QRMonOutliersPlot( qrObj = obj )'; }
 
-  method find-type-outliers($/) { make 'obj = QRMonOutliers( qrObj = obj ); obj = QRMonOutliersPlot( qrObj = obj )'; }
-  method find-outliers-spec($/) { make 'obj = QRMonOutliers( qrObj = obj ); obj = QRMonOutliersPlot( qrObj = obj )'; }
+  method find-outliers-simple($/) {
+    if $<compute-and-display><display-directive> {
+      make 'QRMonOutliers() %>% QRMonOutliersPlot()';
+    } else {
+      make 'QRMonOutliers()';
+    }
+  }
+
+  method find-type-outliers($/) {
+    if $<compute-and-display><display-directive> {
+      make 'QRMonOutliers() %>% QRMonOutliersPlot()';
+    } else {
+      make 'QRMonOutliers()';
+    }
+  }
+
+  method find-outliers-spec($/) {
+    if $<compute-and-display><display-directive> {
+      make 'QRMonOutliers() %>% QRMonOutliersPlot()';
+    } else {
+      make 'QRMonOutliers()';
+    }
+  }
 
   # Find anomalies command
   method find-anomalies-command($/) { make $/.values[0].made; }
