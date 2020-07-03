@@ -16,10 +16,11 @@ say to_dplyr('arrange by the variable mass & height desc');
 
 say "=" x 10;
 
-say to_dplyr('
+say to_pandas('
 use data frame starwars;
 select mass & height;
 mutate bmi = mass/height^2;
+filter by bmi > 30;
 summarize data;
 glimpse data;
 arrange by the variable mass & height descending');

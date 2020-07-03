@@ -66,7 +66,8 @@ grammar DataQueryWorkflows::Grammar
 
     # Mutate command
     rule mutate-command { ( <mutate> | <assign> ) <.by-preposition>? <assign-pairs-list> }
-    rule assign-pair { <variable-name> <.assign-to-symbol> [ <variable-name> | <wl-expr> ] }
+    rule assign-pair { <variable-name> <.assign-to-symbol> <assign-pair-rhs> }
+    rule assign-pair-rhs { <variable-name> | <wl-expr> }
     rule assign-pairs-list { <assign-pair>+ % <.list-separator> }
 
     # Group command

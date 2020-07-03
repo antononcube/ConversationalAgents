@@ -44,6 +44,7 @@ class DataQueryWorkflows::Actions::pandas {
   method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
+  method wl-expr($/) { make $/.Str; }
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
@@ -72,7 +73,8 @@ class DataQueryWorkflows::Actions::pandas {
   # Mutate command
   method mutate-command($/) { make 'mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
   method assign-pairs-list($/) { make $<assign-pair>>>.made.join(', '); }
-  method assign-pair($/) { make $/.values[0].made ~ ' = ' ~ $/.values[1].made; }
+  method assign-pair($/) { make $<variable-name>.made ~ ' = ' ~ $<assign-pair-rhs>.made; }
+  method assign-pair-rhs($/) { make $/.values[0].made; }
 
   # Group command
   method group-command($/) { make 'group_by(' ~ $<variable-names-list>.made ~ ')'; }

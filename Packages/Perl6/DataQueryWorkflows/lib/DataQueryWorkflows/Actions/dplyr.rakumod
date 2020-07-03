@@ -83,7 +83,8 @@ class DataQueryWorkflows::Actions::dplyr {
   # Mutate command
   method mutate-command($/) { make 'dplyr::mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
   method assign-pairs-list($/) { make $<assign-pair>>>.made.join(', '); }
-  method assign-pair($/) { make $/.values[0].made ~ ' = ' ~ $/.values[1].made; }
+  method assign-pair($/) { make $<variable-name>.made ~ ' = ' ~ $<assign-pair-rhs>.made; }
+  method assign-pair-rhs($/) { make $/.values[0].made; }
 
   # Group command
   method group-command($/) { make 'dplyr::group_by(' ~ $<variable-names-list>.made ~ ')'; }
