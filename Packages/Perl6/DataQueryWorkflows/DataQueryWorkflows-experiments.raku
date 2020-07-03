@@ -19,6 +19,7 @@ say "=" x 10;
 say to_dplyr('
 use data frame starwars;
 select mass & height;
-mutate mass1 = mass;
+mutate bmi = mass/height^2;
 summarize data;
+glimpse data;
 arrange by the variable mass & height descending');

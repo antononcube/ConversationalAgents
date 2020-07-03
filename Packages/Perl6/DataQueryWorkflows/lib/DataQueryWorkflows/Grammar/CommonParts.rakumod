@@ -9,6 +9,7 @@ role DataQueryWorkflows::Grammar::CommonParts {
     token and-conjunction { 'and' }
     token apply-verb { 'apply' }
     token assign { 'assign' | 'set' }
+    token at-preposition { 'at' }
     token automatic { 'automatic' }
     token axes-noun { 'axes' }
     token axis-noun { 'axis' }

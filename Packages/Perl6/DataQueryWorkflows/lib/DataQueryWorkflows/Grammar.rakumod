@@ -54,19 +54,19 @@ grammar DataQueryWorkflows::Grammar
     rule data-load-command { <load-data-table> | <use-data-table> }
     rule data-location-spec { <dataset-name> }
     rule load-data-table { <.load-data-directive> <data-location-spec> }
-    rule use-data-table { [<.use-verb> | <.using-preposition>] <.the-determiner>? <.data> <variable-name> }
+    rule use-data-table { [ <.use-verb> | <.using-preposition> ] <.the-determiner>? <.data> <variable-name> }
 
 
     # Select command
     rule select-command { <select> <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
 
     # Filter command
-    rule filter-command { <filter> <.the-determiner>? <.rows>? ( <.for-which-phrase>? | <by-preposition> )  <filter-spec> }
+    rule filter-command { <filter> <.the-determiner>? <.rows>? [ <.for-which-phrase>? | <.by-preposition> ] <filter-spec> }
     rule filter-spec { <predicates-list> }
 
     # Mutate command
     rule mutate-command { ( <mutate> | <assign> ) <.by-preposition>? <assign-pairs-list> }
-    rule assign-pair { <variable-name> <.assign-to-symbol> <variable-name> }
+    rule assign-pair { <variable-name> <.assign-to-symbol> [ <variable-name> | <wl-expr> ] }
     rule assign-pairs-list { <assign-pair>+ % <.list-separator> }
 
     # Group command
@@ -81,7 +81,7 @@ grammar DataQueryWorkflows::Grammar
     # Statistics command
     rule statistics-command { <count-command> | <glimpse-data> | <summarize-data> | <summarize-all-command> }
     rule count-command { <compute-directive> <.the-determiner>? [ <count-verb> | <counts-noun> ] }
-    rule glimpse-data { <glimpse-verb> <at-preposition> <data> }
+    rule glimpse-data { <.display-directive>? <.a-determiner>? <.glimpse-verb> <.at-preposition>? <.the-determiner>? <data>  }
     rule summarize-data { [ <summarize-verb> | <summarise-verb> ] <data> }
     rule summarize-all-command { [ <summarize-verb> | <summarise-verb> ] <them-pronoun>? <all-determiner>? }
 }

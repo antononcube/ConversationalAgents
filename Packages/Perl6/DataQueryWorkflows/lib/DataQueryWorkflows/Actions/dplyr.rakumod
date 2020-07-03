@@ -54,6 +54,7 @@ class DataQueryWorkflows::Actions::dplyr {
   method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
+  method wl-expr($/) { make $/.Str; }
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
