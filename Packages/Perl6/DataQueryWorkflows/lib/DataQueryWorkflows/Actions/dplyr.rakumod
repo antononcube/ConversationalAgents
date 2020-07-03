@@ -1,6 +1,7 @@
+=begin comment
 #==============================================================================
 #
-#   Spoken dplyr actions in Raku Perl 6
+#   dplyr actions in Raku Perl 6
 #   Copyright (C) 2018  Anton Antonov
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -35,53 +36,52 @@
 #     https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/English/RakuPerl6/DataTransformationWorkflowsGrammar.pm6
 #
 #==============================================================================
-
+=end comment
 
 use v6;
-#use lib '.';
-#use lib '../../../EBNF/English/RakuPerl6/';
-use DataTransformationWorkflowsGrammar;
+use DataQueryWorkflows::Grammar;
 
-unit module Spoken-dplyr-actions;
+unit module DataQueryWorkflows::Actions::dplyr;
 
-class Spoken-dplyr-actions::Spoken-dplyr-actions {
+class DataQueryWorkflows::Actions::dplyr {
+
   method TOP($/) { make $/.values[0].made; }
 
   # General
   method variable-name($/) { make $/; }
   method list-separator($/) { make ','; }
-  method variable-names-list($/) { make $<variable-name>>>.made.join(", "); }
+  method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
 
   # Load data
-  method load-data($/) { make "loadData(" ~ $<data-location-spec>.made ~")"; }
-  method data-location-spec($/) { make "\'" ~ $/ ~ "\'"; }
+  method load-data($/) { make '{data(' ~ $<data-location-spec>.made ~'); ' ~ $<data-location-spec> ~ '}'; }
+  method data-location-spec($/) { make '\'' ~ $/ ~ '\''; }
 
   # Select command
-  method select-command($/) { make "dplyr::select(" ~ $<variable-names-list>.made ~ ")"; }
+  method select-command($/) { make 'dplyr::select(' ~ $<variable-names-list>.made ~ ')'; }
 
   # Filter commands
-  method filter-command($/) { make "dplyr::filter(" ~ $<filter-spec> ~ ")"; }
+  method filter-command($/) { make 'dplyr::filter(' ~ $<filter-spec> ~ ')'; }
   method filter-spec($/) { make $<predicates-list>.made; }
-  method predicate($/) { make $/>>.made.join(" "); }
+  method predicate($/) { make $/>>.made.join(' '); }
   method predicate-symbol($/) { make $/; }
   method predicate-value($/) { make $/.values[0].made; }
 
   # Mutate command
-  method mutate-command($/) { make "dplyr::mutate(" ~ $<assign-pairs-list>.made ~ ")"; }
-  method assign-pairs-list($/) { make $<assign-pair>>>.made.join(", "); }
-  method assign-pair($/) { make $/.values[0].made ~ " = " ~ $/.values[1].made; }
+  method mutate-command($/) { make 'dplyr::mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
+  method assign-pairs-list($/) { make $<assign-pair>>>.made.join(', '); }
+  method assign-pair($/) { make $/.values[0].made ~ ' = ' ~ $/.values[1].made; }
 
   # Group command
-  method group-command($/) { make "dplyr::group_by(" ~ $<variable-names-list>.made ~ ")"; }
+  method group-command($/) { make 'dplyr::group_by(' ~ $<variable-names-list>.made ~ ')'; }
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }
   method arrange-command-simple($/) { make $<variable-names-list>.made; }
-  method arrange-command-ascending($/) { make "dplyr::arrange(" ~ $<arrange-command-simple>.made ~ ")"; }
-  method arrange-command-descending($/) { make "dplyr::arrange(desc(" ~ $<arrange-command-simple>.made ~ "))"; }
+  method arrange-command-ascending($/) { make 'dplyr::arrange(' ~ $<arrange-command-simple>.made ~ ')'; }
+  method arrange-command-descending($/) { make 'dplyr::arrange(desc(' ~ $<arrange-command-simple>.made ~ '))'; }
 
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }
-  method count-command($/) { make "dplyr::count()"; }
-  method summarize-all-command($/) { make "dplyr::summarise_all(mean)"}
+  method count-command($/) { make 'dplyr::count()'; }
+  method summarize-all-command($/) { make 'dplyr::summarise_all(mean)'}
 }
