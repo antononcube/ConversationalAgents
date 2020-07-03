@@ -15,6 +15,7 @@
         "DataQueryWorkflows::Grammar::ErrorHandling" : "lib/DataQueryWorkflows/Grammar/ErrorHandling.rakumod",
         "DataQueryWorkflows::Grammar::DataQueryPhrases" : "lib/DataQueryWorkflows/Grammar/DataQueryPhrases.rakumod",
         "DataQueryWorkflows::Actions::dplyr" : "lib/DataQueryWorkflows/Actions/dplyr.rakumod",
+        "DataQueryWorkflows::Actions::pandas" : "lib/DataQueryWorkflows/Actions/pandas.rakumod",
         "DataQueryWorkflows::Actions::SQL" : "lib/DataQueryWorkflows/Actions/SQL.rakumod"
     },
     "depends" : [ ],
