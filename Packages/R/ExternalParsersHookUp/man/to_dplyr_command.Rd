@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hook-up-for-spoken-dplyr.R
 \name{to_dplyr_command}
 \alias{to_dplyr_command}
-\title{Interpret a dplyr spoken command.}
+\title{Interpret a dplyr natural language command.}
 \usage{
 to_dplyr_command(command, parse = TRUE)
 }
@@ -15,15 +15,15 @@ to_dplyr_command(command, parse = TRUE)
 A string or an R expression
 }
 \description{
-Calls Raku Perl 6 module function `to_dplyr` in order to get
-interpretation of a spoken command or a list spoken commands separated with ";".
+Calls Raku Perl 6 module function `to_dplyr_R_command` in order to get
+interpretation of a natural language command or a list spoken commands separated with ";".
 }
 \details{
 Produces a character vector or an expression depending on \code{parse}.
 }
 \seealso{
 Other Spoken dplyr: 
-\code{\link{DPLYRInterpret}()},
-\code{\link{DPLYRParse}()}
+\code{\link{dplyrInterpret}()},
+\code{\link{dplyrParse}()}
 }
 \concept{Spoken dplyr}
