@@ -79,7 +79,9 @@ grammar DataQueryWorkflows::Grammar
     rule arrange-command-descending { <arrange-command-simple> <descending> }
 
     # Statistics command
-    rule statistics-command { <count-command> | <summarize-all-command> }
+    rule statistics-command { <count-command> | <glimpse-data> | <summarize-data> | <summarize-all-command> }
     rule count-command { <compute-directive> <.the-determiner>? [ <count-verb> | <counts-noun> ] }
+    rule glimpse-data { <glimpse-verb> <at-preposition> <data> }
+    rule summarize-data { [ <summarize-verb> | <summarise-verb> ] <data> }
     rule summarize-all-command { [ <summarize-verb> | <summarise-verb> ] <them-pronoun>? <all-determiner>? }
 }

@@ -96,5 +96,8 @@ class DataQueryWorkflows::Actions::dplyr {
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }
   method count-command($/) { make 'dplyr::count()'; }
-  method summarize-all-command($/) { make 'dplyr::summarise_all(mean)'}
+  method summarize-data($/) { make '( function(x) { print(summary(x)); x } )'; }
+  method glimpse-data($/) { make 'dplyr::glimpse()'; }
+  method summarize-all-command($/) { make 'dplyr::summarise_all(mean)'; }
+
 }

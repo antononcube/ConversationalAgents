@@ -16,8 +16,9 @@ say to_dplyr('arrange by the variable mass & height desc');
 
 say "=" x 10;
 
-say to_pandas('
+say to_dplyr('
 use data frame starwars;
 select mass & height;
 mutate mass1 = mass;
+summarize data;
 arrange by the variable mass & height descending');

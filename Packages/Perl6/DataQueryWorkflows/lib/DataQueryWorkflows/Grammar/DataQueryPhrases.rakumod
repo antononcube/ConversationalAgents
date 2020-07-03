@@ -11,11 +11,14 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
     token ascending-adjective { 'ascending' }
     token descending-adjective { 'descending' }
     token filter-verb { 'filter' }
+    token glimpse-verb { 'glimpse' }
     token group-verb { 'group' }
     token mutate-verb { 'mutate' }
     token order-verb { 'order' }
     token select-verb { 'select' }
     token sort-verb { 'sort' }
+    token summarize-verb { 'summarize' }
+    token summarise-verb { 'summarise' }
 
     rule for-which-phrase { <for-preposition> 'which' | <that-pronoun> 'adhere' <to-preposition> }
 

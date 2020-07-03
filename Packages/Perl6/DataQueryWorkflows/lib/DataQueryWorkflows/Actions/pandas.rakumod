@@ -86,5 +86,7 @@ class DataQueryWorkflows::Actions::pandas {
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }
   method count-command($/) { make 'count()'; }
-  method summarize-all-command($/) { make 'summarise_all(mean)'}
+  method summarize-data($/) { make 'summary()'; }
+  method glimpse-data($/) { make 'glimpse()'; }
+  method summarize-all-command($/) { make 'summarise_all(mean)'; }
 }
