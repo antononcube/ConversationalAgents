@@ -1,8 +1,8 @@
 =begin comment
 #==============================================================================
 #
-#   dplyr actions in Raku Perl 6
-#   Copyright (C) 2018  Anton Antonov
+#   pandas actions in Raku (Perl 6)
+#   Copyright (C) 2020  Anton Antonov
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -26,24 +26,14 @@
 #   For more details about Raku (Perl6) see https://raku.org/ .
 #
 #==============================================================================
-#
-#   The actions are implemented for the grammar:
-#
-#     DataTransformationWorkflowGrammar::Spoken-dplyr-command
-#
-#   in the file :
-#
-#     https://github.com/antononcube/ConversationalAgents/blob/master/EBNF/English/RakuPerl6/DataTransformationWorkflowsGrammar.pm6
-#
-#==============================================================================
 =end comment
 
 use v6;
 use DataQueryWorkflows::Grammar;
 
-unit module DataQueryWorkflows::Actions::dplyr;
+unit module DataQueryWorkflows::Actions::pandas;
 
-class DataQueryWorkflows::Actions::dplyr {
+class DataQueryWorkflows::Actions::pandas {
 
   method TOP($/) { make $/.values[0].made; }
 
@@ -57,44 +47,44 @@ class DataQueryWorkflows::Actions::dplyr {
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
-  method trivial-parameter-none($/) { make 'NA'; }
-  method trivial-parameter-empty($/) { make 'c()'; }
-  method trivial-parameter-automatic($/) { make 'NULL'; }
-  method trivial-parameter-false($/) { make 'FALSE'; }
-  method trivial-parameter-true($/) { make 'TRUE'; }
+  method trivial-parameter-none($/) { make 'None'; }
+  method trivial-parameter-empty($/) { make '[]'; }
+  method trivial-parameter-automatic($/) { make 'None'; }
+  method trivial-parameter-false($/) { make 'false'; }
+  method trivial-parameter-true($/) { make 'true'; }
 
   # Load data
   method data-load-command($/) { make $/.values[0].made; }
-  method load-data-table($/) { make '{ data(' ~ $<data-location-spec>.made ~ '); ' ~ $<data-location-spec> ~ ' }'; }
+  method load-data-table($/) { make 'data(' ~ $<data-location-spec>.made ~ ')'; }
   method data-location-spec($/) { make '\'' ~ $/.Str ~ '\''; }
   method use-data-table($/) { make $<variable-name>.made; }
 
   # Select command
-  method select-command($/) { make 'dplyr::select(' ~ $<variable-names-list>.made ~ ')'; }
+  method select-command($/) { make 'select(' ~ $<variable-names-list>.made ~ ')'; }
 
   # Filter commands
-  method filter-command($/) { make 'dplyr::filter(' ~ $<filter-spec> ~ ')'; }
+  method filter-command($/) { make 'filter(' ~ $<filter-spec> ~ ')'; }
   method filter-spec($/) { make $<predicates-list>.made; }
   method predicate($/) { make $/>>.made.join(' '); }
   method predicate-symbol($/) { make $/.Str; }
   method predicate-value($/) { make $/.values[0].made; }
 
   # Mutate command
-  method mutate-command($/) { make 'dplyr::mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
+  method mutate-command($/) { make 'mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
   method assign-pairs-list($/) { make $<assign-pair>>>.made.join(', '); }
   method assign-pair($/) { make $/.values[0].made ~ ' = ' ~ $/.values[1].made; }
 
   # Group command
-  method group-command($/) { make 'dplyr::group_by(' ~ $<variable-names-list>.made ~ ')'; }
+  method group-command($/) { make 'group_by(' ~ $<variable-names-list>.made ~ ')'; }
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }
   method arrange-command-simple($/) { make $<variable-names-list>.made; }
-  method arrange-command-ascending($/) { make 'dplyr::arrange(' ~ $<arrange-command-simple>.made ~ ')'; }
-  method arrange-command-descending($/) { make 'dplyr::arrange(desc(' ~ $<arrange-command-simple>.made ~ '))'; }
+  method arrange-command-ascending($/) { make 'arrange(' ~ $<arrange-command-simple>.made ~ ')'; }
+  method arrange-command-descending($/) { make 'arrange(desc(' ~ $<arrange-command-simple>.made ~ '))'; }
 
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }
-  method count-command($/) { make 'dplyr::count()'; }
-  method summarize-all-command($/) { make 'dplyr::summarise_all(mean)'}
+  method count-command($/) { make 'count()'; }
+  method summarize-all-command($/) { make 'summarise_all(mean)'}
 }

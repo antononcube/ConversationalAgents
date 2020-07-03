@@ -41,7 +41,7 @@ grammar DataQueryWorkflows::Grammar
 
     # TOP
     rule TOP {
-        <load-data> |
+        <data-load-command> |
         <select-command> |
         <filter-command> |
         <mutate-command> |
@@ -51,11 +51,14 @@ grammar DataQueryWorkflows::Grammar
         <pipeline-command> }
 
     # Load data
-    rule load-data { <.load-data-directive> <data-location-spec> }
-    rule data-location-spec { .* }
+    rule data-load-command { <load-data-table> | <use-data-table> }
+    rule data-location-spec { <dataset-name> }
+    rule load-data-table { <.load-data-directive> <data-location-spec> }
+    rule use-data-table { [<.use-verb> | <.using-preposition>] <.the-determiner>? <.data> <variable-name> }
+
 
     # Select command
-    rule select-command { <select> <.the-determiner>? <.variables>? <variable-names-list> }
+    rule select-command { <select> <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
 
     # Filter command
     rule filter-command { <filter> <.the-determiner>? <.rows>? ( <.for-which-phrase>? | <by-preposition> )  <filter-spec> }
@@ -71,7 +74,7 @@ grammar DataQueryWorkflows::Grammar
 
     # Arrange command
     rule arrange-command { <arrange-command-descending> | <arrange-command-ascending> }
-    rule arrange-command-simple { <arrange> <.the-determiner>? <.variables>? <variable-names-list> }
+    rule arrange-command-simple { <arrange> <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
     rule arrange-command-ascending { <arrange-command-simple> <.ascending>? }
     rule arrange-command-descending { <arrange-command-simple> <descending> }
 

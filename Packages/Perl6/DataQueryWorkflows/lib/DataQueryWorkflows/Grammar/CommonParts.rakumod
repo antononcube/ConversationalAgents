@@ -70,6 +70,8 @@ role DataQueryWorkflows::Grammar::CommonParts {
     token using-preposition { 'using' | 'with' | 'over' }
     token value-noun { 'value' }
     token values-noun { 'values' }
+    token variable-noun { 'variable' }
+    token variables-noun { 'variables' }
     token way-noun { 'way' }
     token weight { 'weight' }
     token weights { 'weights' }
