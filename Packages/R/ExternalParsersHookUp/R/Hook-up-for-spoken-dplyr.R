@@ -35,18 +35,6 @@
 ## antononcube @@@ gmail ... com,
 ## Windermere, Florida, USA.
 ##===========================================================
-##
-## This file has example functions for hooking-up with the functions in
-## the file Perl6-command-functions.R using the "spoken dplyr" grammars.
-##
-## See the GitHub project:
-##   https://github.com/antononcube/ConversationalAgents/tree/master/Projects/Spoken-dplyr-agent/R
-##
-## The first version of this file was created and posted at
-## ConversationalAgents at GitHub:
-##   https://github.com/antononcube/ConversationalAgents/
-## Date: 2018-11-18
-##===========================================================
 
 
 ## Change the directory names with the correct paths.
@@ -56,7 +44,10 @@
 #' Raku Perl 6 parser library
 #' @return A string
 #' @export
-Perl6DPLYRParsingLib <- function() { file.path( LocalUserDirName(), "ConversationalAgents", "Packages", "Perl6", "SpokenDataTransformations", "lib") }
+Perl6dplyrParsingLib <- function() {
+  #file.path( LocalUserDirName(), "ConversationalAgents", "Packages", "Perl6", "DataQueryWorkflows", "lib")
+  "DataQueryWorkflows"
+}
 
 #' Parse dplyr natural speech command.
 #' @description Parses a command by directly invoking a Raku Perl6 parser class.
@@ -64,12 +55,12 @@ Perl6DPLYRParsingLib <- function() { file.path( LocalUserDirName(), "Conversatio
 #' @return A character vector
 #' @family Spoken dplyr
 #' @export
-DPLYRParse <-
+dplyrParse <-
   function(command) {
     Perl6Parse(command = command,
-               moduleDirectory = Perl6DPLYRParsingLib(),
-               moduleName = "DataTransformationWorkflowsGrammar",
-               grammarClassName = "Spoken-dplyr-command",
+               moduleDirectory = Perl6dplyrParsingLib(),
+               moduleName = "DataQueryWorkflows",
+               grammarClassName = "DataQueryWorkflows",
                actionsClassName = NULL)
   }
 
@@ -79,18 +70,18 @@ DPLYRParse <-
 #' @return A character vector
 #' @family Spoken dplyr
 #' @export
-DPLYRInterpret <-
+dplyrInterpret <-
   function(command) {
     Perl6Parse(command = command,
-               moduleDirectory = Perl6DPLYRParsingLib(),
-               moduleName = "SpokenDataTransformations",
-               grammarClassName = "DataTransformationWorkflowsGrammar",
-               actionsClassName = "Spoken-dplyr-actions")
+               moduleDirectory = Perl6dplyrParsingLib(),
+               moduleName = "DataQueryWorkflows",
+               grammarClassName = "DataQueryWorkflows",
+               actionsClassName = "dplyr")
   }
 
-#' Interpret a dplyr spoken command.
-#' @description Calls Raku Perl 6 module function `to_dplyr` in order to get
-#' interpretation of a spoken command or a list spoken commands separated with ";".
+#' Interpret a dplyr natural language command.
+#' @description Calls Raku Perl 6 module function `to_dplyr_R_command` in order to get
+#' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A boolean should the result be parsed as an R expression.
 #' @details Produces a character vector or an expression depending on \code{parse}.
@@ -99,8 +90,15 @@ DPLYRInterpret <-
 #' @export
 to_dplyr_command <- function(command, parse=TRUE) {
   pres <- Perl6Command( command = paste0( "say to_dplyr(\"", command, "\")"),
-                        moduleDirectory = Perl6DPLYRParsingLib(),
-                        moduleName = "SpokenDataTransformations" )
+                        moduleDirectory = Perl6dplyrParsingLib(),
+                        moduleName = "DataQueryWorkflows" )
+  messageInds <- grep( "^Possible", pres )
+  if( length(messageInds) > 0 ) {
+    messageLines <- pres[messageInds]
+    print(messageLines)
+    pres <- pres[setdiff(1:length(pres), messageInds)]
+  }
+  pres <- gsub( "\\\"", "\"", pres, fixed = T)
   if(parse) { parse(text = pres) }
   else { pres }
 }
