@@ -24,17 +24,21 @@ arrange by the variable mass & height desc');
 
 say "=" x 10;
 
-my $commands = '
-use data frame starwars;
+my $commands = "
+use starwars;
 select mass & height;
 mutate bmi = mass/height^2;
 filter by bmi > 30;
 summarize data;
 glimpse data;
-inner join startrek by "bmi" = "BMI";
-arrange by the variable mass & height descending';
+inner join star_trek by 'bmi' = 'BMI';
+arrange by the variable mass & height descending";
 
-say ToDataQueryCode( $commands, 'dplyr' );
+$commands = "use starwars;
+inner join with starwars_films by 'name';
+sort by film";
+
+say to_dplyr( $commands );
 
 #say "=" x 10;
 #

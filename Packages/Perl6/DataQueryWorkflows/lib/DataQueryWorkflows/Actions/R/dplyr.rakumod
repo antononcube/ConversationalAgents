@@ -52,6 +52,7 @@ class DataQueryWorkflows::Actions::R::dplyr {
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
   method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
+  method quoted-variable-names-list($/) { make $<quoted-variable-name>>>.made.join(', '); }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
   method wl-expr($/) { make $/.Str; }

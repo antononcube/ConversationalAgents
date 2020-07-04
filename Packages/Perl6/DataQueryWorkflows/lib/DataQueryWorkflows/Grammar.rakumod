@@ -55,7 +55,7 @@ grammar DataQueryWorkflows::Grammar
     rule data-load-command { <load-data-table> | <use-data-table> }
     rule data-location-spec { <dataset-name> }
     rule load-data-table { <.load-data-directive> <data-location-spec> }
-    rule use-data-table { [ <.use-verb> | <.using-preposition> ] <.the-determiner>? <.data> <variable-name> }
+    rule use-data-table { [ <.use-verb> | <.using-preposition> ] <.the-determiner>? <.data>? <variable-name> }
 
     # Select command
     rule select-command { <select> <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
@@ -67,7 +67,7 @@ grammar DataQueryWorkflows::Grammar
     # Mutate command
     rule mutate-command { ( <mutate> | <assign> ) <.by-preposition>? <assign-pairs-list> }
     rule assign-pair { <assign-pair-lhs> <.assign-to-symbol> <assign-pair-rhs> }
-    rule assign-pair-lhs { <variable-name> | <quoted-variable-name> }
+    rule assign-pair-lhs { <quoted-variable-name> | <variable-name> }
     rule assign-pair-rhs { <variable-name> | <wl-expr> }
     rule assign-pairs-list { <assign-pair>+ % <.list-separator> }
 
@@ -89,12 +89,12 @@ grammar DataQueryWorkflows::Grammar
 
     # Join command
     rule join-command { <inner-join-spec> | <left-join-spec> | <right-join-spec> | <semi-join-spec> | <full-join-spec> }
-    rule join-by-spec { <assign-pairs-list> | <variable-names-list> }
-    rule full-join-spec  { <.full-adjective>  <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
-    rule inner-join-spec { <.inner-adjective> <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
-    rule left-join-spec  { <.left-adjective>  <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
-    rule right-join-spec { <.right-adjective> <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
-    rule semi-join-spec  { <.semi-adjective>  <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule join-by-spec { <assign-pairs-list> | <quoted-variable-names-list> }
+    rule full-join-spec  { <.full-adjective>  <.join-noun> <.with-preposition>? <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule inner-join-spec { <.inner-adjective> <.join-noun> <.with-preposition>? <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule left-join-spec  { <.left-adjective>  <.join-noun> <.with-preposition>? <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule right-join-spec { <.right-adjective> <.join-noun> <.with-preposition>? <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule semi-join-spec  { <.semi-adjective>  <.join-noun> <.with-preposition>? <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
 
     # Cross tabulate command
     rule cross-tabulate-command { <.cross-tabulate-phrase> <.variable-noun>? <rows-variable-name> [ <.and-conjunction> | <.with-preposition> ] <.variable-noun>? <columns-variable-name> [ <.over-preposition> <values-variable-name> ]? }

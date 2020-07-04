@@ -42,8 +42,8 @@ my %targetToAction =
     "Python-pandas" => DataQueryWorkflows::Actions::Python::pandas;
 
 my %targetToSeparator{Str} =
-    "dplyr"         => "%>%\n",
-    "R-dplyr"       => "%>%",
+    "dplyr"         => " %>%\n",
+    "R-dplyr"       => " %>%\n",
     "R"             => "\n",
     "R-base"        => "\n",
     "pandas"        => ".\n",
