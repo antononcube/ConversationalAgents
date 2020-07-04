@@ -11,16 +11,23 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
     token ascending-adjective { 'ascending' }
     token descending-adjective { 'descending' }
     token filter-verb { 'filter' }
+    token full-adjective { 'full' }
     token glimpse-verb { 'glimpse' }
     token group-verb { 'group' }
+    token join-noun { 'join' }
+    token inner-adjective { 'inner' }
+    token left-adjective { 'left' }
     token mutate-verb { 'mutate' }
     token order-verb { 'order' }
+    token right-adjective { 'right' }
     token select-verb { 'select' }
+    token semi-adjective { 'semi' }
     token sort-verb { 'sort' }
-    token summarize-verb { 'summarize' }
     token summarise-verb { 'summarise' }
+    token summarize-verb { 'summarize' }
 
     rule for-which-phrase { <for-preposition> 'which' | <that-pronoun> 'adhere' <to-preposition> }
+    rule cross-tabulate-phrase { 'cross' 'tabulate' }
 
     # True dplyr; see comments below.
     token ascending { <ascending-adjective> | 'asc' }

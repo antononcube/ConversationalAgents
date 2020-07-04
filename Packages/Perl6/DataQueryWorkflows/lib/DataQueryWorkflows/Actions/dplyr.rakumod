@@ -48,7 +48,7 @@ class DataQueryWorkflows::Actions::dplyr {
   method TOP($/) { make $/.values[0].made; }
 
   # General
-  method dataset-name($/) { make $/.values[0].made; }
+  method dataset-name($/) { make $/.Str; }
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
   method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
@@ -102,4 +102,60 @@ class DataQueryWorkflows::Actions::dplyr {
   method glimpse-data($/) { make 'dplyr::glimpse()'; }
   method summarize-all-command($/) { make 'dplyr::summarise_all(mean)'; }
 
+  # Join command
+  method join-command($/) { make $/.values[0].made; }
+
+  method join-by-spec($/) { make 'c(' ~ $/.values[0].made ~ ')'; }
+
+  method full-join-spec($/)  {
+    if $<join-by-spec> {
+      make 'full_join(' ~ $<dataset-name>.made ~ ', by = ' ~ $<join-by-spec>.made ~ ')';
+    } else {
+      make 'full_join(' ~ $<dataset-name>.made ~ ')';
+    }
+  }
+
+  method inner-join-spec($/)  { 
+    if $<join-by-spec> {
+      make 'inner_join(' ~ $<dataset-name>.made ~ ', by = ' ~ $<join-by-spec>.made ~ ')';
+    } else {
+      make 'inner_join(' ~ $<dataset-name>.made ~ ')';
+    }
+  }
+
+  method left-join-spec($/)  {
+    if $<join-by-spec> {
+      make 'left_join(' ~ $<dataset-name>.made ~ ', by = ' ~ $<join-by-spec>.made ~ ')';
+    } else {
+      make 'left_join(' ~ $<dataset-name>.made ~ ')';
+    }
+  }
+
+  method right-join-spec($/)  {
+    if $<join-by-spec> {
+      make 'right_join(' ~ $<dataset-name>.made ~ ', by = ' ~ $<join-by-spec>.made ~ ')';
+    } else {
+      make 'right_join(' ~ $<dataset-name>.made ~ ')';
+    }
+  }
+
+  method semi-join-spec($/)  {
+    if $<join-by-spec> {
+      make 'semi_join(' ~ $<dataset-name>.made ~ ', by = ' ~ $<join-by-spec>.made ~ ')';
+    } else {
+      make 'semi_join(' ~ $<dataset-name>.made ~ ')';
+    }
+  }
+
+  # Cross tabulate command
+  method cross-tabulate-command($/) {
+    if $<values-variable-name> {
+      make '(function(x) as.data.frame(xtabs( formula = ' ~ $<values-variable-name>.made ~ ' ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x )))';
+    } else {
+      make '(function(x) as.data.frame(xtabs( formula = ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x )))';
+    }
+  }
+  method rows-variable-name($/) { make $<variable-name>.made; }
+  method columns-variable-name($/) { make $<variable-name>.made; }
+  method values-variable-name($/) { make $<variable-name>.made; }
 }

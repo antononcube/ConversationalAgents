@@ -38,24 +38,24 @@ grammar DataQueryWorkflows::Grammar
         does DataQueryWorkflows::Grammar::ErrorHandling
         does DataQueryWorkflows::Grammar::DataQueryPhrases
         does DataQueryWorkflows::Grammar::PipelineCommand {
-
     # TOP
     rule TOP {
+        <pipeline-command> |
         <data-load-command> |
         <select-command> |
         <filter-command> |
         <mutate-command> |
         <group-command> |
-        <statistics-command> |
         <arrange-command> |
-        <pipeline-command> }
+        <statistics-command> |
+        <join-command> |
+        <cross-tabulate-command> }
 
     # Load data
     rule data-load-command { <load-data-table> | <use-data-table> }
     rule data-location-spec { <dataset-name> }
     rule load-data-table { <.load-data-directive> <data-location-spec> }
     rule use-data-table { [ <.use-verb> | <.using-preposition> ] <.the-determiner>? <.data> <variable-name> }
-
 
     # Select command
     rule select-command { <select> <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
@@ -85,4 +85,23 @@ grammar DataQueryWorkflows::Grammar
     rule glimpse-data { <.display-directive>? <.a-determiner>? <.glimpse-verb> <.at-preposition>? <.the-determiner>? <data>  }
     rule summarize-data { [ <summarize-verb> | <summarise-verb> ] <data> }
     rule summarize-all-command { [ <summarize-verb> | <summarise-verb> ] <them-pronoun>? <all-determiner>? }
+
+    # Join command
+    rule join-command { <inner-join-spec> | <left-join-spec> | <right-join-spec> | <semi-join-spec> | <full-join-spec> }
+    rule join-by-spec { <assign-pairs-list> | <variable-names-list> }
+    rule full-join-spec  { <.full-adjective>  <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule inner-join-spec { <.inner-adjective> <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule left-join-spec  { <.left-adjective>  <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule right-join-spec { <.right-adjective> <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+    rule semi-join-spec  { <.semi-adjective>  <.join-noun> <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
+
+    # Cross tabulate command
+    rule cross-tabulate-command { <.cross-tabulate-phrase> <.variable-noun>? <rows-variable-name> [ <.and-conjunction> | <.with-preposition> ] <.variable-noun>? <columns-variable-name> [ <.over-preposition> <values-variable-name> ]? }
+    rule rows-variable-name { <variable-name> }
+    rule columns-variable-name { <variable-name> }
+    rule values-variable-name { <variable-name> }
+
+    # To wide form command
+
+    # To long form command
 }
