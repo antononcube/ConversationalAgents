@@ -2,7 +2,6 @@ use v6;
 
 # This role class has common command parts.
 role DataQueryWorkflows::Grammar::CommonParts {
-
     # Speech parts
     token a-determiner { 'a' | 'an'}
     token all-determiner { 'all' }
@@ -92,6 +91,24 @@ role DataQueryWorkflows::Grammar::CommonParts {
     token dataset-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
     token variable-name { ([ \w | '_' | '-' | '.' | \d ]+) <!{ $0 eq 'and' }> }
     token date-spec { [ \d ** 4 ] '-' [ \d ** 2 ] '-' [ \d ** 2 ] }
+
+    # Quoted variable name
+    token quoted-variable-name { <single-quoted-variable-name> | <double-quoted-variable-name> }
+
+    token single-quote-symbol { '\'' }
+
+    token double-quote-symbol { '"' }
+
+    token single-quoted-variable-name {
+        <.single-quote-symbol>
+        <variable-name>
+        <.single-quote-symbol>
+    }
+    token double-quoted-variable-name {
+        <.double-quote-symbol>
+        <variable-name>
+        <.double-quote-symbol>
+    }
 
     # Directives
     token classify { 'classify' }
