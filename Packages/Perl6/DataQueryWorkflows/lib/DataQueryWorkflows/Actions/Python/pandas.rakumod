@@ -31,9 +31,9 @@
 use v6;
 use DataQueryWorkflows::Grammar;
 
-unit module DataQueryWorkflows::Actions::pandas;
+unit module DataQueryWorkflows::Actions::Python::pandas;
 
-class DataQueryWorkflows::Actions::pandas {
+class DataQueryWorkflows::Actions::Python::pandas {
 
   method TOP($/) { make $/.values[0].made; }
 

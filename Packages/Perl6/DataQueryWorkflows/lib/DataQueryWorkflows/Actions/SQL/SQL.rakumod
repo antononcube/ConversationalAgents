@@ -41,9 +41,9 @@
 use v6;
 use DataQueryWorkflows::Grammar;
 
-unit module DataQueryWorkflows::Actions::dplyr;
+unit module DataQueryWorkflows::Actions::R::dplyr;
 
-class DataQueryWorkflows::Actions::dplyr {
+class DataQueryWorkflows::Actions::R::dplyr {
 
   method TOP($/) { make $/.values[0].made; }
 

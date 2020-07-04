@@ -14,16 +14,17 @@
         "DataQueryWorkflows::Grammar::PipelineCommand" : "lib/DataQueryWorkflows/Grammar/PipelineCommand.rakumod",
         "DataQueryWorkflows::Grammar::ErrorHandling" : "lib/DataQueryWorkflows/Grammar/ErrorHandling.rakumod",
         "DataQueryWorkflows::Grammar::DataQueryPhrases" : "lib/DataQueryWorkflows/Grammar/DataQueryPhrases.rakumod",
-        "DataQueryWorkflows::Actions::dplyr" : "lib/DataQueryWorkflows/Actions/dplyr.rakumod",
-        "DataQueryWorkflows::Actions::pandas" : "lib/DataQueryWorkflows/Actions/pandas.rakumod",
-        "DataQueryWorkflows::Actions::SQL" : "lib/DataQueryWorkflows/Actions/SQL.rakumod"
+        "DataQueryWorkflows::Actions::Python::pandas" : "lib/DataQueryWorkflows/Actions/Python/pandas.rakumod",
+        "DataQueryWorkflows::Actions::SQL::SQL" : "lib/DataQueryWorkflows/Actions/SQL/SQL.rakumod",
+        "DataQueryWorkflows::Actions::R::base" : "lib/DataQueryWorkflows/Actions/R/base.rakumod",
+        "DataQueryWorkflows::Actions::R::dplyr" : "lib/DataQueryWorkflows/Actions/R/dplyr.rakumod"
     },
     "depends" : [ ],
     "build-depends" : [ ],
     "test-depends" : [ ],
     "resources" : [ ],
     "tags": [
-      "Data query", "Data", "dplyr", "SQL", "Query", "Parser", "Interpreter", "Monad", "Workflow", "Pipeline"
+      "Data query", "Data", "dplyr", "SQL", "pandas", "Query", "Parser", "Interpreter", "Monad", "Workflow", "Pipeline"
     ],
     "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/DataQueryWorkflows"
 }
