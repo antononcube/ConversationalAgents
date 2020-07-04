@@ -1,7 +1,7 @@
 =begin comment
 #==============================================================================
 #
-#   dplyr actions in Raku Perl 6
+#   Data Query Workflows R-dplyr actions in Raku (Perl 6)
 #   Copyright (C) 2018  Anton Antonov
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -41,9 +41,9 @@
 use v6;
 use DataQueryWorkflows::Grammar;
 
-unit module DataQueryWorkflows::Actions::dplyr;
+unit module DataQueryWorkflows::Actions::R::dplyr;
 
-class DataQueryWorkflows::Actions::dplyr {
+class DataQueryWorkflows::Actions::R::dplyr {
 
   method TOP($/) { make $/.values[0].made; }
 
@@ -55,6 +55,9 @@ class DataQueryWorkflows::Actions::dplyr {
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
   method wl-expr($/) { make $/.Str; }
+  method quoted-variable-name($/) {  make $/.values[0].made; }
+  method single-quoted-variable-name($/) {  make '\'' ~ $<variable-name>.made ~ '\''; }
+  method double-quoted-variable-name($/) {  make '"' ~ $<variable-name>.made ~ '"'; }
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
@@ -83,7 +86,8 @@ class DataQueryWorkflows::Actions::dplyr {
   # Mutate command
   method mutate-command($/) { make 'dplyr::mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
   method assign-pairs-list($/) { make $<assign-pair>>>.made.join(', '); }
-  method assign-pair($/) { make $<variable-name>.made ~ ' = ' ~ $<assign-pair-rhs>.made; }
+  method assign-pair($/) { make $<assign-pair-lhs>.made ~ ' = ' ~ $<assign-pair-rhs>.made; }
+  method assign-pair-lhs($/) { make $/.values[0].made; }
   method assign-pair-rhs($/) { make $/.values[0].made; }
 
   # Group command
