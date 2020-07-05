@@ -80,7 +80,7 @@ dplyrInterpret <-
   }
 
 #' Interpret a dplyr natural language command.
-#' @description Calls Raku Perl 6 module function `to_dplyr_R_command` in order to get
+#' @description Calls Raku (Perl 6) module function `to_DataQuery_dplyr` in order to get
 #' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A boolean should the result be parsed as an R expression.
@@ -89,7 +89,7 @@ dplyrInterpret <-
 #' @family Spoken dplyr
 #' @export
 to_dplyr_command <- function(command, parse=TRUE) {
-  pres <- Perl6Command( command = paste0( "say to_dplyr(\"", command, "\")"),
+  pres <- Perl6Command( command = paste0( "say to_DataQuery_dplyr(\"", command, "\")"),
                         moduleDirectory = Perl6dplyrParsingLib(),
                         moduleName = "DataQueryWorkflows" )
   messageInds <- grep( "^Possible", pres )
