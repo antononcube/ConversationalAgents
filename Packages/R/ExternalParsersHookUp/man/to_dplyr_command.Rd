@@ -15,7 +15,7 @@ to_dplyr_command(command, parse = TRUE)
 A string or an R expression
 }
 \description{
-Calls Raku Perl 6 module function `to_dplyr_R_command` in order to get
+Calls Raku (Perl 6) module function `to_DataQuery_dplyr` in order to get
 interpretation of a natural language command or a list spoken commands separated with ";".
 }
 \details{

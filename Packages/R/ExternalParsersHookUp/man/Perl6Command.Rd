@@ -8,7 +8,7 @@ Perl6Command(
   command,
   moduleDirectory,
   moduleName,
-  perl6Location = "/Applications/Rakudo/bin/perl6"
+  perl6Location = "/Applications/Rakudo/bin/raku"
 )
 }
 \arguments{
