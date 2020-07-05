@@ -57,13 +57,13 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   # (Scored) item lists
   method item-id($/) { make '\"' ~ $/.Str ~ '\"'; }
   method item-ids-list($/) { make '{' ~ $<item-id>>>.made.join(', ') ~ '}'; }
-  method scored-item-id($/) { make '\"' ~ $<item-id> ~ '\"' ~ '->' ~ $<number-value>; }
+  method scored-item-id($/) { make $<item-id>.made ~ '->' ~ $<number-value>.made ; }
   method scored-item-ids-list($/) { make '<|' ~ $<scored-item-id>>>.made.join(', ') ~ '|>'; }
 
   # (Scored) tag lists
   method tag-id($/) { make '\"' ~ $/.Str ~ '\"'; }
   method tag-ids-list($/) { make '{' ~ $<tag-id>>>.made.join(', ') ~ '}'; }
-  method scored-tag-id($/) { make '\"' ~ $<tag-id> ~ '\"' ~ '->' ~ $<number-value>; }
+  method scored-tag-id($/) { make $<tag-id>.made ~ '->' ~ $<number-value>.made ; }
   method scored-tag-ids-list($/) { make '<|' ~ $<scored-tag-id>>>.made.join(', ') ~ '|>'; }
   method tag-type-id($/) { make '\"' ~ $/.Str ~ '\"'; }
 
@@ -91,7 +91,7 @@ class RecommenderWorkflows::Actions::SMRMon-WL {
   # LSI command is programmed as a role.
   method lsi-apply-command($/) { make 'SMRMonApplyTermWeightFunctions[' ~ $/.values[0].made ~ ']'; }
   method lsi-apply-verb($/) { make $/.Str; }
-  method lsi-funcs-simple-list($/) { make $<lsi-global-func>.made ~ ', ' ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>; }
+  method lsi-funcs-simple-list($/) { make $<lsi-global-func>.made ~ ', ' ~ $<lsi-local-func>.made ~ ", " ~ $<lsi-normalizer-func>.made ; }
   method lsi-funcs-list($/) { make $<lsi-func>>>.made.join(', '); }
   method lsi-func($/) { make $/.values[0].made; }
   method lsi-global-func($/) { make '"GlobalWeightFunction" -> ' ~  $/.values[0].made; }
