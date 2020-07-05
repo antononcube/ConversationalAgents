@@ -58,7 +58,7 @@ class DataQueryWorkflows::Actions::R::dplyr {
   method wl-expr($/) { make $/.Str; }
   method quoted-variable-name($/) {  make $/.values[0].made; }
   method single-quoted-variable-name($/) {  make '\'' ~ $<variable-name>.made ~ '\''; }
-  method double-quoted-variable-name($/) {  make '"' ~ $<variable-name>.made ~ '"'; }
+  method double-quoted-variable-name($/) {  make '\"' ~ $<variable-name>.made ~ '\"'; }
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
@@ -70,7 +70,7 @@ class DataQueryWorkflows::Actions::R::dplyr {
 
   # Load data
   method data-load-command($/) { make $/.values[0].made; }
-  method load-data-table($/) { make '{ data(' ~ $<data-location-spec>.made ~ '); ' ~ $<data-location-spec> ~ ' }'; }
+  method load-data-table($/) { make '{ data(' ~ $<data-location-spec>.made ~ '); ' ~ $<data-location-spec>.made ~ ' }'; }
   method data-location-spec($/) { make '\'' ~ $/.Str ~ '\''; }
   method use-data-table($/) { make $<variable-name>.made; }
 
@@ -78,7 +78,7 @@ class DataQueryWorkflows::Actions::R::dplyr {
   method select-command($/) { make 'dplyr::select(' ~ $<variable-names-list>.made ~ ')'; }
 
   # Filter commands
-  method filter-command($/) { make 'dplyr::filter(' ~ $<filter-spec> ~ ')'; }
+  method filter-command($/) { make 'dplyr::filter(' ~ $<filter-spec>.made ~ ')'; }
   method filter-spec($/) { make $<predicates-list>.made; }
   method predicate($/) { make $/>>.made.join(' '); }
   method predicate-symbol($/) { make $/.Str; }

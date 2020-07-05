@@ -42,12 +42,13 @@ class DataQueryWorkflows::Actions::R::base {
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
   method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
+  method quoted-variable-names-list($/) { make $<quoted-variable-name>>>.made.join(', '); }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
   method wl-expr($/) { make $/.Str; }
   method quoted-variable-name($/) {  make $/.values[0].made; }
   method single-quoted-variable-name($/) {  make '\'' ~ $<variable-name>.made ~ '\''; }
-  method double-quoted-variable-name($/) {  make '"' ~ $<variable-name>.made ~ '"'; }
+  method double-quoted-variable-name($/) {  make '\"' ~ $<variable-name>.made ~ '\"'; }
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }
@@ -59,7 +60,7 @@ class DataQueryWorkflows::Actions::R::base {
 
   # Load data
   method data-load-command($/) { make $/.values[0].made; }
-  method load-data-table($/) { make '{ data(' ~ $<data-location-spec>.made ~ '); obj =' ~ $<data-location-spec> ~ ' }'; }
+  method load-data-table($/) { make '{ data(' ~ $<data-location-spec>.made ~ '); obj =' ~ $<data-location-spec>.made ~ ' }'; }
   method data-location-spec($/) { make '\'' ~ $/.Str ~ '\''; }
   method use-data-table($/) { make 'obj <- ' ~ $<variable-name>.made; }
 
@@ -67,7 +68,7 @@ class DataQueryWorkflows::Actions::R::base {
   method select-command($/) { make 'obj <- obj[, ' ~ $<variable-names-list>.made ~ ']'; }
 
   # Filter commands
-  method filter-command($/) { make 'obj <- obj[' ~ $<filter-spec> ~ ', ]'; }
+  method filter-command($/) { make 'obj <- obj[' ~ $<filter-spec>.made ~ ', ]'; }
   method filter-spec($/) { make $<predicates-list>.made; }
   method predicate($/) { make $/>>.made.join(' '); }
   method predicate-symbol($/) { make $/.Str; }
