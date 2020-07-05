@@ -54,13 +54,15 @@ RakuCommand::usage = "Raku (Perl 6) command invocation.";
 
 ToMonadicCommand::usage = "Translates a natural language commands into a monadic pipeline.";
 
-ToQRMonCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline.";
+ToQRMonCode::usage = "Translates a natural language commands into a QRMon pipeline.";
 
-ToSMRMonCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline.";
+ToSMRMonCode::usage = "Translates a natural language commands into a SMRMon pipeline.";
 
-ToLSAMonCommand::usage = "Translates a natural language commands into a LSAMon-WL pipeline.";
+ToLSAMonCode::usage = "Translates a natural language commands into a LSAMon pipeline.";
 
-ToECMMonCommand::usage = "Translates a natural language commands into a ECMMon-WL pipeline.";
+ToECMMonCode::usage = "Translates a natural language commands into a ECMMon pipeline.";
+
+ToDataQueryCode::usage = "Translates a natural language commands into a Data Query code.";
 
 ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline. Obsolete.";
 
@@ -129,7 +131,8 @@ aRakuModules = <|
   "QRMon" -> "QuantileRegressionWorkflows",
   "SMRMon" -> "RecommenderWorkflows",
   "LSAMon" -> "LatentSemanticAnalysisWorkflows",
-  "ECMMon" -> "EpidemiologyModelingWorkflows" |>;
+  "ECMMon" -> "EpidemiologyModelingWorkflows",
+  "DataQuery" -> "DataQueryWorkflows" |>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, parseQ, target, stringResultQ, res},
@@ -180,18 +183,18 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToQRMonCommand                                            *)
+(* ToQRMonCode                                            *)
 (*===========================================================*)
 
-Clear[ToQRMonCommand];
+Clear[ToQRMonCode];
 
-SyntaxInformation[ToQRMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToQRMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToQRMonCommand] = Options[ToMonadicCommand];
+Options[ToQRMonCode] = Options[ToMonadicCommand];
 
-ToQRMonCommand[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "QRMon", opts];
+ToQRMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "QRMon", opts];
 
-ToQRMonCommand[___] := $Failed;
+ToQRMonCode[___] := $Failed;
 
 (*----*)
 
@@ -199,7 +202,7 @@ Clear[ToQRMonWLCommand];
 
 Options[ToQRMonWLCommand] = Options[ToMonadicCommand];
 
-ToQRMonWLCommand::obs = "Obsolete function; use ToQRMonCommand instead.";
+ToQRMonWLCommand::obs = "Obsolete function; use ToQRMonCode instead.";
 
 ToQRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
@@ -209,18 +212,18 @@ ToQRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToSMRMonCommand                                           *)
+(* ToSMRMonCode                                              *)
 (*===========================================================*)
 
-Clear[ToSMRMonCommand];
+Clear[ToSMRMonCode];
 
-SyntaxInformation[ToSMRMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToSMRMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToSMRMonCommand] = Options[ToMonadicCommand];
+Options[ToSMRMonCode] = Options[ToMonadicCommand];
 
-ToSMRMonCommand[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "SMRMon", opts];
+ToSMRMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "SMRMon", opts];
 
-ToSMRMonCommand[___] := $Failed;
+ToSMRMonCode[___] := $Failed;
 
 (*----*)
 
@@ -228,7 +231,7 @@ Clear[ToSMRMonWLCommand];
 
 Options[ToSMRMonWLCommand] = Options[ToMonadicCommand];
 
-ToSMRMonWLCommand::obs = "Obsolete function; use ToSMRMonCommand instead.";
+ToSMRMonWLCommand::obs = "Obsolete function; use ToSMRMonCode instead.";
 
 ToSMRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
@@ -238,18 +241,18 @@ ToSMRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToLSAMonCommand                                           *)
+(* ToLSAMonCode                                              *)
 (*===========================================================*)
 
-Clear[ToLSAMonCommand];
+Clear[ToLSAMonCode];
 
-SyntaxInformation[ToLSAMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToLSAMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToLSAMonCommand] = Options[ToMonadicCommand];
+Options[ToLSAMonCode] = Options[ToMonadicCommand];
 
-ToLSAMonCommand[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "LSAMon", opts];
+ToLSAMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "LSAMon", opts];
 
-ToLSAMonCommand[___] := $Failed;
+ToLSAMonCode[___] := $Failed;
 
 (*----*)
 
@@ -257,7 +260,7 @@ Clear[ToLSAMonWLCommand];
 
 Options[ToLSAMonWLCommand] = Options[ToMonadicCommand];
 
-ToLSAMonWLCommand::obs = "Obsolete function; use ToLSAMonCommand instead.";
+ToLSAMonWLCommand::obs = "Obsolete function; use ToLSAMonCode instead.";
 
 ToLSAMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
@@ -267,19 +270,19 @@ ToLSAMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToECMMonCommand                                           *)
+(* ToECMMonCode                                              *)
 (*===========================================================*)
 
-Clear[ToECMMonCommand];
+Clear[ToECMMonCode];
 
-SyntaxInformation[ToECMMonCommand] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToECMMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToECMMonCommand] = Options[ToMonadicCommand];
+Options[ToECMMonCode] = Options[ToMonadicCommand];
 
-ToECMMonCommand[ command_, opts : OptionsPattern[] ] :=
+ToECMMonCode[ command_, opts : OptionsPattern[] ] :=
     ToMonadicCommand[ command, "ECMMon", opts];
 
-ToECMMonCommand[___] := $Failed;
+ToECMMonCode[___] := $Failed;
 
 (*----*)
 
@@ -287,13 +290,29 @@ Clear[ToECMMonWLCommand];
 
 Options[ToECMMonWLCommand] = Options[ToMonadicCommand];
 
-ToECMMonWLCommand::obs = "Obsolete function; use ToECMMonCommand instead.";
+ToECMMonWLCommand::obs = "Obsolete function; use ToECMMonCode instead.";
 
 ToECMMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToECMMonWLCommand::obs];
       ToMonadicCommand[ command, "ECMMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
+
+
+(*===========================================================*)
+(* ToDataQueryCode                                           *)
+(*===========================================================*)
+
+Clear[ToDataQueryCode];
+
+SyntaxInformation[ToDataQueryCode] = { "ArgumentsPattern" -> { _, _., OptionsPattern[] } };
+
+Options[ToDataQueryCode] = Options[ToMonadicCommand];
+
+ToDataQueryCode[ command_String, opts : OptionsPattern[] ] :=
+    ToMonadicCommand[ command, "DataQuery", opts];
+
+ToDataQueryCode[___] := $Failed;
 
 
 End[]; (* `Private` *)
