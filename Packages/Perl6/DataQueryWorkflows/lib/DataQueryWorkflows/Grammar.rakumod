@@ -46,6 +46,7 @@ grammar DataQueryWorkflows::Grammar
         <filter-command> |
         <mutate-command> |
         <group-command> |
+        <ungroup-command> |
         <arrange-command> |
         <statistics-command> |
         <join-command> |
@@ -74,6 +75,10 @@ grammar DataQueryWorkflows::Grammar
     # Group command
     rule group-command { <group-by> <variable-names-list> }
 
+    # Ungroup command
+    rule ungroup-command { <ungroup-simple-command> }
+    rule ungroup-simple-command { <ungroup-verb> | <combine-verb> }
+
     # Arrange command
     rule arrange-command { <arrange-command-descending> | <arrange-command-ascending> }
     rule arrange-command-simple { <arrange> <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
@@ -82,9 +87,9 @@ grammar DataQueryWorkflows::Grammar
 
     # Statistics command
     rule statistics-command { <count-command> | <glimpse-data> | <summarize-data> | <summarize-all-command> }
-    rule count-command { <compute-directive> <.the-determiner>? [ <count-verb> | <counts-noun> ] }
+    rule count-command { <compute-directive> <.the-determiner>? [ <count-verb> | <counts-noun> ] | <count-verb> }
     rule glimpse-data { <.display-directive>? <.a-determiner>? <.glimpse-verb> <.at-preposition>? <.the-determiner>? <data>  }
-    rule summarize-data { [ <summarize-verb> | <summarise-verb> ] <data> }
+    rule summarize-data { [ <summarize-verb> | <summarise-verb> ] <data> | <display-directive> <data>? <summary> }
     rule summarize-all-command { [ <summarize-verb> | <summarise-verb> ] <them-pronoun>? <all-determiner>? }
 
     # Join command
@@ -97,7 +102,7 @@ grammar DataQueryWorkflows::Grammar
     rule semi-join-spec  { <.semi-adjective>  <.join-noun> <.with-preposition>? <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
 
     # Cross tabulate command
-    rule cross-tabulate-command { <.cross-tabulate-phrase> <.variable-noun>? <rows-variable-name> [ <.and-conjunction> | <.with-preposition> ] <.variable-noun>? <columns-variable-name> [ <.over-preposition> <values-variable-name> ]? }
+    rule cross-tabulate-command { <.cross-tabulate-phrase> <.variable-noun>? <rows-variable-name> [ <.list-separator-symbol> | <.with-preposition> ] <.variable-noun>? <columns-variable-name> [ <.over-preposition> <values-variable-name> ]? }
     rule rows-variable-name { <variable-name> }
     rule columns-variable-name { <variable-name> }
     rule values-variable-name { <variable-name> }

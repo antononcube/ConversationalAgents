@@ -70,7 +70,8 @@ class DataQueryWorkflows::Actions::R::base {
   # Filter commands
   method filter-command($/) { make 'obj <- obj[' ~ $<filter-spec>.made ~ ', ]'; }
   method filter-spec($/) { make $<predicates-list>.made; }
-  method predicate($/) { make $/>>.made.join(' '); }
+  method predicates-list($/) { make $<predicate>>>.made.join(', '); }
+  method predicate($/) { make $<variable-name>.made ~ ' ' ~ $<predicate-symbol>.made ~ ' ' ~ $<predicate-value>.made; }
   method predicate-symbol($/) { make $/.Str; }
   method predicate-value($/) { make $/.values[0].made; }
 
@@ -83,6 +84,10 @@ class DataQueryWorkflows::Actions::R::base {
 
   # Group command
   method group-command($/) { make 'obj <- by( data = obj, ' ~ $<variable-names-list>.made ~ ')'; }
+
+  # Ungroup command
+  method ungroup-command($/) { make $/.values[0].made; }
+  method ungroup-simple-command($/) { make 'obj <- as.data.frame(ungroup(obj),stringsAsFactors=FALSE)'; }
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }

@@ -9,6 +9,7 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
     # Tokens
     token arrange-verb { 'arrange' }
     token ascending-adjective { 'ascending' }
+    token combine-verb { 'combine' }
     token descending-adjective { 'descending' }
     token filter-verb { 'filter' }
     token full-adjective { 'full' }
@@ -25,6 +26,7 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
     token sort-verb { 'sort' }
     token summarise-verb { 'summarise' }
     token summarize-verb { 'summarize' }
+    token ungroup-verb { 'ungroup' }
 
     rule for-which-phrase { <for-preposition> 'which' | <that-pronoun> 'adhere' <to-preposition> }
     rule cross-tabulate-phrase { 'cross' 'tabulate' }
@@ -45,7 +47,7 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
     rule predicates-list { <predicate>+ % <list-separator> }
     rule predicate { <variable-name> <predicate-symbol> <predicate-value> }
     token predicate-symbol { "==" | "<" | "<=" | ">" | ">=" }
-    rule predicate-value { <variable-name> }
+    rule predicate-value { <quoted-variable-name> | <number-value> }
     # rule predicate-value { <number> | <string> | <variable-name> }
     # token number { (\d*) }
     # token string { "'" \w* "'" }

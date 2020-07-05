@@ -80,7 +80,8 @@ class DataQueryWorkflows::Actions::R::dplyr {
   # Filter commands
   method filter-command($/) { make 'dplyr::filter(' ~ $<filter-spec>.made ~ ')'; }
   method filter-spec($/) { make $<predicates-list>.made; }
-  method predicate($/) { make $/>>.made.join(' '); }
+  method predicates-list($/) { make $<predicate>>>.made.join(', '); }
+  method predicate($/) { make $<variable-name>.made ~ ' ' ~ $<predicate-symbol>.made ~ ' ' ~ $<predicate-value>.made; }
   method predicate-symbol($/) { make $/.Str; }
   method predicate-value($/) { make $/.values[0].made; }
 
@@ -93,6 +94,10 @@ class DataQueryWorkflows::Actions::R::dplyr {
 
   # Group command
   method group-command($/) { make 'dplyr::group_by(' ~ $<variable-names-list>.made ~ ')'; }
+
+  # Ungroup command
+  method ungroup-command($/) { make $/.values[0].made; }
+  method ungroup-simple-command($/) { make 'ungroup() %>% as.data.frame(stringsAsFactors=FALSE)'; }
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }
@@ -155,9 +160,9 @@ class DataQueryWorkflows::Actions::R::dplyr {
   # Cross tabulate command
   method cross-tabulate-command($/) {
     if $<values-variable-name> {
-      make '(function(x) as.data.frame(xtabs( formula = ' ~ $<values-variable-name>.made ~ ' ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x )))';
+      make '(function(x) as.data.frame(xtabs( formula = ' ~ $<values-variable-name>.made ~ ' ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x ), stringsAsFactors=FALSE ))';
     } else {
-      make '(function(x) as.data.frame(xtabs( formula = ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x )))';
+      make '(function(x) as.data.frame(xtabs( formula = ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x ), stringsAsFactors=FALSE ))';
     }
   }
   method rows-variable-name($/) { make $<variable-name>.made; }
