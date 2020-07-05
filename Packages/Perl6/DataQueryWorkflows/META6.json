@@ -14,6 +14,7 @@
         "DataQueryWorkflows::Grammar::PipelineCommand" : "lib/DataQueryWorkflows/Grammar/PipelineCommand.rakumod",
         "DataQueryWorkflows::Grammar::ErrorHandling" : "lib/DataQueryWorkflows/Grammar/ErrorHandling.rakumod",
         "DataQueryWorkflows::Grammar::DataQueryPhrases" : "lib/DataQueryWorkflows/Grammar/DataQueryPhrases.rakumod",
+        "DataQueryWorkflows::Actions::Julia::DataFrames" : "lib/DataQueryWorkflows/Actions/Julia/DataFrames.rakumod",
         "DataQueryWorkflows::Actions::Python::pandas" : "lib/DataQueryWorkflows/Actions/Python/pandas.rakumod",
         "DataQueryWorkflows::Actions::SQL::SQL" : "lib/DataQueryWorkflows/Actions/SQL/SQL.rakumod",
         "DataQueryWorkflows::Actions::R::base" : "lib/DataQueryWorkflows/Actions/R/base.rakumod",

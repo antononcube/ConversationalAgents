@@ -6,41 +6,54 @@ use DataQueryWorkflows;
 
 #say to_dplyr("filter by mass > 10 & height <200");
 
+#say "=" x 10;
+#
+#say to_DataQuery_dplyr('select mass & height');
+#
+#say "=" x 10;
+#
+#say to_DataQuery_dplyr('use the data frame df;
+#select mass and height;
+#arrange by the variable mass & height desc');
+#
+#say "=" x 10;
+#
+#say to_DataQuery_pandas('use the data frame df;
+#select mass and height;
+#arrange by the variable mass & height desc');
+
 say "=" x 10;
 
-say to_DataQuery_dplyr('select mass & height');
+my $commands = '
+use dfTitanic;
+filter by passengerSex == "male";
+group by passengerClass, passengerSurvival;
+count;
+ungroup;
+';
 
-say "=" x 10;
-
-say to_DataQuery_dplyr('use the data frame df;
-select mass and height;
-arrange by the variable mass & height desc');
-
-say "=" x 10;
-
-say to_DataQuery_pandas('use the data frame df;
-select mass and height;
-arrange by the variable mass & height desc');
-
-say "=" x 10;
-
-my $commands = "
-use starwars;
-select mass & height;
-mutate bmi = mass/height^2;
-filter by bmi > 30;
-summarize data;
-glimpse data;
-inner join star_trek by 'bmi' = 'BMI';
-arrange by the variable mass & height descending";
-
-$commands = "use starwars;
+my $commands2 = "use starwars;
 inner join with starwars_films by 'name';
-sort by film";
+sort by name, film desc;
+echo data summary";
+
+my $commands3 = 'use iris;
+sort by PetalWidth, SepalLength;
+echo data summary;
+group by Species;
+echo data summary
+';
+
+my $commands4 = '
+use dfTitanic;
+filter by passengerSex == "male";
+cross tabulate passengerClass, passengerSurvival;
+';
+
+say ToDataQueryCode( $commands, 'Julia' );
 
 #say ToDataQueryCode( command => $commands, target => "R-base" );
 
-say ToDataQueryCode( $commands, "R-dplyr" );
 
 #say "=" x 10;
 #

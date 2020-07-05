@@ -19,6 +19,7 @@ use DataQueryWorkflows::Grammar;
 use DataQueryWorkflows::Actions::R::dplyr;
 use DataQueryWorkflows::Actions::R::base;
 use DataQueryWorkflows::Actions::Python::pandas;
+use DataQueryWorkflows::Actions::Julia::DataFrames;
 
 #-----------------------------------------------------------
 
@@ -34,20 +35,24 @@ use DataQueryWorkflows::Actions::Python::pandas;
 #};
 
 my %targetToAction =
-    "dplyr"         => DataQueryWorkflows::Actions::R::dplyr,
-    "R-dplyr"       => DataQueryWorkflows::Actions::R::dplyr,
-    "R"             => DataQueryWorkflows::Actions::R::base,
-    "R-base"        => DataQueryWorkflows::Actions::R::base,
-    "pandas"        => DataQueryWorkflows::Actions::Python::pandas,
-    "Python-pandas" => DataQueryWorkflows::Actions::Python::pandas;
+    "dplyr"            => DataQueryWorkflows::Actions::R::dplyr,
+    "R-dplyr"          => DataQueryWorkflows::Actions::R::dplyr,
+    "R"                => DataQueryWorkflows::Actions::R::base,
+    "R-base"           => DataQueryWorkflows::Actions::R::base,
+    "pandas"           => DataQueryWorkflows::Actions::Python::pandas,
+    "Python-pandas"    => DataQueryWorkflows::Actions::Python::pandas,
+    "Julia"            => DataQueryWorkflows::Actions::Julia::DataFrames,
+    "Julia-DataFrames" => DataQueryWorkflows::Actions::Julia::DataFrames;
 
 my %targetToSeparator{Str} =
-    "dplyr"         => " %>%\n",
-    "R-dplyr"       => " %>%\n",
-    "R"             => "\n",
-    "R-base"        => "\n",
-    "pandas"        => ".\n",
-    "Python-pandas" => ".\n";
+    "dplyr"            => " %>%\n",
+    "R-dplyr"          => " %>%\n",
+    "R"                => "\n",
+    "R-base"           => "\n",
+    "pandas"           => ".\n",
+    "Python-pandas"    => ".\n",
+    "Julia"            => "\n",
+    "Julia-DataFrames" => "\n";
 
 
 #-----------------------------------------------------------
@@ -56,7 +61,7 @@ sub has-semicolon (Str $word) {
 }
 
 #-----------------------------------------------------------
-proto ToDataQueryCode($command, $target) is export {*}
+proto ToDataQueryCode(Str $command, Str $target) is export {*}
 
 multi ToDataQueryCode ( Str $command where not has-semicolon($command), Str $target = "dplyr" ) {
 
@@ -67,7 +72,7 @@ multi ToDataQueryCode ( Str $command where not has-semicolon($command), Str $tar
     return $match.made;
 }
 
-multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target = "dplyr" ) {
+multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target = 'dplyr' ) {
 
     die 'Unknown target.' unless %targetToAction{$target}:exists;
 
@@ -78,6 +83,13 @@ multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target 
     my @dqLines = map { ToDataQueryCode($_, $target) }, @commandLines;
 
     return @dqLines.join( %targetToSeparator{$target} );
+}
+
+#-----------------------------------------------------------
+proto to_DataQuery_Julia($) is export {*}
+
+multi to_DataQuery_Julia ( Str $command ) {
+    return ToDataQueryCode( $command, 'Julia-DataFrames' );
 }
 
 #-----------------------------------------------------------
