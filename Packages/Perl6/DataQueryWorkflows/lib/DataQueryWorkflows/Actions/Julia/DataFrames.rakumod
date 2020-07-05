@@ -48,7 +48,7 @@ class DataQueryWorkflows::Actions::Julia::DataFrames {
   method number-value($/) { make $/.Str; }
   method wl-expr($/) { make $/.Str; }
   method quoted-variable-name($/) {  make $/.values[0].made; }
-  method single-quoted-variable-name($/) { make '\'' ~ $<variable-name>.made ~ '\''; }
+  method single-quoted-variable-name($/) { make '\"' ~ $<variable-name>.made ~ '\"'; }
   method double-quoted-variable-name($/) { make '\"' ~ $<variable-name>.made ~ '\"'; }
 
   # Trivial
@@ -62,7 +62,7 @@ class DataQueryWorkflows::Actions::Julia::DataFrames {
   # Load data
   method data-load-command($/) { make $/.values[0].made; }
   method load-data-table($/) { make 'obj = ' ~ $<data-location-spec>.made; }
-  method data-location-spec($/) { make '\'' ~ $/.Str ~ '\''; }
+  method data-location-spec($/) { make '\"' ~ $/.Str ~ '\"'; }
   method use-data-table($/) { make 'obj = ' ~ $<variable-name>.made; }
 
   # Select command

@@ -57,8 +57,8 @@ class DataQueryWorkflows::Actions::R::dplyr {
   method number-value($/) { make $/.Str; }
   method wl-expr($/) { make $/.Str; }
   method quoted-variable-name($/) {  make $/.values[0].made; }
-  method single-quoted-variable-name($/) {  make '\'' ~ $<variable-name>.made ~ '\''; }
-  method double-quoted-variable-name($/) {  make '\"' ~ $<variable-name>.made ~ '\"'; }
+  method single-quoted-variable-name($/) { make '\"' ~ $<variable-name>.made ~ '\"'; }
+  method double-quoted-variable-name($/) { make '\"' ~ $<variable-name>.made ~ '\"'; }
 
   # Trivial
   method trivial-parameter($/) { make $/.values[0].made; }

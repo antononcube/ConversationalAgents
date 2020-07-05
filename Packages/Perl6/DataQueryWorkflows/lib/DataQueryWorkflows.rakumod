@@ -82,7 +82,7 @@ multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target 
 
     my @dqLines = map { ToDataQueryCode($_, $target) }, @commandLines;
 
-    return @dqLines.join( %targetToSeparator{$target} );
+    return @dqLines.join( %targetToSeparator{$target} ).trim;
 }
 
 #-----------------------------------------------------------
