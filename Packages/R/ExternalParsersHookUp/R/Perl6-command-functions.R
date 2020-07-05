@@ -59,7 +59,7 @@
 Perl6Command <- function(command,
                          moduleDirectory,
                          moduleName,
-                         perl6Location = "/Applications/Rakudo/bin/perl6") {
+                         perl6Location = "/Applications/Rakudo/bin/raku") {
 
   if( !is.character(command) ) {
     stop( "A string is expected as a first argument.", call. = T)
@@ -71,6 +71,10 @@ Perl6Command <- function(command,
     system(
       command = paste( perl6Location, gsub( "XXXX", command, p6CommandPart ) ),
       intern = TRUE )
+
+  # lsArgs <- c( '-I', moduleDirectory, '-M', moduleName, '-e', paste0('\'', command, '\'') )
+  #
+  # pres <- system2( command = perl6Location, args = lsArgs, stdout = TRUE )
 
   pres
 }
