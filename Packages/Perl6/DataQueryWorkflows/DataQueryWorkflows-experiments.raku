@@ -8,17 +8,17 @@ use DataQueryWorkflows;
 
 say "=" x 10;
 
-say to_dplyr('select mass & height');
+say to_DataQuery_dplyr('select mass & height');
 
 say "=" x 10;
 
-say to_dplyr('use the data frame df;
+say to_DataQuery_dplyr('use the data frame df;
 select mass and height;
 arrange by the variable mass & height desc');
 
 say "=" x 10;
 
-say to_pandas('use the data frame df;
+say to_DataQuery_pandas('use the data frame df;
 select mass and height;
 arrange by the variable mass & height desc');
 
@@ -38,7 +38,9 @@ $commands = "use starwars;
 inner join with starwars_films by 'name';
 sort by film";
 
-say to_dplyr( $commands );
+#say ToDataQueryCode( command => $commands, target => "R-base" );
+
+say ToDataQueryCode( $commands, "R-dplyr" );
 
 #say "=" x 10;
 #

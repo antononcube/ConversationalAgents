@@ -56,7 +56,7 @@ sub has-semicolon (Str $word) {
 }
 
 #-----------------------------------------------------------
-proto ToDataQueryCode($, $) is export {*}
+proto ToDataQueryCode($command, $target) is export {*}
 
 multi ToDataQueryCode ( Str $command where not has-semicolon($command), Str $target = "dplyr" ) {
 
@@ -81,15 +81,15 @@ multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target 
 }
 
 #-----------------------------------------------------------
-proto to_dplyr($) is export {*}
+proto to_DataQuery_dplyr($) is export {*}
 
-multi to_dplyr ( Str $command ) {
+multi to_DataQuery_dplyr ( Str $command ) {
     return ToDataQueryCode( $command, 'R-dplyr' );
 }
 
 #-----------------------------------------------------------
-proto to_pandas($) is export {*}
+proto to_DataQuery_pandas($) is export {*}
 
-multi to_pandas ( Str $command ) {
+multi to_DataQuery_pandas ( Str $command ) {
     return ToDataQueryCode( $command, 'Python-pandas' );
 }
