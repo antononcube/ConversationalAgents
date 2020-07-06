@@ -68,6 +68,41 @@ class DataQueryWorkflows::Actions::R::dplyr {
   method trivial-parameter-false($/) { make 'FALSE'; }
   method trivial-parameter-true($/) { make 'TRUE'; }
 
+  # Predicates
+  method predicates-list($/) { make $<predicate>>>.made.join(', '); }
+  method predicate($/) { make $/.values>>.made.join(' '); }
+  method predicate-sum($/) { make $<predicate-product>>>.made.join(' | '); }
+  method predicate-product($/) { make $<predicate-term>>>.made.join(' & '); }
+  method predicate-term($/) { make $/.values[0].made; }
+  method predicate-group($/) { make '(' ~ $/<predicate-term>.made ~ ')'; }
+
+  method predicate-simple($/) {
+    if $<predicate-relation>.made eq '%!in%' {
+      make '!(' ~ $<lhs>.made ~ ' %in% ' ~ $<rhs>.made ~ ')';
+    } elsif $<predicate-relation>.made eq 'like' {
+      make 'grepl( pattern = ' ~ $<rhs>.made ~ ', x = ' ~ $<lhs>.made ~ ')';
+    } else {
+      make $<lhs>.made ~ ' ' ~ $<predicate-relation>.made ~ ' ' ~ $<rhs>.made;
+    }
+  }
+  method logical-connective($/) { make $/.values[0].made; }
+  method and-operator($/) { make '&'; }
+  method or-operator($/) { make '|'; }
+  method predicate-symbol($/) { make $/.Str; }
+  method predicate-value($/) { make $/.values[0].made; }
+  method predicate-relation($/) { make $/.values[0].made; }
+  method equal-relation($/) { make '=='; }
+  method not-equal-relation($/) { make '!='; }
+  method less-relation($/) { make '<'; }
+  method less-equal-relation($/) { make '<='; }
+  method greater-relation($/) { make '>'; }
+  method greater-equal-relation($/) { make '>='; }
+  method same-relation($/) { make '=='; }
+  method not-same-relation($/) { make '!='; }
+  method in-relation($/) { make '%in%'; }
+  method not-in-relation($/) { make '%!in%'; }
+  method like-relation($/) { make 'like'; }
+
   # Load data
   method data-load-command($/) { make $/.values[0].made; }
   method load-data-table($/) { make '{ data(' ~ $<data-location-spec>.made ~ '); ' ~ $<data-location-spec>.made ~ ' }'; }
@@ -80,10 +115,6 @@ class DataQueryWorkflows::Actions::R::dplyr {
   # Filter commands
   method filter-command($/) { make 'dplyr::filter(' ~ $<filter-spec>.made ~ ')'; }
   method filter-spec($/) { make $<predicates-list>.made; }
-  method predicates-list($/) { make $<predicate>>>.made.join(', '); }
-  method predicate($/) { make $<variable-name>.made ~ ' ' ~ $<predicate-symbol>.made ~ ' ' ~ $<predicate-value>.made; }
-  method predicate-symbol($/) { make $/.Str; }
-  method predicate-value($/) { make $/.values[0].made; }
 
   # Mutate command
   method mutate-command($/) { make 'dplyr::mutate(' ~ $<assign-pairs-list>.made ~ ')'; }

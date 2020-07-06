@@ -46,11 +46,12 @@ echo data summary
 
 my $commands4 = '
 use dfTitanic;
-filter by passengerSex == "male";
+filter with passengerSex is "male" and paseengerSurvival equals "died" or passengerSurvival is "survived" ;
+filter by passengerClass is like "1.";
 cross tabulate passengerClass, passengerSurvival;
 ';
 
-say ToDataQueryCode( $commands, 'Julia' );
+say ToDataQueryCode( $commands4, 'dplyr' );
 
 #say ToDataQueryCode( command => $commands, target => "R-base" );
 

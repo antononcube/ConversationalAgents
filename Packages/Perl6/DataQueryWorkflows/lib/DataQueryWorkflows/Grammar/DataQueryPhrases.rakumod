@@ -45,10 +45,35 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
 
     # Predicates
     rule predicates-list { <predicate>+ % <list-separator> }
-    rule predicate { <variable-name> <predicate-symbol> <predicate-value> }
-    token predicate-symbol { "==" | "<" | "<=" | ">" | ">=" }
+    #rule predicate { <predicate-simple> [ <logical-connective> <predicate-simple> ]* }
+    rule predicate { <predicate-sum> }
+    rule predicate-sum { <predicate-product>+ % <or-operator> }
+    rule predicate-product { <predicate-term>+ % <and-operator> }
+    rule predicate-term { <predicate-simple> | <predicate-group> }
+    rule predicate-group { '(' <predicate-term> ')' }
+
+    rule predicate-simple { <lhs=predicate-value> [ 'is' ]? <predicate-relation> <rhs=predicate-value> }
     rule predicate-value { <quoted-variable-name> | <number-value> }
-    # rule predicate-value { <number> | <string> | <variable-name> }
-    # token number { (\d*) }
-    # token string { "'" \w* "'" }
+    rule predicate-operator { <logical-connective> | <predicate-relation> }
+    rule logical-connective { <and-operator> | <or-operator> }
+    token and-operator { <and-conjunction> | '&&' | '&' }
+    token or-operator { <or-conjunction> | '||' | '|' }
+    rule predicate-relation {
+        <equal-relation> | <not-equal-relation> |
+        <less-relation> | <less-equal-relation> |
+        <greater-relation> | <greater-equal-relation> |
+        <same-relation> | <not-same-relation>
+        <in-relation> | <not-in-relation> |
+        <like-relation> }
+    rule equal-relation { '=' | '==' | 'equals' | 'equal' 'to'? | 'is' }
+    rule not-equal-relation { '!=' | 'not' 'equal' 'to'? | 'is' 'not' }
+    rule less-relation { '<' | 'less' 'than'? }
+    rule less-equal-relation { '<=' | 'less' 'or'? 'equal' 'than'? }
+    rule greater-relation { '>' | 'greater' 'than'? }
+    rule greater-equal-relation { '>=' | 'greater' 'or'? 'equal' 'than'? }
+    rule same-relation { '===' | 'same' 'as'? }
+    rule not-same-relation { '=!=' | 'not' 'same' 'as'? }
+    rule in-relation { 'in' | 'belongs' 'to' }
+    rule not-in-relation { '!in' | 'not' 'in' | [ 'does' 'not' | 'doesn\'t' ] 'belong' 'to' }
+    rule like-relation { 'like' | 'similar' 'to' }
 }

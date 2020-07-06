@@ -42,6 +42,7 @@ role DataQueryWorkflows::Grammar::CommonParts {
     token model { 'model' }
     token object { 'object' }
     token of-preposition { 'of' }
+    token or-conjunction { 'or' }
     token over-preposition { 'over' }
     token per-preposition { 'per' }
     token plot { 'plot' }
