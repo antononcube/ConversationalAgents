@@ -33,10 +33,12 @@ use v6;
 use DataQueryWorkflows::Grammar::DataQueryPhrases;
 use DataQueryWorkflows::Grammar::PipelineCommand;
 use DataQueryWorkflows::Grammar::ErrorHandling;
+use DataQueryWorkflows::Grammar::PredicateSpecification;
 
 grammar DataQueryWorkflows::Grammar
         does DataQueryWorkflows::Grammar::ErrorHandling
         does DataQueryWorkflows::Grammar::DataQueryPhrases
+        does DataQueryWorkflows::Grammar::PredicateSpecification
         does DataQueryWorkflows::Grammar::PipelineCommand {
     # TOP
     rule TOP {

@@ -30,10 +30,12 @@
 
 use v6;
 use DataQueryWorkflows::Grammar;
+use  DataQueryWorkflows::Actions::Julia::Predicate;
 
 unit module DataQueryWorkflows::Actions::Julia::DataFrames;
 
-class DataQueryWorkflows::Actions::Julia::DataFrames {
+class DataQueryWorkflows::Actions::Julia::DataFrames
+        is DataQueryWorkflows::Actions::Julia::Predicate {
 
   method TOP($/) { make $/.values[0].made; }
 
@@ -71,10 +73,6 @@ class DataQueryWorkflows::Actions::Julia::DataFrames {
   # Filter commands
   method filter-command($/) { make 'obj = obj[ ' ~ $<filter-spec>.made ~ ', :]'; }
   method filter-spec($/) { make $<predicates-list>.made; }
-  method predicates-list($/) { make $<predicate>>>.made.join(', '); }
-  method predicate($/) { make 'obj.' ~ $<variable-name>.made ~ ' .' ~ $<predicate-symbol>.made ~ ' ' ~ $<predicate-value>.made; }
-  method predicate-symbol($/) { make $/.Str; }
-  method predicate-value($/) { make $/.values[0].made; }
 
   # Mutate command
   method mutate-command($/) { make 'transform!( ' ~ $<assign-pairs-list>.made ~ ' )'; }

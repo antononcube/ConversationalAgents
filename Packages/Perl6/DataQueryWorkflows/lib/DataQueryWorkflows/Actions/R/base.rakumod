@@ -30,10 +30,12 @@
 
 use v6;
 use DataQueryWorkflows::Grammar;
+use DataQueryWorkflows::Actions::R::Predicate;
 
 unit module DataQueryWorkflows::Actions::R::base;
 
-class DataQueryWorkflows::Actions::R::base {
+class DataQueryWorkflows::Actions::R::base
+        is DataQueryWorkflows::Actions::R::Predicate {
 
   method TOP($/) { make $/.values[0].made; }
 
@@ -70,10 +72,6 @@ class DataQueryWorkflows::Actions::R::base {
   # Filter commands
   method filter-command($/) { make 'obj <- obj[' ~ $<filter-spec>.made ~ ', ]'; }
   method filter-spec($/) { make $<predicates-list>.made; }
-  method predicates-list($/) { make $<predicate>>>.made.join(', '); }
-  method predicate($/) { make $<variable-name>.made ~ ' ' ~ $<predicate-symbol>.made ~ ' ' ~ $<predicate-value>.made; }
-  method predicate-symbol($/) { make $/.Str; }
-  method predicate-value($/) { make $/.values[0].made; }
 
   # Mutate command
   method mutate-command($/) { make 'dplyr::mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
