@@ -17,6 +17,7 @@ role DataQueryWorkflows::Grammar::CommonParts {
     token by-preposition { 'by' | 'with' | 'using' }
     token calculation { 'calculation' }
     token columns { 'columns' }
+    token contingency-noun { 'contingency' }
     token count-verb { 'count' }
     token counts-noun { 'counts' }
     token create { 'create' }
@@ -38,6 +39,7 @@ role DataQueryWorkflows::Grammar::CommonParts {
     token histograms { 'histograms' }
     token in-preposition { 'in' }
     token is-verb { 'is' }
+    token matrix-noun { 'matrix' }
     token missing-adjective { 'missing' }
     token model { 'model' }
     token object { 'object' }
@@ -59,11 +61,12 @@ role DataQueryWorkflows::Grammar::CommonParts {
     token step-noun { 'step' }
     token summaries { 'summaries' }
     token summary { 'summary' }
+    token table-noun { 'table' }
     token that-pronoun { 'that' }
-    token them-pronoun { 'them' }
-    token time-noun { 'time' }
     token the-determiner { 'the' }
+    token them-pronoun { 'them' }
     token this-pronoun { 'this' }
+    token time-noun { 'time' }
     token to-preposition { 'to' | 'into' }
     token top-noun { 'top' }
     token transform-verb { 'transform' }
@@ -125,7 +128,6 @@ role DataQueryWorkflows::Grammar::CommonParts {
     rule load-data-directive { ( 'load' | 'ingest' ) <.the-determiner>? <data> }
     rule plot-directive { <plot> | 'chart' | <display-directive> <diagram> }
     rule use-directive { [ <get-verb> <and-conjunction>? ]? <use-verb> }
-
 
     # Value types
     token number-value { (\d+ ['.' \d*]?  [ [e|E] \d+]?) }

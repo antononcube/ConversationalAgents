@@ -146,7 +146,10 @@ class DataQueryWorkflows::Actions::R::base
   }
 
   # Cross tabulate command
-  method cross-tabulate-command($/) {
+  method cross-tabulation-command($/) { make $/.values[0].made; }
+  method cross-tabulate-command($/) { $<cross-tabulation-formula>.made }
+  method contingency-matrix-command($/) { $<cross-tabulation-formula>.made }
+  method cross-tabulation-formula($/) {
     if $<values-variable-name> {
       make 'obj <- xtabs( formula = ' ~ $<values-variable-name>.made ~ ' ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x )';
     } else {

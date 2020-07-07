@@ -12,6 +12,7 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
     token combine-verb { 'combine' }
     token descending-adjective { 'descending' }
     token filter-verb { 'filter' }
+    token formula-noun { 'formula' }
     token full-adjective { 'full' }
     token glimpse-verb { 'glimpse' }
     token group-verb { 'group' }
@@ -30,6 +31,8 @@ role DataQueryWorkflows::Grammar::DataQueryPhrases
 
     rule for-which-phrase { <for-preposition> 'which' | <that-pronoun> 'adhere' <to-preposition> }
     rule cross-tabulate-phrase { 'cross' 'tabulate' }
+    rule contingency-matrix-phrase { <contingency-noun> [ <matrix-noun> | <table-noun> ] }
+    rule with-formula-phrase { <with-preposition> <the-determiner>? <formula-noun> }
 
     # True dplyr; see comments below.
     token ascending { <ascending-adjective> | 'asc' }
