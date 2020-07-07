@@ -39,11 +39,22 @@ class DataQueryWorkflows::Actions::R::base
 
   method TOP($/) { make $/.values[0].made; }
 
+  # Overriding Predicate::predicate-simple -- prefixing the lhs variable specs with 'obj$'.
+  method predicate-simple($/) {
+    if $<predicate-relation>.made eq '%!in%' {
+      make '!( obj$' ~ $<lhs>.made ~ ' %in% ' ~ $<rhs>.made ~ ')';
+    } elsif $<predicate-relation>.made eq 'like' {
+      make 'grepl( pattern = ' ~ $<rhs>.made ~ ', x = obj$' ~ $<lhs>.made ~ ')';
+    } else {
+      make 'obj$' ~ $<lhs>.made ~ ' ' ~ $<predicate-relation>.made ~ ' ' ~ $<rhs>.made;
+    }
+  }
+
   # General
   method dataset-name($/) { make $/.Str; }
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
-  method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
+  method variable-names-list($/) { make $<variable-name>>>.made; }
   method quoted-variable-names-list($/) { make $<quoted-variable-name>>>.made.join(', '); }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
@@ -67,16 +78,16 @@ class DataQueryWorkflows::Actions::R::base
   method use-data-table($/) { make 'obj <- ' ~ $<variable-name>.made; }
 
   # Select command
-  method select-command($/) { make 'obj <- obj[, ' ~ $<variable-names-list>.made ~ ']'; }
+  method select-command($/) { make 'obj <- obj[, ' ~ 'c(' ~ map( { '\"' ~ $_ ~ '\"' }, $<variable-names-list>.made ).join(', ') ~ ') ]'; }
 
   # Filter commands
   method filter-command($/) { make 'obj <- obj[' ~ $<filter-spec>.made ~ ', ]'; }
   method filter-spec($/) { make $<predicates-list>.made; }
 
   # Mutate command
-  method mutate-command($/) { make 'dplyr::mutate(' ~ $<assign-pairs-list>.made ~ ')'; }
-  method assign-pairs-list($/) { make $<assign-pair>>>.made.join(', '); }
-  method assign-pair($/) { make $<assign-pair-lhs>.made ~ ' = ' ~ $<assign-pair-rhs>.made; }
+  method mutate-command($/) { make $<assign-pairs-list>.made; }
+  method assign-pairs-list($/) { make '{' ~ $<assign-pair>>>.made.join('; ') ~ '}'; }
+  method assign-pair($/) { make 'obj$' ~ $<assign-pair-lhs>.made ~ ' = ' ~ $<assign-pair-rhs>.made; }
   method assign-pair-lhs($/) { make $/.values[0].made; }
   method assign-pair-rhs($/) { make $/.values[0].made; }
 
@@ -85,13 +96,13 @@ class DataQueryWorkflows::Actions::R::base
 
   # Ungroup command
   method ungroup-command($/) { make $/.values[0].made; }
-  method ungroup-simple-command($/) { make 'obj <- as.data.frame(ungroup(obj),stringsAsFactors=FALSE)'; }
+  method ungroup-simple-command($/) { make 'obj <- as.data.frame(ungroup(obj), stringsAsFactors=FALSE)'; }
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }
-  method arrange-command-simple($/) { make $<variable-names-list>.made; }
-  method arrange-command-ascending($/) { make 'obj <- obj[ order(' ~ $<arrange-command-simple>.made ~ '), ]'; }
-  method arrange-command-descending($/) { make 'obj <- obj[ rev(order(' ~ $<arrange-command-simple>.made ~ ')), ]'; }
+  method arrange-simple-spec($/) { make map( { 'obj$' ~ $_ }, $<variable-names-list>.made ).join(', '); }
+  method arrange-command-ascending($/) { make 'obj <- obj[ order(obj[,' ~ $<arrange-simple-spec>.made ~ ']), ]'; }
+  method arrange-command-descending($/) { make 'obj <- obj[ rev(order(' ~ $<arrange-simple-spec>.made ~ ')), ]'; }
 
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }

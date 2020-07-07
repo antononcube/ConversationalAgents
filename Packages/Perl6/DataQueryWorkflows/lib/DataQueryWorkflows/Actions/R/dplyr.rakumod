@@ -99,9 +99,9 @@ class DataQueryWorkflows::Actions::R::dplyr
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }
-  method arrange-command-simple($/) { make $<variable-names-list>.made; }
-  method arrange-command-ascending($/) { make 'dplyr::arrange(' ~ $<arrange-command-simple>.made ~ ')'; }
-  method arrange-command-descending($/) { make 'dplyr::arrange(desc(' ~ $<arrange-command-simple>.made ~ '))'; }
+  method arrange-simple-spec($/) { make $<variable-names-list>.made; }
+  method arrange-command-ascending($/) { make 'dplyr::arrange(' ~ $<arrange-simple-spec>.made ~ ')'; }
+  method arrange-command-descending($/) { make 'dplyr::arrange(desc(' ~ $<arrange-simple-spec>.made ~ '))'; }
 
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }

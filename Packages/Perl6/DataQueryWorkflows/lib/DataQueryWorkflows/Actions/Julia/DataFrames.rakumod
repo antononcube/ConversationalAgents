@@ -90,9 +90,9 @@ class DataQueryWorkflows::Actions::Julia::DataFrames
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }
-  method arrange-command-simple($/) { make $<variable-names-list>.made; }
-  method arrange-command-ascending($/) { make 'sort!( obj, [' ~ $<arrange-command-simple>.made ~ '] )'; }
-  method arrange-command-descending($/) { make 'sort!( obj, [' ~ $<arrange-command-simple>.made ~ '], rev=true ))'; }
+  method arrange-simple-spec($/) { make $<variable-names-list>.made; }
+  method arrange-command-ascending($/) { make 'sort!( obj, [' ~ $<arrange-simple-spec>.made ~ '] )'; }
+  method arrange-command-descending($/) { make 'sort!( obj, [' ~ $<arrange-simple-spec>.made ~ '], rev=true ))'; }
 
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }

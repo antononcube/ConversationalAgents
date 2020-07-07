@@ -83,9 +83,14 @@ grammar DataQueryWorkflows::Grammar
 
     # Arrange command
     rule arrange-command { <arrange-command-descending> | <arrange-command-ascending> }
-    rule arrange-command-simple { <arrange> <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
-    rule arrange-command-ascending { <arrange-command-simple> <.ascending>? }
-    rule arrange-command-descending { <arrange-command-simple> <descending> }
+    rule arrange-command-filler { <by-preposition> <the-determiner>? [ <variables-noun> | <variable-noun> ]? }
+    rule arrange-simple-spec { <.by-preposition>? <.the-determiner>? [ <.variables-noun> | <.variable-noun> ]? <variable-names-list> }
+    rule arrange-command-ascending {
+        <.arrange> <.ascending>? <arrange-simple-spec> |
+        <.arrange>  <arrange-simple-spec> <.ascending> }
+    rule arrange-command-descending {
+        <.arrange> <.descending> <arrange-simple-spec> |
+        <.arrange> <arrange-simple-spec> <.descending> }
 
     # Statistics command
     rule statistics-command { <count-command> | <glimpse-data> | <summarize-data> | <summarize-all-command> }
