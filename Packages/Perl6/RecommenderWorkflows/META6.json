@@ -20,7 +20,7 @@
         "RecommenderWorkflows::Actions::SMRMon-R" : "lib/RecommenderWorkflows/Actions/SMRMon-R.pm6",
         "RecommenderWorkflows::Actions::SMRMon-WL" : "lib/RecommenderWorkflows/Actions/SMRMon-WL.pm6"
     },
-    "depends" : [ ],
+    "depends" : [ "Text::Levenshtein::Damerau" ],
     "build-depends" : [ ],
     "test-depends" : [ ],
     "resources" : [ ],
