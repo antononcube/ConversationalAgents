@@ -16,10 +16,11 @@ Standard Query Language (SQL) or RStudio's library dplyr.
 unit module DataQueryWorkflows;
 
 use DataQueryWorkflows::Grammar;
-use DataQueryWorkflows::Actions::R::dplyr;
-use DataQueryWorkflows::Actions::R::base;
-use DataQueryWorkflows::Actions::Python::pandas;
 use DataQueryWorkflows::Actions::Julia::DataFrames;
+use DataQueryWorkflows::Actions::Python::pandas;
+use DataQueryWorkflows::Actions::R::base;
+use DataQueryWorkflows::Actions::R::dplyr;
+use DataQueryWorkflows::Actions::WL::System;
 
 #-----------------------------------------------------------
 
@@ -35,24 +36,30 @@ use DataQueryWorkflows::Actions::Julia::DataFrames;
 #};
 
 my %targetToAction =
-    "dplyr"            => DataQueryWorkflows::Actions::R::dplyr,
-    "R-dplyr"          => DataQueryWorkflows::Actions::R::dplyr,
+    "Julia"            => DataQueryWorkflows::Actions::Julia::DataFrames,
+    "Julia-DataFrames" => DataQueryWorkflows::Actions::Julia::DataFrames,
     "R"                => DataQueryWorkflows::Actions::R::base,
     "R-base"           => DataQueryWorkflows::Actions::R::base,
-    "pandas"           => DataQueryWorkflows::Actions::Python::pandas,
+    "R-dplyr"          => DataQueryWorkflows::Actions::R::dplyr,
+    "dplyr"            => DataQueryWorkflows::Actions::R::dplyr,
     "Python-pandas"    => DataQueryWorkflows::Actions::Python::pandas,
-    "Julia"            => DataQueryWorkflows::Actions::Julia::DataFrames,
-    "Julia-DataFrames" => DataQueryWorkflows::Actions::Julia::DataFrames;
+    "pandas"           => DataQueryWorkflows::Actions::Python::pandas,
+    "Mathematica"      => DataQueryWorkflows::Actions::WL::System,
+    "WL"               => DataQueryWorkflows::Actions::WL::System,
+    "WL-System"        => DataQueryWorkflows::Actions::WL::System;
 
 my %targetToSeparator{Str} =
-    "dplyr"            => " %>%\n",
-    "R-dplyr"          => " %>%\n",
+    "Julia"            => "\n",
+    "Julia-DataFrames" => "\n",
     "R"                => "\n",
     "R-base"           => "\n",
-    "pandas"           => ".\n",
+    "R-dplyr"          => " %>%\n",
+    "dplyr"            => " %>%\n",
+    "Mathematica"      => "\n",
     "Python-pandas"    => ".\n",
-    "Julia"            => "\n",
-    "Julia-DataFrames" => "\n";
+    "pandas"           => ".\n",
+    "WL"               => "\n",
+    "WL-System"        => "\n";
 
 
 #-----------------------------------------------------------
@@ -104,4 +111,11 @@ proto to_DataQuery_pandas($) is export {*}
 
 multi to_DataQuery_pandas ( Str $command ) {
     return ToDataQueryCode( $command, 'Python-pandas' );
+}
+
+#-----------------------------------------------------------
+proto to_DataQuery_WL($) is export {*}
+
+multi to_DataQuery_WL ( Str $command ) {
+    return ToDataQueryCode( $command, 'WL-System' );
 }
