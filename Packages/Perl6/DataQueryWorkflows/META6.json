@@ -4,7 +4,7 @@
     "api"  : "1",
     "auth" : "github:antononcube",
     "version" : "0.4.0",
-    "description" : "Data Query workflows building by natural language commands.",
+    "description" : "Data query workflows building by natural language commands.",
     "authors" : [ "Anton Antonov" ],
     "license" : "GPL-3.0-or-later",
     "provides" : {
@@ -21,14 +21,16 @@
         "DataQueryWorkflows::Actions::SQL::SQL" : "lib/DataQueryWorkflows/Actions/SQL/SQL.rakumod",
         "DataQueryWorkflows::Actions::R::Predicate" : "lib/DataQueryWorkflows/Actions/R/Predicate.rakumod",
         "DataQueryWorkflows::Actions::R::base" : "lib/DataQueryWorkflows/Actions/R/base.rakumod",
-        "DataQueryWorkflows::Actions::R::dplyr" : "lib/DataQueryWorkflows/Actions/R/dplyr.rakumod"
+        "DataQueryWorkflows::Actions::R::dplyr" : "lib/DataQueryWorkflows/Actions/R/dplyr.rakumod",
+        "DataQueryWorkflows::Actions::WL::Predicate" : "lib/DataQueryWorkflows/Actions/WL/Predicate.rakumod",
+        "DataQueryWorkflows::Actions::WL::System" : "lib/DataQueryWorkflows/Actions/WL/System.rakumod"
     },
     "depends" : [ ],
     "build-depends" : [ ],
     "test-depends" : [ ],
     "resources" : [ ],
     "tags": [
-      "Data query", "Data", "dplyr", "SQL", "pandas", "Query", "Parser", "Interpreter", "Monad", "Workflow", "Pipeline"
+      "data query", "data", "dplyr", "sql", "pandas", "dataset", "query", "parser", "interpreter", "monad", "workflow", "pipeline"
     ],
     "source-url" : "https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Perl6/DataQueryWorkflows"
 }
