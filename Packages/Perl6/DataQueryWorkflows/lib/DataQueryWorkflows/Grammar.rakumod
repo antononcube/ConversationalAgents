@@ -52,7 +52,7 @@ grammar DataQueryWorkflows::Grammar
         <arrange-command> |
         <statistics-command> |
         <join-command> |
-        <cross-tabulate-command> }
+        <cross-tabulation-command> }
 
     # Load data
     rule data-load-command { <load-data-table> | <use-data-table> }
@@ -104,7 +104,10 @@ grammar DataQueryWorkflows::Grammar
     rule semi-join-spec  { <.semi-adjective>  <.join-noun> <.with-preposition>? <dataset-name> [ [ <.by-preposition> | <.using-preposition> ] <join-by-spec> ]? }
 
     # Cross tabulate command
-    rule cross-tabulate-command { <.cross-tabulate-phrase> <.variable-noun>? <rows-variable-name> [ <.list-separator-symbol> | <.with-preposition> ] <.variable-noun>? <columns-variable-name> [ <.over-preposition> <values-variable-name> ]? }
+    rule cross-tabulate-command { <cross-tabulate-command> | <contingency-matrix-command> }
+    rule cross-tabulation-command { <.cross-tabulate-phrase> <cross-tabulation-formula> }
+    rule contingency-matrix-command { <.create-directive> [ <.the-determiner> | <.a-determiner>]? <.contingency-matrix-phrase> [ <.using-preposition> | <.with-formula-phrase> ] <cross-tabulation-formula> }
+    rule cross-tabulation-formula { <.variable-noun>? <rows-variable-name> [ <.list-separator-symbol> | <.with-preposition> ] <.variable-noun>? <columns-variable-name> [ <.over-preposition> <values-variable-name> ]? }
     rule rows-variable-name { <variable-name> }
     rule columns-variable-name { <variable-name> }
     rule values-variable-name { <variable-name> }
