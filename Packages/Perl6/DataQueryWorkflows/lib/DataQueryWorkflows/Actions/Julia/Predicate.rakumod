@@ -9,8 +9,8 @@ class DataQueryWorkflows::Actions::Julia::Predicate {
   # Predicates
   method predicates-list($/) { make $<predicate>>>.made.join(', '); }
   method predicate($/) { make $/.values>>.made.join(' '); }
-  method predicate-sum($/) { make $<predicate-product>>>.made.join(' .| '); }
-  method predicate-product($/) { make $<predicate-term>>>.made.join(' .& '); }
+  method predicate-sum($/) { make map( { '(' ~ $_ ~ ')' }, $<predicate-product>>>.made ).join(' .| '); }
+  method predicate-product($/) { make map( { '(' ~ $_ ~ ')' }, $<predicate-term>>>.made ).join(' .& '); }
   method predicate-term($/) { make $/.values[0].made; }
   method predicate-group($/) { make '(' ~ $/<predicate-term>.made ~ ')'; }
 
