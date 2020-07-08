@@ -16,9 +16,9 @@ class DataQueryWorkflows::Actions::WL::Predicate {
 
   method predicate-simple($/) {
     if $<predicate-relation>.made eq 'like' {
-      make 'MatchQ[ ' ~ $<lhs>.made ~ ', ' ~ $<rhs>.made ~ ']';
+      make 'MatchQ[ #["' ~ $<lhs>.made ~ '"], ' ~ $<rhs>.made ~ ']';
     } else {
-      make $<lhs>.made ~ ' ' ~ $<predicate-relation>.made ~ ' ' ~ $<rhs>.made;
+      make '#["' ~ $<lhs>.made ~ '"] ' ~ $<predicate-relation>.made ~ ' ' ~ $<rhs>.made;
     }
   }
   method logical-connective($/) { make $/.values[0].made; }
