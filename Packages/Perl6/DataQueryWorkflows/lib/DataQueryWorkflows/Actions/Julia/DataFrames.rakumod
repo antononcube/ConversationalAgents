@@ -152,9 +152,9 @@ class DataQueryWorkflows::Actions::Julia::DataFrames
   method contingency-matrix-command($/) { $<cross-tabulation-formula>.made }
   method cross-tabulation-formula($/) {
     if $<values-variable-name> {
-      make '(function(x) as.data.frame(xtabs( formula = ' ~ $<values-variable-name>.made ~ ' ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x )))';
+      make 'obj = combine( x -> sum(x[:, :;' ~ $<values-variable-name> ~ ']), groupby( obj, [ :' ~ $<rows-variable-name>.made ~ ', :' ~ $<columns-variable-name>.made ~ '] ))';
     } else {
-      make '(function(x) as.data.frame(xtabs( formula = ~ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', data = x )))';
+      make 'obj = combine( nrow, groupby( obj, [ :' ~ $<rows-variable-name>.made ~ ', :' ~ $<columns-variable-name>.made ~ '] ))';
     }
   }
   method rows-variable-name($/) { make $<variable-name>.made; }
