@@ -43,7 +43,7 @@ class DataQueryWorkflows::Actions::WL::System
   method dataset-name($/) { make $/.Str; }
   method variable-name($/) { make $/.Str; }
   method list-separator($/) { make ','; }
-  method variable-names-list($/) { make $<variable-name>>>.made.join(', '); }
+  method variable-names-list($/) { make $<variable-name>>>.made; }
   method quoted-variable-names-list($/) { make $<quoted-variable-name>>>.made.join(', '); }
   method integer-value($/) { make $/.Str; }
   method number-value($/) { make $/.Str; }
@@ -67,21 +67,25 @@ class DataQueryWorkflows::Actions::WL::System
   method use-data-table($/) { make 'obj = ' ~ $<variable-name>.made ~ ';'; }
 
   # Select command
-  method select-command($/) { make 'obj = Map[ KeyTake[ #, ' ~ $<variable-names-list>.made ~ ']&, obj];'; }
+  method select-command($/) {
+    make 'obj = Map[ KeyTake[ #, {' ~ map( { '"' ~ $_ ~ '"' }, $<variable-names-list>.made ).join(', ') ~ '} ]&, obj];';
+  }
 
   # Filter commands
-  method filter-command($/) { make 'obj = Select[ obj, ' ~ $<filter-spec>.made ~ '];'; }
+  method filter-command($/) { make 'obj = Select[ obj, ' ~ $<filter-spec>.made ~ ' & ];'; }
   method filter-spec($/) { make $<predicates-list>.made; }
 
   # Mutate command
-  method mutate-command($/) { make '{' ~ $<assign-pairs-list>.made ~ '}'; }
+  method mutate-command($/) { make 'obj = Map[ Join[ #, <|' ~ $<assign-pairs-list>.made ~ '|> ]&, obj]' ; }
   method assign-pairs-list($/) { make $<assign-pair>>>.made.join(', '); }
-  method assign-pair($/) { make $<assign-pair-lhs>.made ~ ' = ' ~ $<assign-pair-rhs>.made; }
+  method assign-pair($/) { make '"' ~ $<assign-pair-lhs>.made ~ '" -> ' ~ $<assign-pair-rhs>.made; }
   method assign-pair-lhs($/) { make $/.values[0].made; }
   method assign-pair-rhs($/) { make $/.values[0].made; }
 
   # Group command
-  method group-command($/) { make 'obj = GroupBy[ obj, ' ~ $<variable-names-list>.made ~ ']'; }
+  method group-command($/) {
+    make 'obj = GroupBy[ obj, {' ~ map( { '#["' ~ $_ ~ '"]' }, $<variable-names-list>.made ).join(', ') ~ '} ]';
+  }
 
   # Ungroup command
   method ungroup-command($/) { make $/.values[0].made; }
@@ -89,9 +93,9 @@ class DataQueryWorkflows::Actions::WL::System
 
   # Arrange command
   method arrange-command($/) { make $/.values[0].made; }
-  method arrange-command-simple($/) { make $<variable-names-list>.made; }
-  method arrange-command-ascending($/) { make 'obj = SortBy[ obj, ' ~ $<arrange-command-simple>.made ~ ']'; }
-  method arrange-command-descending($/) { make 'obj = ReverseSortBy[ obj, ' ~ $<arrange-command-simple>.made ~ ']'; }
+  method arrange-simple-spec($/) { make '{' ~ map( { '#["' ~ $_ ~ '"]' }, $<variable-names-list>.made ).join(', ') ~ '}'; }
+  method arrange-command-ascending($/) { make 'obj = SortBy[ obj, ' ~ $<arrange-simple-spec>.made ~ ']'; }
+  method arrange-command-descending($/) { make 'obj = ReverseSortBy[ obj, ' ~ $<arrange-simple-spec>.made ~ ']'; }
 
   # Statistics command
   method statistics-command($/) { make $/.values[0].made; }
@@ -151,12 +155,12 @@ class DataQueryWorkflows::Actions::WL::System
   method contingency-matrix-command($/) { $<cross-tabulation-formula>.made }
   method cross-tabulation-formula($/) {
     if $<values-variable-name> {
-      make 'obj = ResourceFunction["CrossTabulate"][ ' ~ $<values-variable-name>.made ~ ' == ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', obj ]';;
+      make 'obj = GroupBy[ obj, { #[' ~ $<rows-variable-name>.made ~ '], #[' ~ $<columns-variable-name>.made ~  '] }&, Total[ #[' ~ $<values-variable-name>.made ~ '] & /@ # ]& ]';;
     } else {
-      make 'obj = ResourceFunction["CrossTabulate"][ ' ~ $<rows-variable-name>.made ~ ' + ' ~ $<columns-variable-name>.made ~ ', obj ];';
+      make 'obj = GroupBy[ obj, { #[' ~ $<rows-variable-name>.made ~ '], #[' ~ $<columns-variable-name>.made ~  '] }&, Length ]';
     }
   }
-  method rows-variable-name($/) { make $<variable-name>.made; }
-  method columns-variable-name($/) { make $<variable-name>.made; }
-  method values-variable-name($/) { make $<variable-name>.made; }
+  method rows-variable-name($/) { make '"' ~ $<variable-name>.made ~ '"'; }
+  method columns-variable-name($/) { make '"' ~ $<variable-name>.made ~ '"'; }
+  method values-variable-name($/) { make '"' ~ $<variable-name>.made ~ '"'; }
 }
