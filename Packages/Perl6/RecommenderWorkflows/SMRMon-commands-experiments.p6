@@ -52,7 +52,7 @@ say to_SMRMon_R( $commands );
 
 say "\n=======\n";
 
-say to_SMRMon_Py( $commands );
+say to_SMRMon_Python( $commands );
 
 say "\n=======\n";
 

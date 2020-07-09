@@ -42,7 +42,7 @@ use v6;
 
 use RecommenderWorkflows::Grammar;
 
-class RecommenderWorkflows::Actions::SMRMon-WL {
+class RecommenderWorkflows::Actions::WL::SMRMon {
 
   # Top
   method TOP($/) { make $/.values[0].made; }

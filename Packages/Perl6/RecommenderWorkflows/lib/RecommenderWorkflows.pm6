@@ -16,76 +16,76 @@ interpretation of English natural speech commands that specify recommender workf
 unit module RecommenderWorkflows;
 
 use RecommenderWorkflows::Grammar;
-use RecommenderWorkflows::Actions::SMRMon-Py;
-use RecommenderWorkflows::Actions::SMRMon-R;
-use RecommenderWorkflows::Actions::SMRMon-WL;
+use RecommenderWorkflows::Actions::Python::SMRMon;
+use RecommenderWorkflows::Actions::R::SMRMon;
+use RecommenderWorkflows::Actions::WL::SMRMon;
 
+my %targetToAction =
+    "Python"           => RecommenderWorkflows::Actions::Python::SMRMon,
+    "Python-SMRMon"    => RecommenderWorkflows::Actions::Python::SMRMon,
+    "R"                => RecommenderWorkflows::Actions::R::SMRMon,
+    "R-SMRMon"         => RecommenderWorkflows::Actions::R::SMRMon,
+    "Mathematica"      => RecommenderWorkflows::Actions::WL::SMRMon,
+    "WL"               => RecommenderWorkflows::Actions::WL::SMRMon,
+    "WL-SMRMon"        => RecommenderWorkflows::Actions::WL::SMRMon;
+
+my %targetToSeparator{Str} =
+    "R"                => " %>%\n",
+    "R-SMRMon"         => " %>%\n",
+    "Mathematica"      => " ==>\n",
+    "Python"           => "\n",
+    "Python-SMRMon"    => "\n",
+    "WL"               => " ==>\n",
+    "WL-SMRMon"        => " ==>\n";
+
+
+#-----------------------------------------------------------
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
 }
 
 #-----------------------------------------------------------
-proto to_SMRMon_Py($) is export {*}
+proto ToRecommenderWorkflowCode(Str $command, Str $target = "R-SMRMon" ) is export {*}
 
-multi to_SMRMon_Py ( Str $command where not has-semicolon($command) ) {
+multi ToRecommenderWorkflowCode ( Str $command where not has-semicolon($command), Str $target = "dplyr" ) {
 
-  my $match = RecommenderWorkflows::Grammar::WorkflowCommand.parse($command, actions => RecommenderWorkflows::Actions::SMRMon-Py );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
+    die 'Unknown target.' unless %targetToAction{$target}:exists;
+
+    my $match = RecommenderWorkflows::Grammar::WorkflowCommand.parse($command, actions => %targetToAction{$target} );
+    die 'Cannot parse the given command.' unless $match;
+    return $match.made;
 }
 
-multi to_SMRMon_Py ( Str $command where has-semicolon($command) ) {
+multi ToRecommenderWorkflowCode ( Str $command where has-semicolon($command), Str $target = 'dplyr' ) {
 
-  my @commandLines = $command.trim.split(/ ';' \s* /);
+    die 'Unknown target.' unless %targetToAction{$target}:exists;
 
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
+    my @commandLines = $command.trim.split(/ ';' \s* /);
 
-  my @smrLines =
-  map { to_SMRMon_Py($_) }, @commandLines;
+    @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
 
-  return @smrLines.join(" \n");
+    my @cmdLines = map { ToRecommenderWorkflowCode($_, $target) }, @commandLines;
+
+    return @cmdLines.join( %targetToSeparator{$target} ).trim;
+}
+
+#-----------------------------------------------------------
+proto to_SMRMon_Python($) is export {*}
+
+multi to_SMRMon_Python ( Str $command ) {
+    return ToRecommenderWorkflowCode( $command, 'Python-SMRMon' );
 }
 
 #-----------------------------------------------------------
 proto to_SMRMon_R($) is export {*}
 
-multi to_SMRMon_R ( Str $command where not has-semicolon($command) ) {
-
-  my $match = RecommenderWorkflows::Grammar::WorkflowCommand.parse($command, actions => RecommenderWorkflows::Actions::SMRMon-R );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
-}
-
-multi to_SMRMon_R ( Str $command where has-semicolon($command) ) {
-
-  my @commandLines = $command.trim.split(/ ';' \s* /);
-
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
-
-  my @smrLines =
-  map { to_SMRMon_R($_) }, @commandLines;
-
-  return @smrLines.join(" %>%\n");
+multi to_SMRMon_R ( Str $command ) {
+    return ToRecommenderWorkflowCode( $command, 'R-SMRMon' );
 }
 
 #-----------------------------------------------------------
 proto to_SMRMon_WL($) is export {*}
 
-multi to_SMRMon_WL ( Str $command where not has-semicolon($command) ) {
-  #say DataTransformationWorkflowsGrammar::Spoken-dplyr-command.parse($command);
-  my $match = RecommenderWorkflows::Grammar::WorkflowCommand.parse($command, actions => RecommenderWorkflows::Actions::SMRMon-WL );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
-}
-
-multi to_SMRMon_WL ( Str $command where has-semicolon($command) ) {
-
-  my @commandLines = $command.trim.split(/ ';' \s* /);
-
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
-
-  my @smrLines =
-  map { to_SMRMon_WL($_) }, @commandLines;
-
-  return @smrLines.join(" ==>\n");
+multi to_SMRMon_WL ( Str $command ) {
+    return ToRecommenderWorkflowCode( $command, 'WL-SMRMon' );
 }

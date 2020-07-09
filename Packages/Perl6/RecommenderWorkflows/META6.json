@@ -16,9 +16,9 @@
         "RecommenderWorkflows::Grammar::PipelineCommand" : "lib/RecommenderWorkflows/Grammar/PipelineCommand.pm6",
         "RecommenderWorkflows::Grammar::RecommenderPhrases" : "lib/RecommenderWorkflows/Grammar/RecommenderPhrases.pm6",
         "RecommenderWorkflows::Grammar::ErrorHandling" : "lib/RecommenderWorkflows/Grammar/ErrorHandling.pm6",
-        "RecommenderWorkflows::Actions::SMRMon-Py" : "lib/RecommenderWorkflows/Actions/SMRMon-Py.pm6",
-        "RecommenderWorkflows::Actions::SMRMon-R" : "lib/RecommenderWorkflows/Actions/SMRMon-R.pm6",
-        "RecommenderWorkflows::Actions::SMRMon-WL" : "lib/RecommenderWorkflows/Actions/SMRMon-WL.pm6"
+        "RecommenderWorkflows::Actions::Python::SMRMon" : "lib/RecommenderWorkflows/Actions/Python/SMRMon.pm6",
+        "RecommenderWorkflows::Actions::R::SMRMon" : "lib/RecommenderWorkflows/Actions/R/SMRMon.pm6",
+        "RecommenderWorkflows::Actions::WL::SMRMon" : "lib/RecommenderWorkflows/Actions/WL/SMRMon.pm6"
     },
     "depends" : [ "Text::Levenshtein::Damerau" ],
     "build-depends" : [ ],

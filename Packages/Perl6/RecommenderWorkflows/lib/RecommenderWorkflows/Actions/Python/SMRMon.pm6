@@ -45,7 +45,7 @@ use v6;
 
 use RecommenderWorkflows::Grammar;
 
-class RecommenderWorkflows::Actions::SMRMon-Py {
+class RecommenderWorkflows::Actions::Python::SMRMon {
 
   # Top
   method TOP($/) { make $/.values[0].made; }
