@@ -35,7 +35,7 @@ use DataQueryWorkflows::Grammar::PipelineCommand;
 use DataQueryWorkflows::Grammar::ErrorHandling;
 use DataQueryWorkflows::Grammar::PredicateSpecification;
 
-grammar DataQueryWorkflows::Grammar
+grammar DataQueryWorkflows::Grammar::WorkflowCommad
         does DataQueryWorkflows::Grammar::ErrorHandling
         does DataQueryWorkflows::Grammar::DataQueryPhrases
         does DataQueryWorkflows::Grammar::PredicateSpecification
@@ -70,8 +70,8 @@ grammar DataQueryWorkflows::Grammar
     # Mutate command
     rule mutate-command { ( <mutate> | <assign> ) <.by-preposition>? <assign-pairs-list> }
     rule assign-pair { <assign-pair-lhs> <.assign-to-symbol> <assign-pair-rhs> }
-    rule assign-pair-lhs { <quoted-variable-name> | <variable-name> }
-    rule assign-pair-rhs { <variable-name> | <wl-expr> }
+    rule assign-pair-lhs { <quoted-variable-name> }
+    rule assign-pair-rhs { <quoted-variable-name> | <wl-expr> }
     rule assign-pairs-list { <assign-pair>+ % <.list-separator> }
 
     # Group command

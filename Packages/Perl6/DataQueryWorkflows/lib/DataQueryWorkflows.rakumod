@@ -68,13 +68,13 @@ sub has-semicolon (Str $word) {
 }
 
 #-----------------------------------------------------------
-proto ToDataQueryCode(Str $command, Str $target) is export {*}
+proto ToDataQueryCode(Str $command, Str $target = "dplyr" ) is export {*}
 
 multi ToDataQueryCode ( Str $command where not has-semicolon($command), Str $target = "dplyr" ) {
 
     die 'Unknown target.' unless %targetToAction{$target}:exists;
 
-    my $match = DataQueryWorkflows::Grammar.parse($command, actions => %targetToAction{$target} );
+    my $match = DataQueryWorkflows::Grammar::WorkflowCommad.parse($command, actions => %targetToAction{$target} );
     die 'Cannot parse the given command.' unless $match;
     return $match.made;
 }
@@ -114,7 +114,7 @@ multi to_DataQuery_pandas ( Str $command ) {
 }
 
 #-----------------------------------------------------------
-proto to_DataQuery_WL($) is export {*}
+proto to_DataQuery_WL(Str $) is export {*}
 
 multi to_DataQuery_WL ( Str $command ) {
     return ToDataQueryCode( $command, 'WL-System' );
