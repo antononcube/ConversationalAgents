@@ -68,9 +68,9 @@ sub has-semicolon (Str $word) {
 }
 
 #-----------------------------------------------------------
-proto ToDataQueryCode(Str $command, Str $target = "dplyr" ) is export {*}
+proto ToDataQueryWorkflowCode(Str $command, Str $target = "dplyr" ) is export {*}
 
-multi ToDataQueryCode ( Str $command where not has-semicolon($command), Str $target = "dplyr" ) {
+multi ToDataQueryWorkflowCode ( Str $command where not has-semicolon($command), Str $target = "dplyr" ) {
 
     die 'Unknown target.' unless %targetToAction{$target}:exists;
 
@@ -79,7 +79,7 @@ multi ToDataQueryCode ( Str $command where not has-semicolon($command), Str $tar
     return $match.made;
 }
 
-multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target = 'dplyr' ) {
+multi ToDataQueryWorkflowCode ( Str $command where has-semicolon($command), Str $target = 'dplyr' ) {
 
     die 'Unknown target.' unless %targetToAction{$target}:exists;
 
@@ -87,7 +87,7 @@ multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target 
 
     @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
 
-    my @dqLines = map { ToDataQueryCode($_, $target) }, @commandLines;
+    my @dqLines = map { ToDataQueryWorkflowCode($_, $target) }, @commandLines;
 
     return @dqLines.join( %targetToSeparator{$target} ).trim;
 }
@@ -96,26 +96,26 @@ multi ToDataQueryCode ( Str $command where has-semicolon($command), Str $target 
 proto to_DataQuery_Julia($) is export {*}
 
 multi to_DataQuery_Julia ( Str $command ) {
-    return ToDataQueryCode( $command, 'Julia-DataFrames' );
+    return ToDataQueryWorkflowCode( $command, 'Julia-DataFrames' );
 }
 
 #-----------------------------------------------------------
 proto to_DataQuery_dplyr($) is export {*}
 
 multi to_DataQuery_dplyr ( Str $command ) {
-    return ToDataQueryCode( $command, 'R-dplyr' );
+    return ToDataQueryWorkflowCode( $command, 'R-dplyr' );
 }
 
 #-----------------------------------------------------------
 proto to_DataQuery_pandas($) is export {*}
 
 multi to_DataQuery_pandas ( Str $command ) {
-    return ToDataQueryCode( $command, 'Python-pandas' );
+    return ToDataQueryWorkflowCode( $command, 'Python-pandas' );
 }
 
 #-----------------------------------------------------------
 proto to_DataQuery_WL(Str $) is export {*}
 
 multi to_DataQuery_WL ( Str $command ) {
-    return ToDataQueryCode( $command, 'WL-System' );
+    return ToDataQueryWorkflowCode( $command, 'WL-System' );
 }
