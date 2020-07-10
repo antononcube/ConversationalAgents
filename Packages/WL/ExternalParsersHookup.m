@@ -56,13 +56,13 @@ ToMonadicCommand::usage = "Translates a natural language commands into a monadic
 
 ToQRMonCode::usage = "Translates a natural language commands into a QRMon pipeline.";
 
-ToSMRMonCode::usage = "Translates a natural language commands into a SMRMon pipeline.";
+ToRecommenderWorkflowCode::usage = "Translates a natural language commands into a SMRMon pipeline.";
 
 ToLSAMonCode::usage = "Translates a natural language commands into a LSAMon pipeline.";
 
 ToECMMonCode::usage = "Translates a natural language commands into a ECMMon pipeline.";
 
-ToDataQueryCode::usage = "Translates a natural language commands into a Data Query code.";
+ToDataQueryWorkflowCode::usage = "Translates a natural language commands into a Data Query code.";
 
 ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline. Obsolete.";
 
@@ -83,22 +83,31 @@ Clear[RakuCommand];
 RakuCommand::nostr = "All arguments are expected to be strings.";
 
 RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocation_String : "/Applications/Rakudo/bin/raku"] :=
-    Block[{rakuCommandPart, rakuCommand, pres},
+    Block[{rakuCommandPart, rakuCommand, aRes, pres},
       (*rakuCommandPart=StringJoin["-I\"",moduleDirectory,"\" -M'",
       moduleName,"' -e 'XXXX'"];
       rakuCommand=rakuLocation<>" "<>StringReplace[rakuCommandPart,"XXXX"->
       command];*)
       rakuCommand = {
         rakuLocation,
-        StringJoin["-I\"", moduleDirectory, "\""],
-        StringJoin["-M'", moduleName, "'"],
-        StringJoin["-e \"" <> command <> "\""]
+        "-I", moduleDirectory,
+        "-M", moduleName,
+        "-e", command
       };
-      (*pres=RunProcess[rakuCommand];*)
 
+      (*
       rakuCommand = StringRiffle[rakuCommand, " "];
-
       pres = Import["! " <> rakuCommand, "String"];
+      *)
+
+      aRes = RunProcess[rakuCommand];
+
+      If[ aRes["ExitCode" ] != 0,
+        Return[aRes["StandardError"]]
+      ];
+
+      pres = aRes["StandardOutput"];
+
       StringReplace[pres, "==>" -> "\[DoubleLongRightArrow]"]
     ];
 
@@ -119,7 +128,7 @@ SyntaxInformation[ToMonadicCommand] = { "ArgumentsPattern" -> { _, _, OptionsPat
 
 ToMonadicCommand::nmon = "Unknown monad name: `1`. The known monad names are `2`.";
 
-ToMonadicCommand::ntgt = "The value of the option \"Target\" is expected to be a string. One of `1`.";
+ToMonadicCommand::ntgt = "The value of the option \"Target\" is expected to be a string.";
 
 Options[ToMonadicCommand] = {
   "Target" -> "WL",
@@ -128,11 +137,24 @@ Options[ToMonadicCommand] = {
 };
 
 aRakuModules = <|
-  "QRMon" -> "QuantileRegressionWorkflows",
-  "SMRMon" -> "RecommenderWorkflows",
-  "LSAMon" -> "LatentSemanticAnalysisWorkflows",
-  "ECMMon" -> "EpidemiologyModelingWorkflows",
-  "DataQuery" -> "DataQueryWorkflows" |>;
+  "QRMon"      -> "QuantileRegressionWorkflows",
+  "SMRMon"     -> "RecommenderWorkflows",
+  "LSAMon"     -> "LatentSemanticAnalysisWorkflows",
+  "ECMMon"     -> "EpidemiologyModelingWorkflows",
+  "DataQuery"  -> "DataQueryWorkflows" |>;
+aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
+
+aRakuFunctions = <|
+  "QRMon"                           -> "ToQuantileRegressionWorkflowCode",
+  "QuantileRegressionWorkflows"     -> "ToQuantileRegressionWorkflowCode",
+  "SMRMon"                          -> "ToRecommenderWorkflowCode",
+  "RecommenderWorkflows"            -> "ToRecommenderWorkflowCode",
+  "LSAMon"                          -> "ToLatentSemanticAnalysisWorkflowCode",
+  "LatentSemanticAnalysisWorkflows" -> "ToLatentSemanticAnalysisWorkflowCode",
+  "ECMMon"                          -> "ToEpidemiologyModelingWorkflowCode",
+  "EpidemiologyModelingWorkflows"   -> "ToEpidemiologyModelingWorkflowCode",
+  "DataQuery"                       -> "ToDataQueryWorkflowCode",
+  "DataQueryWorkflows"              -> "ToDataQueryWorkflowCode"|>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, parseQ, target, stringResultQ, res},
@@ -141,7 +163,7 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
 
       target = OptionValue[ ToMonadicCommand, "Target" ];
       If[ !StringQ[target],
-        Message[ToMonadicCommand::ntgt, ToString[{"\"WL\"", "\"R\"", "\"Py\""}] ];
+        Message[ToMonadicCommand::ntgt];
         target = "WL";
       ];
 
@@ -158,13 +180,13 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
       stringResultQ = TrueQ[stringResultQ];
 
       If[ !KeyExistsQ[aRakuModules, monadName],
-        Message[ToMonadicCommand::nmon, monadName, Keys[aRakuModules] ];
+        Message[ToMonadicCommand::nmon, monadName, Union @ Join[ Keys[aRakuModules], Values[aRakuModules] ] ];
         Return[$Failed]
       ];
 
       pres =
           RakuCommand[
-            StringJoin["say to_" <> monadName <> "_" <> target <> "('", command, "')"],
+            StringJoin["say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"],
             aRakuModules[monadName],
             aRakuModules[monadName]];
 
@@ -212,18 +234,18 @@ ToQRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToSMRMonCode                                              *)
+(* ToRecommenderWorkflowCode                                 *)
 (*===========================================================*)
 
-Clear[ToSMRMonCode];
+Clear[ToRecommenderWorkflowCode];
 
-SyntaxInformation[ToSMRMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToRecommenderWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToSMRMonCode] = Options[ToMonadicCommand];
+Options[ToRecommenderWorkflowCode] = Options[ToMonadicCommand];
 
-ToSMRMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "SMRMon", opts];
+ToRecommenderWorkflowCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "RecommenderWorkflows", opts];
 
-ToSMRMonCode[___] := $Failed;
+ToRecommenderWorkflowCode[___] := $Failed;
 
 (*----*)
 
@@ -231,12 +253,12 @@ Clear[ToSMRMonWLCommand];
 
 Options[ToSMRMonWLCommand] = Options[ToMonadicCommand];
 
-ToSMRMonWLCommand::obs = "Obsolete function; use ToSMRMonCode instead.";
+ToSMRMonWLCommand::obs = "Obsolete function; use ToRecommenderWorkflowCode instead.";
 
 ToSMRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToSMRMonWLCommand::obs];
-      ToMonadicCommand[ command, "SMRMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "RecommenderWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
@@ -300,19 +322,19 @@ ToECMMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToDataQueryCode                                           *)
+(* ToDataQueryWorkflowCode                                   *)
 (*===========================================================*)
 
-Clear[ToDataQueryCode];
+Clear[ToDataQueryWorkflowCode];
 
-SyntaxInformation[ToDataQueryCode] = { "ArgumentsPattern" -> { _, _., OptionsPattern[] } };
+SyntaxInformation[ToDataQueryWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToDataQueryCode] = Options[ToMonadicCommand];
+Options[ToDataQueryWorkflowCode] = Options[ToMonadicCommand];
 
-ToDataQueryCode[ command_String, opts : OptionsPattern[] ] :=
-    ToMonadicCommand[ command, "DataQuery", opts];
+ToDataQueryWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
+    ToMonadicCommand[ command, "DataQueryWorkflows", opts];
 
-ToDataQueryCode[___] := $Failed;
+ToDataQueryWorkflowCode[___] := $Failed;
 
 
 End[]; (* `Private` *)
