@@ -47,7 +47,7 @@ sub has-semicolon (Str $word) {
 #-----------------------------------------------------------
 proto ToRecommenderWorkflowCode(Str $command, Str $target = "R-SMRMon" ) is export {*}
 
-multi ToRecommenderWorkflowCode ( Str $command where not has-semicolon($command), Str $target = "dplyr" ) {
+multi ToRecommenderWorkflowCode ( Str $command where not has-semicolon($command), Str $target = "R-SMRMon" ) {
 
     die 'Unknown target.' unless %targetToAction{$target}:exists;
 
@@ -56,7 +56,7 @@ multi ToRecommenderWorkflowCode ( Str $command where not has-semicolon($command)
     return $match.made;
 }
 
-multi ToRecommenderWorkflowCode ( Str $command where has-semicolon($command), Str $target = 'dplyr' ) {
+multi ToRecommenderWorkflowCode ( Str $command where has-semicolon($command), Str $target = 'R-SMRMon' ) {
 
     die 'Unknown target.' unless %targetToAction{$target}:exists;
 
