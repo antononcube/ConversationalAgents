@@ -39,7 +39,7 @@ use QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases;
 use QuantileRegressionWorkflows::Grammar::PipelineCommand;
 use QuantileRegressionWorkflows::Grammar::ErrorHandling;
 
-grammar QuantileRegressionWorkflows::Grammar::WorkflowCommmand
+grammar QuantileRegressionWorkflows::Grammar::WorkflowCommand
         does QuantileRegressionWorkflows::Grammar::PipelineCommand
         does QuantileRegressionWorkflows::Grammar::TimeSeriesAndRegressionPhrases
         does QuantileRegressionWorkflows::Grammar::ErrorHandling {

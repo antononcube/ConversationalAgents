@@ -6,7 +6,7 @@ use QuantileRegressionWorkflows::Grammar;
 plan 12;
 
 # Shortcut
-my $pQRMONCOMMAND = QuantileRegressionWorkflows::Grammar::WorkflowCommmand;
+my $pQRMONCOMMAND = QuantileRegressionWorkflows::Grammar::WorkflowCommand;
 
 #-----------------------------------------------------------
 # Plot

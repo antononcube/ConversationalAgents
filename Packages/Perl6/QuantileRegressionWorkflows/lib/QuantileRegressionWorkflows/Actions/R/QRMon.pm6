@@ -29,7 +29,7 @@
 #
 #   The actions are implemented for the grammar:
 #
-#     QuantileRegressionWorkflows::Grammar::WorkflowCommmand
+#     QuantileRegressionWorkflows::Grammar::WorkflowCommand
 #
 #   in the file :
 #
@@ -41,9 +41,9 @@
 use v6;
 use QuantileRegressionWorkflows::Grammar;
 
-unit module QuantileRegressionWorkflows::Actions::QRMon-R;
+unit module QuantileRegressionWorkflows::Actions::R::QRMon;
 
-class QuantileRegressionWorkflows::Actions::QRMon-R {
+class QuantileRegressionWorkflows::Actions::R::QRMon {
 
   # Top
   method TOP($/) { make $/.values[0].made; }
