@@ -15,9 +15,9 @@
         "LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand" : "lib/LatentSemanticAnalysisWorkflows/Grammar/PipelineCommand.pm6",
         "LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand" : "lib/LatentSemanticAnalysisWorkflows/Grammar/LSIApplyCommand.pm6",
         "LatentSemanticAnalysisWorkflows::Grammar::ErrorHandling" : "lib/LatentSemanticAnalysisWorkflows/Grammar/ErrorHandling.pm6",
-        "LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py" : "lib/LatentSemanticAnalysisWorkflows/Actions/LSAMon-Py.pm6",
-        "LatentSemanticAnalysisWorkflows::Actions::LSAMon-R" : "lib/LatentSemanticAnalysisWorkflows/Actions/LSAMon-R.pm6",
-        "LatentSemanticAnalysisWorkflows::Actions::LSAMon-WL" : "lib/LatentSemanticAnalysisWorkflows/Actions/LSAMon-WL.pm6"
+        "LatentSemanticAnalysisWorkflows::Actions::Python::LSAMon" : "lib/LatentSemanticAnalysisWorkflows/Actions/Python/LSAMon.pm6",
+        "LatentSemanticAnalysisWorkflows::Actions::R::LSAMon" : "lib/LatentSemanticAnalysisWorkflows/Actions/R/LSAMon.pm6",
+        "LatentSemanticAnalysisWorkflows::Actions::WL::LSAMon" : "lib/LatentSemanticAnalysisWorkflows/Actions/WL/LSAMon.pm6"
     },
     "depends" : [ ],
     "build-depends" : [ ],

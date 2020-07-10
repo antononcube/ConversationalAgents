@@ -15,76 +15,76 @@ interpretation of English natural speech commands that specify Latent Semantic A
 unit module LatentSemanticAnalysisWorkflows;
 
 use LatentSemanticAnalysisWorkflows::Grammar;
-use LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py;
-use LatentSemanticAnalysisWorkflows::Actions::LSAMon-R;
-use LatentSemanticAnalysisWorkflows::Actions::LSAMon-WL;
+use LatentSemanticAnalysisWorkflows::Actions::Python::LSAMon;
+use LatentSemanticAnalysisWorkflows::Actions::R::LSAMon;
+use LatentSemanticAnalysisWorkflows::Actions::WL::LSAMon;
+
+my %targetToAction =
+    "Python"           => LatentSemanticAnalysisWorkflows::Actions::Python::LSAMon,
+    "Python-LSAMon"    => LatentSemanticAnalysisWorkflows::Actions::Python::LSAMon,
+    "R"                => LatentSemanticAnalysisWorkflows::Actions::R::LSAMon,
+    "R-LSAMon"         => LatentSemanticAnalysisWorkflows::Actions::R::LSAMon,
+    "Mathematica"      => LatentSemanticAnalysisWorkflows::Actions::WL::LSAMon,
+    "WL"               => LatentSemanticAnalysisWorkflows::Actions::WL::LSAMon,
+    "WL-LSAMon"        => LatentSemanticAnalysisWorkflows::Actions::WL::LSAMon;
+
+my %targetToSeparator{Str} =
+    "R"                => " %>%\n",
+    "R-LSAMon"         => " %>%\n",
+    "Mathematica"      => " ==>\n",
+    "Python"           => "\n",
+    "Python-LSAMon"    => "\n",
+    "WL"               => " ==>\n",
+    "WL-LSAMon"        => " ==>\n";
 
 
+#-----------------------------------------------------------
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
 }
 
 #-----------------------------------------------------------
-proto to_LSAMon_Py($) is export {*}
+proto ToLatentSemanticAnalysisWorkflowCode(Str $command, Str $target = "R-LSAMon" ) is export {*}
 
-multi to_LSAMon_Py ( Str $command where not has-semicolon($command) ) {
+multi ToLatentSemanticAnalysisWorkflowCode ( Str $command where not has-semicolon($command), Str $target = "R-LSAMon" ) {
 
-  my $match = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand.parse($command, actions => LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
+    die 'Unknown target.' unless %targetToAction{$target}:exists;
+
+    my $match = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommand.parse($command, actions => %targetToAction{$target} );
+    die 'Cannot parse the given command.' unless $match;
+    return $match.made;
 }
 
-multi to_LSAMon_Py ( Str $command where has-semicolon($command) ) {
+multi ToLatentSemanticAnalysisWorkflowCode ( Str $command where has-semicolon($command), Str $target = 'R-LSAMon' ) {
 
-  my @commandLines = $command.trim.split(/ ';' \s* /);
+    die 'Unknown target.' unless %targetToAction{$target}:exists;
 
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
+    my @commandLines = $command.trim.split(/ ';' \s* /);
 
-  my @smrLines =
-  map { to_LSAMon_Py($_) }, @commandLines;
+    @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
 
-  return @smrLines.join(";\n");
+    my @cmdLines = map { ToLatentSemanticAnalysisWorkflowCode($_, $target) }, @commandLines;
+
+    return @cmdLines.join( %targetToSeparator{$target} ).trim;
+}
+
+#-----------------------------------------------------------
+proto to_LSAMon_Python($) is export {*}
+
+multi to_LSAMon_Python ( Str $command ) {
+    return ToLatentSemanticAnalysisWorkflowCode( $command, 'Python-LSAMon' );
 }
 
 #-----------------------------------------------------------
 proto to_LSAMon_R($) is export {*}
 
-multi to_LSAMon_R ( Str $command where not has-semicolon($command) ) {
-  #say LatentSemanticAnalysisWorkflowsGrammar::Latent-semantic-analysis-commmand.parse($command);
-  my $match = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand.parse($command, actions => LatentSemanticAnalysisWorkflows::Actions::LSAMon-R );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
-}
-
-multi to_LSAMon_R ( Str $command where has-semicolon($command) ) {
-
-  my @commandLines = $command.trim.split(/ ';' \s* /);
-
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
-
-  my @smrLines =
-  map { to_LSAMon_R($_) }, @commandLines;
-
-  return @smrLines.join(" %>%\n");
+multi to_LSAMon_R ( Str $command ) {
+    return ToLatentSemanticAnalysisWorkflowCode( $command, 'R-LSAMon' );
 }
 
 #-----------------------------------------------------------
 proto to_LSAMon_WL($) is export {*}
 
-multi to_LSAMon_WL ( Str $command where not has-semicolon($command) ) {
-  my $match = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand.parse($command, actions => LatentSemanticAnalysisWorkflows::Actions::LSAMon-WL );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
-}
-
-multi to_LSAMon_WL ( Str $command where has-semicolon($command) ) {
-
-  my @commandLines = $command.trim.split(/ ';' \s* /);
-
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
-
-  my @smrLines =
-  map { to_LSAMon_WL($_) }, @commandLines;
-
-  return @smrLines.join(" ==>\n");
+multi to_LSAMon_WL ( Str $command ) {
+    return ToLatentSemanticAnalysisWorkflowCode( $command, 'WL-LSAMon' );
 }

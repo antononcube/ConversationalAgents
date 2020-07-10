@@ -45,7 +45,7 @@ use LatentSemanticAnalysisWorkflows::Grammar::ErrorHandling;
 # ...
 # }
 
-grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand
+grammar LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommand
         does LatentSemanticAnalysisWorkflows::Grammar::LSIApplyCommand
         does LatentSemanticAnalysisWorkflows::Grammar::PipelineCommand
         does LatentSemanticAnalysisWorkflows::Grammar::LatentSemanticAnalysisPhrases

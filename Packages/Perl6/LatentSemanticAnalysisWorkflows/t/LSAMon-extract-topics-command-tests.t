@@ -6,7 +6,7 @@ use Test;
 plan 13;
 
 # Shortcut
-my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand;
+my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommand;
 
 #-----------------------------------------------------------
 # Extract topics command tests

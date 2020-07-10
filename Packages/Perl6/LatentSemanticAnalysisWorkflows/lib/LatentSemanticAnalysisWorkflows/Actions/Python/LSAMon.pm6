@@ -44,7 +44,7 @@ use v6;
 use LatentSemanticAnalysisWorkflows::Grammar;
 
 
-class LatentSemanticAnalysisWorkflows::Actions::LSAMon-Py {
+class LatentSemanticAnalysisWorkflows::Actions::Python::LSAMon {
 
   # Top
   method TOP($/) { make $/.values[0].made; }

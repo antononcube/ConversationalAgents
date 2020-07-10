@@ -6,7 +6,7 @@ use Test;
 plan 11;
 
 # Shortcut
-my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand;
+my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommand;
 
 #-----------------------------------------------------------
 # LSI command tests

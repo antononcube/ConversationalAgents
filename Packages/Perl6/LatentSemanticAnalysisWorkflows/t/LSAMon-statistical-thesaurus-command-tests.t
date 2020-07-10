@@ -6,7 +6,7 @@ use Test;
 plan 6;
 
 # Shortcut
-my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand;
+my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommand;
 
 #-----------------------------------------------------------
 # Extract statistical thesaurus command tests

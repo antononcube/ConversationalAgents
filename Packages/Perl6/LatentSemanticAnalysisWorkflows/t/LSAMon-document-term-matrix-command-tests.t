@@ -6,7 +6,7 @@ use Test;
 plan 7;
 
 # Shortcut
-my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommmand;
+my $pLSAMONCOMMAND = LatentSemanticAnalysisWorkflows::Grammar::WorkflowCommand;
 
 #-----------------------------------------------------------
 # Make document-term matrix command tests

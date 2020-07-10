@@ -43,7 +43,7 @@ use v6;
 #use lib '../../../EBNF/English/RakuPerl6/';
 use LatentSemanticAnalysisWorkflows::Grammar;
 
-class LatentSemanticAnalysisWorkflows::Actions::LSAMon-WL {
+class LatentSemanticAnalysisWorkflows::Actions::WL::LSAMon {
 
   # Top
   method TOP($/) { make $/.values[0].made; }
