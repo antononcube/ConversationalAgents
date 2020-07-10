@@ -47,7 +47,7 @@ use v6;
 
 use EpidemiologyModelingWorkflows::Grammar;
 
-class EpidemiologyModelingWorkflows::Actions::ECMMon-WL {
+class EpidemiologyModelingWorkflows::Actions::WL::ECMMon {
 
    # Top
     method TOP($/) { make $/.values[0].made; }

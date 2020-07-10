@@ -14,9 +14,9 @@
         "EpidemiologyModelingWorkflows::Grammar::PipelineCommand" : "lib/EpidemiologyModelingWorkflows/Grammar/PipelineCommand.pm6",
         "EpidemiologyModelingWorkflows::Grammar::EpidemiologyPhrases" : "lib/EpidemiologyModelingWorkflows/Grammar/EpidemiologyPhrases.pm6",
         "EpidemiologyModelingWorkflows::Grammar::ErrorHandling" : "lib/EpidemiologyModelingWorkflows/Grammar/ErrorHandling.pm6",
-        "EpidemiologyModelingWorkflows::Actions::ECMMon-Py" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-Py.pm6",
-        "EpidemiologyModelingWorkflows::Actions::ECMMon-R" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-R.pm6",
-        "EpidemiologyModelingWorkflows::Actions::ECMMon-WL" : "lib/EpidemiologyModelingWorkflows/Actions/ECMMon-WL.pm6"
+        "EpidemiologyModelingWorkflows::Actions::Python::ECMMon" : "lib/EpidemiologyModelingWorkflows/Actions/Python/ECMMon.pm6",
+        "EpidemiologyModelingWorkflows::Actions::R::ECMMon" : "lib/EpidemiologyModelingWorkflows/Actions/R/ECMMon.pm6",
+        "EpidemiologyModelingWorkflows::Actions::WL::ECMMon" : "lib/EpidemiologyModelingWorkflows/Actions/WL/ECMMon.pm6"
     },
     "depends" : [ ],
     "build-depends" : [ ],

@@ -2,11 +2,11 @@ use lib './lib';
 #use lib '.';
 use EpidemiologyModelingWorkflows;
 use EpidemiologyModelingWorkflows::Grammar;
-use EpidemiologyModelingWorkflows::Actions::ECMMon-R;
+use EpidemiologyModelingWorkflows::Actions::R::ECMMon;
 
 
-#use MLWorflows::Recommender::Actions::ECMMon-R;
-#use MLWorflows::QuantileRegression::Actions::ECMMon-R;
+#use MLWorflows::Recommender::Actions::R::ECMMon;
+#use MLWorflows::QuantileRegression::Actions::R::ECMMon;
 
 my $pECMMONCOMMAND = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand;
 

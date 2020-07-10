@@ -1,7 +1,7 @@
 =begin comment
 #==============================================================================
 #
-#   ECMMon-Py actions in Raku Perl 6
+#   ECMMon-R actions in Raku Perl 6
 #   Copyright (C) 2020  Anton Antonov
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,14 @@
 #
 #     EpidemiologyModelingWorkflows::Grammar::WorkflowCommand
 #
-#   and a possible software monad ECMMon-Py.
+#   and the software monad ECMMon-R:
+#
+#     https://github.com/antononcube/ECMMon-R
+#
+#==============================================================================
+#
+#   The code below is derived from the code for ECMMon-R by simple
+#   unfolding of the monadic pipeline into assignment.
 #
 #==============================================================================
 =end comment
@@ -40,7 +47,7 @@ use v6;
 
 use EpidemiologyModelingWorkflows::Grammar;
 
-class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
+class EpidemiologyModelingWorkflows::Actions::R::ECMMon {
     # Top
     method TOP($/) { make $/.values[0].made; }
 
@@ -48,10 +55,10 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
     method dataset-name($/) { make $/.values[0].made; }
     method variable-name($/) { make $/.Str; }
     method list-separator($/) { make ','; }
-    method variable-names-list($/) { make '[' ~ $<variable-name>>>.made.join(', ') ~ ']'; }
+    method variable-names-list($/) { make 'c(' ~ $<variable-name>>>.made.join(', ') ~ ')'; }
     method integer-value($/) { make $/.Str; }
     method number-value($/) { make $/.Str; }
-    method number-value-list($/) { make '[' ~ $<number-value>>>.made.join(', ') ~ ']'; }
+    method number-value-list($/) { make 'c(' ~ $<number-value>>>.made.join(', ') ~ ')'; }
     method r-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
     method wl-range-spec($/) { make 'seq' ~ $<number-value-list>.made.substr(1); }
     method r-numeric-list-spec($/) { make $<number-value-list>.made; }
@@ -72,10 +79,10 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
     # Trivial
     method trivial-parameter($/) { make $/.values[0].made; }
     method trivial-parameter-none($/) { make 'NA'; }
-    method trivial-parameter-empty($/) { make '[]'; }
+    method trivial-parameter-empty($/) { make 'c()'; }
     method trivial-parameter-automatic($/) { make 'NULL'; }
-    method trivial-parameter-false($/) { make 'False'; }
-    method trivial-parameter-true($/) { make 'True'; }
+    method trivial-parameter-false($/) { make 'FALSE'; }
+    method trivial-parameter-true($/) { make 'TRUE'; }
 
       # Data load commands
     method data-load-command($/) { make $/.values[0].made; }
@@ -83,9 +90,9 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
 
     # Creation
     method create-command($/) { make $/.values[0].made; }
-    method create-simple($/) { make 'obj = ECMMonUnit()'; }
+    method create-simple($/) { make 'ECMMonUnit()'; }
     method create-by-single-site-model($/) {
-        make 'obj = ECMMonUnit( model = ' ~ $<single-site-model-spec>.made ~ ')';
+        make 'ECMMonUnit( model = ' ~ $<single-site-model-spec>.made ~ ')';
     }
 
     # Single site model spec
@@ -149,16 +156,16 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
 
     # Assign initial conditions command
     method assign-initial-conditions-command ($/) { make $/.values[0].made; }
-    method assign-value-to-stock($/) { make 'obj = ECMMonAssignInitialConditions( ecmObj = obj, initConds = [' ~ $<stock-spec>.made ~ ' = ' ~ $<number-value>.made ~ '])';}
+    method assign-value-to-stock($/) { make 'ECMMonAssignInitialConditions( initConds = c(' ~ $<stock-spec>.made ~ ' = ' ~ $<number-value>.made ~ ') )';}
 
     # Assign rates command
     method assign-rate-values-command ($/) { make $/.values[0].made; }
-    method assign-value-to-rate($/) { make 'obj = ECMMonAssignRateValues( ecmObj = obj, rateValues = [' ~ $<rate-spec>.made ~ ' = ' ~ $<number-value>.made ~ '])';}
+    method assign-value-to-rate($/) { make 'ECMMonAssignRateValues( rateValues = c(' ~ $<rate-spec>.made ~ ' = ' ~ $<number-value>.made ~ ') )';}
 
     # Simulate
     method simulate-command($/) { make $/.values[0].made; }
-    method simulate-simple-spec($/) { make 'obj = ECMMonSimulate( )'; }
-    method simulate-over-time-range($/) { make 'obj = ECMMonSimulate( ecmObj = obj, ' ~ $<time-range-spec-command-part>.made ~ ')'; }
+    method simulate-simple-spec($/) { make 'ECMMonSimulate()'; }
+    method simulate-over-time-range($/) { make 'ECMMonSimulate(' ~ $<time-range-spec-command-part>.made ~ ')'; }
 
     # Time range specification
     method time-range-spec-command-part($/) { make $<time-range-spec>.made; }
@@ -177,12 +184,12 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
 
     # Batch Simulate
     method batch-simulate-command($/) { make $/.values[0].made; }
-    method batch-simulate-over-parameters($/) { make 'obj = ECMMonBatchSimulate( ecmObj = obj, ' ~ $<batch-simulation-parameters-spec>.made ~ ', ' ~ $<time-range-spec>.made ~ ')'; }
+    method batch-simulate-over-parameters($/) { make 'ECMMonBatchSimulate( ' ~ $<batch-simulation-parameters-spec>.made ~ ', ' ~ $<time-range-spec>.made ~ ')'; }
 
     method batch-simulation-parameters-spec($/) { make $/.values[0].made; }
     method batch-parameters-data-frame-spec($/) { make 'params = ' ~ $<dataset-name>.made; }
     method batch-parameter-outer-form-spec($/) { make 'params = ' ~ $<parameter-range-spec-list>.made; }
-    method parameter-range-spec-list($/) { make '{' ~ $<parameter-range-spec>>>.made.join(', ') ~ '}'; }
+    method parameter-range-spec-list($/) { make 'list(' ~ $<parameter-range-spec>>>.made.join(', ') ~ ')'; }
     method parameter-spec($/) { make $/.values[0].made; }
     method parameter-values($/) { make $/.values[0].made; }
     method parameter-range-spec($/) { make $<parameter-spec>.made ~ ' = ' ~ $<parameter-values>.made; }
@@ -191,23 +198,23 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
     method plot-command($/) { make $/.values[0].made; }
     method plot-solutions($/) {
         if $<time-range-spec-command-part> {
-            make 'obj = ECMMonPlotSolutions( ecmObj = obj, ' ~ $<time-range-spec-command-part>.made ~ ')';
+            make 'ECMMonPlotSolutions(' ~ $<time-range-spec-command-part>.made ~ ')';
         } else {
-            make 'obj = ECMMonPlotSolutions( ecmObj = obj )';
+            make 'ECMMonPlotSolutions()';
         }
     }
     method plot-population-solutions($/) {
         if $<time-range-spec-command-part> {
-            make 'obj = ECMMonPlotSolutions( ecmObj = obj, stocksSpec = ".*Population", ' ~ $<time-range-spec-command-part>.made ~ ')';
+            make 'ECMMonPlotSolutions( stocksSpec = ".*Population", ' ~ $<time-range-spec-command-part>.made ~ ')';
         } else {
-            make 'obj = ECMMonPlotSolutions( ecmObj = obj, stocksSpec = ".*Population")';
+            make 'ECMMonPlotSolutions( stocksSpec = ".*Population")';
         }
     }
     method plot-solution-histograms($/) {
         if $<time-range-spec-command-part> {
-            make 'obj = ECMMonPlotSolutionHistograms( ecmObj = obj, ' ~ $<time-range-spec-command-part>.made ~ ')';
+            make 'ECMMonPlotSolutionHistograms(' ~ $<time-range-spec-command-part>.made ~ ')';
         } else {
-            make 'obj = ECMMonPlotSolutionHistograms( ecmObj = obj )';
+            make 'ECMMonPlotSolutionHistograms()';
         }
     }
 
@@ -216,20 +223,20 @@ class EpidemiologyModelingWorkflows::Actions::ECMMon-Py {
 
     method extend-by-matrix($/) {
         if $<migrating-stocks-subcommand> {
-            make 'obj = ECMMonExtendByAdjacencyMatrix( ecmObj = obj, mat = ' ~ $<variable-name>.made ~ ', migratingStocks = ' ~ $<migrating-stocks-subcommand>.made ~ ')';
+            make 'ECMMonExtendByAdjacencyMatrix( mat = ' ~ $<variable-name>.made ~ ', migratingStocks = ' ~ $<migrating-stocks-subcommand>.made ~ ')';
         } else {
-            make 'obj = ECMMonExtendByAdjacencyMatrix( ecmObj = obj, mat = ' ~ $<variable-name>.made ~ ')';
+            make 'ECMMonExtendByAdjacencyMatrix( mat = ' ~ $<variable-name>.made ~ ')';
         }
     }
 
-    method extend-by-traveling-patterns-dataframe($/) { make 'obj = ECMMonExtendByDataFrame( ecmObj = obj, data = ' ~ $<dataset-name>.made ~ ')'; }
-    method extend-by-country-spec($/) { make 'obj = ECMMonExtendByCountry( ecmObj = obj, country = ' ~ $<country-spec>.made ~ ')'; }
+    method extend-by-traveling-patterns-dataframe($/) { make 'ECMMonExtendByDataFrame( data = ' ~ $<dataset-name>.made ~ ')'; }
+    method extend-by-country-spec($/) { make 'ECMMonExtendByCountry( country = ' ~ $<country-spec>.made ~ ')'; }
     method country-spec($/) { make $<variable-name>; }
 
     method migrating-stocks-subcommand($/) { make $<stock-specs-list>.made; }
-    method stock-specs-list($/) { make '["' ~ $<stock-spec>>>.made.join('", "') ~ '"]'; }
+    method stock-specs-list($/) { make 'c("' ~ $<stock-spec>>>.made.join('", "') ~ '")'; }
 
     # Pipeline command
     method pipeline-command($/) { make  $/.values[0].made; }
-    method get-pipeline-value($/) { make 'obj = ECMMonEchoValue( ecmObj = obj )'; }
+    method get-pipeline-value($/) { make 'ECMMonEchoValue()'; }
 }

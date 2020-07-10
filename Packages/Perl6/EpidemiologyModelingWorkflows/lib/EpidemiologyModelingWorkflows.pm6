@@ -16,76 +16,76 @@ interpretation of English natural speech commands that specify epidemiology mode
 unit module EpidemiologyModelingWorkflows;
 
 use EpidemiologyModelingWorkflows::Grammar;
-use EpidemiologyModelingWorkflows::Actions::ECMMon-Py;
-use EpidemiologyModelingWorkflows::Actions::ECMMon-R;
-use EpidemiologyModelingWorkflows::Actions::ECMMon-WL;
+use EpidemiologyModelingWorkflows::Actions::Python::ECMMon;
+use EpidemiologyModelingWorkflows::Actions::R::ECMMon;
+use EpidemiologyModelingWorkflows::Actions::WL::ECMMon;
 
+my %targetToAction =
+    "Python"           => EpidemiologyModelingWorkflows::Actions::Python::ECMMon,
+    "Python-ECMMon"    => EpidemiologyModelingWorkflows::Actions::Python::ECMMon,
+    "R"                => EpidemiologyModelingWorkflows::Actions::R::ECMMon,
+    "R-ECMMon"         => EpidemiologyModelingWorkflows::Actions::R::ECMMon,
+    "Mathematica"      => EpidemiologyModelingWorkflows::Actions::WL::ECMMon,
+    "WL"               => EpidemiologyModelingWorkflows::Actions::WL::ECMMon,
+    "WL-ECMMon"        => EpidemiologyModelingWorkflows::Actions::WL::ECMMon;
+
+my %targetToSeparator{Str} =
+    "R"                => " %>%\n",
+    "R-ECMMon"         => " %>%\n",
+    "Mathematica"      => " ==>\n",
+    "Python"           => "\n",
+    "Python-ECMMon"    => "\n",
+    "WL"               => " ==>\n",
+    "WL-ECMMon"        => " ==>\n";
+
+
+#-----------------------------------------------------------
 sub has-semicolon (Str $word) {
     return defined index $word, ';';
 }
 
 #-----------------------------------------------------------
-proto to_ECMMon_Py($) is export {*}
+proto ToEpidemiologyModelingWorkflowCode(Str $command, Str $target = "R-ECMMon" ) is export {*}
 
-multi to_ECMMon_Py ( Str $command where not has-semicolon($command) ) {
+multi ToEpidemiologyModelingWorkflowCode ( Str $command where not has-semicolon($command), Str $target = "R-ECMMon" ) {
 
-  my $match = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand.parse($command, actions => EpidemiologyModelingWorkflows::Actions::ECMMon-Py );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
+    die 'Unknown target.' unless %targetToAction{$target}:exists;
+
+    my $match = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand.parse($command, actions => %targetToAction{$target} );
+    die 'Cannot parse the given command.' unless $match;
+    return $match.made;
 }
 
-multi to_ECMMon_Py ( Str $command where has-semicolon($command) ) {
+multi ToEpidemiologyModelingWorkflowCode ( Str $command where has-semicolon($command), Str $target = 'R-ECMMon' ) {
 
-  my @commandLines = $command.trim.split(/ ';' \s* /);
+    die 'Unknown target.' unless %targetToAction{$target}:exists;
 
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
+    my @commandLines = $command.trim.split(/ ';' \s* /);
 
-  my @smrLines =
-  map { to_ECMMon_Py($_) }, @commandLines;
+    @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
 
-  return @smrLines.join(" \n");
+    my @cmdLines = map { ToEpidemiologyModelingWorkflowCode($_, $target) }, @commandLines;
+
+    return @cmdLines.join( %targetToSeparator{$target} ).trim;
+}
+
+#-----------------------------------------------------------
+proto to_ECMMon_Python($) is export {*}
+
+multi to_ECMMon_Python ( Str $command ) {
+    return ToEpidemiologyModelingWorkflowCode( $command, 'Python-ECMMon' );
 }
 
 #-----------------------------------------------------------
 proto to_ECMMon_R($) is export {*}
 
-multi to_ECMMon_R ( Str $command where not has-semicolon($command) ) {
-
-  my $match = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand.parse($command, actions => EpidemiologyModelingWorkflows::Actions::ECMMon-R );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
-}
-
-multi to_ECMMon_R ( Str $command where has-semicolon($command) ) {
-
-  my @commandLines = $command.trim.split(/ ';' \s* /);
-
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
-
-  my @smrLines =
-  map { to_ECMMon_R($_) }, @commandLines;
-
-  return @smrLines.join(" %>%\n");
+multi to_ECMMon_R ( Str $command ) {
+    return ToEpidemiologyModelingWorkflowCode( $command, 'R-ECMMon' );
 }
 
 #-----------------------------------------------------------
 proto to_ECMMon_WL($) is export {*}
 
-multi to_ECMMon_WL ( Str $command where not has-semicolon($command) ) {
-
-  my $match = EpidemiologyModelingWorkflows::Grammar::WorkflowCommand.parse($command, actions => EpidemiologyModelingWorkflows::Actions::ECMMon-WL );
-  die 'Cannot parse the given command.' unless $match;
-  return $match.made;
-}
-
-multi to_ECMMon_WL ( Str $command where has-semicolon($command) ) {
-
-  my @commandLines = $command.trim.split(/ ';' \s* /);
-
-  @commandLines = grep { $_.Str.chars > 0 }, @commandLines;
-
-  my @smrLines =
-  map { to_ECMMon_WL($_) }, @commandLines;
-
-  return @smrLines.join(" ==>\n");
+multi to_ECMMon_WL ( Str $command ) {
+    return ToEpidemiologyModelingWorkflowCode( $command, 'WL-ECMMon' );
 }
