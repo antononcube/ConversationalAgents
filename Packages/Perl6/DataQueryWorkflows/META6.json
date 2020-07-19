@@ -10,11 +10,7 @@
     "provides" : {
         "DataQueryWorkflows" : "lib/DataQueryWorkflows.rakumod",
         "DataQueryWorkflows::Grammar" : "lib/DataQueryWorkflows/Grammar.rakumod",
-        "DataQueryWorkflows::Grammar::CommonParts" : "lib/DataQueryWorkflows/Grammar/CommonParts.rakumod",
-        "DataQueryWorkflows::Grammar::ErrorHandling" : "lib/DataQueryWorkflows/Grammar/ErrorHandling.rakumod",
         "DataQueryWorkflows::Grammar::DataQueryPhrases" : "lib/DataQueryWorkflows/Grammar/DataQueryPhrases.rakumod",
-        "DataQueryWorkflows::Grammar::PipelineCommand" : "lib/DataQueryWorkflows/Grammar/PipelineCommand.rakumod",
-        "DataQueryWorkflows::Grammar::PredicateSpecification" : "lib/DataQueryWorkflows/Grammar/PredicateSpecification.rakumod",
         "DataQueryWorkflows::Actions::Julia::DataFrames" : "lib/DataQueryWorkflows/Actions/Julia/DataFrames.rakumod",
         "DataQueryWorkflows::Actions::Julia::Predicate" : "lib/DataQueryWorkflows/Actions/Julia/Predicate.rakumod",
         "DataQueryWorkflows::Actions::Python::pandas" : "lib/DataQueryWorkflows/Actions/Python/pandas.rakumod",
@@ -25,7 +21,7 @@
         "DataQueryWorkflows::Actions::WL::Predicate" : "lib/DataQueryWorkflows/Actions/WL/Predicate.rakumod",
         "DataQueryWorkflows::Actions::WL::System" : "lib/DataQueryWorkflows/Actions/WL/System.rakumod"
     },
-    "depends" : [ ],
+    "depends" : [ "DSL::Shared" ],
     "build-depends" : [ ],
     "test-depends" : [ ],
     "resources" : [ ],

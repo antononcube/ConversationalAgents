@@ -30,16 +30,18 @@
 
 use v6;
 
+use DSL::Shared::Roles::English::CommonParts;
+use DSL::Shared::Roles::English::PipelineCommand;
+use DSL::Shared::Roles::PredicateSpecification;
+use DSL::Shared::Roles::ErrorHandling;
+
 use DataQueryWorkflows::Grammar::DataQueryPhrases;
-use DataQueryWorkflows::Grammar::PipelineCommand;
-use DataQueryWorkflows::Grammar::ErrorHandling;
-use DataQueryWorkflows::Grammar::PredicateSpecification;
 
 grammar DataQueryWorkflows::Grammar::WorkflowCommad
-        does DataQueryWorkflows::Grammar::ErrorHandling
+        does DSL::Shared::Roles::ErrorHandling
         does DataQueryWorkflows::Grammar::DataQueryPhrases
-        does DataQueryWorkflows::Grammar::PredicateSpecification
-        does DataQueryWorkflows::Grammar::PipelineCommand {
+        does DSL::Shared::Roles::PredicateSpecification
+        does DSL::Shared::Roles::English::PipelineCommand {
     # TOP
     rule TOP {
         <pipeline-command> |
