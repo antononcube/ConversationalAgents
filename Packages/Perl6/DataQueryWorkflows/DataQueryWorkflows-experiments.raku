@@ -46,19 +46,32 @@ echo data summary
 
 my $commands4 = '
 use dfTitanic;
-filter with passengerSex is "male" and paseengerSurvival equals "died" or passengerSurvival is "survived" ;
+filter with passengerSex is "male" and passengerSurvival equals "died" or passengerSurvival is "survived" ;
 filter by passengerClass is like "1.";
-cross tabulate passengerClass, passengerSurvival;
+cross tabulate passengerClass, passengerSurvival over passengerAge;
 ';
 
-say ToDataQueryCode( $commands4, 'Julia' );
+my $commands5 = '
+      use starwars;
+      filter with gender is "female";
+      select mass & height;
+      mutate bmi = mass/height^2;
+      arrange by the variable bmi, mass, height descending;';
 
-#say ToDataQueryCode( command => $commands, target => "R-base" );
+say "\n", '-' x 3, 'R-base:';
 
+say ToDataQueryWorkflowCode( $commands, 'R-base' );
 
-#say "=" x 10;
+say "\n", '-' x 3, 'R-dplyr:';
+
+say ToDataQueryWorkflowCode( $commands, 'R-dplyr' );
 #
-#say to_dplyr('
-#use data frame starwars;
-#cross tabulate homeworld with gender over mass;
-#sort by Freq descending');
+#say "\n", '-' x 3, 'Julia-DataFrames:';
+#
+#say ToDataQueryWorkflowCode( $commands4, 'Julia-DataFrames' );
+#
+#say "\n", '-' x 3, 'WL-System:';
+#
+#say ToDataQueryWorkflowCode( $commands4, 'WL-System' );
+
+
