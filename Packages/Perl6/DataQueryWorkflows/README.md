@@ -19,18 +19,32 @@ Change the 'use' line with the proper location of the package.
 
     use DataQueryWorkflows;
 
-    say to_dplyr("select mass & height");
+    say ToDataQueryWorkflowCode('select mass & height', 'R-dplyr');
+    
     # dplyr::select(mass, height) 
     
-    say to_dplyr('
-      select mass & height; 
-      mutate mass1 = mass; 
-      arrange descending by the variable mass & height
-    ');
+    #------
     
-    # dplyr::select(mass, height) %>% 
-    # dplyr::mutate(mass1 = mass) %>% 
-    # dplyr::arrange(desc(mass, height))
+    ToDataQueryWorkflowCode('
+      use starwars;
+      select mass & height; 
+      mutate bmi = mass/height^2; 
+      arrange by the variable bmi descending;
+    ', 'R-dplyr');
 
+    # starwars %>%
+    # dplyr::select(mass, height) %>%
+    # dplyr::mutate(bmi = mass/height^2) %>%
+    # dplyr::arrange(desc(bmi))
+    
 
+## On naming of translation packages
 
+WL has a `System` context where usually the built-in functions reside. WL adepts know this, but not that much the rest.
+(All WL packages provide a context for their functions.)
+
+The thing is that my naming convention for the translation files so far is `<programming language>::<package name>`.
+And I do not want to break that invariant.
+
+Knowing the package is not essential when invoking the functions. 
+For example `ToDataQueryWorkflowCode[_,"R"]` produces same results as `ToDataQueryWorkflowCode[_,"R-base"]`, etc.
