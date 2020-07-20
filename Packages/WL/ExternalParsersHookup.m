@@ -60,7 +60,7 @@ ToRecommenderWorkflowCode::usage = "Translates a natural language commands into 
 
 ToLatentSemanticAnalysisWorkflowCode::usage = "Translates a natural language commands into a LSAMon pipeline.";
 
-ToECMMonCode::usage = "Translates a natural language commands into a ECMMon pipeline.";
+ToEpidemiologyModelingWorkflowCode::usage = "Translates a natural language commands into a ECMMon pipeline.";
 
 ToDataQueryWorkflowCode::usage = "Translates a natural language commands into a Data Query code.";
 
@@ -296,16 +296,16 @@ ToLSAMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
 (* ToECMMonCode                                              *)
 (*===========================================================*)
 
-Clear[ToECMMonCode];
+Clear[ToEpidemiologyModelingWorkflowCode];
 
-SyntaxInformation[ToECMMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToEpidemiologyModelingWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToECMMonCode] = Options[ToMonadicCommand];
+Options[ToEpidemiologyModelingWorkflowCode] = Options[ToMonadicCommand];
 
-ToECMMonCode[ command_, opts : OptionsPattern[] ] :=
+ToEpidemiologyModelingWorkflowCode[ command_, opts : OptionsPattern[] ] :=
     ToMonadicCommand[ command, "DSL::English::EpidemiologyModelingWorkflows", opts];
 
-ToECMMonCode[___] := $Failed;
+ToEpidemiologyModelingWorkflowCode[___] := $Failed;
 
 (*----*)
 
