@@ -1,0 +1,27 @@
+{
+  "perl": "6.d",
+  "name": "DSL::Shared::Utilities::AddFuzzyMatching",
+  "api": "1",
+  "auth": "github:antononcube",
+  "version": "0.1.0",
+  "description": "Adds fuzzy matching to grammar tokens.",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "license": "Artistic-2.0",
+  "provides": {
+    "DSL::Shared::Utilities::AddFuzzyMatching":          "lib/DSL/Shared/Utilities/AddFuzzyMatching.rakumod",
+    "DSL::Shared::Utilities::AddFuzzyMatching::Grammar": "lib/DSL/Shared/Utilities/AddFuzzyMatching/Grammar.rakumod",
+    "DSL::Shared::Utilities::AddFuzzyMatching::Actions": "lib/DSL/Shared/Utilities/AddFuzzyMatching/Actions.rakumod"
+  },
+  "depends": [],
+  "build-depends": [],
+  "test-depends": [],
+  "resources": [],
+  "tags": [
+    "parser",
+    "fuzzy",
+    "match"
+  ],
+  "source-url": "https://github.com/antononcube/ConverationalAgents/Packages/Perl6/AddFuzzyMatching"
+}
