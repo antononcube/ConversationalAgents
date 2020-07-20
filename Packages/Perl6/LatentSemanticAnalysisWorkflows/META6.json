@@ -1,10 +1,10 @@
 {
     "perl" : "6.d",
-    "name" : "LatentSemanticAnalysisWorkflows",
+    "name" : "LatentSemanticAnalysisWorkflows-obsolete",
     "api"  : "1",
     "auth" : "github:antononcube",
     "version" : "0.8.0",
-    "description" : "Latent Semantic Analysis workflows building by natural language commands.",
+    "description" : "Latent Semantic Analysis workflows building by natural language commands. Obsolete",
     "authors" : [ "Anton Antonov" ],
     "license" : "GPL-3.0-or-later",
     "provides" : {
