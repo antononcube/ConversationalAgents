@@ -2,7 +2,7 @@
 
 ***This Raku package directory is obsolete.***
 
-***The package was moved to:*** https://github.com/antononcube/Raku-DSL-English-RecommenderWorkflows .
+***The package was moved to:*** https://github.com/antononcube/Raku-DSL-English-LatentSemanticAnalysisWorkflows .
 
 ## In brief
 
