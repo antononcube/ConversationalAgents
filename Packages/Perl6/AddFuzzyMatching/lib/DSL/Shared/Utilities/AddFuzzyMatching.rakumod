@@ -23,7 +23,7 @@ use DSL::Shared::Utilities::AddFuzzyMatching::Actions;
 ## The function
 ##===========================================================
 
-sub makeModifiedGrammarFile( Str $fileName ) is export {
+sub addFuzzyMatch( Str $fileName ) is export {
 
   my $program = slurp($fileName);
 

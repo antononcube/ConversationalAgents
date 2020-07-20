@@ -1,7 +1,7 @@
 use v6;
 
-use lib './lib';
-use lib '.';
+#use lib './lib';
+#use lib '.';
 
 use DSL::Shared::Utilities::AddFuzzyMatching;
 
@@ -11,7 +11,7 @@ use DSL::Shared::Utilities::AddFuzzyMatching;
 #
 my $packageDir = "./corpus/";
 
-makeModifiedGrammarFile( $packageDir ~ "/testFile.rakumod" );
+addFuzzyMatch( $packageDir ~ "/testFile-template" );
 
 ##===========================================================
 ## Data
