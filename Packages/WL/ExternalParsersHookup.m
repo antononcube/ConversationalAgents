@@ -58,7 +58,7 @@ ToQRMonCode::usage = "Translates a natural language commands into a QRMon pipeli
 
 ToRecommenderWorkflowCode::usage = "Translates a natural language commands into a SMRMon pipeline.";
 
-ToLSAMonCode::usage = "Translates a natural language commands into a LSAMon pipeline.";
+ToLatentSemanticAnalysisWorkflowCode::usage = "Translates a natural language commands into a LSAMon pipeline.";
 
 ToECMMonCode::usage = "Translates a natural language commands into a ECMMon pipeline.";
 
@@ -138,24 +138,24 @@ Options[ToMonadicCommand] = {
 };
 
 aRakuModules = <|
-  "QRMon"      -> "QuantileRegressionWorkflows",
-  "SMRMon"     -> "RecommenderWorkflows",
-  "LSAMon"     -> "LatentSemanticAnalysisWorkflows",
-  "ECMMon"     -> "EpidemiologyModelingWorkflows",
+  "QRMon"      -> "DSL::English::QuantileRegressionWorkflows",
+  "SMRMon"     -> "DSL::English::RecommenderWorkflows",
+  "LSAMon"     -> "DSL::English::LatentSemanticAnalysisWorkflows",
+  "ECMMon"     -> "DSL::English::EpidemiologyModelingWorkflows",
   "DataQuery"  -> "DSL::English::DataQueryWorkflows" |>;
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
 aRakuFunctions = <|
-  "QRMon"                           -> "ToQuantileRegressionWorkflowCode",
-  "QuantileRegressionWorkflows"     -> "ToQuantileRegressionWorkflowCode",
-  "SMRMon"                          -> "ToRecommenderWorkflowCode",
-  "RecommenderWorkflows"            -> "ToRecommenderWorkflowCode",
-  "LSAMon"                          -> "ToLatentSemanticAnalysisWorkflowCode",
-  "LatentSemanticAnalysisWorkflows" -> "ToLatentSemanticAnalysisWorkflowCode",
-  "ECMMon"                          -> "ToEpidemiologyModelingWorkflowCode",
-  "EpidemiologyModelingWorkflows"   -> "ToEpidemiologyModelingWorkflowCode",
-  "DataQuery"                       -> "ToDataQueryWorkflowCode",
-  "DSL::English::DataQueryWorkflows"  -> "ToDataQueryWorkflowCode"|>;
+  "QRMon"                                             -> "ToQuantileRegressionWorkflowCode",
+  "DSL::English::QuantileRegressionWorkflows"         -> "ToQuantileRegressionWorkflowCode",
+  "SMRMon"                                            -> "ToRecommenderWorkflowCode",
+  "DSL::English::RecommenderWorkflows"                -> "ToRecommenderWorkflowCode",
+  "LSAMon"                                            -> "ToLatentSemanticAnalysisWorkflowCode",
+  "DSL::English::LatentSemanticAnalysisWorkflows"     -> "ToLatentSemanticAnalysisWorkflowCode",
+  "ECMMon"                                            -> "ToEpidemiologyModelingWorkflowCode",
+  "DSL::English::EpidemiologyModelingWorkflows"       -> "ToEpidemiologyModelingWorkflowCode",
+  "DataQuery"                                         -> "ToDataQueryWorkflowCode",
+  "DSL::English::DataQueryWorkflows"                  -> "ToDataQueryWorkflowCode"|>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, parseQ, target, stringResultQ, res},
@@ -215,7 +215,7 @@ SyntaxInformation[ToQRMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] }
 
 Options[ToQRMonCode] = Options[ToMonadicCommand];
 
-ToQRMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "QRMon", opts];
+ToQRMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "DSL::English::QuantileRegressionWorkflows", opts];
 
 ToQRMonCode[___] := $Failed;
 
@@ -244,7 +244,7 @@ SyntaxInformation[ToRecommenderWorkflowCode] = { "ArgumentsPattern" -> { _, Opti
 
 Options[ToRecommenderWorkflowCode] = Options[ToMonadicCommand];
 
-ToRecommenderWorkflowCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "RecommenderWorkflows", opts];
+ToRecommenderWorkflowCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "DSL::English::RecommenderWorkflows", opts];
 
 ToRecommenderWorkflowCode[___] := $Failed;
 
@@ -264,18 +264,18 @@ ToSMRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToLSAMonCode                                              *)
+(* ToLatentSemanticAnalysisWorkflowCode                                              *)
 (*===========================================================*)
 
-Clear[ToLSAMonCode];
+Clear[ToLatentSemanticAnalysisWorkflowCode];
 
-SyntaxInformation[ToLSAMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToLatentSemanticAnalysisWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToLSAMonCode] = Options[ToMonadicCommand];
+Options[ToLatentSemanticAnalysisWorkflowCode] = Options[ToMonadicCommand];
 
-ToLSAMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "LSAMon", opts];
+ToLatentSemanticAnalysisWorkflowCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "DSL::English::LatentSemanticAnalysisWorkflows", opts];
 
-ToLSAMonCode[___] := $Failed;
+ToLatentSemanticAnalysisWorkflowCode[___] := $Failed;
 
 (*----*)
 
@@ -283,7 +283,7 @@ Clear[ToLSAMonWLCommand];
 
 Options[ToLSAMonWLCommand] = Options[ToMonadicCommand];
 
-ToLSAMonWLCommand::obs = "Obsolete function; use ToLSAMonCode instead.";
+ToLSAMonWLCommand::obs = "Obsolete function; use ToLatentSemanticAnalysisWorkflowCode instead.";
 
 ToLSAMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
@@ -303,7 +303,7 @@ SyntaxInformation[ToECMMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] 
 Options[ToECMMonCode] = Options[ToMonadicCommand];
 
 ToECMMonCode[ command_, opts : OptionsPattern[] ] :=
-    ToMonadicCommand[ command, "ECMMon", opts];
+    ToMonadicCommand[ command, "DSL::English::EpidemiologyModelingWorkflows", opts];
 
 ToECMMonCode[___] := $Failed;
 
