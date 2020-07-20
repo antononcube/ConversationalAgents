@@ -141,7 +141,7 @@ aRakuModules = <|
   "SMRMon"     -> "RecommenderWorkflows",
   "LSAMon"     -> "LatentSemanticAnalysisWorkflows",
   "ECMMon"     -> "EpidemiologyModelingWorkflows",
-  "DataQuery"  -> "DataQueryWorkflows" |>;
+  "DataQuery"  -> "DSL::English::DataQueryWorkflows" |>;
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
 aRakuFunctions = <|
@@ -154,7 +154,7 @@ aRakuFunctions = <|
   "ECMMon"                          -> "ToEpidemiologyModelingWorkflowCode",
   "EpidemiologyModelingWorkflows"   -> "ToEpidemiologyModelingWorkflowCode",
   "DataQuery"                       -> "ToDataQueryWorkflowCode",
-  "DataQueryWorkflows"              -> "ToDataQueryWorkflowCode"|>;
+  "DSL::English::DataQueryWorkflows"  -> "ToDataQueryWorkflowCode"|>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, parseQ, target, stringResultQ, res},
@@ -187,7 +187,7 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
       pres =
           RakuCommand[
             StringJoin["say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"],
-            aRakuModules[monadName],
+            "",
             aRakuModules[monadName]];
 
       pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];
@@ -332,7 +332,7 @@ SyntaxInformation[ToDataQueryWorkflowCode] = { "ArgumentsPattern" -> { _, Option
 Options[ToDataQueryWorkflowCode] = Options[ToMonadicCommand];
 
 ToDataQueryWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
-    ToMonadicCommand[ command, "DataQueryWorkflows", opts];
+    ToMonadicCommand[ command, "DSL::English::DataQueryWorkflows", opts];
 
 ToDataQueryWorkflowCode[___] := $Failed;
 
