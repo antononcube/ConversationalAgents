@@ -1,5 +1,10 @@
 # Recommenders Workflows 
 
+
+***This Raku package directory is obsolete.***
+
+***The package was moved to:*** https://github.com/antononcube/Raku-DSL-English-RecommenderWorkflows .
+
 ## In brief
 
 This Raku Perl 6 package has grammar classes and action classes for the parsing and
