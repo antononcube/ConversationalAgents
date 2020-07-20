@@ -1,6 +1,8 @@
 # Data Query Workflows 
 
-Possible alternative name: *"Spoken dplyr commands"*.  
+***This Raku package directory is obsolete.***
+
+***The package was moved to:*** https://github.com/antononcube/Raku-DSL-English-DataQueryWorkflows .
 
 ## In brief
 
