@@ -33,7 +33,7 @@ class DSL::Shared::Utilities::AddFuzzyMatching::Actions {
 
   method token-spec($/) {
 
-    my @dont = [ 'a', 'an', 'and', 'by', 'do', 'for', 'from', 'get', 'load', 'of', 'per', 'set', 'that', 'the', 'to', 'use', 'with' ];
+    my @dont = [ 'a', 'an', 'and', 'by', 'do', 'for', 'from', 'get', 'in', 'load', 'min', 'max', 'no', 'of', 'per', 'set', 'that', 'the', 'to', 'use', 'with' ];
 
     my Str $term = substr( $/.Str, 1, $/.Str.chars - 2);
 
