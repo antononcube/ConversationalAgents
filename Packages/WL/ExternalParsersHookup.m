@@ -54,7 +54,7 @@ RakuCommand::usage = "Raku (Perl 6) command invocation.";
 
 ToMonadicCommand::usage = "Translates a natural language commands into a monadic pipeline.";
 
-ToQRMonCode::usage = "Translates a natural language commands into a QRMon pipeline.";
+ToQuantileRegressionWorkflowCode::usage = "Translates a natural language commands into a QRMon pipeline.";
 
 ToRecommenderWorkflowCode::usage = "Translates a natural language commands into a SMRMon pipeline.";
 
@@ -206,18 +206,18 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToQRMonCode                                            *)
+(* ToQuantileRegressionWorkflowCode                          *)
 (*===========================================================*)
 
-Clear[ToQRMonCode];
+Clear[ToQuantileRegressionWorkflowCode];
 
-SyntaxInformation[ToQRMonCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+SyntaxInformation[ToQuantileRegressionWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
-Options[ToQRMonCode] = Options[ToMonadicCommand];
+Options[ToQuantileRegressionWorkflowCode] = Options[ToMonadicCommand];
 
-ToQRMonCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "DSL::English::QuantileRegressionWorkflows", opts];
+ToQuantileRegressionWorkflowCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "DSL::English::QuantileRegressionWorkflows", opts];
 
-ToQRMonCode[___] := $Failed;
+ToQuantileRegressionWorkflowCode[___] := $Failed;
 
 (*----*)
 
@@ -225,12 +225,12 @@ Clear[ToQRMonWLCommand];
 
 Options[ToQRMonWLCommand] = Options[ToMonadicCommand];
 
-ToQRMonWLCommand::obs = "Obsolete function; use ToQRMonCode instead.";
+ToQRMonWLCommand::obs = "Obsolete function; use ToQuantileRegressionWorkflowCode instead.";
 
 ToQRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToQRMonWLCommand::obs];
-      ToMonadicCommand[ command, "QRMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "DSL::English::QuantileRegressionWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
@@ -259,7 +259,7 @@ ToSMRMonWLCommand::obs = "Obsolete function; use ToRecommenderWorkflowCode inste
 ToSMRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToSMRMonWLCommand::obs];
-      ToMonadicCommand[ command, "RecommenderWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "DSL::English::RecommenderWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
@@ -288,7 +288,7 @@ ToLSAMonWLCommand::obs = "Obsolete function; use ToLatentSemanticAnalysisWorkflo
 ToLSAMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToLSAMonWLCommand::obs];
-      ToMonadicCommand[ command, "LSAMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "DSL::English::LatentSemanticAnalysisWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
     ];
 
 
