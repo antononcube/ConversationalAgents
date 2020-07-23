@@ -102,9 +102,8 @@ RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocat
 
       aRes = RunProcess[rakuCommand];
 
-      If[ aRes["ExitCode" ] != 0,
+      If[ aRes["ExitCode" ] != 0 || StringLength[ aRes["StandardError"] ] > 0,
         Echo[StringTrim @ aRes["StandardError"], "RunProcess stderr:"];
-        Return[aRes["StandardOutput"]]
       ];
 
       pres = aRes["StandardOutput"];
