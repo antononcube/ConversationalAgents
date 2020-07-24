@@ -6,7 +6,7 @@ Authors@R: person("Anton", "Antonov", email = "antononcube@gmail.com",
                   role = c("aut", "cre"))
 Maintainer: Anton Antonov <antononcube@gmail.com>
 Description: This package has a collection of functions and tests for 
-    hooking-up and using external parsers. (Like Raku Perl 6, ANTLR4, Wolfram Language, etc.)
+    hooking-up and using external parsers. (Like Raku, ANTLR4, Wolfram Language, etc.)
 License: BSD-3
 Language: en-US
 Encoding: UTF-8
