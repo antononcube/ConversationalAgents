@@ -97,7 +97,7 @@ LSAMonEchoStatisticalThesaurus[ "Words" -> { "sing", "left", "home" }]
 This Raku (Perl 6) command:
 
 ```perl6
-say to_LSAMon_Py($command);
+say to_LSAMon_Python($command);
 ```
 
 generates this Python code:

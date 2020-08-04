@@ -49,7 +49,11 @@
 #' @export
 ToDataQueryWorkflowCode <- function(command, parse=TRUE) {
 
-  pres <- RakuCommand( command = paste0( "say ToDataQueryWorkflowCode('", command, "')"),
+  command <- gsub( '`', '\\\\`', command)
+  command <- gsub( "\'", "\\\\'", command)
+  command <- gsub( "\"", "\\\\'", command)
+
+  pres <- RakuCommand( command = paste0( "say ToDataQueryWorkflowCode('", command, "', 'R-tidyverse')" ),
                        moduleDirectory = "",
                        moduleName = "DSL::English::DataQueryWorkflows" )
 
