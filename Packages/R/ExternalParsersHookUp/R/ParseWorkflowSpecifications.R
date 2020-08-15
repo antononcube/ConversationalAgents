@@ -43,17 +43,23 @@
 #' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A Boolean should the result be parsed as an R expression.
+#' @param target Target of the interpretation.
+#' One of "base", "data.table", "sqldf", "tidyverse".
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-ToDataQueryWorkflowCode <- function(command, parse=TRUE) {
+ToDataQueryWorkflowCode <- function(command, parse = TRUE, target = "tidyverse" ) {
 
   command <- gsub( '`', '\\\\`', command)
   command <- gsub( "\'", "\\\\'", command)
   command <- gsub( "\"", "\\\\'", command)
 
-  pres <- RakuCommand( command = paste0( "say ToDataQueryWorkflowCode('", command, "', 'R-tidyverse')" ),
+  if( target %in% c( "base", "data.table", "sqldf", "tidyverse" ) ) {
+    target <- paste0( "R-", target )
+  }
+
+  pres <- RakuCommand( command = paste0( "say ToDataQueryWorkflowCode('", command, "', '", target, "')" ),
                        moduleDirectory = "",
                        moduleName = "DSL::English::DataQueryWorkflows" )
 
