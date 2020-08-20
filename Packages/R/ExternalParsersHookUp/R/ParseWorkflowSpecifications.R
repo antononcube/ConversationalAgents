@@ -37,6 +37,45 @@
 ##===========================================================
 
 
+#' Interpret search engine query commands.
+#' @description Invokes the Raku module DSL::English::SearchEngineQueries in order to get
+#' interpretation of a natural language command or a list spoken commands separated with ";".
+#' @param command A string with a command or a list of commands separated with ";".
+#' @param parse A Boolean should the result be parsed as an R expression.
+#' @param target Target of the interpretation.
+#' One of "base", "data.table", "SMRMon", "sqldf", "tidyverse".
+#' @details Produces a character vector or an expression depending on \code{parse}.
+#' @return A string or an R expression
+#' @family Spoken dplyr
+#' @export
+ToSearchEngineQueryCode <- function(command, parse = TRUE, target = "tidyverse" ) {
+
+  command <- gsub( '`', '\\\\`', command)
+  command <- gsub( "\'", "\\\\'", command)
+  command <- gsub( "\"", "\\\\'", command)
+
+  if( target %in% c( "base", "data.table", "SMRMon", "sqldf", "tidyverse" ) ) {
+    target <- paste0( "R-", target )
+  }
+
+  pres <- RakuCommand( command = paste0( "say ToSearchEngineQueryCode('", command, "', '", target, "')" ),
+                       moduleDirectory = "",
+                       moduleName = "DSL::English::SearchEngineQueries" )
+
+  messageInds <- grep( "^Possible", pres )
+
+  if( length(messageInds) > 0 ) {
+    messageLines <- pres[messageInds]
+    print(messageLines)
+    pres <- pres[setdiff(1:length(pres), messageInds)]
+  }
+
+  pres <- gsub( "\\\"", "\"", pres, fixed = T)
+
+  if(parse) { parse(text = pres) }
+  else { pres }
+}
+
 
 #' Interpret data query workflow natural language commands.
 #' @description Invokes the Raku module DSL::English::DataQueryWorkflows in order to get
@@ -44,7 +83,7 @@
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A Boolean should the result be parsed as an R expression.
 #' @param target Target of the interpretation.
-#' One of "base", "data.table", "sqldf", "tidyverse".
+#' One of "base", "data.table", "SMRMon", "sqldf", "tidyverse".
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
@@ -55,7 +94,7 @@ ToDataQueryWorkflowCode <- function(command, parse = TRUE, target = "tidyverse" 
   command <- gsub( "\'", "\\\\'", command)
   command <- gsub( "\"", "\\\\'", command)
 
-  if( target %in% c( "base", "data.table", "sqldf", "tidyverse" ) ) {
+  if( target %in% c( "base", "data.table", "SMRMon", "sqldf", "tidyverse" ) ) {
     target <- paste0( "R-", target )
   }
 

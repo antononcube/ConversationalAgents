@@ -12,7 +12,7 @@ ToDataQueryWorkflowCode(command, parse = TRUE, target = "tidyverse")
 \item{parse}{A Boolean should the result be parsed as an R expression.}
 
 \item{target}{Target of the interpretation.
-One of "base", "data.table", "sqldf", "tidyverse".}
+One of "base", "data.table", "SMRMon", "sqldf", "tidyverse".}
 }
 \value{
 A string or an R expression
@@ -29,6 +29,7 @@ Other Spoken dplyr:
 \code{\link{ToEpidemiologyModelingWorkflowCode}()},
 \code{\link{ToLatentSemanticAnalysisWorkflowCode}()},
 \code{\link{ToQuantileRegressionWorkflowCode}()},
-\code{\link{ToRecommenderWorkflowCode}()}
+\code{\link{ToRecommenderWorkflowCode}()},
+\code{\link{ToSearchEngineQueryCode}()}
 }
 \concept{Spoken dplyr}

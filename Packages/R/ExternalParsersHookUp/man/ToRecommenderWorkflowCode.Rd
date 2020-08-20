@@ -26,6 +26,7 @@ Other Spoken dplyr:
 \code{\link{ToDataQueryWorkflowCode}()},
 \code{\link{ToEpidemiologyModelingWorkflowCode}()},
 \code{\link{ToLatentSemanticAnalysisWorkflowCode}()},
-\code{\link{ToQuantileRegressionWorkflowCode}()}
+\code{\link{ToQuantileRegressionWorkflowCode}()},
+\code{\link{ToSearchEngineQueryCode}()}
 }
 \concept{Spoken dplyr}
