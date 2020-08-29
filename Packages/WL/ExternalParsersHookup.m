@@ -54,6 +54,8 @@ RakuCommand::usage = "Raku (Perl 6) command invocation.";
 
 ToMonadicCommand::usage = "Translates a natural language commands into a monadic pipeline.";
 
+ToClassificationWorkflowCode::usage = "Translates a natural language commands into a ClCon pipeline.";
+
 ToQuantileRegressionWorkflowCode::usage = "Translates a natural language commands into a QRMon pipeline.";
 
 ToRecommenderWorkflowCode::usage = "Translates a natural language commands into a SMRMon pipeline.";
@@ -137,6 +139,7 @@ Options[ToMonadicCommand] = {
 };
 
 aRakuModules = <|
+  "ClCon"      -> "DSL::English::ClassificationWorkflows",
   "QRMon"      -> "DSL::English::QuantileRegressionWorkflows",
   "SMRMon"     -> "DSL::English::RecommenderWorkflows",
   "LSAMon"     -> "DSL::English::LatentSemanticAnalysisWorkflows",
@@ -145,6 +148,8 @@ aRakuModules = <|
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
 aRakuFunctions = <|
+  "ClCon"                                             -> "ToClassificationWorkflowCode",
+  "DSL::English::ClassificationWorkflows"             -> "ToClassificationWorkflowCode",
   "QRMon"                                             -> "ToQuantileRegressionWorkflowCode",
   "DSL::English::QuantileRegressionWorkflows"         -> "ToQuantileRegressionWorkflowCode",
   "SMRMon"                                            -> "ToRecommenderWorkflowCode",
@@ -202,6 +207,22 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
         True, pres
       ]
     ];
+
+
+
+(*===========================================================*)
+(* ToClassificationWorkflowCode                              *)
+(*===========================================================*)
+
+Clear[ToClassificationWorkflowCode];
+
+SyntaxInformation[ToClassificationWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToClassificationWorkflowCode] = Options[ToMonadicCommand];
+
+ToClassificationWorkflowCode[ command_, opts : OptionsPattern[] ] := ToMonadicCommand[ command, "DSL::English::ClassificationWorkflows", opts];
+
+ToClassificationWorkflowCode[___] := $Failed;
 
 
 (*===========================================================*)
