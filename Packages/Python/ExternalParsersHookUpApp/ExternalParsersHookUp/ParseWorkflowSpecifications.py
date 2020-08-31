@@ -5,6 +5,10 @@ def ToDataQueryWorkflowCode(command, parse=True, target='Python-pandas', globals
     if target in ['pandas']:
         target = 'Python-' + target
 
+    command = command.replace('`', '\\`')
+    command = command.replace('\'', '\"')
+    command = command.replace('\"', '\"')
+
     pres = RakuCommand(command=''.join(["say ToDataQueryWorkflowCode('", command, "', '", target, "')"]),
                        moduleName='DSL::English::DataQueryWorkflows')
 
