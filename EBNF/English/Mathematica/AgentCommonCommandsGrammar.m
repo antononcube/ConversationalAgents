@@ -64,20 +64,20 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
 ];
 
 
-BeginPackage["AgentCommonCommandsGrammar`"]
+BeginPackage["AgentCommonCommandsGrammar`"];
 (* Exported symbols added here with SymbolName::usage *)
 
 
-pAGENTCOMMONCOMMAND::usage = "Parses common conversational agent natural language commands."
+pAGENTCOMMONCOMMAND::usage = "Parses common conversational agent natural language commands.";
 
 AgentCommonCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
-commonly used in conversational agents."
+commonly used in conversational agents.";
 
 AgentCommonCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
-commonly used in conversational agents."
+commonly used in conversational agents.";
 
 
-Begin["`Private`"]
+Begin["`Private`"];
 
 Needs["FunctionalParsers`"];
 
@@ -126,7 +126,7 @@ res =
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[AgentCommonCommandsSubGrammars]
+Clear[AgentCommonCommandsSubGrammars];
 
 Options[AgentCommonCommandsSubGrammars] = { "Normalize" -> False };
 
@@ -145,7 +145,7 @@ AgentCommonCommandsSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[AgentCommonCommandsGrammar]
+Clear[AgentCommonCommandsGrammar];
 
 Options[AgentCommonCommandsGrammar] = Options[AgentCommonCommandsSubGrammars];
 
@@ -164,6 +164,6 @@ AgentCommonCommandsGrammar[opts:OptionsPattern[]] :=
     ];
 
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]

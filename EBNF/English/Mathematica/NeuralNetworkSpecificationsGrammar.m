@@ -72,7 +72,7 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
 ];
 
 
-BeginPackage["NeuralNetworkSpecificationsGrammar`"]
+BeginPackage["NeuralNetworkSpecificationsGrammar`"];
 
 pNETMONCOMMAND::usage = "Parses natural language commands for neural network specification and training.";
 

@@ -78,19 +78,19 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 ];
 
-BeginPackage["RecommenderWorkflowsGrammar`"]
+BeginPackage["RecommenderWorkflowsGrammar`"];
 
 pSMRMONCOMMAND::usage = "Parses natural language commands for recommendations workflows."
 
 SMRMonCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
-specifying SMRMon pipelines construction."
+specifying SMRMon pipelines construction.";
 
 SMRMonCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
-specifying SMRMon pipelines construction."
+specifying SMRMon pipelines construction.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
-Needs["FunctionalParsers`"]
+Needs["FunctionalParsers`"];
 
 (************************************************************)
 (* Common parts                                             *)
@@ -309,7 +309,7 @@ res =
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[SMRMonCommandsSubGrammars]
+Clear[SMRMonCommandsSubGrammars];
 
 Options[SMRMonCommandsSubGrammars] = { "Normalize" -> False };
 
@@ -328,7 +328,7 @@ SMRMonCommandsSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[SMRMonCommandsGrammar]
+Clear[SMRMonCommandsGrammar];
 
 Options[SMRMonCommandsGrammar] = Options[SMRMonCommandsSubGrammars];
 

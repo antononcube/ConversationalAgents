@@ -68,7 +68,7 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
 
 BeginPackage["TimeSeriesWorkflowsGrammar`"];
 
-pQRMONCOMMAND::usage = "Parses natural language commands for time series workflows."
+pQRMONCOMMAND::usage = "Parses natural language commands for time series workflows.";
 
 QRMonCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
 specifying QRMon pipelines construction.";

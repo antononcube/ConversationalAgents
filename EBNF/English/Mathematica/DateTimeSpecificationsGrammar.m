@@ -64,20 +64,20 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
 ];
 
 
-BeginPackage["DateTimeSpecificationsGrammar`"]
+BeginPackage["DateTimeSpecificationsGrammar`"];
 (* Exported symbols added here with SymbolName::usage *)
 
 
-pDATETIMESPEC::usage = "Parses common date-time specifications."
+pDATETIMESPEC::usage = "Parses common date-time specifications.";
 
-pDATESPEC::usage = "Parses common date specifications."
+pDATESPEC::usage = "Parses common date specifications.";
 
-DateTimeSpecificationsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for date-time specifications."
+DateTimeSpecificationsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for date-time specifications.";
 
-DateTimeSpecificationsGrammar::usage = "Gives as a string an EBNF grammar for parsing date-time specifications."
+DateTimeSpecificationsGrammar::usage = "Gives as a string an EBNF grammar for parsing date-time specifications.";
 
 
-Begin["`Private`"]
+Begin["`Private`"];
 
 Needs["FunctionalParsers`"];
 
@@ -127,7 +127,7 @@ res =
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[DateTimeSpecificationsSubGrammars]
+Clear[DateTimeSpecificationsSubGrammars];
 
 Options[DateTimeSpecificationsSubGrammars] = { "Normalize" -> False };
 
@@ -146,7 +146,7 @@ DateTimeSpecificationsSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[DateTimeSpecificationsGrammar]
+Clear[DateTimeSpecificationsGrammar];
 
 Options[DateTimeSpecificationsGrammar] = Options[DateTimeSpecificationsSubGrammars];
 
@@ -165,6 +165,6 @@ DateTimeSpecificationsGrammar[opts:OptionsPattern[]] :=
     ];
 
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]

@@ -36,17 +36,17 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 ];
 
-BeginPackage["ListManagementGrammar`"]
+BeginPackage["ListManagementGrammar`"];
 
-pLISTMANAGEMENTCOMMAND::usage = "Parser for list management natural language commands."
+pLISTMANAGEMENTCOMMAND::usage = "Parser for list management natural language commands.";
 
 ListManagementCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
-for list management."
+for list management.";
 
 ListManagementCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
-for list management."
+for list management.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
 Needs["FunctionalParsers`"];
 
@@ -97,7 +97,7 @@ res =
 
 (* Almost the same as the code at the end of ClassifierWorkflowsGrammar.m . *)
 
-Clear[ListManagementCommandsSubGrammars]
+Clear[ListManagementCommandsSubGrammars];
 
 Options[ListManagementCommandsSubGrammars] = { "Normalize" -> False };
 
@@ -116,7 +116,7 @@ ListManagementCommandsSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[ListManagementCommandsGrammar]
+Clear[ListManagementCommandsGrammar];
 
 Options[ListManagementCommandsGrammar] = Options[ListManagementCommandsSubGrammars];
 
@@ -135,6 +135,6 @@ ListManagementCommandsGrammar[opts:OptionsPattern[]] :=
     ];
 
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]
