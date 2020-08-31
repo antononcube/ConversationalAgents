@@ -96,19 +96,19 @@ If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 ];
 
-BeginPackage["ClassifierWorkflowsGrammar`"]
+BeginPackage["ClassifierWorkflowsGrammar`"];
 
-pCLCONCOMMAND::usage = "Parses natural language commands for classification workflows."
+pCLCONCOMMAND::usage = "Parses natural language commands for classification workflows.";
 
 ClConCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
-specifying ClCon pipelines construction."
+specifying ClCon pipelines construction.";
 
 ClConCommandsGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
-specifying ClCon pipelines construction."
+specifying ClCon pipelines construction.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
-Needs["FunctionalParsers`"]
+Needs["FunctionalParsers`"];
 
 (************************************************************)
 (* Common parts                                             *)
@@ -524,6 +524,6 @@ ClConCommandsGrammar[opts:OptionsPattern[]] :=
       If[ normalizeQ, GrammarNormalize[res], res ]
     ];
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
 EndPackage[]
