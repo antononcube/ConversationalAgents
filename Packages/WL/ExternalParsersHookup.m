@@ -64,7 +64,9 @@ ToLatentSemanticAnalysisWorkflowCode::usage = "Translates a natural language com
 
 ToEpidemiologyModelingWorkflowCode::usage = "Translates a natural language commands into a ECMMon pipeline.";
 
-ToDataQueryWorkflowCode::usage = "Translates a natural language commands into a Data Query code.";
+ToDataQueryWorkflowCode::usage = "Translates a natural language commands into a Data Query Workflow code.";
+
+ToSearchEngineQueryCode::usage = "Translates a natural language commands into a Search Engine Query code.";
 
 ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline. Obsolete.";
 
@@ -139,12 +141,13 @@ Options[ToMonadicCommand] = {
 };
 
 aRakuModules = <|
-  "ClCon"      -> "DSL::English::ClassificationWorkflows",
-  "QRMon"      -> "DSL::English::QuantileRegressionWorkflows",
-  "SMRMon"     -> "DSL::English::RecommenderWorkflows",
-  "LSAMon"     -> "DSL::English::LatentSemanticAnalysisWorkflows",
-  "ECMMon"     -> "DSL::English::EpidemiologyModelingWorkflows",
-  "DataQuery"  -> "DSL::English::DataQueryWorkflows" |>;
+  "ClCon"              -> "DSL::English::ClassificationWorkflows",
+  "QRMon"              -> "DSL::English::QuantileRegressionWorkflows",
+  "SMRMon"             -> "DSL::English::RecommenderWorkflows",
+  "LSAMon"             -> "DSL::English::LatentSemanticAnalysisWorkflows",
+  "ECMMon"             -> "DSL::English::EpidemiologyModelingWorkflows",
+  "DataQuery"          -> "DSL::English::DataQueryWorkflows",
+  "SearchEngineQuery"  -> "DSL::English::SearchEngineQueries" |>;
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
 aRakuFunctions = <|
@@ -159,7 +162,9 @@ aRakuFunctions = <|
   "ECMMon"                                            -> "ToEpidemiologyModelingWorkflowCode",
   "DSL::English::EpidemiologyModelingWorkflows"       -> "ToEpidemiologyModelingWorkflowCode",
   "DataQuery"                                         -> "ToDataQueryWorkflowCode",
-  "DSL::English::DataQueryWorkflows"                  -> "ToDataQueryWorkflowCode"|>;
+  "DSL::English::DataQueryWorkflows"                  -> "ToDataQueryWorkflowCode",
+  "SearchEngineQuery"                                 -> "ToSearchEngineQueryCode",
+  "DSL::English::SearchEngineQueries"                 -> "ToSearchEngineQueryCode"|>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, parseQ, target, stringResultQ, res},
@@ -356,6 +361,22 @@ ToDataQueryWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
     ToMonadicCommand[ command, "DSL::English::DataQueryWorkflows", opts];
 
 ToDataQueryWorkflowCode[___] := $Failed;
+
+
+(*===========================================================*)
+(* ToSearchEngineQueryCode                                   *)
+(*===========================================================*)
+
+Clear[ToSearchEngineQueryCode];
+
+SyntaxInformation[ToSearchEngineQueryCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToSearchEngineQueryCode] = Options[ToMonadicCommand];
+
+ToSearchEngineQueryCode[ command_String, opts : OptionsPattern[] ] :=
+    ToMonadicCommand[ command, "DSL::English::SearchEngineQueries", opts];
+
+ToSearchEngineQueryCode[___] := $Failed;
 
 
 End[]; (* `Private` *)
