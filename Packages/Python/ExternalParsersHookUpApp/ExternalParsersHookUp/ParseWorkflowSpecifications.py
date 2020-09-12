@@ -1,7 +1,7 @@
 from .RakuCommandFunctions import RakuCommand
 
 
-def ToDataQueryWorkflowCode(command, parse=True, target='Python-pandas', globals=globals()):
+def ToDataQueryWorkflowCode(command, execute=True, target='Python-pandas', globals=globals()):
     if target in ['pandas']:
         target = 'Python-' + target
 
@@ -15,7 +15,7 @@ def ToDataQueryWorkflowCode(command, parse=True, target='Python-pandas', globals
     if len(pres.stderr) > 0:
         print(pres.stderr)
 
-    if parse:
+    if execute:
         exec(pres.stdout, globals)
 
     return pres.stdout
