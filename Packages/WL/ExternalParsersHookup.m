@@ -136,7 +136,7 @@ ToMonadicCommand::ntgt = "The value of the option \"Target\" is expected to be a
 
 Options[ToMonadicCommand] = {
   "Target" -> "WL",
-  "Parse" -> Automatic,
+  "Execute" -> Automatic,
   "StringResult" -> Automatic
 };
 
@@ -167,9 +167,9 @@ aRakuFunctions = <|
   "DSL::English::SearchEngineQueries"                 -> "ToSearchEngineQueryCode"|>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
-    Block[{pres, parseQ, target, stringResultQ, res},
+    Block[{pres, executeQ, target, stringResultQ, res},
 
-      parseQ = OptionValue[ ToMonadicCommand, "Parse" ];
+      executeQ = OptionValue[ ToMonadicCommand, "Execute" ];
 
       target = OptionValue[ ToMonadicCommand, "Target" ];
       If[ !StringQ[target],
@@ -179,10 +179,10 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
 
       stringResultQ = OptionValue[ ToMonadicCommand, "StringResult" ];
 
-      If[ TrueQ[parseQ===Automatic],
-        parseQ = If[ target == "WL", True, False, False]
+      If[ TrueQ[executeQ===Automatic],
+        executeQ = If[ target == "WL", True, False, False]
       ];
-      parseQ = TrueQ[parseQ];
+      executeQ = TrueQ[executeQ];
 
       If[ TrueQ[stringResultQ===Automatic],
         stringResultQ = If[ target == "WL", False, True, True]
@@ -203,7 +203,7 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
       pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];
 
       Which[
-        parseQ, ToExpression[pres],
+        executeQ, ToExpression[pres],
 
         !stringResultQ,
         res = ToExpression[pres, StandardForm, Hold];
@@ -252,10 +252,10 @@ Options[ToQRMonWLCommand] = Options[ToMonadicCommand];
 
 ToQRMonWLCommand::obs = "Obsolete function; use ToQuantileRegressionWorkflowCode instead.";
 
-ToQRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+ToQRMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToQRMonWLCommand::obs];
-      ToMonadicCommand[ command, "DSL::English::QuantileRegressionWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "DSL::English::QuantileRegressionWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
     ];
 
 
@@ -281,10 +281,10 @@ Options[ToSMRMonWLCommand] = Options[ToMonadicCommand];
 
 ToSMRMonWLCommand::obs = "Obsolete function; use ToRecommenderWorkflowCode instead.";
 
-ToSMRMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+ToSMRMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToSMRMonWLCommand::obs];
-      ToMonadicCommand[ command, "DSL::English::RecommenderWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "DSL::English::RecommenderWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
     ];
 
 
@@ -310,10 +310,10 @@ Options[ToLSAMonWLCommand] = Options[ToMonadicCommand];
 
 ToLSAMonWLCommand::obs = "Obsolete function; use ToLatentSemanticAnalysisWorkflowCode instead.";
 
-ToLSAMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+ToLSAMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToLSAMonWLCommand::obs];
-      ToMonadicCommand[ command, "DSL::English::LatentSemanticAnalysisWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "DSL::English::LatentSemanticAnalysisWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
     ];
 
 
@@ -340,10 +340,10 @@ Options[ToECMMonWLCommand] = Options[ToMonadicCommand];
 
 ToECMMonWLCommand::obs = "Obsolete function; use ToECMMonCode instead.";
 
-ToECMMonWLCommand[ command_, parse_:True, opts : OptionsPattern[] ] :=
+ToECMMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToECMMonWLCommand::obs];
-      ToMonadicCommand[ command, "ECMMon", Append[ DeleteCases[{opts}, HoldPattern["Parse" -> _] ], "Parse" -> parse ] ]
+      ToMonadicCommand[ command, "ECMMon", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
     ];
 
 
