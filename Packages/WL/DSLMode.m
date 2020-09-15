@@ -71,8 +71,10 @@ nbDSLStyle =
       Cell[StyleData[StyleDefinitions -> "Default.nb"]],
 
       Cell[StyleData["Input"],
-        StyleKeyMapping -> {"=" -> "WolframAlphaShort",
-          "*" -> "DSLInputParse", ">" -> "ExternalLanguage",
+        StyleKeyMapping -> {
+          "=" -> "WolframAlphaShort",
+          "*" -> "DSLInputParse",
+          ">" -> "ExternalLanguage",
           "Tab" -> "DSLInputExecute"}],
 
       Cell[StyleData["DSLInputExecute"],
