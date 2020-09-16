@@ -76,15 +76,40 @@ VerificationTest[
 
 VerificationTest[
   dfTitanic = ImportCSVToDataset["https://raw.githubusercontent.com/antononcube/MathematicaVsR/master/Data/MathematicaVsR-Data-Titanic.csv"];
+  dfTitanic2 = ExampleData[{"Dataset", "Titanic"}];
   dfStarwars = ImportCSVToDataset["https://raw.githubusercontent.com/antononcube/R-packages/master/DataQueryWorkflowsTests/inst/extdata/dfStarwars.csv"];
   dfStarwarsFilms = ImportCSVToDataset["https://raw.githubusercontent.com/antononcube/R-packages/master/DataQueryWorkflowsTests/inst/extdata/dfStarwarsFilms.csv"];
   dfStarwarsStarships = ImportCSVToDataset["https://raw.githubusercontent.com/antononcube/R-packages/master/DataQueryWorkflowsTests/inst/extdata/dfStarwarsStarships.csv"];
   dfStarwarsVehicles = ImportCSVToDataset["https://raw.githubusercontent.com/antononcube/R-packages/master/DataQueryWorkflowsTests/inst/extdata/dfStarwarsVehicles.csv"];
-  Dimensions /@ {dfTitanic, dfStarwars, dfStarwarsFilms, dfStarwarsStarships, dfStarwarsVehicles}
+  Dimensions /@ {dfTitanic, dfTitanic2, dfStarwars, dfStarwarsFilms, dfStarwarsStarships, dfStarwarsVehicles}
   ,
-  {{1309, 5}, {87, 11}, {173, 2}, {31, 2}, {13, 2}}
+  {{1309, 5}, {1309, 4}, {87, 11}, {173, 2}, {31, 2}, {13, 2}}
   ,
   TestID -> "LoadData"
+];
+
+
+(***********************************************************)
+(* Missing data                                            *)
+(***********************************************************)
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic2; delete missing", "Execute" -> True];
+  Normal @ Cases[res1, _Missing, Infinity]
+  ,
+  {}
+  ,
+  TestID -> "Delete-missing-1"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic2; replace missing values with 0", "Execute" -> True];
+  Length @ Normal @ Cases[res1, 0, Infinity] > 20
+  ,
+  True
+  ,
+  TestID -> "Replace-missing-1"
 ];
 
 
@@ -155,16 +180,43 @@ VerificationTest[
 ];
 
 
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; select passengerSex as sex and 'passengerClass' as 'class' and 'passengerAge' as age", "Execute" -> True];
+  (
+    obj = dfTitanic;
+    obj = Map[ <|"sex" -> #["passengerSex"], "class" -> #["passengerClass"], "age" -> #["passengerAge"]|>&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Select-as-pairs-2"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; select 'passengerSex', passengerClass, passengerAge as sex, class, age", "Execute" -> True];
+  (
+    obj = dfTitanic;
+    obj = Map[ <|"sex" -> #["passengerSex"], "class" -> #["passengerClass"], "age" -> #["passengerAge"]|>&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Select-with-two-lists-1"
+];
+
+
 (***********************************************************)
 (* Rename columns                                          *)
 (***********************************************************)
 
 VerificationTest[
   res1 = ToDataQueryWorkflowCode["use dfStarwars; rename name as name2, and mass as MASS;", "Execute" -> True];
-  ReleaseHold @ Hold[obj = dfStarwars;
-  obj = ((Join[#1,
-    Association["name2" -> #1["name"], "MASS" -> #1["mass"]]] &) /@ obj)[All,
-    Keys[Association["name2" -> #1["name"], "MASS" -> #1["mass"]]]]];
+  ReleaseHold @Hold[
+    obj = dfStarwars;obj = (Join[KeyDrop[#1, {"name", "mass"}], Association["name2" -> #1["name"], "MASS" -> #1["mass"]]] &) /@ obj
+  ];
   res1 == obj
   ,
   True
@@ -174,9 +226,37 @@ VerificationTest[
 
 
 VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; rename passengerSex as sex and 'passengerClass' as 'class' and 'passengerAge' as age", "Execute" -> True];
+  (
+    obj = dfTitanic;
+    obj = Map[ Join[ KeyDrop[ #, {"passengerSex", "passengerClass", "passengerAge"} ], <|"sex" -> #["passengerSex"], "class" -> #["passengerClass"], "age" -> #["passengerAge"]|> ]&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Rename-as-pairs-2"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; rename 'passengerSex', passengerClass, passengerAge as sex, class, age", "Execute" -> True];
+  (
+    obj = dfTitanic;
+    obj = Map[ Join[ KeyDrop[ #, {"passengerSex", "passengerClass", "passengerAge"} ], <| "sex" -> #["passengerSex"], "class" -> #["passengerClass"], "age" -> #["passengerAge"]|> ]&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Rename-with-two-lists-1"
+];
+
+
+VerificationTest[
   res1 = ToDataQueryWorkflowCode["use dfStarwars; rename name as name2, and mass as MASS;", "Execute" -> True];
   res2 = ToDataQueryWorkflowCode["use dfStarwars; select name as name2, and mass as MASS;", "Execute" -> True];
-  res1 == res2
+  Length[res1[1]] == Length[dfStarwars[1]] && Length[res2[1]] == 2
   ,
   True
   ,
@@ -299,7 +379,7 @@ VerificationTest[
   ReleaseHold @
       Hold[
         obj = dfStarwarsStarships;
-        obj = JoinAcross[obj, dfStarwarsVehicles, {"name"}, "Left"]
+        obj = JoinAcross[obj, dfStarwarsVehicles, {"name"}, "Inner"]
       ];
   res1 == obj
   ,
@@ -314,14 +394,15 @@ VerificationTest[
   ReleaseHold @
       Hold[
         obj = dfStarwarsStarships;
-        obj = JoinAcross[obj, dfStarwarsVehicles, {"name"}, "Left"]
+        obj = JoinAcross[obj, dfStarwarsVehicles, {"name"}, "Inner"]
       ];
   res1 == obj
   ,
   True
   ,
-  TestID -> "Inner-join-2"
+  TestID -> "Inner-join-3"
 ];
+
 
 VerificationTest[
   res1 = ToDataQueryWorkflowCode["
@@ -332,14 +413,14 @@ VerificationTest[
   ReleaseHold @
       Hold[
         obj = dfStarwarsStarships;
-        obj = ((Join[#1, Association["character" -> #1["name"]]] &) /@ obj)[All, Keys[Association["character" -> #1["name"]]]];
-        obj = JoinAcross[obj, dfStarwarsVehicles, {"character" -> "name"}, "Left"]
+        obj = (Join[KeyDrop[#1, {"name"}], Association["character" -> #1["name"]]] &) /@ obj;
+        obj = JoinAcross[obj, dfStarwarsVehicles, "character" -> "name", "Inner"]
       ];
   res1 == obj
   ,
   True
   ,
-  TestID -> "Inner-join-3"
+  TestID -> "Inner-join-4"
 ];
 
 
@@ -443,6 +524,77 @@ VerificationTest[
 (***********************************************************)
 (* To long form                                            *)
 (***********************************************************)
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; to long form with identifier column id", "Execute" -> True];
+  ReleaseHold @
+      Hold[
+        obj = dfTitanic;
+        obj = ToLongForm[obj, "IdentifierColumns" -> {"id"}]
+      ];
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "To-long-form-1"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; to long form with variable columns passengerAge, passengerSex, passengerClass, and passengerSurvival", "Execute" -> True];
+  ReleaseHold @
+      Hold[
+        obj = dfTitanic;
+        obj = ToLongForm[obj, "VariableColumns" -> {"passengerAge", "passengerSex", "passengerClass", "passengerSurvival"}]
+      ];
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "To-long-form-2"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode[
+    "use dfTitanic;
+    drop columns passengerClass and passengerAge;
+    to long form with variable columns passengerSex and passengerSurvival with variable column name 'VAR';", "Execute" -> True];
+  ReleaseHold @
+      Hold[
+        obj = dfTitanic;
+        obj = (KeyDrop[#1, {"passengerClass", "passengerAge"}] &) /@ obj;
+        obj = ToLongForm[obj,
+          "VariableColumns" -> {"passengerSex", "passengerSurvival"},
+          "VariablesTo" -> "VAR"]
+      ];
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "To-long-form-3"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode[
+    "use dfTitanic;
+    drop columns passengerClass and passengerAge;
+    to long form with variable columns passengerSex and passengerSurvival with value column name 'VAL1';", "Execute" -> True];
+  ReleaseHold @
+      Hold[
+        obj = dfTitanic;
+        obj = (KeyDrop[#1, {"passengerClass", "passengerAge"}] &) /@ obj;
+        obj = ToLongForm[obj,
+          "VariableColumns" -> {"passengerSex", "passengerSurvival"},
+          "ValuesTo" -> "VAL!"]
+      ];
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "To-long-form-4"
+];
 
 
 (***********************************************************)
