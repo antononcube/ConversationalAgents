@@ -587,7 +587,7 @@ VerificationTest[
         obj = (KeyDrop[#1, {"passengerClass", "passengerAge"}] &) /@ obj;
         obj = ToLongForm[obj,
           "VariableColumns" -> {"passengerSex", "passengerSurvival"},
-          "ValuesTo" -> "VAL!"]
+          "ValuesTo" -> "VAL1"]
       ];
   res1 == obj
   ,
