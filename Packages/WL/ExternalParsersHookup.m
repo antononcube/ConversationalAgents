@@ -52,6 +52,8 @@ BeginPackage["ExternalParsersHookup`"];
 
 RakuCommand::usage = "Raku (Perl 6) command invocation.";
 
+ToDSLCode::usage = "Raku DSL comprehensive translation.";
+
 ToMonadicCommand::usage = "Translates a natural language commands into a monadic pipeline.";
 
 ToClassificationWorkflowCode::usage = "Translates a natural language commands into a ClCon pipeline.";
@@ -79,6 +81,48 @@ ToECMMonWLCommand::usage = "Translates a natural language commands into a ECMMon
 Begin["`Private`"];
 
 (*===========================================================*)
+(* CellPrint                                                 *)
+(*===========================================================*)
+
+Clear[CellPrintWL];
+CellPrintWL[s_String] := NotebookWrite[EvaluationNotebook[], Cell[s, "Input"], All];
+
+Clear[CellPrintAndRunWL];
+CellPrintAndRunWL[s_String] := (
+  NotebookWrite[EvaluationNotebook[], Cell[s, "Input"], All];
+  SelectionEvaluateCreateCell[EvaluationNotebook[]]
+);
+
+Clear[CellPrintJulia];
+CellPrintJulia[s_String] :=
+    NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "Julia"]];
+
+Clear[CellPrintAndRunJulia];
+CellPrintAndRunJulia[s_String] := (
+  NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "Julia"], All];
+  SelectionEvaluateCreateCell[EvaluationNotebook[]]
+);
+
+Clear[CellPrintR];
+CellPrintR[s_String] :=
+    NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "R"]];
+
+Clear[CellPrintAndRunR];
+CellPrintAndRunR[s_String] := (
+  NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "R"], All];
+  SelectionEvaluateCreateCell[EvaluationNotebook[]]);
+
+Clear[CellPrintPython];
+CellPrintPython[s_String] :=
+    NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "Python"]];
+
+Clear[CellPrintAndRunPython];
+CellPrintAndRunPython[s_String] := (
+  NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "Python"], All];
+  SelectionEvaluateCreateCell[EvaluationNotebook[]]
+);
+
+(*===========================================================*)
 (* RakuCommand                                              *)
 (*===========================================================*)
 
@@ -87,7 +131,7 @@ Clear[RakuCommand];
 RakuCommand::nostr = "All arguments are expected to be strings.";
 
 RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocation_String : "/Applications/Rakudo/bin/raku"] :=
-    Block[{rakuCommandPart, rakuCommand, aRes, pres},
+    Block[{rakuCommand, aRes, pres},
       (*rakuCommandPart=StringJoin["-I\"",moduleDirectory,"\" -M'",
       moduleName,"' -e 'XXXX'"];
       rakuCommand=rakuLocation<>" "<>StringReplace[rakuCommandPart,"XXXX"->
@@ -110,15 +154,70 @@ RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocat
         Echo[StringTrim @ aRes["StandardError"], "RunProcess stderr:"];
       ];
 
-      pres = aRes["StandardOutput"];
-
-      StringReplace[pres, "==>" -> "\[DoubleLongRightArrow]"]
+      pres = aRes["StandardOutput"]
     ];
 
 RakuCommand[___] :=
     Block[{},
       Message[RakuCommand::nostr];
       $Failed
+    ];
+
+
+(*===========================================================*)
+(* ToDSLCode                                                 *)
+(*===========================================================*)
+
+Clear[ToDSLCode];
+
+SyntaxInformation[ToDSLCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+ToDSLCode::nmeth = "The value of the option Method is expected to be one of: `1`.";
+
+Options[ToDSLCode] = {
+  Method -> "PrintAndEvaluate"
+};
+
+ToDSLCode[command_, opts : OptionsPattern[] ] :=
+    Block[{pres, lsExpectedMethods, method, aRes},
+
+      method = OptionValue[ ToDSLCode, Method ];
+
+      If[ TrueQ[ method === Automatic], method = "PrintAndEvaluate"];
+
+      lsExpectedMethods = {"Automatic", "Print", "Evaluate", "PrintAndEvaluate", "Execute", "PrintAndExecute"};
+      If[ !MemberQ[ ToLowerCase @ lsExpectedMethods, ToLowerCase @ method ],
+        Message[ToDSLCode::nmeth, Prepend[ ToString[lsExpectedMethods], Automatic] ];
+        Return[$Failed]
+      ];
+
+      method = ToLowerCase[method];
+
+      pres =
+          RakuCommand[
+            StringJoin["say ToDSLCode(\"", command, "\", language => \"English\", format => \"JSON\" )"],
+            "",
+            "DSL::Shared::Utilities::ComprehensiveTranslation"];
+
+      (*      pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];*)
+
+      aRes = Association @ ImportString[ pres, "JSON"];
+
+      aRes["Code"] = StringReplace[aRes["Code"] , "==>" -> "\[DoubleLongRightArrow]"];
+
+      Which[
+        MemberQ[ ToLowerCase @ { "Print" }, method],
+        CellPrintWL[aRes["Code"]],
+
+        MemberQ[ ToLowerCase @ { "PrintAndExecute", "PrintAndEvaluate" }, method],
+        CellPrintAndRunWL[aRes["Code"]],
+
+        MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method],
+        ToExpression[aRes["Code"]],
+
+        True,
+        aRes
+      ]
     ];
 
 
@@ -141,30 +240,30 @@ Options[ToMonadicCommand] = {
 };
 
 aRakuModules = <|
-  "ClCon"              -> "DSL::English::ClassificationWorkflows",
-  "QRMon"              -> "DSL::English::QuantileRegressionWorkflows",
-  "SMRMon"             -> "DSL::English::RecommenderWorkflows",
-  "LSAMon"             -> "DSL::English::LatentSemanticAnalysisWorkflows",
-  "ECMMon"             -> "DSL::English::EpidemiologyModelingWorkflows",
-  "DataQuery"          -> "DSL::English::DataQueryWorkflows",
-  "SearchEngineQuery"  -> "DSL::English::SearchEngineQueries" |>;
+  "ClCon" -> "DSL::English::ClassificationWorkflows",
+  "QRMon" -> "DSL::English::QuantileRegressionWorkflows",
+  "SMRMon" -> "DSL::English::RecommenderWorkflows",
+  "LSAMon" -> "DSL::English::LatentSemanticAnalysisWorkflows",
+  "ECMMon" -> "DSL::English::EpidemiologyModelingWorkflows",
+  "DataQuery" -> "DSL::English::DataQueryWorkflows",
+  "SearchEngineQuery" -> "DSL::English::SearchEngineQueries" |>;
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
 aRakuFunctions = <|
-  "ClCon"                                             -> "ToClassificationWorkflowCode",
-  "DSL::English::ClassificationWorkflows"             -> "ToClassificationWorkflowCode",
-  "QRMon"                                             -> "ToQuantileRegressionWorkflowCode",
-  "DSL::English::QuantileRegressionWorkflows"         -> "ToQuantileRegressionWorkflowCode",
-  "SMRMon"                                            -> "ToRecommenderWorkflowCode",
-  "DSL::English::RecommenderWorkflows"                -> "ToRecommenderWorkflowCode",
-  "LSAMon"                                            -> "ToLatentSemanticAnalysisWorkflowCode",
-  "DSL::English::LatentSemanticAnalysisWorkflows"     -> "ToLatentSemanticAnalysisWorkflowCode",
-  "ECMMon"                                            -> "ToEpidemiologyModelingWorkflowCode",
-  "DSL::English::EpidemiologyModelingWorkflows"       -> "ToEpidemiologyModelingWorkflowCode",
-  "DataQuery"                                         -> "ToDataQueryWorkflowCode",
-  "DSL::English::DataQueryWorkflows"                  -> "ToDataQueryWorkflowCode",
-  "SearchEngineQuery"                                 -> "ToSearchEngineQueryCode",
-  "DSL::English::SearchEngineQueries"                 -> "ToSearchEngineQueryCode"|>;
+  "ClCon" -> "ToClassificationWorkflowCode",
+  "DSL::English::ClassificationWorkflows" -> "ToClassificationWorkflowCode",
+  "QRMon" -> "ToQuantileRegressionWorkflowCode",
+  "DSL::English::QuantileRegressionWorkflows" -> "ToQuantileRegressionWorkflowCode",
+  "SMRMon" -> "ToRecommenderWorkflowCode",
+  "DSL::English::RecommenderWorkflows" -> "ToRecommenderWorkflowCode",
+  "LSAMon" -> "ToLatentSemanticAnalysisWorkflowCode",
+  "DSL::English::LatentSemanticAnalysisWorkflows" -> "ToLatentSemanticAnalysisWorkflowCode",
+  "ECMMon" -> "ToEpidemiologyModelingWorkflowCode",
+  "DSL::English::EpidemiologyModelingWorkflows" -> "ToEpidemiologyModelingWorkflowCode",
+  "DataQuery" -> "ToDataQueryWorkflowCode",
+  "DSL::English::DataQueryWorkflows" -> "ToDataQueryWorkflowCode",
+  "SearchEngineQuery" -> "ToSearchEngineQueryCode",
+  "DSL::English::SearchEngineQueries" -> "ToSearchEngineQueryCode"|>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, executeQ, target, stringResultQ, res},
@@ -179,12 +278,12 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
 
       stringResultQ = OptionValue[ ToMonadicCommand, "StringResult" ];
 
-      If[ TrueQ[executeQ===Automatic],
+      If[ TrueQ[executeQ === Automatic],
         executeQ = If[ target == "WL", True, False, False]
       ];
       executeQ = TrueQ[executeQ];
 
-      If[ TrueQ[stringResultQ===Automatic],
+      If[ TrueQ[stringResultQ === Automatic],
         stringResultQ = If[ target == "WL", False, True, True]
       ];
       stringResultQ = TrueQ[stringResultQ];
@@ -200,6 +299,7 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
             "",
             aRakuModules[monadName]];
 
+      pres = StringReplace[pres, "==>" -> "\[DoubleLongRightArrow]"];
       pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];
 
       Which[
@@ -252,7 +352,7 @@ Options[ToQRMonWLCommand] = Options[ToMonadicCommand];
 
 ToQRMonWLCommand::obs = "Obsolete function; use ToQuantileRegressionWorkflowCode instead.";
 
-ToQRMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
+ToQRMonWLCommand[ command_, execute_ : True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToQRMonWLCommand::obs];
       ToMonadicCommand[ command, "DSL::English::QuantileRegressionWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
@@ -281,7 +381,7 @@ Options[ToSMRMonWLCommand] = Options[ToMonadicCommand];
 
 ToSMRMonWLCommand::obs = "Obsolete function; use ToRecommenderWorkflowCode instead.";
 
-ToSMRMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
+ToSMRMonWLCommand[ command_, execute_ : True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToSMRMonWLCommand::obs];
       ToMonadicCommand[ command, "DSL::English::RecommenderWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
@@ -310,7 +410,7 @@ Options[ToLSAMonWLCommand] = Options[ToMonadicCommand];
 
 ToLSAMonWLCommand::obs = "Obsolete function; use ToLatentSemanticAnalysisWorkflowCode instead.";
 
-ToLSAMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
+ToLSAMonWLCommand[ command_, execute_ : True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToLSAMonWLCommand::obs];
       ToMonadicCommand[ command, "DSL::English::LatentSemanticAnalysisWorkflows", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
@@ -340,7 +440,7 @@ Options[ToECMMonWLCommand] = Options[ToMonadicCommand];
 
 ToECMMonWLCommand::obs = "Obsolete function; use ToECMMonCode instead.";
 
-ToECMMonWLCommand[ command_, execute_:True, opts : OptionsPattern[] ] :=
+ToECMMonWLCommand[ command_, execute_ : True, opts : OptionsPattern[] ] :=
     Block[{},
       Message[ToECMMonWLCommand::obs];
       ToMonadicCommand[ command, "ECMMon", Append[ DeleteCases[{opts}, HoldPattern["Execute" -> _] ], "Execute" -> execute ] ]
