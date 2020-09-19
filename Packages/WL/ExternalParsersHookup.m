@@ -195,12 +195,11 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
 
       pres =
           RakuCommand[
-            StringJoin["say ToDSLCode(\"", command, "\", language => \"English\", format => \"JSON\" )"],
+            StringJoin["say ToDSLCode(\"", command, "\", language => \"English\", format => \"JSON\", guessGrammar => True )"],
             "",
             "DSL::Shared::Utilities::ComprehensiveTranslation"];
 
       (*      pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];*)
-
       aRes = Association @ ImportString[ pres, "JSON"];
 
       aRes["Code"] = StringReplace[aRes["Code"] , "==>" -> "\[DoubleLongRightArrow]"];

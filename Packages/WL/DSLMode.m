@@ -82,7 +82,7 @@ nbDSLStyle =
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "DSLInputParse"},
         Evaluatable -> True,
-        CellEvaluationFunction -> (ExternalParsersHookup`ToDataQueryWorkflowCode[ToString[#1], "Execute" -> True] &),
+        CellEvaluationFunction -> (ExternalParsersHookup`ToDSLCode[ToString[#1], Method -> "Execute" ] &),
         CellFrameColor -> GrayLevel[0.92],
         CellFrameLabels -> {{"DSL", None}, {None, None}},
         AutoQuoteCharacters -> {}, FormatType -> InputForm,
@@ -94,7 +94,7 @@ nbDSLStyle =
       Cell[StyleData["DSLInputParse"], CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
-        CellEvaluationFunction -> (ExternalParsersHookup`ToDataQueryWorkflowCode[ToString[#1], "Execute" -> False] &),
+        CellEvaluationFunction -> (ExternalParsersHookup`ToDSLCode[ToString[#1],  Method -> "Print" ] &),
         CellFrameColor -> GrayLevel[0.97],
         CellFrameLabels -> {{Cell[BoxData[StyleBox["DSL", FontSlant -> "Italic"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
         FormatType -> InputForm, FontFamily -> "Courier",
@@ -123,7 +123,7 @@ DSLMode[nb_NotebookObject, True] := DSLMode[nb];
 DSLMode[nb_NotebookObject] :=
     Block[{},
       If[Length[
-        DownValues[ExternalParsersHookup`ToDataQueryWorkflowCode]] == 0,
+        DownValues[ExternalParsersHookup`ToDSLCode]] == 0,
         Echo["ExternalParsersHookup.m", "Importing from GitHub:"];
         Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/ExternalParsersHookup.m"]
       ];
