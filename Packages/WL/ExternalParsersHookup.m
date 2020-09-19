@@ -172,6 +172,8 @@ Clear[ToDSLCode];
 
 SyntaxInformation[ToDSLCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
 
+ToDSLCode::nargs = "One string argument is expected.";
+
 ToDSLCode::nmeth = "The value of the option Method is expected to be one of: `1`.";
 
 Options[ToDSLCode] = {
@@ -179,7 +181,7 @@ Options[ToDSLCode] = {
 };
 
 ToDSLCode[command_, opts : OptionsPattern[] ] :=
-    Block[{pres, lsExpectedMethods, method, aRes},
+    Module[{pres, lsExpectedMethods, method, aRes},
 
       method = OptionValue[ ToDSLCode, Method ];
 
@@ -202,6 +204,10 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
       (*      pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];*)
       aRes = Association @ ImportString[ pres, "JSON"];
 
+      If[ !AssociationQ[aRes],
+        Return[$Failed]
+      ];
+
       aRes["Code"] = StringReplace[aRes["Code"] , "==>" -> "\[DoubleLongRightArrow]"];
 
       Which[
@@ -217,6 +223,12 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
         True,
         aRes
       ]
+    ];
+
+ToDSLCode[___] :=
+    Block[{},
+      Message[ToDSLCode::nargs];
+      $Failed
     ];
 
 
