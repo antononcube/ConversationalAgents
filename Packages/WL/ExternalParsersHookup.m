@@ -78,6 +78,23 @@ ToLSAMonWLCommand::usage = "Translates a natural language commands into a LSAMon
 
 ToECMMonWLCommand::usage = "Translates a natural language commands into a ECMMon-WL pipeline. Obsolete.";
 
+CellPrintWL::usage = "CellPrintWL[s_String]";
+
+CellPrintAndRunWL::usage = "CellPrintAndRunWL[s_String]";
+
+CellPrintJulia::usage = "CellPrintJulia[s_String]";
+
+CellPrintAndRunJulia::usage = "CellPrintAndRunJulia[s_String]";
+
+CellPrintR::usage = "CellPrintR[s_String]";
+
+CellPrintAndRunR::usage = "CellPrintAndRunR[s_String]";
+
+CellPrintPython::usage = "CellPrintPython[s_String]";
+
+CellPrintAndRunPython::usage = "CellPrintAndRunPython[s_String]";
+
+
 Begin["`Private`"];
 
 (*===========================================================*)
@@ -121,6 +138,12 @@ CellPrintAndRunPython[s_String] := (
   NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "Python"], All];
   SelectionEvaluateCreateCell[EvaluationNotebook[]]
 );
+
+aTargetLanguageToCellPrintFunc =
+    <| "R" -> CellPrintR, "Python" -> CellPrintPython, "Julia" -> CellPrintJulia, "WL" -> CellPrintWL |>;
+
+aTargetLanguageToCellPrintAndRunFunc =
+    <| "R" -> CellPrintAndRunR, "Python" -> CellPrintAndRunPython, "Julia" -> CellPrintAndRunJulia, "WL" -> CellPrintAndRunWL |>;
 
 (*===========================================================*)
 (* RakuCommand                                              *)
@@ -181,7 +204,7 @@ Options[ToDSLCode] = {
 };
 
 ToDSLCode[command_, opts : OptionsPattern[] ] :=
-    Module[{pres, lsExpectedMethods, method, aRes},
+    Module[{pres, lsExpectedMethods, method, aRes, lang},
 
       method = OptionValue[ ToDSLCode, Method ];
 
@@ -197,7 +220,7 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
 
       pres =
           RakuCommand[
-            StringJoin["say ToDSLCode(\"", command, "\", language => \"English\", format => \"JSON\", guessGrammar => True )"],
+            StringJoin["say ToDSLCode(\"", command, "\", language => \"English\", format => \"JSON\", guessGrammar => True,  defaultTargetsSpec => 'WL' )"],
             "",
             "DSL::Shared::Utilities::ComprehensiveTranslation"];
 
@@ -210,15 +233,23 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
 
       aRes["Code"] = StringReplace[aRes["Code"] , "==>" -> "\[DoubleLongRightArrow]"];
 
+      lang = StringSplit[aRes["DSLTARGET"], "-"][[1]];
+
       Which[
-        MemberQ[ ToLowerCase @ { "Print" }, method],
-        CellPrintWL[aRes["Code"]],
+        MemberQ[ ToLowerCase @ { "Print" }, method] &&
+            KeyExistsQ[aTargetLanguageToCellPrintFunc, lang],
+        aTargetLanguageToCellPrintFunc[lang][aRes["Code"]],
 
-        MemberQ[ ToLowerCase @ { "PrintAndExecute", "PrintAndEvaluate" }, method],
-        CellPrintAndRunWL[aRes["Code"]],
+        MemberQ[ ToLowerCase @ { "PrintAndExecute", "PrintAndEvaluate" }, method] &&
+            KeyExistsQ[aTargetLanguageToCellPrintAndRunFunc, lang],
+        aTargetLanguageToCellPrintAndRunFunc[lang][aRes["Code"]],
 
-        MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method],
+        MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] && lang == "WL",
         ToExpression[aRes["Code"]],
+
+        MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] &&
+            KeyExistsQ[aTargetLanguageToCellPrintAndRunFunc, lang],
+        ExternalEvaluate[lang, aRes["Code"]],
 
         True,
         aRes
