@@ -60,11 +60,38 @@
 (* :Keywords: DSL, style, options, notebook, WL *)
 (* :Discussion: *)
 
+
+(***********************************************************)
+(* Load packages                                           *)
+(***********************************************************)
+
+If[ Length[DownValues[ExternalParsersHookup`ToDSLCode]] == 0,
+  Echo["ExternalParsersHookup.m", "Import from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/ExternalParsersHookup.m"];
+];
+
+
+(***********************************************************)
+(* Package definitions                                     *)
+(***********************************************************)
+
 BeginPackage["DSLMode`"];
 
 DSLMode::usage = "Restyle notebooks to use the DSL theme.";
 
+DSLInputExecute::isage = "Execution function for the cell style \"DSLInputExecute\".";
+
+DSLInputParse::isage = "Execution function for the cell style \"DSLInputParse\".";
+
 Begin["`Private`"];
+
+Clear[DSLInputExecute];
+Options[DSLInputExecute] = {Method -> "Execute"};
+DSLInputExecute[boxData_String, opts : OptionsPattern[]] := ExternalParsersHookup`ToDSLCode[boxData, Sequence @@ Options @ DSLInputExecute];
+
+Clear[DSLInputParse];
+Options[DSLInputParse] = {Method -> "Print"};
+DSLInputParse[boxData_String, opts : OptionsPattern[]] := ExternalParsersHookup`ToDSLCode[boxData, Sequence @@ Options @ DSLInputParse];
 
 nbDSLStyle =
     Notebook[{
@@ -82,7 +109,7 @@ nbDSLStyle =
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "DSLInputParse"},
         Evaluatable -> True,
-        CellEvaluationFunction -> (ExternalParsersHookup`ToDSLCode[ToString[#1], Method -> "Execute" ] &),
+        CellEvaluationFunction -> (DSLMode`DSLInputExecute[ToString[#1], Options[DSLMode`DSLInputExecute]] &),
         CellFrameColor -> GrayLevel[0.92],
         CellFrameLabels -> {{"DSL", None}, {None, None}},
         AutoQuoteCharacters -> {}, FormatType -> InputForm,
@@ -94,7 +121,7 @@ nbDSLStyle =
       Cell[StyleData["DSLInputParse"], CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
-        CellEvaluationFunction -> (ExternalParsersHookup`ToDSLCode[ToString[#1],  Method -> "Print" ] &),
+        CellEvaluationFunction -> (DSLMode`DSLInputParse[ToString[#1], Options[DSLMode`DSLInputParse]] &),
         CellFrameColor -> GrayLevel[0.97],
         CellFrameLabels -> {{Cell[BoxData[StyleBox["DSL", FontSlant -> "Italic"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
         FormatType -> InputForm, FontFamily -> "Courier",
@@ -113,7 +140,7 @@ nbDSLStyle =
       StyleDefinitions -> "PrivateStylesheetFormatting.nb"
     ];
 
-ClearAll[DSLMode] ;
+Clear[DSLMode] ;
 DSLMode[True] = DSLMode[];
 
 DSLMode[] := DSLMode[EvaluationNotebook[]];
