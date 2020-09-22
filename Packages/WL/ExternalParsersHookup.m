@@ -122,11 +122,11 @@ CellPrintAndRunJulia[s_String] := (
 
 Clear[CellPrintR];
 CellPrintR[s_String] :=
-    NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "R"]];
+    NotebookWrite[EvaluationNotebook[], Cell["{\n" <> s <> "\n}", "ExternalLanguage", CellEvaluationLanguage -> "R"]];
 
 Clear[CellPrintAndRunR];
 CellPrintAndRunR[s_String] := (
-  NotebookWrite[EvaluationNotebook[], Cell[s, "ExternalLanguage", CellEvaluationLanguage -> "R"], All];
+  NotebookWrite[EvaluationNotebook[], Cell["{\n" <> s <> "\n}", "ExternalLanguage", CellEvaluationLanguage -> "R"], All];
   SelectionEvaluateCreateCell[EvaluationNotebook[]]);
 
 Clear[CellPrintPython];
