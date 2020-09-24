@@ -235,6 +235,10 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
 
       lang = StringSplit[aRes["DSLTARGET"], "-"][[1]];
 
+      If[ lang == "WL" && StringTake[command, -1] == ";" && StringTake[ aRes["Code"], -1] != ";",
+        aRes["Code"] = aRes["Code"] <> ";"
+      ];
+
       Which[
         MemberQ[ ToLowerCase @ { "Print" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintFunc, lang],
