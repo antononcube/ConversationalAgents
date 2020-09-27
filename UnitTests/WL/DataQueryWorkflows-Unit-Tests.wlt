@@ -466,13 +466,13 @@ VerificationTest[
   res1 = ToDataQueryWorkflowCode["use dfTitanic; cross tabulate passengerSex and passengerClass", "Execute" -> True];
   ReleaseHold @
       Hold[obj = dfTitanic;
-      obj = GroupBy[obj, {#1["passengerSex"], #1["passengerClass"]} &, Length]
+      obj = ResourceFunction["CrossTabulate"][ obj[All, {#1["passengerSex"], #1["passengerClass"]}&] ]
       ];
   res1 == obj
   ,
   True
   ,
-  TestID -> "Crass-tabulation-1"
+  TestID -> "Cross-tabulation-1"
 ];
 
 
@@ -481,13 +481,13 @@ VerificationTest[
   ReleaseHold @
       Hold[
         obj = dfTitanic;
-        obj = GroupBy[obj, {#1["passengerSex"], #1["passengerClass"]} &, Total[(#1["passengerAge"] &) /@ #1] &]
+        obj = ResourceFunction["CrossTabulate"][ obj[ All, {#1["passengerSex"], #1["passengerClass"], #1["passengerAge"] }&] ]
       ];
   res1 == obj
   ,
   True
   ,
-  TestID -> "Crass-tabulation-2"
+  TestID -> "Cross-tabulation-2"
 ];
 
 
@@ -502,7 +502,7 @@ VerificationTest[
   ,
   True
   ,
-  TestID -> "Crass-tabulation-3"
+  TestID -> "Cross-tabulation-3"
 ];
 
 
@@ -517,7 +517,7 @@ VerificationTest[
   ,
   True
   ,
-  TestID -> "Crass-tabulation-4"
+  TestID -> "Cross-tabulation-4"
 ];
 
 
