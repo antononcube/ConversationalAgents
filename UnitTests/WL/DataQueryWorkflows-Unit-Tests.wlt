@@ -167,6 +167,20 @@ VerificationTest[
 
 
 VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfStarwars; transform mass2 = `28*#mass`", "Execute" -> True];
+  (
+    obj = dfStarwars;
+    obj = Map[ Join[ #, <|"mass2" -> 28*#["mass"]|> ]&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Select-assign-pairs-2"
+];
+
+
+VerificationTest[
   res1 = ToDataQueryWorkflowCode["use dfStarwars; select name as name2, and mass as MASS;", "Execute" -> True];
   ReleaseHold @ Hold[obj = dfStarwars;
   obj = ((Join[#1,
@@ -191,6 +205,20 @@ VerificationTest[
   True
   ,
   TestID -> "Select-as-pairs-2"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfStarwars; select name as 'name2', height as height2 and `342` as MASS;", "Execute" -> True];
+  (
+    obj = dfStarwars;
+    obj = Map[ <|"name2" -> #["name"], "height2" -> #["height"], "MASS" -> 342|>&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Select-as-pairs-3"
 ];
 
 
@@ -240,6 +268,20 @@ VerificationTest[
 
 
 VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; rename passengerSex as sex and 'passengerClass' as 'class' and 'passengerAge' as age", "Execute" -> True];
+  (
+    obj = dfTitanic;
+    obj = Map[ Join[ KeyDrop[ #, {"passengerSex", "passengerClass", "passengerAge"} ], <|"sex" -> #["passengerSex"], "class" -> #["passengerClass"], "age" -> #["passengerAge"]|> ]&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Rename-as-pairs-2"
+];
+
+
+VerificationTest[
   res1 = ToDataQueryWorkflowCode["use dfTitanic; rename 'passengerSex', passengerClass, passengerAge as sex, class, age", "Execute" -> True];
   (
     obj = dfTitanic;
@@ -261,6 +303,38 @@ VerificationTest[
   True
   ,
   TestID -> "Rename-vs-select-with-as-pairs-1"
+];
+
+
+(***********************************************************)
+(* Mutate                                                  *)
+(***********************************************************)
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfStarwars; transform mass2 = `28*#mass`", "Execute" -> True];
+  (
+    obj = dfStarwars;
+    obj = Map[ Join[ #, <|"mass2" -> 28*#["mass"]|> ]&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Mutate-1"
+];
+
+
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfStarwars; transform name as 'name2', height as height2 and `342` as MASS;", "Execute" -> True];
+  (
+    obj = dfStarwars;
+    obj = Map[ Join[ #, <|"name2" -> #["name"], "height2" -> #["height"], "MASS" -> 342|> ]&, obj]
+  );
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "Mutate-2"
 ];
 
 
