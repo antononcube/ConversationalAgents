@@ -220,7 +220,7 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
 
       pres =
           RakuCommand[
-            StringJoin["say ToDSLCode(\"", command, "\", language => \"English\", format => \"JSON\", guessGrammar => True,  defaultTargetsSpec => 'WL' )"],
+            StringJoin["say ToDSLCode(\"", StringReplace[command, "\""->"\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True,  defaultTargetsSpec => 'WL' )"],
             "",
             "DSL::Shared::Utilities::ComprehensiveTranslation"];
 
