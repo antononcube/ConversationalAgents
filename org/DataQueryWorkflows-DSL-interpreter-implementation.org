@@ -1,0 +1,206 @@
+#+TITLE: Data Query Workflows DSL interpreter implementation
+#+AUTHOR: Anton Antonov, Accendo Data LLC
+#+EMAIL: antononcube@posteo.net
+#+TODO: TODO ONGOING MAYBE | DONE CANCELED 
+#+OPTIONS: toc:1 num:0
+
+* Introduction
+- This org-mode file has work plans for the project "DataQueryWorkflows DSL".
+- Related
+  - Repositories / packages:
+    - Raku package [[https://github.com/antononcube/Raku-DSL-English-DataQueryWorkflows][DSL::English::DataQueryWorkflows]]
+    - Python package [[https://github.com/antononcube/ConversationalAgents/tree/master/Packages/Python/ExternalParsersHookUpApp][ExternalParsersHookUp]]
+    - R package [[https://github.com/antononcube/ConversationalAgents/tree/master/Packages/R/ExternalParsersHookUp][ExternalParsersHookUp]]
+    - WL package [[https://github.com/antononcube/ConversationalAgents/blob/master/Packages/WL/ExternalParsersHookup.m][ExternalParsersHookUp]]
+    - WL package [[https://github.com/antononcube/ConversationalAgents/blob/master/Packages/WL/DSLMode.m][DSLMode]]
+  - Unit tests packages / files:
+    - Python [[https://github.com/antononcube/ConversationalAgents/blob/master/UnitTests/Python/DataQueryWorkflows-Unit-Tests.py][DataQueryWorkflows-Unit-Tests.py]]
+    - R package [[https://github.com/antononcube/R-packages/tree/master/DataQueryWorkflowsTests][DataQueryWorkflowsTests]]
+    - WL file [[https://github.com/antononcube/ConversationalAgents/blob/master/UnitTests/WL/DataQueryWorkflows-Unit-Tests.wlt][DataQueryWorkflows-Unit-Tests.wlt]]
+  - Presentations
+    - [[https://github.com/antononcube/SimplifiedMachineLearningWorkflows-book/tree/master/R/DataScienceStudyGroup-SouthFL-Meetup-October-2020][Data Science Study Group South Florida October 2020]] 
+    - Wolfram Technology Conference 2020
+* TODO Raku [0%][0/3]
+** TODO Grammar [65%] [17/26]
+- [-] arrange [66%] [2/3]
+  - [X] descending simple
+  - [X] ascending simple
+  - [ ] ascending or descending per column spec
+- [X] cross tabulation
+  - [X] single formula
+  - [X] double formula
+- [X] data load
+- [ ] data properties [0%] [0/5]
+  - [ ] column names
+  - [ ] row names
+  - [ ] number of rows
+  - [ ] number of columns
+  - [ ] number of missing values
+- [X] distinct command
+- [ ] drop columns by indices
+- [X] drop columns by names
+- [X] filter rows with predicates
+- [X] group by column names
+- [X] group map of a programming function
+- [X] joins [100%] [5/5]
+  - [X] inner join
+  - [X] left join
+  - [X] right join
+  - [X] semi-join
+  - [X] outer join
+- [X] make dictionary
+- [X] missing treatment
+  - [X] drop incomplete cases
+  - [X] replacing of missing values
+- [X] mutate columns
+  - [X] assign-pairs
+  - [M] two lists
+- [X] rename columns
+  - [X] by two lists
+  - [X] by pairs
+- [ ] replacing of specified values with a specified value
+- [-] reshape
+  - [X] pivot-longer
+  - [ ] pivot-wider
+- [ ] select columns with indices
+- [X] select columns with names
+  - [X] simple list
+  - [X] by as-pairs 
+  - [X] by assign-pairs
+  - [X] by two lists 
+- [ ] select columns with predicates
+- [ ] slice row selection with indices 
+  - [ ] slice with integer list
+  - [ ] slice with range
+  - [ ] slice head
+  - [ ] slice tail
+  - [ ] slice sample
+- [X] statistics
+  - [X] shape
+  - [X] count
+  - [X] glimpse
+  - [X] data summary
+- [ ] summarize
+  - [ ] assign-pairs
+  - [ ] as-pairs
+- [X] summarize at: columns lists and rhs-list
+- [X] summarize all: functions list
+- [X] un-group
+** TODO Actions [37%] [3/8]
+*** DONE Bulgarian
+*** TODO Julia-DataFrames [%] [/]
+*** DONE Korean
+*** TODO Python-pandas [%] [/]
+*** TODO R-base [%] [/]
+*** TODO R-tidyverse [%] [/]
+*** DONE Spanish 
+*** TODO WL-System [%] [/]
+** TODO Additional functionalities [14%] [1/7]
+- [ ] Implement *transmute*.
+- [ ] Implement *transform*.
+- [X] The action classes of WL-System and R-base should know when the data is grouped in a given
+  sequence of commands.
+  - Did that using the class variable ~%.properties~ in ~PipelineCommand~ class.
+  - Note, that implies proper emptying of ~%.properties~ before
+    parsing a sequence of commands.
+  - This approach can be also useful when programming R-data.table and SQL.
+- [ ] Implement /per group/ adverb.
+  - For example:
+    : cross tabulate per group passengerSex and passengerClass;
+    : per group cross tabulate passengerSex and passengerClass;
+    : cross tabulate passengerSex and passengerClass per group;
+  - Note that the "per group" adverb is not needed in R-tidyverse.
+- [ ] Implement full-blown ~summarize~ commands
+- [ ] Implement column name specification for column name strings.
+  - For example: 
+    : mutate gain = COL:arr_time - COL:dep_time
+- [ ] Resolve the problematic parsing of "summarize data".
+  - It is being parsed with ~<summarize-at-command>~.
+* TODO Python [0%] [0/2]
+** TODO Unit tests
+*** TODO pandas [0%] [0/7]
+** TODO External parsers hook-up [16%] [1/6]
+- [X] Investigate "proper" call of Raku.
+- [ ] External calling of Raku and handling of:
+  - [ ] ~stdout~
+  - [ ] ~stderr~
+- [ ] Deal with double quotes.
+- [ ] React to the requested programming language / target.
+- [ ] React to natural language translation.
+- [-] Options / named arguments for:
+  - [ ] Target
+  - [X] Execution
+* TODO R [0%] [0/2]
+** TODO Unit tests
+*** TODO tidyverse [0%] [0/7]
+
+*** TODO base [%] [/]
+
+** TODO External parsers hook-up [50%] [3/6]
+- [X] Investigate "proper" call of Raku.
+- [X] External calling of Raku and handling of:
+  - [X] ~stdout~
+  - [X] ~stderr~
+- [X] Deal with double quotes.
+- [ ] React to the requested programming language / target.
+- [ ] React to natural language translation.
+- [-] Options / named arguments for:
+  - [X] Target
+  - [X] Parising to expression
+  - [ ] Execution
+* TODO Wolfram Language [0%][0/3]
+** TODO Externals parsers hook-up [83%] [5/6]
+- [X] Investigate "proper" call of Raku.
+- [X] External calling of Raku and handling of:
+  - [X] ~stdout~
+  - [X] ~stderr~
+- [X] Deal with double quotes.
+- [X] React to the requested programming language / target.
+- [X] React to the specification of ";" in the last command.
+- [ ] React to natural language translation.
+** TODO Unit tests
+- There is dedicated unit test file at GitHub:
+  - [[https://github.com/antononcube/ConversationalAgents/blob/master/UnitTests/WL/DataQueryWorkflows-Unit-Tests.wlt][DataQueryWorkflows-Unit-Tests.wlt]]
+** TODO DataReshape.m [50%] [1/2]
+- It is very hard to not use [[https://github.com/antononcube/MathematicaForPrediction/blob/master/DataReshape.m][DataReshape.m]]:
+  - The "one liner" code with built-in functions is hard to:
+    - Adapt to the different data reshaping use cases
+    - Comprehend
+- [X] Better ~ToLongForm~ [100%] [5/5]
+  - [X] Review code
+  - [X] Multi-identifier columns
+  - [X] More intuitive signatures
+  - [X] Options for the arguments
+  - [X] Unit tests
+- [-] Better ~ToWideForm~ [66%] [4/6]
+  - [X] Review code
+  - [X] Multi-identifier columns
+  - [X] Remove row-IDs in the result
+  - [ ] More intuitive signatures
+  - [X] Options for the arguments
+  - [ ] Unit tests
+** TODO WFR functions [0%] [0/2]
+- [ ] ~ToLongForm~ [%] [/]
+  - [ ] Write MVP version of the notebook
+  - [ ] Submit
+  - [ ] Refine
+  - [ ] Re-submit
+- [ ] ~ToWideForm~ [%] [/]
+  - [ ] Write MVP version of the notebook
+  - [ ] Submit
+  - [ ] Refine
+  - [ ] Re-submit
+* TODO Documentation [20%] [1/5]
+** TODO Data Transformation Workflows project
+** TODO DSL principles
+** TODO DSL usage guide
+** TODO NYC flights data query examples [33%] [1/3]
+*** TODO R notebook
+*** TODO WL notebook with R code
+*** DONE WL notebook with WL code
+** DONE Diagrams [100%] [5/5]
+- [X] Simple multi-language transformation diagram
+- [X] DSLs big picture mind-map
+- [X] Invocation in WL notebook
+- [X] Invocation in R
+- [X] Flowchart of the target Data Query Workflows
