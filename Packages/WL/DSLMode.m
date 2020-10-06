@@ -79,9 +79,11 @@ BeginPackage["DSLMode`"];
 
 DSLMode::usage = "Restyle notebooks to use the DSL theme.";
 
-DSLInputExecute::isage = "Execution function for the cell style \"DSLInputExecute\".";
+DSLInputExecute::usage = "Execution function for the cell style \"DSLInputExecute\".";
 
-DSLInputParse::isage = "Execution function for the cell style \"DSLInputParse\".";
+DSLInputParse::usage = "Execution function for the cell style \"DSLInputParse\".";
+
+DeleteCells::usage = "Delete cells of a specified style.";
 
 Begin["`Private`"];
 
@@ -160,6 +162,11 @@ DSLMode[nb_NotebookObject] :=
 DSLMode[ False] := SetOptions[EvaluationNotebook[], StyleDefinitions -> "Default.nb"];
 
 DSLMode[nb_NotebookObject, False] := SetOptions[nb, StyleDefinitions -> "Default.nb"];
+
+
+Clear[DeleteCells];
+DeleteCells[style_String] := NotebookDelete@Cells[CellStyle -> style];
+DeleteCells[style_String] := DeleteCells["Output"];
 
 End[]; (* `Private` *)
 
