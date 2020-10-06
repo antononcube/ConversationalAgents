@@ -21,7 +21,7 @@
     - [[https://github.com/antononcube/SimplifiedMachineLearningWorkflows-book/tree/master/R/DataScienceStudyGroup-SouthFL-Meetup-October-2020][Data Science Study Group South Florida October 2020]] 
     - Wolfram Technology Conference 2020
 * TODO Raku [0%][0/3]
-** TODO Grammar [65%] [17/26]
+** TODO Grammar [69%] [18/26]
 - [-] arrange [66%] [2/3]
   - [X] descending simple
   - [X] ascending simple
@@ -80,9 +80,9 @@
   - [X] count
   - [X] glimpse
   - [X] data summary
-- [ ] summarize
-  - [ ] assign-pairs
-  - [ ] as-pairs
+- [X] summarize by
+  - [X] assign-pairs
+  - [X] as-pairs
 - [X] summarize at: columns lists and rhs-list
 - [X] summarize all: functions list
 - [X] un-group
@@ -148,7 +148,7 @@
   - [X] Target
   - [X] Parising to expression
   - [ ] Execution
-* TODO Wolfram Language [0%][0/3]
+* TODO Wolfram Language [20%][1/5]
 ** TODO Externals parsers hook-up [83%] [5/6]
 - [X] Investigate "proper" call of Raku.
 - [X] External calling of Raku and handling of:
@@ -158,21 +158,89 @@
 - [X] React to the requested programming language / target.
 - [X] React to the specification of ";" in the last command.
 - [ ] React to natural language translation.
-** TODO Unit tests
+** DONE Unit tests file
 - There is dedicated unit test file at GitHub:
   - [[https://github.com/antononcube/ConversationalAgents/blob/master/UnitTests/WL/DataQueryWorkflows-Unit-Tests.wlt][DataQueryWorkflows-Unit-Tests.wlt]]
+** TODO Unit tests [26%] [7/26]
+- [ ] arrange [0%] [0/3]
+  - [ ] descending simple
+  - [ ] ascending simple
+  - [ ] ascending or descending per column spec
+- [X] cross tabulation
+  - [X] single formula
+  - [X] double formula
+- [ ] data load
+- [ ] data properties [0%] [0/5]
+  - [ ] column names
+  - [ ] row names
+  - [ ] number of rows
+  - [ ] number of columns
+  - [ ] number of missing values
+- [X] distinct command
+  - [X] "delete duplicates"
+  - [X] "unique rows"
+- [ ] drop columns by indices
+- [ ] drop columns by names
+- [X] filter rows with predicates
+- [ ] group by column names
+- [ ] group map of a programming function
+- [-] joins [40%] [2/5]
+  - [X] inner join
+  - [ ] left join
+  - [X] right join
+  - [ ] semi-join
+  - [ ] outer join
+- [ ] make dictionary
+- [X] missing treatment
+  - [X] drop incomplete cases 
+  - [X] replacing of missing values
+- [X] mutate columns
+  - [X] assign-pairs
+  - [X] two lists
+- [X] rename columns
+  - [X] by two lists
+  - [X] by pairs
+  - [X] rename vs select
+- [ ] replacing of specified values with a specified value
+- [-] reshape
+  - [X] pivot-longer
+  - [ ] pivot-wider
+- [ ] select columns with indices
+- [X] select columns with names
+  - [X] simple list
+  - [X] by as-pairs 
+  - [X] by assign-pairs
+  - [X] by two lists 
+- [ ] select columns with predicates
+- [ ] slice row selection with indices 
+  - [ ] slice with integer list
+  - [ ] slice with range
+  - [ ] slice head
+  - [ ] slice tail
+  - [ ] slice sample
+- [ ] statistics
+  - [ ] shape
+  - [ ] count
+  - [ ] glimpse
+  - [ ] data summary
+- [ ] summarize by
+  - [ ] assign-pairs
+  - [ ] as-pairs
+- [ ] summarize at: columns lists and rhs-list
+- [ ] summarize all: functions list
+- [ ] un-group
 ** TODO DataReshape.m [50%] [1/2]
 - It is very hard to not use [[https://github.com/antononcube/MathematicaForPrediction/blob/master/DataReshape.m][DataReshape.m]]:
   - The "one liner" code with built-in functions is hard to:
     - Adapt to the different data reshaping use cases
     - Comprehend
-- [X] Better ~ToLongForm~ [100%] [5/5]
+*** DONE Better ~ToLongForm~ [100%] [5/5]
   - [X] Review code
   - [X] Multi-identifier columns
   - [X] More intuitive signatures
   - [X] Options for the arguments
   - [X] Unit tests
-- [-] Better ~ToWideForm~ [66%] [4/6]
+*** TODO Better ~ToWideForm~ [66%] [4/6]
   - [X] Review code
   - [X] Multi-identifier columns
   - [X] Remove row-IDs in the result
