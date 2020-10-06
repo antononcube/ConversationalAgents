@@ -77,6 +77,11 @@ If[ Length[DownValues[MonadicSparseMatrixRecommender`SMRMonUnit]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/MonadicProgramming/MonadicSparseMatrixRecommender.m"];
 ];
 
+If[ Length[DownValues[MonadicEpidemiologyCompartmentalModeling`ECMMonUnit]] == 0,
+  Echo["MonadicEpidemiologyCompartmentalModeling.m", "Import from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/SystemModeling/master/Projects/Coronavirus-propagation-dynamics/WL/MonadicEpidemiologyCompartmentalModeling.m"];
+];
+
 If[ Length[DownValues[DataReshape`ToLongForm]] == 0,
   Echo["DataReshape.m", "Import from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/DataReshape.m"];
