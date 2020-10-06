@@ -165,8 +165,8 @@ DSLMode[nb_NotebookObject, False] := SetOptions[nb, StyleDefinitions -> "Default
 
 
 Clear[DeleteCells];
-DeleteCells[style_String] := NotebookDelete@Cells[CellStyle -> style];
-DeleteCells[style_String] := DeleteCells["Output"];
+DeleteCells[style_String] := NotebookDelete[Cells[CellStyle -> style]];
+DeleteCells[] := DeleteCells["Output"];
 
 End[]; (* `Private` *)
 
