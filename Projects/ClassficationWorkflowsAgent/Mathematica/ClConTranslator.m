@@ -90,12 +90,12 @@ I decided I am fine with this not being a package.
 (*Needs["FunctionalParsers`"]*)
 (*Needs["ClassifierWorkflowsGrammar`"]*)
 
-Clear[TGetValue]
+Clear[TGetValue];
 TGetValue[parsed_, head_] :=
     If[FreeQ[parsed, head[___]], None, First@Cases[parsed, head[n___] :> n, {0, Infinity}]];
 
 
-Clear[TLoadData]
+Clear[TLoadData];
 TLoadData[parsed_] :=
     Block[{exampleGroup, dataName, data, ds, varNames},
       exampleGroup = "MachineLearning";
@@ -128,7 +128,7 @@ TLoadData[parsed_] :=
     ];
 
 
-Clear[TSplitData]
+Clear[TSplitData];
 TSplitData[parsed_] :=
     Block[{pctVal = None, valPctVal = None, splitPart = None},
 
@@ -167,7 +167,7 @@ TSplitData[parsed_] :=
 (* Data statistics                                         *)
 (***********************************************************)
 
-Clear[TSummarizeData]
+Clear[TSummarizeData];
 TSummarizeData[parsed_] :=
     Block[{},
       If[FreeQ[parsed, _SplitPartList | _SplitPart],
@@ -179,11 +179,11 @@ TSummarizeData[parsed_] :=
     ];
 
 
-Clear[TCrossTabulateData]
+Clear[TCrossTabulateData];
 TCrossTabulateData[parsed_] := parsed;
 
 
-Clear[TCrossTabulateVars]
+Clear[TCrossTabulateVars];
 TCrossTabulateVars[parsed_] :=
     Block[{},
 
@@ -196,7 +196,7 @@ TCrossTabulateVars[parsed_] :=
 (* Classifier creation                                     *)
 (***********************************************************)
 
-Clear[TClassifierNameRetrieval]
+Clear[TClassifierNameRetrieval];
 TClassifierNameRetrieval[parsed_] :=
     Block[{clName, clMethodNames},
 
@@ -223,7 +223,7 @@ TClassifierNameRetrieval[parsed_] :=
     ];
 
 
-Clear[TClassifierCreation]
+Clear[TClassifierCreation];
 TClassifierCreation[parsed_] :=
     Block[{clName, clMethodNames},
 
@@ -233,7 +233,7 @@ TClassifierCreation[parsed_] :=
     ];
 
 
-Clear[TClassifierEnsembleCreation]
+Clear[TClassifierEnsembleCreation];
 TClassifierEnsembleCreation[parsed_] :=
     Block[{clName, rsFraction, nClassifiers, rsFunc},
 
@@ -263,10 +263,10 @@ TClassifierEnsembleCreation[parsed_] :=
 (* Classifier queries                                      *)
 (***********************************************************)
 
-Clear[TClassifierQuery]
+Clear[TClassifierQuery];
 TClassifierQuery[parsed_] := parsed;
 
-Clear[TClassifierInfo]
+Clear[TClassifierInfo];
 TClassifierInfo[parsed_]:=
     Block[{},
       ClConEchoFunctionContext["classifier info:",
@@ -276,7 +276,7 @@ TClassifierInfo[parsed_]:=
     ];
 
 
-Clear[TClassifierPropertyNameRetrieval]
+Clear[TClassifierPropertyNameRetrieval];
 TClassifierPropertyNameRetrieval[parsed_] :=
     Block[{propName, clPropNames},
 
@@ -306,7 +306,7 @@ TClassifierPropertyNameRetrieval[parsed_] :=
       propName
     ];
 
-Clear[TClassifierGetInfoProperty]
+Clear[TClassifierGetInfoProperty];
 TClassifierGetInfoProperty[parsed_] :=
     Block[{propName},
 
@@ -326,7 +326,7 @@ TClassifierGetInfoProperty[parsed_] :=
 (* Classifier testing                                      *)
 (***********************************************************)
 
-Clear[TTestMeasureNameRetrieval]
+Clear[TTestMeasureNameRetrieval];
 TTestMeasureNameRetrieval[parsed_] :=
     Block[{clmPropNames, propName, origPropName},
 
@@ -371,11 +371,11 @@ TTestMeasureNameRetrieval[parsed_] :=
     ];
 
 
-Clear[TClassifierTesting]
+Clear[TClassifierTesting];
 TClassifierTesting[parsed_] := parsed;
 
 
-Clear[TTestResults]
+Clear[TTestResults];
 TTestResults[parsed_] :=
     Block[{propNames, clTh, clLbl},
 
@@ -413,7 +413,7 @@ TTestResults[parsed_] :=
     ];
 
 
-Clear[TTestClassifier]
+Clear[TTestClassifier];
 TTestClassifier[parsed_] :=
     ToClConPipelineFunction[ {"compute accuracy, precision, and recall", "show roc plots"} ];
 
@@ -423,7 +423,7 @@ TTestClassifier[parsed_] :=
 (***********************************************************)
 
 (* Note that this code is very similar / almost the same as the code of TTestMeasureNameRetrieval (above.) *)
-Clear[TROCFunctionNameRetrieval]
+Clear[TROCFunctionNameRetrieval];
 TROCFunctionNameRetrieval[parsed_] :=
     Block[{rocFuncNames, funcName, origFuncName},
 
@@ -456,7 +456,7 @@ TROCFunctionNameRetrieval[parsed_] :=
       funcName
     ];
 
-ClearAll[TROCCurvesPlot]
+ClearAll[TROCCurvesPlot];
 TROCCurvesPlot[parsed_] :=
     Block[{rocFuncNames},
 
@@ -487,7 +487,7 @@ TROCCurvesPlot[parsed_] :=
 (* Classifier information                                  *)
 (***********************************************************)
 
-Clear[TClassifierGetInfoProperty]
+Clear[TClassifierGetInfoProperty];
 TClassifierGetInfoProperty[parsed_] :=
     Block[{propName},
 
@@ -507,7 +507,7 @@ TClassifierGetInfoProperty[parsed_] :=
 (* Importance of variables                                 *)
 (***********************************************************)
 
-Clear[TAccuraciesByVariableShuffling]
+Clear[TAccuraciesByVariableShuffling];
 TAccuraciesByVariableShuffling[parsed_] :=
     Block[{},
       Function[{x, c},
@@ -519,15 +519,15 @@ TAccuraciesByVariableShuffling[parsed_] :=
 (* General pipeline commands                               *)
 (***********************************************************)
 
-Clear[TPipelineCommand]
+Clear[TPipelineCommand];
 TPipelineCommand[parsed_] := parsed;
 
 
-Clear[TGetPipelineValue]
+Clear[TGetPipelineValue];
 TGetPipelineValue[parsed_] := ClConEchoValue;
 
 
-Clear[TGetPipelineContext]
+Clear[TGetPipelineContext];
 TGetPipelineContext[parsed_] :=
     Block[{},
 
@@ -543,7 +543,7 @@ TGetPipelineContext[parsed_] :=
     ];
 
 
-Clear[TPipelineContextRetrieve]
+Clear[TPipelineContextRetrieve];
 TPipelineContextRetrieve[parsed_] :=
     Block[{cvKey},
 
@@ -554,7 +554,7 @@ TPipelineContextRetrieve[parsed_] :=
     ];
 
 
-Clear[TPipelineContextAdd]
+Clear[TPipelineContextAdd];
 TPipelineContextAdd[parsed_] :=
     Block[{cvKey},
 
@@ -604,7 +604,7 @@ TSecondOrderCommand[parsed_] := parsed;
 (* Main translation functions                              *)
 (***********************************************************)
 
-ClearAll[TranslateToClCon]
+ClearAll[TranslateToClCon];
 
 Options[TranslateToClCon] = { "TokenizerFunction" -> (ParseToTokens[#, {",", "'"}, {" ", "\t", "\n"}]&) };
 
@@ -648,7 +648,7 @@ TranslateToClCon[pres_] :=
     ];
 
 
-ClearAll[ToClConPipelineFunction]
+ClearAll[ToClConPipelineFunction];
 
 Options[ToClConPipelineFunction] =
     { "Trace" -> False,
