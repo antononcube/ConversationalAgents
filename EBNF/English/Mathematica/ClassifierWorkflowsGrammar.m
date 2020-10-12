@@ -253,7 +253,7 @@ ebnfClassifierMaking = "
   <classifier-creation> = <classifier-creation-opening> &> ( [ <classifier-algorithm> ] , 'classifier' , [ <using-preposition> &> <library-name> ] |
                                                                    'classifier' , <using-preposition> &> <classifier-algorithm> ) ,
                                                                  [ <using-preposition> &> <train-data-spec> ] <@ ClassifierCreation ;
-  <classifier-creation-opening> = ( ( 'make' | 'create' | 'train' ) , [ 'a' | 'an' ] ) ;
+  <classifier-creation-opening> = ( 'make' | 'create' | 'train' ) , [ 'a' | 'an' ] ;
   <classifier-method> = 'DecisionTree' | 'GradientBoostedTrees' | 'LogisticRegression' | 'NaiveBayes' |
                         'NearestNeighbors' | 'NeuralNetwork' | 'RandomForest' | 'SupportVectorMachine' <@ ClassifierMethod ;
   <classifier-algorithm> = ( <classifier-algorithm-name> | <classifier-method> ) , [ ( 'from' |'of' ) &> <library-name> ] <@ ClassifierAlgorithm ;
