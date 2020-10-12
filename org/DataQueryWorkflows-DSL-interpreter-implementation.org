@@ -21,7 +21,7 @@
     - [[https://github.com/antononcube/SimplifiedMachineLearningWorkflows-book/tree/master/R/DataScienceStudyGroup-SouthFL-Meetup-October-2020][Data Science Study Group South Florida October 2020]] 
     - Wolfram Technology Conference 2020
 * TODO Raku [0%][0/3]
-** TODO Grammar [70%] [19/27]
+** TODO Grammar [77%] [21/27]
 - [-] arrange [66%] [2/3]
   - [X] descending simple
   - [X] ascending simple
@@ -59,9 +59,9 @@
   - [X] by two lists
   - [X] by pairs
 - [X] replacing of specified values with a specified value
-- [-] reshape
+- [X] reshape
   - [X] pivot-longer
-  - [ ] pivot-wider
+  - [X] pivot-wider
 - [ ] select columns with indices
 - [X] select columns with names
   - [X] simple list
