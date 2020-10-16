@@ -53,37 +53,37 @@
 (***********************************************************)
 
 If[ Length[DownValues[MonadicContextualClassification`ClConUnit]] == 0,
-  Echo["MonadicContextualClassification.m", "Import from GitHub:"];
+  Echo["MonadicContextualClassification.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/MonadicProgramming/MonadicContextualClassification.m"];
 ];
 
 If[ Length[DownValues[MonadicQuantileRegression`QRMonUnit]] == 0,
-  Echo["MonadicQuantileRegression.m", "Import from GitHub:"];
+  Echo["MonadicQuantileRegression.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/MonadicProgramming/MonadicQuantileRegression.m"];
 ];
 
 If[ Length[DownValues[MonadicStructuralBreaksFinder`QRMonFindChowTestLocalMaxima]] == 0,
-  Echo["MonadicStructuralBreaksFinder.m", "Import from GitHub:"];
+  Echo["MonadicStructuralBreaksFinder.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/MonadicProgramming/MonadicStructuralBreaksFinder.m"];
 ];
 
 If[ Length[DownValues[MonadicLatentSemanticAnalysis`LSAMonUnit]] == 0,
-  Echo["MonadicLatentSemanticAnalysis.m", "Import from GitHub:"];
+  Echo["MonadicLatentSemanticAnalysis.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/MonadicProgramming/MonadicLatentSemanticAnalysis.m"];
 ];
 
 If[ Length[DownValues[MonadicSparseMatrixRecommender`SMRMonUnit]] == 0,
-  Echo["MonadicSparseMatrixRecommender.m", "Import from GitHub:"];
+  Echo["MonadicSparseMatrixRecommender.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/MonadicProgramming/MonadicSparseMatrixRecommender.m"];
 ];
 
 If[ Length[DownValues[MonadicEpidemiologyCompartmentalModeling`ECMMonUnit]] == 0,
-  Echo["MonadicEpidemiologyCompartmentalModeling.m", "Import from GitHub:"];
+  Echo["MonadicEpidemiologyCompartmentalModeling.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/SystemModeling/master/Projects/Coronavirus-propagation-dynamics/WL/MonadicEpidemiologyCompartmentalModeling.m"];
 ];
 
 If[ Length[DownValues[DataReshape`ToLongForm]] == 0,
-  Echo["DataReshape.m", "Import from GitHub:"];
+  Echo["DataReshape.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/DataReshape.m"];
 ];
 
