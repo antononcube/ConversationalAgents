@@ -66,7 +66,7 @@
 (***********************************************************)
 
 If[ Length[DownValues[ExternalParsersHookup`ToDSLCode]] == 0,
-  Echo["ExternalParsersHookup.m", "Import from GitHub:"];
+  Echo["ExternalParsersHookup.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/ExternalParsersHookup.m"];
 ];
 
