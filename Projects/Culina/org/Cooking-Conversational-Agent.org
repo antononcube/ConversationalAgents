@@ -1,0 +1,81 @@
+#+TITLE: Cooking Conversational Agent
+#+AUTHOR: Anton Antonov, Sezin Yaman
+#+EMAIL: antononcube@posteo.net, yaman.sezin@gmail.com
+#+TODO: TODO ONGOING MAYBE Anton Sezin | DONE CANCELED 
+#+OPTIONS: toc:1 num:0
+
+* Why? [0%] [0/3]
+** Sezin Mission statement
+** Sezin Motivation
+** Sezin Frustrations with other similar solution
+* TODO Defining the problem
+* TODO Preliminary tasks [0%] [0/2]
+** TODO Select a name
+- Memorable (has a ring to it)
+- Descriptive
+- In what language?
+** TODO GitHub repository?
+* MVP [%] [/]
+** TODO Features
+** TODO Design
+** TODO Implementation
+*** Mathematica
+* Presentations
+** [[https://www.miamiwids.com][WiDS Miami 2021]]
+- Online conference.
+- [[https://www.papercall.io/widsmiami2021][Call for papers]]
+** Abstract
+** Paper features
+- Goals
+  - Is this an advertisement of the project?
+    - Meaning, collaboration invitation.
+  - Is this "just" know-how for embarking on a project like this?
+  - Is this a show-off presentation?
+    - Meaning, self-promotion.
+- Message
+  - From personal experiences to scaled solution
+  - Global audience relevance
+    - There is big picture and small picture
+    - Individual user
+    - Multiple users
+  - Management of the project
+    - How to design the features?
+    - How to collaborate?
+    - How to do MVP and later implementations?
+  - It is shown that:
+    - Design functionality for the convenience of single person (or
+      household)
+    - Multiple users data can be utilized for recommendations:
+      - Novelty
+      - Acquiring of products and tools
+      - Feasibility
+        - Can it be made on time?
+    - Conversational agent perspective of introducing the system's functionalities
+      - Brainstorming approach
+      - Breakdown of functionalities and data (type, sources)
+      - Breakdown of functionalities and software modules
+    - System architecture
+    - Data analysis
+      - Introspection (single user)
+        - Most popular dishes
+        - Most consumed ingredients
+        - Pareto principle adherence of:
+          - Dishes
+          - Purchases (geo-location, products)
+          - Nutritional ingredients
+          - Segmentation by weekday, calendar days
+      - All users
+        - Most popular dishes
+        - Most consumed ingredients
+        - Pareto principle adherence of:
+  - Topics of special interest:
+    - Handling misspellings
+    - Audio to text
+    - Scheduling of steps
+    - Security and data obfuscation
+    - Logistics problem formulation
+      - What to products to get and steps to perform in order to get
+        a dish by/at certain time?
+- Design
+  - Personal use
+  - Scaling
