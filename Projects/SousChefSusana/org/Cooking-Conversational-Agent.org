@@ -21,8 +21,32 @@
 ** TODO Implementation
 *** Mathematica
 * Software architecture
-** Software modules
-- [ ]
+** General strategy
+- Separation of the business logic from the implementation.
+- (Dialog) Grammars are used to encode the business logic and know-how
+  of the workflows.
+** On-boarding module
+- User profile
+  - Allergies
+  - Cuisine preferences
+  - etc.
+- Access to food
+** Analytic module
+- Retrospect for a single user
+- Analysis of global usage / utilization
+- Breakdowns of usage / utilization 
+** Recommendation module
+- Recipe to do today / tonight
+** Cooking directions module
+- For a concrete recipe what directions are given.
+  - What directions to follow.
+** Privacy 
+- "You are what you eat."
+- Opt-in and opt-out flags.
+- Some recipes are shared.
+- Some are available to everyone.
+- Is it possible to determine health conditions from utilized recipes
+  and cooking history?
 * Presentations
 ** [[https://www.miamiwids.com][WiDS Miami 2021]]
 - Online conference.
@@ -82,3 +106,8 @@
 - Design
   - Personal use
   - Scaling
+** Analogies and relations 
+- This is an app mostly for women. (Say/)
+  - What would be the corresponding app for men?
+    - Fishing suggestion app.
+
