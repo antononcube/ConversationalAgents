@@ -20,6 +20,9 @@
 ** TODO Design
 ** TODO Implementation
 *** Mathematica
+* Software architecture
+** Software modules
+- [ ]
 * Presentations
 ** [[https://www.miamiwids.com][WiDS Miami 2021]]
 - Online conference.
