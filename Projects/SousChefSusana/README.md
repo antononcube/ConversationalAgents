@@ -1,8 +1,8 @@
 # Sous-chef Susana
 
 This project has documents and diagrams for design and implementation
-of a conversational agent named “Sous-chef-Susana” aimed at facilitating the  
-to food preparation (cooking) activities. (See [Wk1].) 
+of a conversational agent named “Sous-chef-Susana” aimed at facilitating 
+of food preparation (cooking) activities. (See [Wk1].) 
 
 **Remark:** More precisely, food preparation support and analysis.
 
@@ -15,7 +15,7 @@ Here is a mind-map that outlines of the scope of the project:
  
 ## Similarities with Glukoza
  
-Culina is very similar to the conversational agent 
+Susana is very similar to the conversational agent 
 [Glukoza](../Glukoza)
 in both component design and grammar design and elements.
 
@@ -26,4 +26,4 @@ in both component design and grammar design and elements.
 [AAv1] Anton Antonov, 
 ["Voice-Grammar-Compute-Communicate: Take Control of Your Health Data"](https://www.youtube.com/watch?v=_rI1RxkeAcA),
 (2018),
-Wolfram Channel at YouTube.
+[Wolfram Channel at YouTube](https://www.youtube.com/channel/UCJekgf6k62CQHdENWf2NgAQ).
