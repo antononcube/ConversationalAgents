@@ -119,11 +119,21 @@ Windermere, Florida, 2021
 BeginPackage["RakuGrammarClassesGeneration`"];
 (* Exported symbols added here with SymbolName::usage *)
 
-MakeRoleByPhrases::usage = "MakeRoleByPhrases";
-
 MakePropertyActionClass::usage = "MakePropertyActionClass";
 
+MakeRoleByPhrases::usage = "MakeRoleByPhrases";
+
+NormalizeRakuReference::usage = "NormalizeRakuReference";
+
+ToRakuRegex::usage = "ToRakuRegex";
+
+ToRakuRuleReference::usage = "ToRakuRuleReference";
+
+ToRakuTerminal::usage = "ToRakuTerminal";
+
 ToRakuTests::usage = "ToRakuTests";
+
+ToRakuToken::usage = "ToRakuToken";
 
 Begin["`Private`"];
 
@@ -133,19 +143,54 @@ Begin["`Private`"];
 
 Clear[ToRakuTerminal];
 
-ToRakuTerminal[s_String] := StringRiffle[Map["'" <> # <> "'" &, StringSplit[s]], " "];
+ToRakuTerminal[s_String] := ToRakuTerminal[StringSplit[s]];
 
-ToRakuTerminal[s : {_String ..}] := StringRiffle[Map["'" <> # <> "'" &, s], " "];
+ToRakuTerminal[s : {_String ..}] :=
+    StringRiffle[Map["'" <> StringReplace[#, {"'" -> "\'"}] <> "'" &, s], " "];
+
+Clear[ToRakuRegex];
+
+ToRakuRegex[s_String, suffix_String, delim_String : "\\\\h+"] :=
+    ToRakuRegex[StringSplit[StringReplace[s, LetterCharacter ~~ "-" ~~ LetterCharacter -> " " <> "-" <> " "]], suffix, delim];
+
+ToRakuRegex[s : {_String ..}, suffix_String, delim_String : "\\\\h+"] :=
+    StringReplace[
+      StringRiffle[Map["<" <> NormalizeRakuReference[# <> suffix] <> ">" &, s], " " <> delim <> " "],
+      "\\\\" -> "\\"
+    ];
 
 Clear[ToRakuToken];
 
-ToRakuToken[s_String, suffix_String : ""] := StringRiffle[Map["<" <> # <> suffix <> ">" &, StringSplit[s]], " "];
+ToRakuToken[s : ( _String | { _String .. } ) , suffix_String ] := ToRakuRegex[s, suffix, " "];
 
-ToRakuToken[s : {_String ..}, suffix_String : ""] := StringRiffle[Map["<" <> # <> suffix <> ">" &, s], " "];
+Clear[NormalizeRakuReference];
+
+NormalizeRakuReference[s_String] :=
+    Block[{res},
+      res =
+          StringReplace[ s,
+            {
+              n : (DigitCharacter..) :> IntegerName[ToExpression[n]] <> "-int",
+              c : ( "'" | "&" | "%" | "." | "_" | "?" | "!" | ";" | ":" | "," ) :> "-" <> CharacterName[c] <> "-",
+              d : DigitCharacter :> CharacterName[d],
+              {"/", "(", ")"} -> "-"}
+          ];
+      StringReplace[
+        res,
+        {
+          StartOfString ~~ "--" -> CharacterName["-"] <> "-",
+          StartOfString ~~ "-" ~~ EndOfString -> CharacterName["-"],
+          StartOfString ~~ "-" -> "",
+          "-" ~~ EndOfString -> "",
+          "---" -> "-" <> CharacterName["-"] <> "-",
+          "--" -> "-"
+        }
+      ]
+    ];
 
 Clear[ToRakuRuleReference];
-ToRakuRuleReference[s_String] := "<" <> s <> ">";
 
+ToRakuRuleReference[s_String] := "<" <> NormalizeRakuReference[s] <> ">";
 
 (***********************************************************)
 (* MakePropertyRole                                        *)
@@ -162,7 +207,8 @@ Options[MakeRoleByPhrases] = {
   "WordTokenSuffix" -> "-word",
   "SeparateTerminals" -> True,
   "TokensForJoinedPhrases" -> True,
-  "SplitWordsByCapitalLetters" -> False
+  "SplitWordsByCapitalLetters" -> False,
+  "Regexes" -> False
 };
 
 MakeRoleByPhrases[properties : {_String ..}, opts : OptionsPattern[]] :=
@@ -172,13 +218,14 @@ MakeRoleByPhrases[properties : {_String ..}, opts : OptionsPattern[]] :=
         (* ELSE *)
         lsPhrases = StringSplit[properties]
       ];
-      MakeRoleByPhrases[ lsPhrases, opts]
+      MakeRoleByPhrases[lsPhrases, opts]
     ];
 
 MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
     Block[{ruleSuffix, roleName, topRuleName, wordTokenSuffix,
       separateTerminalsQ, tokensForJoinedPhrasesQ,
-      lsRakuTokens, lsRakuRules, lsJoinedPhrases, lsPropertyWords},
+      lsRakuTokens, lsRakuRules, lsJoinedPhrases, lsPropertyWords,
+      regexFunc, rakuMethod},
 
       ruleSuffix = OptionValue[MakeRoleByPhrases, "RuleSuffix"];
       roleName = OptionValue[MakeRoleByPhrases, "RoleName"];
@@ -187,18 +234,27 @@ MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
       separateTerminalsQ = TrueQ[OptionValue[MakeRoleByPhrases, "SeparateTerminals"]];
       tokensForJoinedPhrasesQ = TrueQ[OptionValue[MakeRoleByPhrases, "TokensForJoinedPhrases"]];
 
+      If[ TrueQ[OptionValue[MakeRoleByPhrases, "Regexes"]],
+        regexFunc = ToRakuRegex;
+        rakuMethod = "regex",
+        (*ELSE*)
+        regexFunc = ToRakuToken;
+        rakuMethod = "rule"
+      ];
+
       lsJoinedPhrases = StringJoin@*Capitalize /@ phrases;
 
       lsPropertyWords = Union[Flatten[phrases]];
 
       lsRakuTokens =
-          Map[# -> "token " <> # <> wordTokenSuffix <> " {" <> ToRakuTerminal[#] <> "}" &, lsPropertyWords];
+          Map[# -> "token " <> NormalizeRakuReference[# <> wordTokenSuffix] <> " {" <> ToRakuTerminal[#] <> "}" &, lsPropertyWords];
 
+      (* This is association in*)
       lsRakuRules =
           MapThread[
             With[{name = StringRiffle[#1, "-"] <> ruleSuffix},
               name ->
-                  "rule " <> name <> " {" <> ToRakuToken[#1, wordTokenSuffix] <> If[ tokensForJoinedPhrasesQ, " | " <> ToRakuTerminal[#2], "" ] <> "}"
+                  rakuMethod <> " " <> NormalizeRakuReference[name] <> " { " <> NormalizeRakuReference[regexFunc[#1, wordTokenSuffix]] <> If[ tokensForJoinedPhrasesQ, " | " <> ToRakuTerminal[#2], "" ] <> "}"
             ] &,
             {phrases, lsJoinedPhrases}];
 
@@ -230,7 +286,7 @@ MakePropertyActionClass[properties : {_String ..}, opts : OptionsPattern[]] :=
 
       lsRakuRules =
           MapThread[
-            With[{name = StringRiffle[#1, "-"] <> ruleSuffix},
+            With[{name = StringTake[ ToRakuToken[#, ruleSuffix], {2, -2}] },
               name -> "method " <> name <> "($/) { make " <> ToRakuTerminal[#2] <> "; }"
             ] &,
             {Map[ToLowerCase @ StringCases[#, CharacterRange["A", "Z"] ~~ (Except[CharacterRange["A", "Z"]] ..)] &, properties], properties}];
