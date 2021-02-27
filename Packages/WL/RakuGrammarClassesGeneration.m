@@ -340,7 +340,7 @@ MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
       separateTerminalsQ = TrueQ[OptionValue[MakeRoleByTrie, "SeparateTerminals"]];
       tokensForJoinedPhrasesQ = TrueQ[OptionValue[MakeRoleByTrie, "TokensForJoinedPhrases"]];
 
-      If[ TrueQ[OptionValue[MakeRoleByPhrases, "Regexes"]],
+      If[ TrueQ[OptionValue[MakeRoleByTrie, "Regexes"]],
         regexFunc = ToRakuRegex;
         rakuMethod = "regex",
         (*ELSE*)
