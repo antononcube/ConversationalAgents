@@ -333,12 +333,12 @@ MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
       lsNodes, lsFirstLevel, lsSubTries, lsRuleSpecs,
       regexFunc, rakuMethod},
 
-      ruleSuffix = OptionValue[MakeRoleByPhrases, "RuleSuffix"];
-      roleName = OptionValue[MakeRoleByPhrases, "RoleName"];
-      topRuleName = OptionValue[MakeRoleByPhrases, "TopRuleName"];
-      wordTokenSuffix = OptionValue[MakeRoleByPhrases, "WordTokenSuffix"];
-      separateTerminalsQ = TrueQ[OptionValue[MakeRoleByPhrases, "SeparateTerminals"]];
-      tokensForJoinedPhrasesQ = TrueQ[OptionValue[MakeRoleByPhrases, "TokensForJoinedPhrases"]];
+      ruleSuffix = OptionValue[MakeRoleByTrie, "RuleSuffix"];
+      roleName = OptionValue[MakeRoleByTrie, "RoleName"];
+      topRuleName = OptionValue[MakeRoleByTrie, "TopRuleName"];
+      wordTokenSuffix = OptionValue[MakeRoleByTrie, "WordTokenSuffix"];
+      separateTerminalsQ = TrueQ[OptionValue[MakeRoleByTrie, "SeparateTerminals"]];
+      tokensForJoinedPhrasesQ = TrueQ[OptionValue[MakeRoleByTrie, "TokensForJoinedPhrases"]];
 
       If[ TrueQ[OptionValue[MakeRoleByPhrases, "Regexes"]],
         regexFunc = ToRakuRegex;
@@ -364,8 +364,6 @@ MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
       lsRuleSpecs = Map[TrieKeyTraverse[#, List] //. x : List[List[c__]] :> List[c] &, lsSubTries];
 
       lsRakuRules = ToRakuRegex[#, wordTokenSuffix] & /@ lsRuleSpecs;
-
-      Print[lsRakuRules];
 
       lsRakuRules =
           MapThread[
