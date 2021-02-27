@@ -116,12 +116,29 @@ Windermere, Florida, 2021
 
 *)
 
+(***********************************************************)
+(* Load packages                                           *)
+(***********************************************************)
+
+If[ Length[DownValues[TriesWithFrequencies`TrieQ]] == 0,
+  Echo["TriesWithFrequencies.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/TriesWithFrequencies.m"];
+];
+
+
+(***********************************************************)
+(* Package definitions                                     *)
+(***********************************************************)
+
+
 BeginPackage["RakuGrammarClassesGeneration`"];
 (* Exported symbols added here with SymbolName::usage *)
 
 MakePropertyActionClass::usage = "MakePropertyActionClass";
 
-MakeRoleByPhrases::usage = "MakeRoleByPhrases";
+MakeRoleByPhrases::usage = "MakeRoleByPhrases[phrases : ( {_String..} | {{_String..}..}), opts___ ]";
+
+MakeRoleByTrie::usage = "MakeRoleByTrie[trie_?TrieQ, opts___]";
 
 NormalizeRakuReference::usage = "NormalizeRakuReference";
 
@@ -137,6 +154,8 @@ ToRakuToken::usage = "ToRakuToken";
 
 Begin["`Private`"];
 
+Needs["TriesWithFrequencies`"];
+
 (***********************************************************)
 (* Basic functions                                         *)
 (***********************************************************)
@@ -151,12 +170,34 @@ ToRakuTerminal[s : {_String ..}] :=
 Clear[ToRakuRegex];
 
 ToRakuRegex[s_String, suffix_String, delim_String : "\\\\h+"] :=
-    ToRakuRegex[StringSplit[StringReplace[s, LetterCharacter ~~ "-" ~~ LetterCharacter -> " " <> "-" <> " "]], suffix, delim];
+    "<" <> NormalizeRakuReference[s <> suffix] <> ">" /; StringFreeQ[s, " "];
+
+ToRakuRegex[s_String, suffix_String, delim_String : "\\\\h+"] :=
+    ToRakuRegex[StringSplit[StringReplace[s, LetterCharacter ~~ "-" ~~ LetterCharacter -> " " <> "-" <> " "]], suffix, delim] /; Not[StringFreeQ[s, " "]];
 
 ToRakuRegex[s : {_String ..}, suffix_String, delim_String : "\\\\h+"] :=
     StringReplace[
       StringRiffle[Map["<" <> NormalizeRakuReference[# <> suffix] <> ">" &, s], " " <> delim <> " "],
       "\\\\" -> "\\"
+    ];
+
+ToRakuRegex[s : { (_String | _List) .. }, suffix_String, delim_String : "\\\\h+"] :=
+    Block[{res},
+
+      res =
+          Map[
+            If[ StringQ[#],
+              ToRakuRegex[#, suffix, delim],
+              (*ELSE*)
+              "[ " <> StringRiffle[ Map[ ToRakuRegex[#, suffix, delim]&, #], " | "] <> " ]"
+            ]&,
+            s
+          ];
+
+      StringReplace[
+        StringRiffle[res, " " <> delim <> " "],
+        "\\\\" -> "\\"
+      ]
     ];
 
 Clear[ToRakuToken];
@@ -193,7 +234,7 @@ Clear[ToRakuRuleReference];
 ToRakuRuleReference[s_String] := "<" <> NormalizeRakuReference[s] <> ">";
 
 (***********************************************************)
-(* MakePropertyRole                                        *)
+(* MakeRoleByPhrases                                       *)
 (***********************************************************)
 
 Clear[MakeRoleByPhrases];
@@ -249,7 +290,7 @@ MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
       lsRakuTokens =
           Map[# -> "token " <> NormalizeRakuReference[# <> wordTokenSuffix] <> " {" <> ToRakuTerminal[#] <> "}" &, lsPropertyWords];
 
-      (* This is association in*)
+      (* This is association in *)
       lsRakuRules =
           MapThread[
             With[{name = StringRiffle[#1, "-"] <> ruleSuffix},
@@ -258,6 +299,82 @@ MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
             ] &,
             {phrases, lsJoinedPhrases}];
 
+      lsRakuRules =
+          Prepend[Values[lsRakuRules], "rule " <> topRuleName <> " {" <> StringRiffle[ToRakuRuleReference /@ Keys[lsRakuRules], " |\n"] <> "}"];
+      lsRakuRules = Join[lsRakuRules, Values[lsRakuTokens]];
+
+      StringRiffle[Join[{"role " <> roleName <> " {"}, lsRakuRules, {"}"}], "\n"]
+    ];
+
+
+(***********************************************************)
+(* MakeRoleByTrie                                          *)
+(***********************************************************)
+
+Clear[MakeRoleByTrie];
+
+SyntaxInformation[MakeRoleByTrie] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+
+Options[MakeRoleByTrie] = {
+  "RuleSuffix" -> "-prop",
+  "RoleName" -> "SomeRole",
+  "TopRuleName" -> "some-rule",
+  "WordTokenSuffix" -> "-word",
+  "SeparateTerminals" -> True,
+  "TokensForJoinedPhrases" -> True,
+  "SplitWordsByCapitalLetters" -> False,
+  "Regexes" -> False
+};
+
+MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
+    Block[{ruleSuffix, roleName, topRuleName, wordTokenSuffix,
+      separateTerminalsQ, tokensForJoinedPhrasesQ,
+      lsRakuTokens, lsRakuRules,
+      lsNodes, lsFirstLevel, lsSubTries, lsRuleSpecs,
+      regexFunc, rakuMethod},
+
+      ruleSuffix = OptionValue[MakeRoleByPhrases, "RuleSuffix"];
+      roleName = OptionValue[MakeRoleByPhrases, "RoleName"];
+      topRuleName = OptionValue[MakeRoleByPhrases, "TopRuleName"];
+      wordTokenSuffix = OptionValue[MakeRoleByPhrases, "WordTokenSuffix"];
+      separateTerminalsQ = TrueQ[OptionValue[MakeRoleByPhrases, "SeparateTerminals"]];
+      tokensForJoinedPhrasesQ = TrueQ[OptionValue[MakeRoleByPhrases, "TokensForJoinedPhrases"]];
+
+      If[ TrueQ[OptionValue[MakeRoleByPhrases, "Regexes"]],
+        regexFunc = ToRakuRegex;
+        rakuMethod = "regex",
+        (*ELSE*)
+        regexFunc = ToRakuToken;
+        rakuMethod = "rule"
+      ];
+
+      (* Make tokens *)
+      lsNodes = Union[Flatten[TrieKeyTraverse[trie, List]]];
+      lsNodes = Complement[lsNodes, {$TrieRoot, $TrieValue}];
+
+      lsRakuTokens =
+          Map[# -> "token " <> NormalizeRakuReference[# <> wordTokenSuffix] <> " {" <> ToRakuTerminal[#] <> "}" &, lsNodes];
+
+      (* Get the sub-tries *)
+      lsFirstLevel = Map[#[[-1, 1]] &, TrieRootToLeafPaths@TriePrune[trie, 1]];
+
+      lsSubTries = TrieSubTrie[trie, {#}] & /@ lsFirstLevel;
+
+      (* Convert sub-tries into rules *)
+      lsRuleSpecs = Map[TrieKeyTraverse[#, List] //. x : List[List[c__]] :> List[c] &, lsSubTries];
+
+      lsRakuRules = ToRakuRegex[#, wordTokenSuffix] & /@ lsRuleSpecs;
+
+      Print[lsRakuRules];
+
+      lsRakuRules =
+          MapThread[
+            With[{name = StringRiffle[Flatten[{#2}], "-"] <> ruleSuffix},
+              name -> rakuMethod <> " " <> NormalizeRakuReference[name] <> " { " <> #1 <> "}"
+            ] &,
+            {lsRakuRules, lsFirstLevel}];
+
+      (* Finalize rules collection *)
       lsRakuRules =
           Prepend[Values[lsRakuRules], "rule " <> topRuleName <> " {" <> StringRiffle[ToRakuRuleReference /@ Keys[lsRakuRules], " |\n"] <> "}"];
       lsRakuRules = Join[lsRakuRules, Values[lsRakuTokens]];
