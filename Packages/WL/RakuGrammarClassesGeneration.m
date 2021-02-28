@@ -181,15 +181,24 @@ ToRakuRegex[s : {_String ..}, suffix_String, delim_String : "\\\\h+"] :=
       "\\\\" -> "\\"
     ];
 
-ToRakuRegex[s : { (_String | _List) .. }, suffix_String, delim_String : "\\\\h+"] :=
+ToRakuRegex[alts : Alternatives[__], suffix_String, delim_String : "\\\\h+"] :=
     Block[{res},
 
+      res = "[ " <> StringRiffle[ Map[ ToRakuRegex[#, suffix, delim]&, List @@ alts], " | "] <> " ]";
+
+      StringReplace[ res, "\\\\" -> "\\"]
+    ];
+
+ToRakuRegex[s : { (_String | Alternatives[__]) .. }, suffix_String, delim_String : "\\\\h+"] :=
+    Block[{res},
+
+      (* No need for the If, but it shows the decomposition into functions. *)
       res =
           Map[
             If[ StringQ[#],
               ToRakuRegex[#, suffix, delim],
               (*ELSE*)
-              "[ " <> StringRiffle[ Map[ ToRakuRegex[#, suffix, delim]&, #], " | "] <> " ]"
+              ToRakuRegex[#, suffix, delim]
             ]&,
             s
           ];
@@ -311,6 +320,9 @@ MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
 (* MakeRoleByTrie                                          *)
 (***********************************************************)
 
+Clear[TravCombiner];
+TravCombiner[x_, y_] := {x, Which[ListQ[y] && Length[y] > 1, Apply[Alternatives, y], ListQ[y], y[[1]], True, y]};
+
 Clear[MakeRoleByTrie];
 
 SyntaxInformation[MakeRoleByTrie] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -361,7 +373,7 @@ MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
       lsSubTries = TrieSubTrie[trie, {#}] & /@ lsFirstLevel;
 
       (* Convert sub-tries into rules *)
-      lsRuleSpecs = Map[TrieKeyTraverse[#, List] //. x : List[List[c__]] :> List[c] &, lsSubTries];
+      lsRuleSpecs = Map[TrieKeyTraverse[#, TravCombiner]&, lsSubTries];
 
       lsRakuRules = ToRakuRegex[#, wordTokenSuffix] & /@ lsRuleSpecs;
 
