@@ -1,0 +1,5 @@
+** Sezin Mission statement
+** Sezin Motivation
+** Sezin Frustrations with other similar solution
+
+While food is essential to life, cooking your own is optional. Cooking your own, however, can make one in better charge of life. Requiring a set of skills, knowledge, time and resources, "what do I cook today?" can be an unpleasent and tiring question at times. With an assistant, on the other hand, people can utlize the latest advencements of data science, create a personal cooking journey which is healthy and economical. There already exists many cooking assisting applications yet they often seem have high complexity. One can be lost, for instance, in the lake of countless recipes and intructions, with ingredients that are hard to retrieve and lack of tricks and personal preferences. Furthermore, existing solutions do not offer an retrospective analysis over one's cooking history and preferences. Motivated by these, we present Sous Chef Susana, that is an conversational agent designed to foster cooking decision-making, with the features including personalization, recommendations, and smart cooking tracking. 

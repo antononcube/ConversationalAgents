@@ -10,11 +10,11 @@
 ** Sezin Frustrations with other similar solution
 * TODO Defining the problem
 * TODO Preliminary tasks [0%] [0/2]
-** TODO Select a name
+** DONE Select a name
 - Memorable (has a ring to it)
 - Descriptive
 - In what language?
-** TODO GitHub repository?
+** DONE GitHub repository?
 * MVP [%] [/]
 ** TODO Features
 ** TODO Design
