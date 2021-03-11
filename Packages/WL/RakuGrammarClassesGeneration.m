@@ -167,6 +167,8 @@ ToRakuTerminal[s_String] := ToRakuTerminal[StringSplit[s]];
 ToRakuTerminal[s : {_String ..}] :=
     StringRiffle[Map["'" <> StringReplace[#, {"'" -> "\'"}] <> "'" &, s], " "];
 
+ToRakuTerminal[{}] := "EMPTY";
+
 Clear[ToRakuRegex];
 
 ToRakuRegex[s_String, suffix_String, delim_String : "\\\\h+"] :=
