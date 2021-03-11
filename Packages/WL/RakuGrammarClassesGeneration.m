@@ -177,10 +177,13 @@ ToRakuRegex[s_String, suffix_String, delim_String : "\\\\h+"] :=
 ToRakuRegex[s_String, suffix_String, delim_String : "\\\\h+"] :=
     ToRakuRegex[StringSplit[StringReplace[s, LetterCharacter ~~ "-" ~~ LetterCharacter -> " " <> "-" <> " "]], suffix, delim] /; Not[StringFreeQ[s, " "]];
 
-ToRakuRegex[s : {_String ..}, suffix_String, delim_String : "\\\\h+"] :=
-    StringReplace[
-      StringRiffle[Map["<" <> NormalizeRakuReference[# <> suffix] <> ">" &, s], " " <> delim <> " "],
-      "\\\\" -> "\\"
+ToRakuRegex[s : {_String ..}, suffix_String, delimArg_String : "\\\\h+"] :=
+    Block[{delim = delimArg},
+      If[delim != " ", delim = " " <> delim <> " "];
+      StringReplace[
+        StringRiffle[Map["<" <> NormalizeRakuReference[# <> suffix] <> ">" &, s], delim],
+        "\\\\" -> "\\"
+      ]
     ];
 
 ToRakuRegex[alts : Alternatives[__], suffix_String, delim_String : "\\\\h+"] :=
@@ -191,8 +194,10 @@ ToRakuRegex[alts : Alternatives[__], suffix_String, delim_String : "\\\\h+"] :=
       StringReplace[ res, "\\\\" -> "\\"]
     ];
 
-ToRakuRegex[s : { (_String | Alternatives[__]) .. }, suffix_String, delim_String : "\\\\h+"] :=
-    Block[{res},
+ToRakuRegex[s : { (_String | Alternatives[__]) .. }, suffix_String, delimArg_String : "\\\\h+"] :=
+    Block[{res,delim = delimArg},
+
+      If[delim != " ", delim = " " <> delim <> " "];
 
       (* No need for the If, but it shows the decomposition into functions. *)
       res =
@@ -206,8 +211,8 @@ ToRakuRegex[s : { (_String | Alternatives[__]) .. }, suffix_String, delim_String
           ];
 
       StringReplace[
-        StringRiffle[res, " " <> delim <> " "],
-        "\\\\" -> "\\"
+        StringRiffle[res, delim],
+        {"\\\\" -> "\\", "  " -> " "}
       ]
     ];
 
@@ -345,7 +350,7 @@ MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
       separateTerminalsQ, tokensForJoinedPhrasesQ,
       lsRakuTokens, lsRakuRules,
       lsNodes, lsFirstLevel, lsSubTries, lsRuleSpecs,
-      regexFunc, rakuMethod},
+      regexFunc, rakuMethod, regexDelim},
 
       ruleSuffix = OptionValue[MakeRoleByTrie, "RuleSuffix"];
       roleName = OptionValue[MakeRoleByTrie, "RoleName"];
@@ -356,9 +361,11 @@ MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
 
       If[ TrueQ[OptionValue[MakeRoleByTrie, "Regexes"]],
         regexFunc = ToRakuRegex;
+        regexDelim = "\\\\h+";
         rakuMethod = "regex",
         (*ELSE*)
         regexFunc = ToRakuToken;
+        regexDelim = " ";
         rakuMethod = "rule"
       ];
 
@@ -377,7 +384,7 @@ MakeRoleByTrie[ trie_?TrieQ, opts : OptionsPattern[]] :=
       (* Convert sub-tries into rules *)
       lsRuleSpecs = Map[TrieKeyTraverse[#, TravCombiner]&, lsSubTries];
 
-      lsRakuRules = ToRakuRegex[#, wordTokenSuffix] & /@ lsRuleSpecs;
+      lsRakuRules = ToRakuRegex[#, wordTokenSuffix, regexDelim] & /@ lsRuleSpecs;
 
       lsRakuRules =
           MapThread[
