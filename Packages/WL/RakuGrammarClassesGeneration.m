@@ -134,6 +134,8 @@ If[ Length[DownValues[TriesWithFrequencies`TrieQ]] == 0,
 BeginPackage["RakuGrammarClassesGeneration`"];
 (* Exported symbols added here with SymbolName::usage *)
 
+SplitWordsByCapitalLetters::usage = "SplitWordsByCapitalLetters";
+
 MakePropertyActionClass::usage = "MakePropertyActionClass";
 
 MakeRoleByPhrases::usage = "MakeRoleByPhrases[phrases : ( {_String..} | {{_String..}..}), opts___ ]";
@@ -156,8 +158,21 @@ Begin["`Private`"];
 
 Needs["TriesWithFrequencies`"];
 
+
 (***********************************************************)
-(* Basic functions                                         *)
+(* SplitWordsByCapitalLetters                              *)
+(***********************************************************)
+
+Clear[SplitWordsByCapitalLetters];
+
+SplitWordsByCapitalLetters[word_String] :=
+    StringCases[word, CharacterRange["A", "Z"] ~~ (Except[CharacterRange["A", "Z"]] ..)];
+
+SplitWordsByCapitalLetters[words : { _String ..} ] := Map[ SplitWordsByCapitalLetters, words];
+
+
+(***********************************************************)
+(* ToRakuTerminal                                          *)
 (***********************************************************)
 
 Clear[ToRakuTerminal];
@@ -168,6 +183,11 @@ ToRakuTerminal[s : {_String ..}] :=
     StringRiffle[Map["'" <> StringReplace[#, {"'" -> "\'"}] <> "'" &, s], " "];
 
 ToRakuTerminal[{}] := "EMPTY";
+
+
+(***********************************************************)
+(* ToRakuRegex                                             *)
+(***********************************************************)
 
 Clear[ToRakuRegex];
 
@@ -216,9 +236,19 @@ ToRakuRegex[s : { (_String | Alternatives[__]) .. }, suffix_String, delimArg_Str
       ]
     ];
 
+
+(***********************************************************)
+(* ToRakuToken                                             *)
+(***********************************************************)
+
 Clear[ToRakuToken];
 
 ToRakuToken[s : ( _String | { _String .. } ) , suffix_String ] := ToRakuRegex[s, suffix, " "];
+
+
+(***********************************************************)
+(* NormalizeRakuReference                                  *)
+(***********************************************************)
 
 Clear[NormalizeRakuReference];
 
@@ -245,9 +275,15 @@ NormalizeRakuReference[s_String] :=
       ]
     ];
 
+
+(***********************************************************)
+(* ToRakuRuleReference                                     *)
+(***********************************************************)
+
 Clear[ToRakuRuleReference];
 
 ToRakuRuleReference[s_String] := "<" <> NormalizeRakuReference[s] <> ">";
+
 
 (***********************************************************)
 (* MakeRoleByPhrases                                       *)
@@ -265,6 +301,7 @@ Options[MakeRoleByPhrases] = {
   "SeparateTerminals" -> True,
   "TokensForJoinedPhrases" -> True,
   "SplitWordsByCapitalLetters" -> False,
+  "TerminalModifier" -> ToLowerCase,
   "Regexes" -> False
 };
 
@@ -280,7 +317,7 @@ MakeRoleByPhrases[properties : {_String ..}, opts : OptionsPattern[]] :=
 
 MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
     Block[{ruleSuffix, roleName, topRuleName, wordTokenSuffix,
-      separateTerminalsQ, tokensForJoinedPhrasesQ,
+      separateTerminalsQ, tokensForJoinedPhrasesQ, terminalModifierFunc,
       lsRakuTokens, lsRakuRules, lsJoinedPhrases, lsPropertyWords,
       regexFunc, rakuMethod},
 
@@ -290,6 +327,9 @@ MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
       wordTokenSuffix = OptionValue[MakeRoleByPhrases, "WordTokenSuffix"];
       separateTerminalsQ = TrueQ[OptionValue[MakeRoleByPhrases, "SeparateTerminals"]];
       tokensForJoinedPhrasesQ = TrueQ[OptionValue[MakeRoleByPhrases, "TokensForJoinedPhrases"]];
+      terminalModifierFunc = OptionValue[MakeRoleByPhrases, "TerminalModifier"];
+
+      If[ TrueQ[terminalModifierFunc === Automatic], terminalModifierFunc = ToLowerCase ];
 
       If[ TrueQ[OptionValue[MakeRoleByPhrases, "Regexes"]],
         regexFunc = ToRakuRegex;
@@ -299,12 +339,12 @@ MakeRoleByPhrases[ phrases : { {_String ..} .. }, opts : OptionsPattern[]] :=
         rakuMethod = "rule"
       ];
 
-      lsJoinedPhrases = StringJoin@*Capitalize /@ phrases;
+      lsJoinedPhrases = StringJoin /@ Map[ Capitalize, phrases, {-1}];
 
       lsPropertyWords = Union[Flatten[phrases]];
 
       lsRakuTokens =
-          Map[# -> "token " <> NormalizeRakuReference[# <> wordTokenSuffix] <> " {" <> ToRakuTerminal[#] <> "}" &, lsPropertyWords];
+          Map[# -> "token " <> NormalizeRakuReference[# <> wordTokenSuffix] <> " {" <> ToRakuTerminal[ terminalModifierFunc[#] ] <> "}" &, lsPropertyWords];
 
       (* This is association in *)
       lsRakuRules =
