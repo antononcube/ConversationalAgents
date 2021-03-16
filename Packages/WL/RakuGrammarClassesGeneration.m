@@ -134,7 +134,11 @@ If[ Length[DownValues[TriesWithFrequencies`TrieQ]] == 0,
 BeginPackage["RakuGrammarClassesGeneration`"];
 (* Exported symbols added here with SymbolName::usage *)
 
-SplitWordsByCapitalLetters::usage = "SplitWordsByCapitalLetters";
+ToLowerCaseWithExclusions::usage = "ToLowerCaseWithExclusions[s : (_String | {_String..}), excls]
+the string or list of strings s into lower case by keeping certain specified strings (exclusions) unchanged.";
+
+SplitWordsByCapitalLetters::usage = "SplitWordsByCapitalLetters[s_String] splits the string s into
+sub-strings of s that start with a capital letter.";
 
 MakePropertyActionClass::usage = "MakePropertyActionClass";
 
@@ -157,6 +161,30 @@ ToRakuToken::usage = "ToRakuToken";
 Begin["`Private`"];
 
 Needs["TriesWithFrequencies`"];
+
+
+(***********************************************************)
+(* ToLowerCaseWithExclusions                              *)
+(***********************************************************)
+
+Clear[ToLowerCaseWithExclusions];
+ToLowerCaseWithExclusions[s : (_String | {_String..})] := ToLowerCaseWithExclusions[s, Automatic];
+ToLowerCaseWithExclusions[s_String, excls : (Automatic | {(_String | Automatic) ..})] :=
+    Block[{lsExclusions, lsWords, lsAuto, aPos},
+
+      lsExclusions = Select[Flatten@{excls}, StringQ];
+
+      If[! FreeQ[{excls}, Automatic],
+        lsWords = StringSplit[s, {WhitespaceCharacter, PunctuationCharacter}];
+        lsAuto = Pick[lsWords, StringMatchQ[lsWords, x : (CharacterRange["A", "Z"] ..) /; StringLength[x] >= 3]];
+        lsExclusions = Join[lsExclusions, lsAuto]
+      ];
+
+      aPos = Select[Association[Map[# -> StringPosition[s, #] &, lsExclusions]], Length[#] > 0 &];
+      Fold[StringReplacePart[#1, #2[[1]], #2[[2]]] &, ToLowerCase[s], Normal@aPos]
+    ];
+
+ToLowerCaseWithExclusions[s_List, excls_] := Map[ToLowerCaseWithExclusions[#, excls]&, s];
 
 
 (***********************************************************)
@@ -215,7 +243,7 @@ ToRakuRegex[alts : Alternatives[__], suffix_String, delim_String : "\\\\h+"] :=
     ];
 
 ToRakuRegex[s : { (_String | Alternatives[__]) .. }, suffix_String, delimArg_String : "\\\\h+"] :=
-    Block[{res,delim = delimArg},
+    Block[{res, delim = delimArg},
 
       If[delim != " ", delim = " " <> delim <> " "];
 
