@@ -12,7 +12,11 @@ for the envisioned dialogs.
 Here is a mind-map that outlines of the scope of the project:
 
 [![](./Diagrams/Cooking-Conversational-Agent-mind-map.png)](./Diagrams/Cooking-Conversational-Agent-mind-map.pdf) 
- 
+
+Here is a diagram of the components of Sous Chef Susana:
+
+[![SousChefSusana](./Diagrams/Sous-Chef-Susana-design-small.jpg)](./Diagrams/Sous-Chef-Susana-design.jpg)
+
 ## Similarities with Glukoza
  
 Susana is very similar to the conversational agent 
