@@ -13,7 +13,7 @@ Here is a mind-map that outlines of the scope of the project:
 
 *TBD...*
 
-Here is a diagram of the components of Sous Chef Susana:
+Here is a diagram of the components of Head Huntress Gemma:
 
 [![HeadHuntressGemma](./Diagrams/Head-Huntress-Gemma-design.jpg)](./Diagrams/Head-Huntress-Gemma-design.jpg)
 
@@ -52,3 +52,8 @@ Several other names are considered. They are listed below together with some dis
 ["Voice-Grammar-Compute-Communicate: Take Control of Your Health Data"](https://www.youtube.com/watch?v=_rI1RxkeAcA),
 (2018),
 [Wolfram Channel at YouTube](https://www.youtube.com/channel/UCJekgf6k62CQHdENWf2NgAQ).
+
+[AAr1] Anton Antonov
+[DSL::English::RecruitingWorkflows Raku package](https://github.com/antononcube/Raku-DSL-English-RecruitingWorkflows),
+(2021),
+[GitHub/antononcube](https://github.com/antononcube).
