@@ -115,6 +115,8 @@ ToDataQueryWorkflowCode::usage = "Translates a natural language commands into a 
 
 ToSearchEngineQueryCode::usage = "Translates a natural language commands into a Search Engine Query code.";
 
+ToFoodPreparationWorkflowCode::usage = "Translates a natural language commands into a Food Preparation Workflow code.";
+
 ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline. Obsolete.";
 
 ToSMRMonWLCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline. Obsolete.";
@@ -337,7 +339,9 @@ aRakuModules = <|
   "LSAMon" -> "DSL::English::LatentSemanticAnalysisWorkflows",
   "ECMMon" -> "DSL::English::EpidemiologyModelingWorkflows",
   "DataQuery" -> "DSL::English::DataQueryWorkflows",
-  "SearchEngineQuery" -> "DSL::English::SearchEngineQueries" |>;
+  "SearchEngineQuery" -> "DSL::English::SearchEngineQueries",
+  "FoodPreparation" -> "DSL::English::FoodPreparationWorkflows"
+|>;
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
 aRakuFunctions = <|
@@ -354,7 +358,10 @@ aRakuFunctions = <|
   "DataQuery" -> "ToDataQueryWorkflowCode",
   "DSL::English::DataQueryWorkflows" -> "ToDataQueryWorkflowCode",
   "SearchEngineQuery" -> "ToSearchEngineQueryCode",
-  "DSL::English::SearchEngineQueries" -> "ToSearchEngineQueryCode"|>;
+  "DSL::English::SearchEngineQueries" -> "ToSearchEngineQueryCode",
+  "FoodPreparation" -> "ToFoodPreparationWorkflowCode",
+  "DSL::English::FoodPreparationWorkflows" -> "ToFoodPreparationWorkflowCode"
+|>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
     Block[{pres, executeQ, target, stringResultQ, res},
@@ -568,6 +575,23 @@ ToSearchEngineQueryCode[ command_String, opts : OptionsPattern[] ] :=
     ToMonadicCommand[ command, "DSL::English::SearchEngineQueries", opts];
 
 ToSearchEngineQueryCode[___] := $Failed;
+
+
+(*===========================================================*)
+(* ToFoodPreparationWorkflowCode                             *)
+(*===========================================================*)
+
+Clear[ToFoodPreparationWorkflowCode];
+
+SyntaxInformation[ToFoodPreparationWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToFoodPreparationWorkflowCode] = Options[ToMonadicCommand];
+
+ToFoodPreparationWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
+    ToMonadicCommand[ command, "DSL::English::FoodPreparationWorkflows", opts];
+
+ToFoodPreparationWorkflowCode[___] := $Failed;
+
 
 
 End[]; (* `Private` *)
