@@ -94,15 +94,15 @@ nRulesLHS =
 ebnfNumberNameRules = StringRiffle[nRules, "\n"];
 
 ebnfNumberName1To19Rule =
-    "<name-1-to-19> = " <> StringRiffle[Take[nRulesLHS, {2, 20}], " | "] <> " ;"
+    "<name-1-to-19> = " <> StringRiffle[Take[nRulesLHS, {2, 20}], " | "] <> " ;";
 
-ebnfNumberNameUpTo19Rule = "<name-up-to-19> = <name-of-0> | <name-1-to-19> ;"
+ebnfNumberNameUpTo19Rule = "<name-up-to-19> = <name-of-0> | <name-1-to-19> ;";
 
 ebnfNumberNameM10Rule =
-    "<name-of-10s> = " <> StringRiffle[Take[nRulesLHS, {21, -4}], " | "] <> " ;"
+    "<name-of-10s> = " <> StringRiffle[Take[nRulesLHS, {21, -4}], " | "] <> " ;";
 
 ebnfNumberName1To10Rule =
-    "<name-1-to-10> = " <> StringRiffle[Take[nRulesLHS, {2, 11}], " | "] <> " ;"
+    "<name-1-to-10> = " <> StringRiffle[Take[nRulesLHS, {2, 11}], " | "] <> " ;";
 
 TimesFlatten = Function[Apply[Times, Flatten[List[#]]]];
 TotalFlatten = Function[Total[Flatten[List[#]]]];
