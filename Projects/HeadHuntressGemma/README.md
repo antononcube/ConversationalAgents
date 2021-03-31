@@ -27,9 +27,15 @@ in both component design and grammar design and elements.
 
 ## Name selection
 
-"Gemma" was chosen because of the phrase "diamond in the rough", and it is short, memorable, 
-and fairly unique. (See the 
-[WolframAlpha result for "Gemma name"](https://www.wolframalpha.com/input/?i=Gemma+name).)
+The name "Gemma" was chosen because of the phrase "diamond in the rough" (i.e. "gem in the rough"), 
+and because it is short, memorable, and fairly unique. (See 
+[WolframAlpha's result for "Gemma name"](https://www.wolframalpha.com/input/?i=Gemma+name).)
+
+(Additional alluding references:
+the fictional character 
+[Gemma Teller Morrow](https://en.wikipedia.org/wiki/Gemma_Teller_Morrow),
+the phrase
+["burying one's talents"](https://en.wikipedia.org/wiki/Parable_of_the_talents_or_minas).)
 
 Several other names are considered. They are listed below together with some discussion points.
 
