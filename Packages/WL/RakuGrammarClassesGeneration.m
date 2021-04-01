@@ -97,8 +97,8 @@ assume that we get proper English phrases and make parser(s) that match those ph
 Here is a command to do that:
 
 ```mathematica
-MakePropertyRole[
-  cm["Properties"],
+MakeRoleByPhrases[
+  SplitWordsByCapitalLetters /@ cm["Properties"],
   "RoleName" -> "ClassifierMeasurements",
   "TopRuleName" -> "wl-classifier-measurement",
   "RuleSuffix" -> "-measure",
