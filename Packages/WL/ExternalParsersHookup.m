@@ -95,6 +95,8 @@ If[ Length[DownValues[DataReshape`ToLongForm]] == 0,
 BeginPackage["ExternalParsersHookup`"];
 (* Exported symbols added here with SymbolName::usage *)
 
+$DSLUserIdentifier::usage = "DSL user identifier.";
+
 RakuCommand::usage = "Raku (Perl 6) command invocation.";
 
 ToDSLCode::usage = "Raku DSL comprehensive translation.";
@@ -143,6 +145,13 @@ CellPrintAndRunPython::usage = "CellPrintAndRunPython[s_String]";
 
 
 Begin["`Private`"];
+
+(*===========================================================*)
+(* $DSLUserIdentifier                                        *)
+(*===========================================================*)
+
+$DSLUserIdentifier = None;
+
 
 (*===========================================================*)
 (* CellPrint                                                 *)
@@ -247,14 +256,18 @@ ToDSLCode::nargs = "One string argument is expected.";
 ToDSLCode::nmeth = "The value of the option Method is expected to be one of: `1`.";
 
 Options[ToDSLCode] = {
+  "UserIdentifier" -> Automatic,
   Method -> "PrintAndEvaluate"
 };
 
-ToDSLCode[command_, opts : OptionsPattern[] ] :=
-    Module[{pres, lsExpectedMethods, method, aRes, lang},
+ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
+    Module[{command = commandArg, userID, method, pres, lsExpectedMethods, aRes, lang},
+
+      userID = OptionValue[ ToDSLCode, "UserIdentifier" ];
+      If[ TrueQ[ userID === Automatic ], userID = $DSLUserIdentifier ];
+      If[ MemberQ[ {Anonymous, None}, userID ] || !StringQ[userID], userID = ""];
 
       method = OptionValue[ ToDSLCode, Method ];
-
       If[ TrueQ[ method === Automatic], method = "PrintAndEvaluate"];
 
       lsExpectedMethods = {"Automatic", "Print", "Evaluate", "PrintAndEvaluate", "Execute", "PrintAndExecute"};
@@ -265,9 +278,13 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
 
       method = ToLowerCase[method];
 
+      If[ StringQ[userID] && StringLength[userID] > 0,
+         command = "USER ID " <> userID <>" ;" <> command;
+      ];
+
       pres =
           RakuCommand[
-            StringJoin["say ToDSLCode(\"", StringReplace[command, "\""->"\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True,  defaultTargetsSpec => 'WL' )"],
+            StringJoin["say ToDSLCode(\"", StringReplace[command, "\""->"\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
             "",
             "DSL::Shared::Utilities::ComprehensiveTranslation"];
 
@@ -285,6 +302,8 @@ ToDSLCode[command_, opts : OptionsPattern[] ] :=
       If[ lang == "WL" && StringTake[command, -1] == ";" && StringTake[ aRes["Code"], -1] != ";",
         aRes["Code"] = aRes["Code"] <> ";"
       ];
+
+      $DSLUserIdentifier = aRes["USERID"];
 
       Which[
         MemberQ[ ToLowerCase @ { "Print" }, method] &&
