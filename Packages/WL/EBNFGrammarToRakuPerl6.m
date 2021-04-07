@@ -269,3 +269,36 @@ ToRakuPerl6[ebnfCode_String, opts : OptionsPattern[]] :=
       ]
     ];
 
+
+PackageExport["GetTerminals"]
+
+Clear[GetTerminals];
+
+GetTerminals::usage = "Gets the terminals in grammar string.";
+
+GetTerminals[ebnfCode_String] := Union[StringCases[ebnfCode, "'" ~~ x : (Except["'"] ..) ~~ "'" :> x]];
+
+
+PackageExport["ReplaceTerminalsWithTokens"]
+
+Clear[ReplaceTerminalsWithTokens];
+
+ReplaceTerminalsWithTokens::usage = "Replaces the terminals with tokens in a grammar string.";
+
+Options[ReplaceTerminalsWithTokens] = {"WordTokenSuffix" -> "-word"};
+
+ReplaceTerminalsWithTokens[rakuCode_String, opts : OptionsPattern[]] :=
+    ReplaceTerminalsWithTokens[rakuCode, GetTerminals[rakuCode], opts];
+
+ReplaceTerminalsWithTokens[rakuCode_String, terminals : {_String ..}, opts : OptionsPattern[]] :=
+    Block[{suffix, lsRules, lsTokens, res},
+      suffix = OptionValue[ReplaceTerminalsWithTokens, "WordTokenSuffix"];
+      lsRules = Map["'" <> # <> "'" -> "<" <> # <> suffix <> ">" &, terminals];
+      res = StringReplace[rakuCode, lsRules];
+      lsTokens = Map["token " <> # <> suffix <> " { '" <> # <> "' };" &, terminals];
+      If[StringTake[res, -1] == "}",
+        StringTake[res, {1, -2}] <> "\n" <> StringRiffle[Map["  " <> # &, lsTokens], "\n"] <> "\n}",
+        (* ELSE *)
+        <| "Grammar" -> res, "Tokens" -> StringRiffle[lsTokens, "\n"] |>
+      ]
+    ];
