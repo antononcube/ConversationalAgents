@@ -112,7 +112,7 @@ FSM states.
  !["PhCA-2-a-producer"](http://imgur.com/B2d2HDRm.png)
  !["PhCA-3-the-third-one](http://imgur.com/mWKNbVom.png)
  
- See this [movie](https://youtu.be/1sQgD9Kn0TQ) demonstrating a PhCA run.
+ See this [movie](https://www.youtube.com/watch?v=fHRHEAPPZS8) demonstrating a PhCA run.
   
 ## References
 
