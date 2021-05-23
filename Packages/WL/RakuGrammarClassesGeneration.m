@@ -193,8 +193,11 @@ ToLowerCaseWithExclusions[s_List, excls_] := Map[ToLowerCaseWithExclusions[#, ex
 
 Clear[SplitWordsByCapitalLetters];
 
+(*SplitWordsByCapitalLetters[word_String] :=*)
+(*    {word} /; StringMatchQ[word, (CharacterRange["A", "Z"]..)];*)
+
 SplitWordsByCapitalLetters[word_String] :=
-    StringCases[word, CharacterRange["A", "Z"] ~~ (Except[CharacterRange["A", "Z"]] ..)];
+    StringCases[word, CharacterRange["A", "Z"] ~~ (Except[CharacterRange["A", "Z"]] ...)];
 
 SplitWordsByCapitalLetters[words : { _String ..} ] := Map[ SplitWordsByCapitalLetters, words];
 
