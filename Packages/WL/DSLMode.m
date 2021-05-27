@@ -100,6 +100,7 @@ nbDSLStyle =
 
       Cell[StyleData["Input"],
         StyleKeyMapping -> {
+          "|" -> "Raku",
           "=" -> "WolframAlphaShort",
           "*" -> "DSLInputParse",
           ">" -> "ExternalLanguage",
@@ -121,13 +122,24 @@ nbDSLStyle =
 
       Cell[StyleData["DSLInputParse"], CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
-        StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
+        StyleKeyMapping -> {"Tab" -> "Raku"}, Evaluatable -> True,
         CellEvaluationFunction -> (DSLMode`DSLInputParse[ToString[#1], Options[DSLMode`DSLInputParse]] &),
         CellFrameColor -> GrayLevel[0.97],
         CellFrameLabels -> {{Cell[BoxData[StyleBox["DSL", FontSlant -> "Italic"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
         FormatType -> InputForm, FontFamily -> "Courier",
         FontWeight -> Bold, Magnification -> 1.15` Inherited,
         FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 1, 1]
+      ],
+
+      Cell[StyleData["Raku"], CellFrame -> True,
+        CellMargins -> {{66, 10}, {5, 10}},
+        StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
+        CellEvaluationFunction -> (ExternalParsersHookup`RakuCommand[ToString[#1], "", "DSL::Shared::Utilities::ComprehensiveTranslation"] &),
+        CellFrameColor -> GrayLevel[0.97],
+        CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
+        FormatType -> InputForm, FontFamily -> "Courier",
+        FontWeight -> Bold, Magnification -> 1.15` Inherited,
+        FontColor -> GrayLevel[0.4], Background -> RGBColor[1, 1, 0.95]
       ],
 
       Cell[StyleData["Code"],
