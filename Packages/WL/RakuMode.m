@@ -142,11 +142,6 @@ RakuMode[ False] := SetOptions[EvaluationNotebook[], StyleDefinitions -> "Defaul
 
 RakuMode[nb_NotebookObject, False] := SetOptions[nb, StyleDefinitions -> "Default.nb"];
 
-
-Clear[DeleteCells];
-DeleteCells[style_String] := NotebookDelete[Cells[CellStyle -> style]];
-DeleteCells[] := DeleteCells["Output"];
-
 End[]; (* `Private` *)
 
 EndPackage[]
