@@ -82,6 +82,8 @@ DSLInputExecute::usage = "Execution function for the cell style \"DSLInputExecut
 
 DSLInputParse::usage = "Execution function for the cell style \"DSLInputParse\".";
 
+RakuInputExecute::usage = "Execution function for the cell style \"RakuInputExecute\".";
+
 DeleteCells::usage = "Delete cells of a specified style.";
 
 Begin["`Private`"];
@@ -94,13 +96,18 @@ Clear[DSLInputParse];
 Options[DSLInputParse] = {Method -> "Print"};
 DSLInputParse[boxData_String, opts : OptionsPattern[]] := ExternalParsersHookup`ToDSLCode[boxData, Sequence @@ Options @ DSLInputParse];
 
+Clear[RakuInputExecute];
+Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "DSL::Shared::Utilities::ComprehensiveTranslation"};
+RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
+    ExternalParsersHookup`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]];
+
 nbDSLStyle =
     Notebook[{
       Cell[StyleData[StyleDefinitions -> "Default.nb"]],
 
       Cell[StyleData["Input"],
         StyleKeyMapping -> {
-          "|" -> "Raku",
+          "|" -> "RakuInputExecute",
           "=" -> "WolframAlphaShort",
           "*" -> "DSLInputParse",
           ">" -> "ExternalLanguage",
@@ -122,7 +129,7 @@ nbDSLStyle =
 
       Cell[StyleData["DSLInputParse"], CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
-        StyleKeyMapping -> {"Tab" -> "Raku"}, Evaluatable -> True,
+        StyleKeyMapping -> {"Tab" -> "RakuInputExecute"}, Evaluatable -> True,
         CellEvaluationFunction -> (DSLMode`DSLInputParse[ToString[#1], Options[DSLMode`DSLInputParse]] &),
         CellFrameColor -> GrayLevel[0.97],
         CellFrameLabels -> {{Cell[BoxData[StyleBox["DSL", FontSlant -> "Italic"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
@@ -131,10 +138,10 @@ nbDSLStyle =
         FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 1, 1]
       ],
 
-      Cell[StyleData["Raku"], CellFrame -> True,
+      Cell[StyleData["RakuInputExecute"], CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
-        CellEvaluationFunction -> (ExternalParsersHookup`RakuCommand[ToString[#1], "", "DSL::Shared::Utilities::ComprehensiveTranslation"] &),
+        CellEvaluationFunction -> (RakuInputExecute[ToString[#1], Options[DSLMode'RakuInputExecute]]&),
         CellFrameColor -> GrayLevel[0.97],
         CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
         FormatType -> InputForm, FontFamily -> "Courier",
