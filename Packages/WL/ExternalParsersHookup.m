@@ -244,7 +244,7 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
       ];
 
       pres =
-          RakuCommand[
+          RakuCommand`RakuCommand[
             StringJoin["say ToDSLCode(\"", StringReplace[command, "\""->"\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
             "",
             "DSL::Shared::Utilities::ComprehensiveTranslation"];
@@ -372,7 +372,7 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
       ];
 
       pres =
-          RakuCommand[
+          RakuCommand`RakuCommand[
             StringJoin["say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"],
             "",
             aRakuModules[monadName]];
