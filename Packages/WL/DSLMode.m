@@ -99,7 +99,7 @@ DSLInputParse[boxData_String, opts : OptionsPattern[]] := ExternalParsersHookup`
 Clear[RakuInputExecute];
 Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "DSL::Shared::Utilities::ComprehensiveTranslation"};
 RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
-    ExternalParsersHookup`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]];
+    RakuCommand`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]];
 
 nbDSLStyle =
     Notebook[{
