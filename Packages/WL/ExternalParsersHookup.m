@@ -52,6 +52,11 @@
 (* Load packages                                           *)
 (***********************************************************)
 
+If[ Length[DownValues[RakuCommand`RakuCommand]] == 0,
+  Echo["RakuCommand.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/RakuCommand.m"];
+];
+
 If[ Length[DownValues[MonadicContextualClassification`ClConUnit]] == 0,
   Echo["MonadicContextualClassification.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/MonadicProgramming/MonadicContextualClassification.m"];
@@ -96,8 +101,6 @@ BeginPackage["ExternalParsersHookup`"];
 (* Exported symbols added here with SymbolName::usage *)
 
 $DSLUserIdentifier::usage = "DSL user identifier.";
-
-RakuCommand::usage = "Raku (Perl 6) command invocation.";
 
 ToDSLCode::usage = "Raku DSL comprehensive translation.";
 
@@ -200,48 +203,6 @@ aTargetLanguageToCellPrintFunc =
 
 aTargetLanguageToCellPrintAndRunFunc =
     <| "R" -> CellPrintAndRunR, "Python" -> CellPrintAndRunPython, "Julia" -> CellPrintAndRunJulia, "WL" -> CellPrintAndRunWL |>;
-
-(*===========================================================*)
-(* RakuCommand                                              *)
-(*===========================================================*)
-
-Clear[RakuCommand];
-
-RakuCommand::nostr = "All arguments are expected to be strings.";
-
-RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocation_String : "/Applications/Rakudo/bin/raku"] :=
-    Block[{rakuCommand, aRes, pres},
-      (*rakuCommandPart=StringJoin["-I\"",moduleDirectory,"\" -M'",
-      moduleName,"' -e 'XXXX'"];
-      rakuCommand=rakuLocation<>" "<>StringReplace[rakuCommandPart,"XXXX"->
-      command];*)
-      rakuCommand = {
-        rakuLocation,
-        "-I", moduleDirectory,
-        "-M", moduleName,
-        "-e", command
-      };
-
-      (*
-      rakuCommand = StringRiffle[rakuCommand, " "];
-      pres = Import["! " <> rakuCommand, "String"];
-      *)
-
-      aRes = RunProcess[rakuCommand];
-
-      If[ aRes["ExitCode" ] != 0 || StringLength[ aRes["StandardError"] ] > 0,
-        Echo[StringTrim @ aRes["StandardError"], "RunProcess stderr:"];
-      ];
-
-      pres = aRes["StandardOutput"]
-    ];
-
-RakuCommand[___] :=
-    Block[{},
-      Message[RakuCommand::nostr];
-      $Failed
-    ];
-
 
 (*===========================================================*)
 (* ToDSLCode                                                 *)
