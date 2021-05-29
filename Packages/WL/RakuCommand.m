@@ -75,20 +75,20 @@ Clear[RakuCommand];
 RakuCommand::nostr = "All arguments are expected to be strings.";
 
 RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocation_String : "/Applications/Rakudo/bin/raku"] :=
-    Block[{rakuCommand, aRes, pres},
+    RakuCommand[command, moduleDirectory, {moduleName}, rakuLocation];
+
+RakuCommand[command_String, moduleDirectory_String, moduleNamesArg : {_String ..}, rakuLocation_String : "/Applications/Rakudo/bin/raku"] :=
+    Block[{moduleNames = moduleNamesArg, rakuCommand, aRes, pres},
       (*rakuCommandPart=StringJoin["-I\"",moduleDirectory,"\" -M'",
       moduleName,"' -e 'XXXX'"];
       rakuCommand=rakuLocation<>" "<>StringReplace[rakuCommandPart,"XXXX"->
       command];*)
-      rakuCommand = {
-        rakuLocation,
-        "-I", moduleDirectory,
-        "-M", moduleName,
-        "-e", command
-      };
+      moduleNames = Select[StringTrim[moduleNames], StringLength[#] > 0 &];
 
-      If[ StringLength[moduleName] == 0,
-        rakuCommand = Drop[rakuCommand,{4,5}]
+      If[ Length[moduleNames] > 0,
+        rakuCommand = Join[ {rakuLocation, "-I", moduleDirectory, "-M"}, Riffle[moduleNames, "-M"], {"-e", command}],
+        (*ELSE*)
+        rakuCommand = {rakuLocation, "-I", moduleDirectory, "-e", command}
       ];
 
       (*
