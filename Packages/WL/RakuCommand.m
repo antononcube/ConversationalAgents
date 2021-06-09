@@ -32,12 +32,12 @@
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     Written by Anton Antonov,
-    antononcube @@ @ poste o .. .. n e t,
+    antononcube@posteo.net,
     Windermere, Florida, USA.
 *)
 
 (*
-    Mathematica is (C) Copyright 1988-2019 Wolfram Research, Inc.
+    Mathematica is (C) Copyright 1988-2021 Wolfram Research, Inc.
 
     Protected by copyright law and international treaties.
 
@@ -79,10 +79,7 @@ RakuCommand[command_String, moduleDirectory_String, moduleName_String, rakuLocat
 
 RakuCommand[command_String, moduleDirectory_String, moduleNamesArg : {_String ..}, rakuLocation_String : "/Applications/Rakudo/bin/raku"] :=
     Block[{moduleNames = moduleNamesArg, rakuCommand, aRes, pres},
-      (*rakuCommandPart=StringJoin["-I\"",moduleDirectory,"\" -M'",
-      moduleName,"' -e 'XXXX'"];
-      rakuCommand=rakuLocation<>" "<>StringReplace[rakuCommandPart,"XXXX"->
-      command];*)
+
       moduleNames = Select[StringTrim[moduleNames], StringLength[#] > 0 &];
 
       If[ Length[moduleNames] > 0,
@@ -90,11 +87,6 @@ RakuCommand[command_String, moduleDirectory_String, moduleNamesArg : {_String ..
         (*ELSE*)
         rakuCommand = {rakuLocation, "-I", moduleDirectory, "-e", command}
       ];
-
-      (*
-      rakuCommand = StringRiffle[rakuCommand, " "];
-      pres = Import["! " <> rakuCommand, "String"];
-      *)
 
       aRes = RunProcess[rakuCommand];
 
