@@ -32,7 +32,7 @@
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     Written by Anton Antonov,
-    antononcube @ gmail . com,
+    antononcube@posteo.net,
     Windermere, Florida, USA.
 *)
 
@@ -52,7 +52,7 @@
 (* :Title: RakuMode *)
 (* :Context: RakuMode` *)
 (* :Author: Anton Antonov *)
-(* :Date: 2020-09-15 *)
+(* :Date: 2021-05-28 *)
 
 (* :Package Version: 1.0 *)
 (* :Mathematica Version: 12.1 *)
