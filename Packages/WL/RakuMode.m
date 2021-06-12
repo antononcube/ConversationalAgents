@@ -195,7 +195,7 @@ nbRakuStyle =
     },
       WindowSize -> {857, 887},
       WindowMargins -> {{373, Automatic}, {Automatic, 219}},
-      FrontEndVersion -> "12.1 for Mac OS X x86 (64-bit) (June 19, 2020)",
+      FrontEndVersion -> "12.3.0 for Mac OS X x86 (64-bit) (May 10, 2021)",
       StyleDefinitions -> "PrivateStylesheetFormatting.nb"
     ];
 
