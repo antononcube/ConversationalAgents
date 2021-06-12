@@ -122,6 +122,8 @@ ToSearchEngineQueryCode::usage = "Translates a natural language commands into a 
 
 ToFoodPreparationWorkflowCode::usage = "Translates a natural language commands into a Food Preparation Workflow code.";
 
+ToDataAcquisitionWorkflowCode::usage = "Translates a natural language commands into a Data Acquisition Workflow code.";
+
 ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline. Obsolete.";
 
 ToSMRMonWLCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline. Obsolete.";
@@ -320,7 +322,8 @@ aRakuModules = <|
   "ECMMon" -> "DSL::English::EpidemiologyModelingWorkflows",
   "DataQuery" -> "DSL::English::DataQueryWorkflows",
   "SearchEngineQuery" -> "DSL::English::SearchEngineQueries",
-  "FoodPreparation" -> "DSL::English::FoodPreparationWorkflows"
+  "FoodPreparation" -> "DSL::English::FoodPreparationWorkflows",
+  "DataAcquisition" -> "DSL::English::DataAcquisitionWorkflows"
 |>;
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
@@ -339,8 +342,11 @@ aRakuFunctions = <|
   "DSL::English::DataQueryWorkflows" -> "ToDataQueryWorkflowCode",
   "SearchEngineQuery" -> "ToSearchEngineQueryCode",
   "DSL::English::SearchEngineQueries" -> "ToSearchEngineQueryCode",
+  "FoodPrep" -> "ToFoodPreparationWorkflowCode",
   "FoodPreparation" -> "ToFoodPreparationWorkflowCode",
-  "DSL::English::FoodPreparationWorkflows" -> "ToFoodPreparationWorkflowCode"
+  "DSL::English::FoodPreparationWorkflows" -> "ToFoodPreparationWorkflowCode",
+  "DataAcquisition" -> "ToDataAcquisitionWorkflowCode",
+  "DSL::English::ToDataAcquisitionWorkflows" -> "ToDataAcquisitionWorkflowCode"
 |>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
@@ -572,6 +578,21 @@ ToFoodPreparationWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
 
 ToFoodPreparationWorkflowCode[___] := $Failed;
 
+
+(*===========================================================*)
+(* ToDataAcquisitionWorkflowCode                             *)
+(*===========================================================*)
+
+Clear[ToDataAcquisitionWorkflowCode];
+
+SyntaxInformation[ToDataAcquisitionWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToDataAcquisitionWorkflowCode] = Options[ToMonadicCommand];
+
+ToDataAcquisitionWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
+    ToMonadicCommand[ command, "DSL::English::DataAcquisitionWorkflows", opts];
+
+ToDataAcquisitionWorkflowCode[___] := $Failed;
 
 
 End[]; (* `Private` *)
