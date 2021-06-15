@@ -346,7 +346,7 @@ aRakuFunctions = <|
   "FoodPreparation" -> "ToFoodPreparationWorkflowCode",
   "DSL::English::FoodPreparationWorkflows" -> "ToFoodPreparationWorkflowCode",
   "DataAcquisition" -> "ToDataAcquisitionWorkflowCode",
-  "DSL::English::ToDataAcquisitionWorkflows" -> "ToDataAcquisitionWorkflowCode"
+  "DSL::English::DataAcquisitionWorkflows" -> "ToDataAcquisitionWorkflowCode"
 |>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
