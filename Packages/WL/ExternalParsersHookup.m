@@ -345,7 +345,7 @@ aRakuFunctions = <|
   "FoodPrep" -> "ToFoodPreparationWorkflowCode",
   "FoodPreparation" -> "ToFoodPreparationWorkflowCode",
   "DSL::English::FoodPreparationWorkflows" -> "ToFoodPreparationWorkflowCode",
-  "DataAcqui" -> "ToDataAcquisitionWorkflowCode",
+  "DataAcquirer" -> "ToDataAcquisitionWorkflowCode",
   "DataAcquisition" -> "ToDataAcquisitionWorkflowCode",
   "DSL::English::DataAcquisitionWorkflows" -> "ToDataAcquisitionWorkflowCode"
 |>;
