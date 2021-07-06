@@ -76,6 +76,14 @@ If[ Length[DownValues[RakuCommand`RakuCommand]] == 0,
 
 BeginPackage["RakuMode`"];
 
+$RakuZMQSocket::usage = "Raku ZMQ socket.";
+
+$RakuProcess::usage = "Raku process.";
+
+KillRakuProcess::usage = "Kill the process assigned to $RakuProcess";
+
+StartRakuProcess::usage = "Start Raku with a ZMQ sockets and assign the process to $RakuProcess";
+
 RakuMode::usage = "Restyle notebooks to use the Raku external execution theme.";
 
 RakuInputExecute::usage = "Execution function for the cell style \"RakuInputExecute\".";
@@ -83,6 +91,10 @@ RakuInputExecute::usage = "Execution function for the cell style \"RakuInputExec
 DeleteCells::usage = "Delete cells of a specified style.";
 
 Begin["`Private`"];
+
+(***********************************************************)
+(* Icons                                                   *)
+(***********************************************************)
 
 rbCameliaHex16 = GraphicsBox[
   TagBox[RasterBox[CompressedData["
@@ -104,18 +116,18 @@ EyMhMn/lzZ35i4Ofxvq6gItbIkhv0o76v/ri1TCxTywoacYDXzuhE0/qMTM+
 KlEdyVtXZMVSccXL9C0ZcRhknyqK/ZGboiaIgvi6q2d9utGvjJL9c9TWjkfJ
 dGPwyMGoXcv1crOz6fYbZYzyAg==
     "], {{0, 18.75}, {21., 0}}, {0, 255},
-    ColorFunction->GrayLevel,
-    ImageResolution->{96, 96}],
-   BoxForm`ImageTag[
-   "Byte", ColorSpace -> "Grayscale", Interleaving -> False, Magnification -> Automatic, MetaInformation ->
-    Association["Comments" -> Association["Software" -> "www.inkscape.org"]]],
-   Selectable->False],
-  DefaultBaseStyle->"ImageGraphics",
-  ImageSizeRaw->{21., 18.75},
-  PlotRange->{{0, 21.}, {0, 18.75}}
+    ColorFunction -> GrayLevel,
+    ImageResolution -> {96, 96}],
+    BoxForm`ImageTag[
+      "Byte", ColorSpace -> "Grayscale", Interleaving -> False, Magnification -> Automatic, MetaInformation ->
+        Association["Comments" -> Association["Software" -> "www.inkscape.org"]]],
+    Selectable -> False],
+  DefaultBaseStyle -> "ImageGraphics",
+  ImageSizeRaw -> {21., 18.75},
+  PlotRange -> {{0, 21.}, {0, 18.75}}
 ];
 
-rbCameliaHex24 =  GraphicsBox[
+rbCameliaHex24 = GraphicsBox[
   TagBox[RasterBox[CompressedData["
 1:eJytlW1MU1ccxumtQUl8mU63L3vJZtz0w+KHfZhzyZxfpmSJcTjMKrpNAijL
 xIlO51tidNO59r61hVaoCkhpoU5gGKQKq0iFOaCzUiyFRQGRyn1pYVCB9t5z
@@ -148,21 +160,21 @@ DnhazTWjEakSOw4fOW/remXy51hQNJzJ9lUFDfhouD8JHgXaLms6PSVeSF6k
 fifhwcRqYbI4st94mUKm5jAs+yclpbl3MZ+mR85lP9B02zZOx2FYtd871zQn
 taxv2uZcOz1/keoXTzc6Nnxqz4zoac7gRJp5Yoj6NP0DdKhBTA==
     "], {{0, 28.5}, {30.75, 0}}, {0, 255},
-    ColorFunction->GrayLevel,
-    ImageResolution->{96, 96}],
-   BoxForm`ImageTag[
-   "Byte", ColorSpace -> "Grayscale", Interleaving -> False, Magnification -> Automatic, MetaInformation ->
-    Association["Comments" -> Association["Software" -> "www.inkscape.org"]]],
-   Selectable->False],
-  DefaultBaseStyle->"ImageGraphics",
-  ImageSizeRaw->{30.75, 28.5},
-  PlotRange->{{0, 30.75}, {0, 28.5}}
+    ColorFunction -> GrayLevel,
+    ImageResolution -> {96, 96}],
+    BoxForm`ImageTag[
+      "Byte", ColorSpace -> "Grayscale", Interleaving -> False, Magnification -> Automatic, MetaInformation ->
+        Association["Comments" -> Association["Software" -> "www.inkscape.org"]]],
+    Selectable -> False],
+  DefaultBaseStyle -> "ImageGraphics",
+  ImageSizeRaw -> {30.75, 28.5},
+  PlotRange -> {{0, 30.75}, {0, 28.5}}
 ];
 
-Clear[RakuInputExecute];
-Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> ""};
-RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
-    RakuCommand`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]];
+
+(***********************************************************)
+(* Input execution                                         *)
+(***********************************************************)
 
 nbRakuStyle =
     Notebook[{
@@ -175,10 +187,11 @@ nbRakuStyle =
           ">" -> "ExternalLanguage",
           "Tab" -> "RakuInputExecute"}],
 
-      Cell[StyleData["RakuInputExecute"], CellFrame -> True,
+      Cell[StyleData["RakuInputExecute"],
+        CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
-        CellEvaluationFunction -> (RakuInputExecute[ToString[#1], Options[RakuMode'RakuInputExecute]]&),
+        CellEvaluationFunction -> (RakuInputExecute[#1, Options[RakuMode'RakuInputExecute]]&),
         CellFrameColor -> GrayLevel[0.85],
         (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
         CellFrameLabels -> {{Cell[BoxData[rbCameliaHex16]], None}, {None, None}},
@@ -199,6 +212,30 @@ nbRakuStyle =
       StyleDefinitions -> "PrivateStylesheetFormatting.nb"
     ];
 
+
+(***********************************************************)
+(* Input execution                                         *)
+(***********************************************************)
+
+Clear[RakuInputExecute];
+Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "", "Process" -> $RakuProcess};
+RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
+    Block[{ff},
+      If[ TrueQ[ Head[OptionValue[RakuInputExecute, "Process"]] === ProcessObject ],
+        ff = FullForm[boxData];
+        ff = ToExpression@StringReplace[ToString[ff], "\\\\" -> "\\"];
+        BinaryWrite[$RakuZMQSocket, StringToByteArray[ff, $SystemCharacterEncoding]];
+        ByteArrayToString[SocketReadMessage[$RakuZMQSocket]],
+        (* ELSE *)
+        RakuCommand`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]]
+      ]
+    ];
+
+
+(***********************************************************)
+(* RakuMode function                                       *)
+(***********************************************************)
+
 Clear[RakuMode] ;
 RakuMode[True] = RakuMode[];
 
@@ -218,6 +255,81 @@ RakuMode[nb_NotebookObject] :=
 RakuMode[ False] := SetOptions[EvaluationNotebook[], StyleDefinitions -> "Default.nb"];
 
 RakuMode[nb_NotebookObject, False] := SetOptions[nb, StyleDefinitions -> "Default.nb"];
+
+
+(***********************************************************)
+(* Raku process functions                                  *)
+(***********************************************************)
+
+Clear[StartRakuProcess];
+
+Options[StartRakuProcess] = {
+  "Raku" -> "/Applications/Rakudo/bin/raku",
+  "URL" -> "tcp://127.0.0.1",
+  "Port" -> "5555",
+  "OutputPrompt" -> "",
+  "ErrorPrompt" -> "#ERROR: "};
+
+StartRakuProcess[opts : OptionsPattern[]] :=
+    Block[{raku, url, port, aPars},
+
+      raku = OptionValue[StartRakuProcess, "Raku"];
+      url = OptionValue[StartRakuProcess, "URL"];
+      port = ToString[OptionValue[StartRakuProcess, "Port"]];
+
+      aPars = <|
+        "URL" -> url,
+        "Port" -> port,
+        "OutputPrompt" -> OptionValue[StartRakuProcess, "OutputPrompt"],
+        "ErrorPrompt" -> OptionValue[StartRakuProcess, "ErrorPrompt"] |>;
+
+      $RakuProcess = StartProcess[ {raku, "-e", zmqScript[aPars]} ];
+      $RakuZMQSocket = SocketConnect[url <> ":" <> port, "ZMQ_REQ"];
+      <|"Process" -> $RakuProcess, "Socket" -> $RakuZMQSocket|>
+    ];
+
+
+Clear[KillRakuProcess];
+
+KillRakuProcess[] :=
+    Block[{},
+      Close[$RakuZMQSocket];
+      KillProcess[$RakuProcess]
+    ];
+
+
+(***********************************************************)
+(* ZMQ script                                              *)
+(***********************************************************)
+
+zmqScript =
+    StringTemplate[
+      "
+use v6;
+
+use Net::ZMQ4;
+use Net::ZMQ4::Constants;
+use Text::CodeProcessing::REPLSandbox;
+use Text::CodeProcessing;
+
+sub MAIN(Str :$url = '`URL`', Str :$port = '`Port`', Str :$rakuOutputPrompt = '`OutputPrompt`', Str :$rakuErrorPrompt = '`ErrorPrompt`') {
+
+    # Socket to talk to clients
+    my Net::ZMQ4::Context $context .= new;
+    my Net::ZMQ4::Socket $responder .= new($context, ZMQ_REP);
+    $responder.bind(\"$url:$port\");
+
+    ## Create a sandbox
+    my $sandbox = Text::CodeProcessing::REPLSandbox.new();
+
+    while (1) {
+        my $message = $responder.receive();
+        say \"Received : { $message.data-str }\";
+        my $res = CodeChunkEvaluate($sandbox, $message.data-str, $rakuOutputPrompt, $rakuErrorPrompt);
+        $responder.send($res);
+    }
+}
+"];
 
 End[]; (* `Private` *)
 
