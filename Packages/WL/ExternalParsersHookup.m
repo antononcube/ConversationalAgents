@@ -258,12 +258,12 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
         Return[$Failed]
       ];
 
-      aRes["Code"] = StringReplace[aRes["Code"] , "==>" -> "\[DoubleLongRightArrow]"];
+      aRes["CODE"] = StringReplace[aRes["CODE"] , "==>" -> "\[DoubleLongRightArrow]"];
 
       lang = StringSplit[aRes["DSLTARGET"], "-"][[1]];
 
-      If[ lang == "WL" && StringTake[command, -1] == ";" && StringTake[ aRes["Code"], -1] != ";",
-        aRes["Code"] = aRes["Code"] <> ";"
+      If[ lang == "WL" && StringTake[command, -1] == ";" && StringTake[ aRes["CODE"], -1] != ";",
+        aRes["CODE"] = aRes["CODE"] <> ";"
       ];
 
       $DSLUserIdentifier = aRes["USERID"];
@@ -271,18 +271,18 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
       Which[
         MemberQ[ ToLowerCase @ { "Print" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintFunc, lang],
-        aTargetLanguageToCellPrintFunc[lang][aRes["Code"]],
+        aTargetLanguageToCellPrintFunc[lang][aRes["CODE"]],
 
         MemberQ[ ToLowerCase @ { "PrintAndExecute", "PrintAndEvaluate" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintAndRunFunc, lang],
-        aTargetLanguageToCellPrintAndRunFunc[lang][aRes["Code"]],
+        aTargetLanguageToCellPrintAndRunFunc[lang][aRes["CODE"]],
 
         MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] && lang == "WL",
-        ToExpression[aRes["Code"]],
+        ToExpression[aRes["CODE"]],
 
         MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintAndRunFunc, lang],
-        ExternalEvaluate[lang, aRes["Code"]],
+        ExternalEvaluate[lang, aRes["CODE"]],
 
         True,
         aRes
