@@ -218,10 +218,14 @@ nbRakuStyle =
 (***********************************************************)
 
 Clear[RakuInputExecute];
-Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "", "Process" -> $RakuProcess};
+Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "", "Process" -> Automatic};
 RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
-    Block[{ff},
-      If[ TrueQ[ Head[OptionValue[RakuInputExecute, "Process"]] === ProcessObject ],
+    Block[{proc, ff},
+
+      proc = OptionValue[RakuInputExecute, "Process"];
+      If[ TrueQ[proc === Automatic], proc = $RakuProcess];
+
+      If[ TrueQ[ Head[proc] === ProcessObject ] && ProcessStatus[proc] == "Running",
         ff = FullForm[boxData];
         ff = ToExpression@StringReplace[ToString[ff], "\\\\" -> "\\"];
         BinaryWrite[$RakuZMQSocket, StringToByteArray[ff, $SystemCharacterEncoding]];
@@ -293,8 +297,10 @@ Clear[KillRakuProcess];
 
 KillRakuProcess[] :=
     Block[{},
-      Close[$RakuZMQSocket];
-      KillProcess[$RakuProcess]
+      If[ TrueQ[ Head[$RakuZMQSocket] === SocketObject], Close[$RakuZMQSocket] ];
+      If[ TrueQ[ Head[$RakuProcess] === ProcessObject], KillProcess[$RakuProcess] ];
+      $RakuZMQSocket = Null;
+      $RakuProcess = Null;
     ];
 
 
