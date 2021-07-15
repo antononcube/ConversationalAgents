@@ -65,10 +65,16 @@
 (* Load packages                                           *)
 (***********************************************************)
 
+(* NOTE:
+The loading of ExternalParsersHookup.m also loads RakuMode.m,
+which is used for the cell RakuInputExecute below. *)
+
+
 If[ Length[DownValues[ExternalParsersHookup`ToDSLCode]] == 0,
   Echo["ExternalParsersHookup.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/ExternalParsersHookup.m"];
 ];
+
 
 (***********************************************************)
 (* Package definitions                                     *)
@@ -82,9 +88,9 @@ DSLInputExecute::usage = "Execution function for the cell style \"DSLInputExecut
 
 DSLInputParse::usage = "Execution function for the cell style \"DSLInputParse\".";
 
-RakuInputExecute::usage = "Execution function for the cell style \"RakuInputExecute\".";
+(*RakuInputExecute::usage = "Execution function for the cell style \"RakuInputExecute\".";*)
 
-DeleteCells::usage = "Delete cells of a specified style.";
+(*DeleteCells::usage = "Delete cells of a specified style.";*)
 
 Begin["`Private`"];
 
@@ -96,10 +102,11 @@ Clear[DSLInputParse];
 Options[DSLInputParse] = {Method -> "Print"};
 DSLInputParse[boxData_String, opts : OptionsPattern[]] := ExternalParsersHookup`ToDSLCode[boxData, Sequence @@ Options @ DSLInputParse];
 
-Clear[RakuInputExecute];
-Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "DSL::Shared::Utilities::ComprehensiveTranslation"};
-RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
-    RakuCommand`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]];
+(* Not needed because we use RakuMode`RakuInputExecute. *)
+(*Clear[RakuInputExecute];*)
+(*Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "DSL::Shared::Utilities::ComprehensiveTranslation"};*)
+(*RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=*)
+(*    RakuCommand`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]];*)
 
 nbDSLStyle =
     Notebook[{
@@ -138,15 +145,18 @@ nbDSLStyle =
         FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 1, 1]
       ],
 
-      Cell[StyleData["RakuInputExecute"], CellFrame -> True,
+      Cell[StyleData["RakuInputExecute"],
+        CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
-        CellEvaluationFunction -> (RakuInputExecute[ToString[#1], Options[DSLMode'RakuInputExecute]]&),
-        CellFrameColor -> GrayLevel[0.97],
-        CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
+        CellEvaluationFunction -> (RakuMode`RakuInputExecute[#1, Options[RakuMode'RakuInputExecute]]&),
+        CellFrameColor -> GrayLevel[0.85],
+        (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
+        CellFrameLabels -> {{Cell[BoxData[RakuMode`Private`rbCameliaHex16]], None}, {None, None}},
+        AutoQuoteCharacters -> {},
         FormatType -> InputForm, FontFamily -> "Courier",
         FontWeight -> Bold, Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4], Background -> RGBColor[1, 1, 0.95]
+        FontColor -> GrayLevel[0.4], Background -> RGBColor[0.976471, 0.964706, 0.960784, 1]
       ],
 
       Cell[StyleData["Code"],
