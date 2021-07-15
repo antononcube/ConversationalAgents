@@ -92,6 +92,10 @@ If[ Length[DownValues[DataReshape`ToLongForm]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/DataReshape.m"];
 ];
 
+If[ Length[DownValues[RakuMode`RakuInputExecute]] == 0,
+  Echo["RakuMode.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/RakuMode.m"];
+];
 
 (***********************************************************)
 (* Package definitions                                     *)
@@ -242,14 +246,27 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
       method = ToLowerCase[method];
 
       If[ StringQ[userID] && StringLength[userID] > 0,
-         command = "USER ID " <> userID <>" ;" <> command;
+        command = "USER ID " <> userID <> " ;" <> command;
       ];
 
-      pres =
-          RakuCommand`RakuCommand[
-            StringJoin["say ToDSLCode(\"", StringReplace[command, "\""->"\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
-            "",
-            "DSL::Shared::Utilities::ComprehensiveTranslation"];
+      If[ TrueQ[ Head[RakuMode`$RakuProcess] === ProcessObject ],
+
+        (* Hoping that every time loading is not too slow. *)
+        pres =
+            RakuMode`RakuInputExecute[
+              StringJoin[
+                "use DSL::Shared::Utilities::ComprehensiveTranslation;",
+                "say ToDSLCode(\"",
+                command,
+                "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"]
+            ],
+        (*ELSE*)
+        pres =
+            RakuCommand`RakuCommand[
+              StringJoin["say ToDSLCode(\"", StringReplace[command, "\"" -> "\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
+              "",
+              "DSL::Shared::Utilities::ComprehensiveTranslation"];
+      ];
 
       (*      pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];*)
       aRes = Association @ ImportString[ pres, "JSON"];
@@ -378,11 +395,19 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
         Return[$Failed]
       ];
 
-      pres =
-          RakuCommand`RakuCommand[
-            StringJoin["say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"],
-            "",
-            aRakuModules[monadName]];
+      If[ TrueQ[ Head[RakuMode`$RakuProcess] === ProcessObject ],
+        pres =
+            RakuMode`RakuInputExecute[
+              StringJoin["use " <> aRakuModules[monadName] <> "; say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"]
+            ],
+
+        (*ELSE*)
+        pres =
+            RakuCommand`RakuCommand[
+              StringJoin["say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"],
+              "",
+              aRakuModules[monadName]]
+      ];
 
       pres = StringReplace[pres, "==>" -> "\[DoubleLongRightArrow]"];
       pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];
