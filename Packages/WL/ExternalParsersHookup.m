@@ -152,6 +152,9 @@ CellPrintPython::usage = "CellPrintPython[s_String]";
 
 CellPrintAndRunPython::usage = "CellPrintAndRunPython[s_String]";
 
+DSLWebServiceInterpretationURL::usage = "Give DSL web service URL of a DSL command.";
+
+DSLWebServiceInterpretation::usage = "Get the DSL web service interpretation of DSL command.";
 
 Begin["`Private`"];
 
@@ -620,6 +623,26 @@ ToDataAcquisitionWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
 
 ToDataAcquisitionWorkflowCode[___] := $Failed;
 
+
+(*===========================================================*)
+(* DSL web service functions                                 *)
+(*===========================================================*)
+
+Clear[DSLWebServiceInterpretationURL, DSLWebServiceInterpretation];
+
+Options[DSLWebServiceInterpretationURL] = {"URL" -> "http://accendodata.net:5040/translate/", "Sub" -> None};
+DSLWebServiceInterpretationURL[command_String, opts : OptionsPattern[]] :=
+    If[StringQ[OptionValue[DSLWebServiceInterpretationURL, "Sub"]],
+
+      OptionValue[DSLWebServiceInterpretationURL, "URL"] <> OptionValue[DSLWebServiceInterpretationURL, "Sub"] <> "/" <> "'" <> URLEncode[command] <> "'",
+      (*ELSE*)
+
+      OptionValue[DSLWebServiceInterpretationURL, "URL"] <> "'" <> URLEncode[command] <> "'"
+    ];
+
+Options[DSLWebServiceInterpretation] = Options[DSLWebServiceInterpretationURL];
+DSLWebServiceInterpretation[command_String, opts : OptionsPattern[]] :=
+    Import[DSLWebServiceInterpretationURL[command, opts], "JSON"];
 
 End[]; (* `Private` *)
 
