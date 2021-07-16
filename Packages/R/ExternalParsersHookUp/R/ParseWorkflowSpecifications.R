@@ -32,7 +32,7 @@
 ## OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ##
 ## Written by Anton Antonov,
-## antononcube @@@ gmail ... com,
+## antononcube @@@ posteo ... net,
 ## Windermere, Florida, USA.
 ##===========================================================
 

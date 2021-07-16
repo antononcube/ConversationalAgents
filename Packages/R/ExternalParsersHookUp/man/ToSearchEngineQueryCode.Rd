@@ -2,7 +2,7 @@
 % Please edit documentation in R/ParseWorkflowSpecifications.R
 \name{ToSearchEngineQueryCode}
 \alias{ToSearchEngineQueryCode}
-\title{Interpret data query workflow natural language commands.}
+\title{Interpret search engine query commands.}
 \usage{
 ToSearchEngineQueryCode(command, parse = TRUE, target = "tidyverse")
 }

@@ -1,7 +1,7 @@
 Package: ExternalParsersHookUp
 Type: Package
 Title: External Parsers Hook-up
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Anton", "Antonov", email = "antononcube@gmail.com",
                   role = c("aut", "cre"))
 Maintainer: Anton Antonov <antononcube@gmail.com>
@@ -17,7 +17,8 @@ Imports:
     purrr,
     dplyr,
     stringi,
-    stringr
+    stringr,
+    jsonlite
 Suggests: 
     knitr,
     rmarkdown,
