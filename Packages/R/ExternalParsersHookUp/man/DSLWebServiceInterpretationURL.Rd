@@ -21,3 +21,8 @@ If NULL then only the \code{url} is used.}
 \description{
 Gives interpreter web service URL of a DSL command.
 }
+\seealso{
+Other DSLWebService: 
+\code{\link{DSLWebServiceInterpretation}()}
+}
+\concept{DSLWebService}

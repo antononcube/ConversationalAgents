@@ -48,20 +48,25 @@ NULL
 #' @param url The web service URL.
 #' @param sub Sub-service name.
 #' If NULL then only the \code{url} is used.
+#' @family DSLWebService
 #' @export
 DSLWebServiceInterpretationURL <- function(command, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
   if( is.character(sub) ) {
-    paste0(url, sub, "/'", URLencode(command), "")
+    paste0(url, sub, "/'", URLencode(command), "'")
   } else {
-    paste0(url, "'", URLencode(command), "")
+    paste0(url, "'", URLencode(command), "'")
   }
 }
+
 
 #' DSL interpretation
 #' @description Gives interpreter web service URL of a DSL command.
 #' @param command The command to be interpreted.
-#' @param ... Arguments for \code{\link{DSLInterpretationURL}}.
+#' @param url The web service URL.
+#' @param sub Sub-service name.
+#' If NULL then only the \code{url} is used.
+#' @family DSLWebService
 #' @export
-DSLWebServiceInterpretation <- function(command, ...) {
-  jsonlite::fromJSON(DSLWebServiceInterpretationURL(command, ...))
+DSLWebServiceInterpretation <- function(command, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
+  jsonlite::fromJSON(DSLWebServiceInterpretationURL(command, url = url, sub = sub))
 }

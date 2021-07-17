@@ -4,13 +4,25 @@
 \alias{DSLWebServiceInterpretation}
 \title{DSL interpretation}
 \usage{
-DSLWebServiceInterpretation(command, ...)
+DSLWebServiceInterpretation(
+  command,
+  url = "http://accendodata.net:5040/translate/",
+  sub = NULL
+)
 }
 \arguments{
 \item{command}{The command to be interpreted.}
 
-\item{...}{Arguments for \code{\link{DSLInterpretationURL}}.}
+\item{url}{The web service URL.}
+
+\item{sub}{Sub-service name.
+If NULL then only the \code{url} is used.}
 }
 \description{
 Gives interpreter web service URL of a DSL command.
 }
+\seealso{
+Other DSLWebService: 
+\code{\link{DSLWebServiceInterpretationURL}()}
+}
+\concept{DSLWebService}
