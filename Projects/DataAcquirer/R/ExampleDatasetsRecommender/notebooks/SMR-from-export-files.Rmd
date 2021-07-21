@@ -1,0 +1,191 @@
+---
+title: "Ingest recommender data"
+author: Anton Antonov
+date: 2021-07-21
+output: html_notebook
+params:
+  smrDirName: "~/MathFiles/Data Acquisition Workflows/ProcessedData"
+---
+
+```{r setup}
+library(d3heatmap)
+library(magrittr)
+library(tidyverse)
+library(Matrix)
+library(SparseMatrixRecommender)
+library(SMRMon)
+library(LSAMon)
+library(OutlierIdentifiers)
+library(SparseMatrixRecommenderInterfacesNoDT)
+library(ParetoPrincipleAdherence)
+library(jsonlite)
+```
+
+# Ingest data
+
+## WL Datasets
+
+```{r}
+dfWLSMRMatrix <- read.csv( file = file.path( params$smrDirName, "WLExampleData-dfSMRMatrix.csv") )
+
+dfWLStemRules <- read.csv( file = file.path( params$smrDirName, "WLExampleData-dfStemRules.csv") )
+dfWLLSAWordGlobalWeights <- read.csv( file = file.path( params$smrDirName, "WLExampleData-dfLSAWordGlobalWeights.csv") )
+dfWLLSATopicWordMatrix <- read.csv( file = file.path( params$smrDirName, "WLExampleData-dfLSATopicWordMatrix.csv") )
+
+dfWLExampleData <- read.csv( file = file.path( params$smrDirName, "dfWLExampleData.csv") )
+
+aWLDescriptions <- jsonlite::read_json( path = file.path( params$smrDirName, "aWLExampleData-Descriptions.json") )
+aWLDescriptions <- setNames(as.character(aWLDescriptions), names(aWLDescriptions))
+```
+
+```{r}
+Summary(dfWLSMRMatrix)
+```
+
+```{r}
+Summary(dfWLExampleData)
+```
+
+## R Datasets
+
+```{r}
+dfRSMRMatrix <- read.csv( file = file.path( params$smrDirName, "RExampleData-dfSMRMatrix.csv") )
+
+dfRStemRules <- read.csv( file = file.path( params$smrDirName, "RExampleData-dfStemRules.csv") )
+dfRLSAWordGlobalWeights <- read.csv( file = file.path( params$smrDirName, "RExampleData-dfLSAWordGlobalWeights.csv") )
+dfRLSATopicWordMatrix <- read.csv( file = file.path( params$smrDirName, "RExampleData-dfLSATopicWordMatrix.csv") )
+
+dfRExampleData <- read.csv( file = file.path( params$smrDirName, "dfRExampleData.csv") )
+
+aRDescriptions <- jsonlite::read_json( path = file.path( params$smrDirName, "aRExampleData-Descriptions.json") )
+aRDescriptions <- setNames(as.character(aRDescriptions), names(aRDescriptions))
+```
+
+```{r}
+Summary(dfRSMRMatrix)
+```
+
+```{r}
+Summary(dfRExampleData)
+```
+
+
+-------
+# LSA objects creation
+
+##  WL datasets
+
+```{r}
+lsaWLDatasetsWordsAndPhrases <- 
+  LSAMonUnit( aWLDescriptions ) %>% 
+  LSAMonMakeDocumentTermMatrix(stemWordsQ = T, stopWords = NULL ) %>% 
+  LSAMonApplyTermWeightFunctions( "IDF", "None", "Cosine" ) %>% 
+  LSAMonExtractTopics( numberOfTopics = 20, minNumberOfDocumentsPerTerm = 2, method = "NNMF", maxSteps = 12)
+```
+
+
+## R datasets
+
+```{r}
+lsaRDatasetsWordsAndPhrases <- 
+  LSAMonUnit( aRDescriptions ) %>% 
+  LSAMonMakeDocumentTermMatrix(stemWordsQ = T, stopWords = NULL ) %>% 
+  LSAMonApplyTermWeightFunctions( "IDF", "None", "Cosine" ) %>% 
+  LSAMonExtractTopics( numberOfTopics = 20, minNumberOfDocumentsPerTerm = 1, method = "NNMF", maxSteps = 12)
+```
+
+-------
+
+# Create WL datasets recommender 
+
+```{r}
+smrWLDatasets <- 
+  SMRCreateFromLongForm( data = dfWLSMRMatrix, itemColumnName = "Item", tagTypeColumnName = "TagType", valueColumnName = "Tag", weightColumnName = "Weight" ) %>% 
+  SMRMonSetItemColumnName("ID")
+```
+
+```{r}
+smatTerms <- lsaWLDatasetsWordsAndPhrases %>% LSAMonTakeWeightedDocumentTermMatrix
+smatTopics <- lsaWLDatasetsWordsAndPhrases %>% LSAMonNormalizeMatrixProduct(normalizeLeftQ = F) %>% LSAMonTakeW
+smatTopics <- SMRApplyTermWeightFunctions(docTermMat = smatTopics, globalWeightFunction = "None", localWeightFunction = "None", normalizerFunction = "Cosine")
+```
+
+```{r}
+smrWLDatasets <- 
+  smrWLDatasets %>% 
+  SMRAnnexSubMatrix( newSubMat = smatTerms, "Word", addTagTypesToColumnNamesQ = T) %>% 
+  SMRAnnexSubMatrix( newSubMat = smatTopics, "Topic", addTagTypesToColumnNamesQ = T)
+```
+
+## Example recommendations
+
+```{r}
+lsProf <- c("ApplicationArea:Aviation" = 0.707107, "DataType:TimeSeries" = 0.707107, "Word:airlin" = 1)
+```
+
+```{r}
+dfRecs <- 
+  smrWLDatasets %>% 
+  SMRMonRecommendByProfile(lsProf) %>% 
+  SMRMonJoinAcross(dfWLExampleData, by = "ID") %>% 
+  SMRMonTakeValue
+dfRecs
+```
+
+
+-------
+
+# Create R datasets recommender 
+
+```{r}
+smrRDatasets <- 
+  SMRCreateFromLongForm( data = dfRSMRMatrix, itemColumnName = "Item", tagTypeColumnName = "TagType", valueColumnName = "Tag", weightColumnName = "Weight" ) %>% 
+  SMRMonSetItemColumnName("ID")
+```
+
+```{r}
+smatTerms <- lsaRDatasetsWordsAndPhrases %>% LSAMonTakeWeightedDocumentTermMatrix
+smatTopics <- lsaRDatasetsWordsAndPhrases %>% LSAMonNormalizeMatrixProduct(normalizeLeftQ = F) %>% LSAMonTakeW
+smatTopics <- SMRApplyTermWeightFunctions(docTermMat = smatTopics, globalWeightFunction = "None", localWeightFunction = "None", normalizerFunction = "Cosine")
+```
+
+```{r}
+smrRDatasets <- 
+  smrRDatasets %>% 
+  SMRAnnexSubMatrix( newSubMat = smatTerms, "Word", addTagTypesToColumnNamesQ = T) %>% 
+  SMRAnnexSubMatrix( newSubMat = smatTopics, "Topic", addTagTypesToColumnNamesQ = T)
+```
+
+## Example recommendations
+
+```{r}
+lsProf <- c("ColumnType:Character" = 1., "Word:airlin" = 0.90788, "Word:seri" = 0.361032, "Word:time" = 0.213094)
+```
+
+```{r}
+dfRecs <- 
+  smrRDatasets %>% 
+  SMRMonRecommendByProfile(lsProf) %>% 
+  SMRMonJoinAcross(dfRExampleData, by = "ID") %>% 
+  SMRMonTakeValue
+dfRecs
+```
+
+------
+
+# Save
+
+```{r}
+base::save( list = c("smrWLDatasets"), file = file.path("../flexdashboards", "smrWLDatasets.RData") )
+base::save( list = c("lsaWLDatasetsWordsAndPhrases"), file = file.path("../flexdashboards", "lsaWLDatasetsWordsAndPhrases.RData") )
+base::save( list = c("dfWLExampleData"), file = file.path("../flexdashboards", "dfWLExampleData.RData") )
+```
+
+
+```{r}
+base::save( list = c("smrRDatasets"), file = file.path("../flexdashboards", "smrRDatasets.RData") )
+base::save( list = c("lsaRDatasetsWordsAndPhrases"), file = file.path("../flexdashboards", "lsaRDatasetsWordsAndPhrases.RData") )
+base::save( list = c("dfRExampleData"), file = file.path("../flexdashboards", "dfRExampleData.RData") )
+```
+
+
