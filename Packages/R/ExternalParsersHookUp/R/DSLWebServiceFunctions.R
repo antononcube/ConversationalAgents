@@ -99,19 +99,28 @@ MakeDSLWebServiceURL <- function(command, scheme = "http", hostname = "accendoda
 #' @param hostname Hostname, string.
 #' @param port Port, string or integer.
 #' @param path Path, string.
+#' @param url URL, string.
+#' If NULL then the URL is composed with the arguments \code{scheme, hostname, port, path}.
+#' @param sub Sub-service name.
 #' @details The function \{code\link{httr::build_url}} is used.
 #' This function is a more tunable and robust version of \code{\link{DSLWebServiceInterpretation}}.
-#' @return Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <contenst>)}.
+#' If the argument \code{url} is a string then the web services URL is created with the function
+#' \code{\link{DSLWebServiceInterpretationURL}};
+#' otherwise, the function \code{\link{MakeDSLWebServiceURL}} is used.
+#' @return Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <content>)}.
 #' @family DSLWebService
-#'
 #' @export
-InterpretByDSLWebService <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/" ) {
+InterpretByDSLWebService <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", url = NULL, sub = NULL ) {
 
   # Make the URL
-  url <- MakeDSLWebServiceURL(command, scheme = scheme, hostname = hostname, port = port, path = path )
+  if ( is.character(url) ) {
+    urlLocal <- DSLWebServiceInterpretationURL( command, url = url, sub = sub)
+  } else {
+    urlLocal <- MakeDSLWebServiceURL(command, scheme = scheme, hostname = hostname, port = port, path = path )
+  }
 
   # Attempt to get a response
-  resp <- httr::GET(url = url)
+  resp <- httr::GET(url = urlLocal)
 
   # Check response
   if( httr::http_error(resp) ) {

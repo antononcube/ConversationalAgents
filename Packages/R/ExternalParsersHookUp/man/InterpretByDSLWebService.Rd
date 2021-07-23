@@ -9,7 +9,9 @@ InterpretByDSLWebService(
   scheme = "http",
   hostname = "accendodata.net",
   port = "5040",
-  path = "translate/"
+  path = "translate/",
+  url = NULL,
+  sub = NULL
 )
 }
 \arguments{
@@ -22,9 +24,14 @@ InterpretByDSLWebService(
 \item{port}{Port, string or integer.}
 
 \item{path}{Path, string.}
+
+\item{url}{URL, string.
+If NULL then the URL is composed with the arguments \code{scheme, hostname, port, path}.}
+
+\item{sub}{Sub-service name.}
 }
 \value{
-Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <contenst>)}.
+Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <content>)}.
 }
 \description{
 Gives interpreter web service URL of a DSL command.
