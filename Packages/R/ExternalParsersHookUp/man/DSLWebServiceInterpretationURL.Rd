@@ -23,6 +23,8 @@ Gives interpreter web service URL of a DSL command.
 }
 \seealso{
 Other DSLWebService: 
-\code{\link{DSLWebServiceInterpretation}()}
+\code{\link{DSLWebServiceInterpretation}()},
+\code{\link{InterpretByDSLWebService}()},
+\code{\link{MakeDSLWebServiceURL}()}
 }
 \concept{DSLWebService}

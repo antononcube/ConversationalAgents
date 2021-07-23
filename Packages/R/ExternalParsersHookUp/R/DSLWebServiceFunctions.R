@@ -38,6 +38,7 @@
 
 
 
+#' @import httr
 #' @import jsonlite
 NULL
 
@@ -70,3 +71,60 @@ DSLWebServiceInterpretationURL <- function(command, url = "http://accendodata.ne
 DSLWebServiceInterpretation <- function(command, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
   jsonlite::fromJSON(DSLWebServiceInterpretationURL(command, url = url, sub = sub))
 }
+
+
+#' Make DSL web service URL
+#' @description Gives interpreter web service URL of a DSL command.
+#' @param command The command to be interpreted.
+#' @param scheme Scheme, string.
+#' @param hostname Hostname, string.
+#' @param port Port, string or integer.
+#' @param path Path, string.
+#' @details The function \{code\link{httr::build_url}} is used.
+#' This function is a more tunable and robust version of \code{\link{DSLWebServiceInterpretationURL}}.
+#' @return A URL string.
+#' @family DSLWebService
+#' @export
+MakeDSLWebServiceURL <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/" ) {
+  urlSpec <- list( scheme = scheme, hostname = hostname, port = port, path = path, params = URLencode(command))
+  class(urlSpec) <- "url"
+  httr::build_url( url = urlSpec)
+}
+
+
+#' Interpret by DSL web service
+#' @description Gives interpreter web service URL of a DSL command.
+#' @param command The command to be interpreted.
+#' @param scheme Scheme, string.
+#' @param hostname Hostname, string.
+#' @param port Port, string or integer.
+#' @param path Path, string.
+#' @details The function \{code\link{httr::build_url}} is used.
+#' This function is a more tunable and robust version of \code{\link{DSLWebServiceInterpretation}}.
+#' @return Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <contenst>)}.
+#' @family DSLWebService
+#'
+#' @export
+InterpretByDSLWebService <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/" ) {
+
+  # Make the URL
+  url <- MakeDSLWebServiceURL(command, scheme = scheme, hostname = hostname, port = port, path = path )
+
+  # Attempt to get a response
+  resp <- httr::GET(url = url)
+
+  # Check response
+  if( httr::http_error(resp) ) {
+    return( list( Success = FALSE, Response = resp, Content = NULL ) )
+  }
+
+  # Get the content
+  res <- httr::content(resp, type = "application/json" )
+
+  # Result
+  return( list( Success = TRUE, Response = resp, Content = res ) )
+
+}
+
+
+
