@@ -640,15 +640,15 @@ DSLWebServiceInterpretationURL[command_String, opts : OptionsPattern[]] :=
       OptionValue[DSLWebServiceInterpretationURL, "URL"] <> "'" <> URLEncode[command] <> "'"
     ];
 
-DSLWebServiceInterpretation::cfopt = "The value of the option \"CodeForm\" is expected to be one of Automatic, False, or True";
+DSLWebServiceInterpretation::wlcop = "The value of the option \"WLCode\" is expected to be one of Automatic, False, or True";
 
 DSLWebServiceInterpretation::nowl = "The value of the key \"CODE\" of the result is not WL code.";
 
-Options[DSLWebServiceInterpretation] = Join[ Options[DSLWebServiceInterpretationURL], { "CodeForm" -> Automatic } ];
+Options[DSLWebServiceInterpretation] = Join[ Options[DSLWebServiceInterpretationURL], { "WLCode" -> Automatic } ];
 DSLWebServiceInterpretation[command_String, opts : OptionsPattern[]] :=
     Block[{codeForm, url, aRes},
 
-      codeForm = OptionValue[DSLWebServiceInterpretation, "CodeForm"];
+      codeForm = OptionValue[DSLWebServiceInterpretation, "WLCode"];
 
       url = DSLWebServiceInterpretationURL[command, FilterRules[{opts}, Options[DSLWebServiceInterpretationURL]]];
 
@@ -661,7 +661,7 @@ DSLWebServiceInterpretation[command_String, opts : OptionsPattern[]] :=
       aRes = Association[aRes];
 
       If[ !MemberQ[{Automatic, False, True}, codeForm],
-        Message[DSLWebServiceInterpretation::cfopt]
+        Message[DSLWebServiceInterpretation::wlcop]
       ];
 
       If[
