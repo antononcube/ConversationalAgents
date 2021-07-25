@@ -665,7 +665,7 @@ DSLWebServiceInterpretation[command_String, opts : OptionsPattern[]] :=
       ];
 
       If[
-        StringMatchQ[aRes["DSLTARGET"], __ ~~ "WL" ~~ ___] && TrueQ[codeForm === Automatic] || TrueQ[codeForm],
+        StringMatchQ[aRes["DSLTARGET"], ___ ~~ "WL" ~~ ___] && TrueQ[codeForm === Automatic] || TrueQ[codeForm],
         aRes["CODE"] = ToExpression["Hold[" <> StringReplace[aRes["CODE"], {"==>" -> "\[DoubleLongRightArrow]"}] <> "]"]
       ];
 
