@@ -640,9 +640,37 @@ DSLWebServiceInterpretationURL[command_String, opts : OptionsPattern[]] :=
       OptionValue[DSLWebServiceInterpretationURL, "URL"] <> "'" <> URLEncode[command] <> "'"
     ];
 
-Options[DSLWebServiceInterpretation] = Options[DSLWebServiceInterpretationURL];
+DSLWebServiceInterpretation::cfopt = "The value of the option \"CodeForm\" is expected to be one of Automatic, False, or True";
+
+DSLWebServiceInterpretation::nowl = "The value of the key \"CODE\" of the result is not WL code.";
+
+Options[DSLWebServiceInterpretation] = Join[ Options[DSLWebServiceInterpretationURL], { "CodeForm" -> Automatic } ];
 DSLWebServiceInterpretation[command_String, opts : OptionsPattern[]] :=
-    Import[DSLWebServiceInterpretationURL[command, opts], "JSON"];
+    Block[{codeForm, url, aRes},
+
+      codeForm = OptionValue[DSLWebServiceInterpretation, "CodeForm"];
+
+      url = DSLWebServiceInterpretationURL[command, FilterRules[{opts}, Options[DSLWebServiceInterpretationURL]]];
+
+      aRes = Import[url, "JSON"];
+
+      If[ !MatchQ[aRes, {_Rule..}],
+        Return[aRes]
+      ];
+
+      aRes = Association[aRes];
+
+      If[ !MemberQ[{Automatic, False, True}, codeForm],
+        Message[DSLWebServiceInterpretation::cfopt]
+      ];
+
+      If[
+        StringMatchQ[aRes["DSLTARGET"], __ ~~ "WL" ~~ ___] && TrueQ[codeForm === Automatic] || TrueQ[codeForm],
+        aRes["CODE"] = ToExpression["Hold[" <> StringReplace[aRes["CODE"], {"==>" -> "\[DoubleLongRightArrow]"}] <> "]"]
+      ];
+
+      aRes
+    ];
 
 End[]; (* `Private` *)
 
