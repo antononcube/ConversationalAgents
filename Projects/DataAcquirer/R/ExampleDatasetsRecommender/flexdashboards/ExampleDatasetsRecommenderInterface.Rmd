@@ -47,6 +47,18 @@ lsData         <- list( "Mathematica" = dfWLExampleData,              "R" = dfRE
 
 Parameters {.sidebar}
 =======================================================================
+```{r}
+actionButton( inputId = "showAll", 
+              label = "Show all",
+              #icon = icon("paper-plane"), 
+              style = "color: #fff; background-color: #337ab7; border-color: #2e6da4" )
+
+showAll <- reactiveVal(FALSE)
+
+observeEvent(input$showAll, {
+  showAll(!showAll())
+})
+```
 
 ```{r}
 selectInput( inputId = "recommender", 
@@ -239,18 +251,25 @@ lsProf <-
     ) 
   })
 
+dfRecommendations <- 
+  reactive({ 
+    if( is.null(lsProf()) || length(lsProf()) == 0 ) {
+      if( showAll() ) { dfData() }
+      else { NULL }
+    } else {
+      showAll(FALSE)
+      smrObj() %>% 
+        SMRMonApplyTagTypeWeights( 
+          weights = tagTypeWeights(), 
+          default = 1 ) %>% 
+        SMRMonRecommendByProfile( profile = lsProf(), nrecs = input$numberOfRecs ) %>% 
+        SMRMonJoinAcross( dfData() ) %>% 
+        SMRMonTakeValue
+    }
+  })
+
 DT::renderDataTable(
-  if( is.null(lsProf()) || length(lsProf()) == 0 ) {
-    NULL
-  } else {
-    smrObj() %>% 
-      SMRMonApplyTagTypeWeights( 
-        weights = tagTypeWeights(), 
-        default = 1 ) %>% 
-      SMRMonRecommendByProfile( profile = lsProf(), nrecs = input$numberOfRecs ) %>% 
-      SMRMonJoinAcross( dfData() ) %>% 
-      SMRMonTakeValue
-    },
+  dfRecommendations(),
   options = list(scrollX = "300px", scrollY = "300px", scroller = TRUE)
 ) 
 ```
