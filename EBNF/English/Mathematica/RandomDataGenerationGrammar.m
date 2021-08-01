@@ -63,10 +63,10 @@ BeginPackage["RandomDataGenerationGrammar`"];
 
 pRANDOMDATAGENERATIONCOMMAND::usage = "Parses natural language commands for random data generation.";
 
-RandomDataGenerationSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
+RandomDataGenerationSubGrammar::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
 specifying random data generation commands construction.";
 
-RandomDataGenerationGrammars::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
+RandomDataGenerationGrammar::usage = "Gives as a string an EBNF grammar for parsing natural language commands \
 specifying random data generation commands construction.";
 
 Begin["`Private`"];
@@ -209,12 +209,12 @@ Print[LeafCount /@ res];
 (* Grammar exposing functions                               *)
 (************************************************************)
 
-Clear[RandomDataGenerationSubGrammars];
+Clear[RandomDataGenerationSubGrammar];
 
-Options[RandomDataGenerationSubGrammars] = { "Normalize" -> False };
+Options[RandomDataGenerationSubGrammar] = { "Normalize" -> False };
 
-RandomDataGenerationSubGrammars[opts:OptionsPattern[]] :=
-    Block[{ normalizeQ = TrueQ[OptionValue[RandomDataGenerationSubGrammars, "Normalize"]], res},
+RandomDataGenerationSubGrammar[opts:OptionsPattern[]] :=
+    Block[{ normalizeQ = TrueQ[OptionValue[RandomDataGenerationSubGrammar, "Normalize"]], res},
 
       res =
           Association[
@@ -228,14 +228,14 @@ RandomDataGenerationSubGrammars[opts:OptionsPattern[]] :=
     ];
 
 
-Clear[RandomDataGenerationGrammars];
+Clear[RandomDataGenerationGrammar];
 
-Options[RandomDataGenerationGrammars] = Options[RandomDataGenerationSubGrammars];
+Options[RandomDataGenerationGrammar] = Options[RandomDataGenerationSubGrammar];
 
-RandomDataGenerationGrammars[opts:OptionsPattern[]] :=
-    Block[{ normalizeQ = TrueQ[OptionValue[RandomDataGenerationGrammars, "Normalize"]], res},
+RandomDataGenerationGrammar[opts:OptionsPattern[]] :=
+    Block[{ normalizeQ = TrueQ[OptionValue[RandomDataGenerationGrammar, "Normalize"]], res},
 
-      res = RandomDataGenerationSubGrammars[ opts ];
+      res = RandomDataGenerationSubGrammar[ opts ];
 
       res =
           StringRiffle[
