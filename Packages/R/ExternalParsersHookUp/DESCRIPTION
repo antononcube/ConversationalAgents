@@ -18,7 +18,8 @@ Imports:
     dplyr,
     stringi,
     stringr,
-    jsonlite
+    jsonlite,
+    httr
 Suggests: 
     knitr,
     rmarkdown,
