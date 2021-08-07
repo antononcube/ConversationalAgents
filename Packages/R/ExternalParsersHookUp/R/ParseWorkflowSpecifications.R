@@ -37,6 +37,11 @@
 ##===========================================================
 
 
+#' @import httr
+#' @import jsonlite
+NULL
+
+
 #' Interpret search engine query commands.
 #' @description Invokes the Raku module DSL::English::SearchEngineQueries in order to get
 #' interpretation of a natural language command or a list spoken commands separated with ";".

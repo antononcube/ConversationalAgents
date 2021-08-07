@@ -46,6 +46,11 @@
 ##===========================================================
 
 
+#' @import httr
+#' @import jsonlite
+NULL
+
+
 #' Raku Perl 6 command
 #' @description Parses a string with a given Raku Perl 6 module directory and
 #' name, grammar, and grammar actions.
