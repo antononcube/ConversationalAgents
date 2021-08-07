@@ -262,9 +262,7 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
                 "say dsl-translate(\"",
                 command,
                 "\", defaultTargetsSpec => 'WL' )"]
-            ];
-        Print[pres];
-        ,
+            ],
         (*ELSE*)
         pres =
             RakuCommand`RakuCommand[
