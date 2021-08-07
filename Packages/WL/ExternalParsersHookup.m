@@ -259,14 +259,14 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
             RakuMode`RakuInputExecute[
               StringJoin[
                 "use DSL::Shared::Utilities::ComprehensiveTranslation;",
-                "say dsl-translate(\"",
+                "say ToDSLCode(\"",
                 command,
-                "\", defaultTargetsSpec => 'WL' )"]
+                "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"]
             ],
         (*ELSE*)
         pres =
             RakuCommand`RakuCommand[
-              StringJoin["say dsl-translate(\"", StringReplace[command, "\"" -> "\\\""], "\", defaultTargetsSpec => 'WL' )"],
+              StringJoin["say ToDSLCode(\"", StringReplace[command, "\"" -> "\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
               "",
               "DSL::Shared::Utilities::ComprehensiveTranslation"];
       ];
