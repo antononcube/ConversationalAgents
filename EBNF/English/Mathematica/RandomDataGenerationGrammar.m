@@ -106,7 +106,7 @@ ebnfCommonParts = "
   <column-noun> = 'column' | 'variable' ;
   <generators-noun> = 'generator' | 'generators' ;
   <tabular-adjective> = 'tabular' ;
-  <random-adjective> = 'random' ;
+  <random-adjective> = 'random' | 'random-driven' | 'randomized' | 'arbitrary' | 'chance' , 'driven' | 'chance-driven' ;
   <names-noun> = 'names' ;
 ";
 
@@ -196,7 +196,7 @@ res =
           ebnfRandomTabularDataGenerationCommand,
           ebnfCommand};
 
-Print[LeafCount /@ res];
+(*Print[LeafCount /@ res];*)
 
 
 (************************************************************)
