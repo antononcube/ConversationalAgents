@@ -231,7 +231,7 @@ Options[ToDSLCode] = {
 };
 
 ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
-    Module[{command = commandArg, userID, method, pres, lsExpectedMethods, aRes, lang},
+    Module[{command = commandArg, userID, method, pres, pres2, lsERRLines, errPrefix, lsExpectedMethods, aRes, lang},
 
       userID = OptionValue[ ToDSLCode, "UserIdentifier" ];
       If[ TrueQ[ userID === Automatic ], userID = $DSLUserIdentifier ];
@@ -262,17 +262,30 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
                 "say ToDSLCode(\"",
                 command,
                 "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"]
-            ],
+            ];
+
+        (* The line prefix is "#ERROR: " is defined in RakuMode.m . *)
+        errPrefix = "#ERROR: ";
+        pres = StringTrim[pres];
+        lsERRLines = StringCases[pres, StartOfLine ~~ errPrefix ~~ (Except["\n"] ..) ~~ EndOfLine];
+        If[ Length[lsERRLines] > 0,
+          pres2 = StringTrim@StringReplace[pres, Thread[lsERRLines -> ""]];
+          aRes = Association @ ImportString[pres2, "JSON"];
+          aRes = Append[aRes, "STDERR" -> StringReplace[StringRiffle[Union@lsERRLines, "\n"], errPrefix -> ""]],
+          (*ELSE*)
+          aRes = Association @ ImportString[pres, "JSON"];
+        ]
+        ,
         (*ELSE*)
         pres =
             RakuCommand`RakuCommand[
               StringJoin["say ToDSLCode(\"", StringReplace[command, "\"" -> "\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
               "",
               "DSL::Shared::Utilities::ComprehensiveTranslation"];
-      ];
 
-      (*      pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];*)
-      aRes = Association @ ImportString[ pres, "JSON"];
+        (*      pres = StringTrim @ StringReplace[ pres, "\\\"" -> "\""];*)
+        aRes = Association @ ImportString[ pres, "JSON"];
+      ];
 
       If[ !AssociationQ[aRes],
         Return[$Failed]
@@ -281,6 +294,10 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
       aRes["CODE"] = StringReplace[aRes["CODE"] , "==>" -> "\[DoubleLongRightArrow]"];
 
       lang = StringSplit[aRes["DSLTARGET"], "-"][[1]];
+
+      If[ KeyExistsQ[aRes, "STDERR"] && StringLength[aRes["STDERR"]] > 0,
+        Echo[aRes["STDERR"], "stderr:"]
+      ];
 
       If[ lang == "WL" && StringTake[command, -1] == ";" && StringTake[ aRes["CODE"], -1] != ";",
         aRes["CODE"] = aRes["CODE"] <> ";"
