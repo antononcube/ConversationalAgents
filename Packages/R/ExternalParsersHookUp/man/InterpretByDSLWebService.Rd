@@ -6,17 +6,19 @@
 \usage{
 InterpretByDSLWebService(
   command,
+  query = NULL,
   scheme = "http",
   hostname = "accendodata.net",
   port = "5040",
   path = "translate/",
-  query = NULL,
   url = NULL,
   sub = NULL
 )
 }
 \arguments{
 \item{command}{The command to be interpreted.}
+
+\item{query}{A list with named elements of URL query specs.}
 
 \item{scheme}{Scheme, string.}
 
@@ -25,8 +27,6 @@ InterpretByDSLWebService(
 \item{port}{Port, string or integer.}
 
 \item{path}{Path, string.}
-
-\item{query}{A list with named elements of URL query specs.}
 
 \item{url}{URL, string.
 If NULL then the URL is composed with the arguments \code{scheme, hostname, port, path}.}

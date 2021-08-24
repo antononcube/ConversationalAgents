@@ -126,11 +126,11 @@ MakeDSLWebServiceURL <- function(command = NULL, scheme = "http", hostname = "ac
 #' Interpret by DSL web service
 #' @description Gives interpreter web service URL of a DSL command.
 #' @param command The command to be interpreted.
+#' @param query A list with named elements of URL query specs.
 #' @param scheme Scheme, string.
 #' @param hostname Hostname, string.
 #' @param port Port, string or integer.
 #' @param path Path, string.
-#' @param query A list with named elements of URL query specs.
 #' @param url URL, string.
 #' If NULL then the URL is composed with the arguments \code{scheme, hostname, port, path}.
 #' @param sub Sub-service name.
@@ -142,11 +142,11 @@ MakeDSLWebServiceURL <- function(command = NULL, scheme = "http", hostname = "ac
 #' @return Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <content>)}.
 #' @family DSLWebService
 #' @export
-InterpretByDSLWebService <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", query = NULL, url = NULL, sub = NULL ) {
+InterpretByDSLWebService <- function(command, query = NULL, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", url = NULL, sub = NULL ) {
 
   # Make the URL
   if ( is.character(url) ) {
-    urlLocal <- DSLWebServiceInterpretationURL( command, url = url, sub = sub)
+    urlLocal <- DSLWebServiceInterpretationURL( command, query = query, url = url, sub = sub )
   } else {
     urlLocal <- MakeDSLWebServiceURL(command = command, scheme = scheme, hostname = hostname, port = port, path = path, query = query )
   }
