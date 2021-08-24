@@ -61,7 +61,7 @@ DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "
 
   url2 <- httr::parse_url( url )
 
-  if( !( is.null(command) || is.character(command) && length(commands) == 1) ) {
+  if( !( is.null(command) || is.character(command) && length(command) == 1) ) {
     stop( "The argument command is expected to be string or NULL.", call. = TRUE )
   }
 
@@ -75,7 +75,6 @@ DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "
 
   if( !is.null(query) ) {
     query <- setNames( as.list(query), names(query) )
-    query <- lapply(query, URLencode)
     url2$query <- query
   }
 
