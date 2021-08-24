@@ -45,30 +45,55 @@ NULL
 #' DSL interpretation URL
 #' @description Gives interpreter web service URL of a DSL command.
 #' @param command The command to be interpreted.
+#' @param query A character vector with named elements.
 #' @param url The web service URL.
 #' @param sub Sub-service name.
 #' If NULL then only the \code{url} is used.
 #' @family DSLWebService
 #' @export
-DSLWebServiceInterpretationURL <- function(command, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
+DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
+
   if( is.character(sub) ) {
-    paste0(url, sub, "/'", URLencode(command), "'")
+    res <- paste0(url, sub, "/")
   } else {
-    paste0(url, "'", URLencode(command), "'")
+    res <- url
   }
+
+  url2 <- httr::parse_url( url )
+
+  if( !( is.null(command) || is.character(command) && length(commands) == 1) ) {
+    stop( "The argument command is expected to be string or NULL.", call. = TRUE )
+  }
+
+  if( is.character(command) ) {
+    url2$params <- URLencode(command)
+  }
+
+  if( !( is.null(query) || ( is.character(query) || is.list(query) ) && !is.null(names(query)) && !is.null(names(query))) ) {
+    stop( "The argument query is expected to be character vector with named elements or NULL.", call. = TRUE )
+  }
+
+  if( !is.null(query) ) {
+    query <- setNames( as.list(query), names(query) )
+    query <- lapply(query, URLencode)
+    url2$query <- query
+  }
+
+  httr::build_url(url2)
 }
 
 
 #' DSL interpretation
 #' @description Gives interpreter web service URL of a DSL command.
 #' @param command The command to be interpreted.
+#' @param query A character vector with named elements.
 #' @param url The web service URL.
 #' @param sub Sub-service name.
 #' If NULL then only the \code{url} is used.
 #' @family DSLWebService
 #' @export
-DSLWebServiceInterpretation <- function(command, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
-  jsonlite::fromJSON(DSLWebServiceInterpretationURL(command, url = url, sub = sub))
+DSLWebServiceInterpretation <- function(command, query = NULL, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
+  jsonlite::fromJSON(DSLWebServiceInterpretationURL(command, query = query, url = url, sub = sub))
 }
 
 
@@ -79,13 +104,20 @@ DSLWebServiceInterpretation <- function(command, url = "http://accendodata.net:5
 #' @param hostname Hostname, string.
 #' @param port Port, string or integer.
 #' @param path Path, string.
+#' @param query A list with named elements of URL query specs.
 #' @details The function \{code\link{httr::build_url}} is used.
 #' This function is a more tunable and robust version of \code{\link{DSLWebServiceInterpretationURL}}.
 #' @return A URL string.
 #' @family DSLWebService
 #' @export
-MakeDSLWebServiceURL <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/" ) {
-  urlSpec <- list( scheme = scheme, hostname = hostname, port = port, path = path, params = URLencode(command))
+MakeDSLWebServiceURL <- function(command = NULL, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", query = NULL ) {
+
+  if( !is.null(command) ) {
+    command <- URLencode(command)
+  }
+
+  urlSpec <- list( scheme = scheme, hostname = hostname, port = port, path = path, params = command, query = query)
+
   class(urlSpec) <- "url"
   httr::build_url( url = urlSpec)
 }
@@ -98,6 +130,7 @@ MakeDSLWebServiceURL <- function(command, scheme = "http", hostname = "accendoda
 #' @param hostname Hostname, string.
 #' @param port Port, string or integer.
 #' @param path Path, string.
+#' @param query A list with named elements of URL query specs.
 #' @param url URL, string.
 #' If NULL then the URL is composed with the arguments \code{scheme, hostname, port, path}.
 #' @param sub Sub-service name.
@@ -109,13 +142,13 @@ MakeDSLWebServiceURL <- function(command, scheme = "http", hostname = "accendoda
 #' @return Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <content>)}.
 #' @family DSLWebService
 #' @export
-InterpretByDSLWebService <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", url = NULL, sub = NULL ) {
+InterpretByDSLWebService <- function(command, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", query = NULL, url = NULL, sub = NULL ) {
 
   # Make the URL
   if ( is.character(url) ) {
     urlLocal <- DSLWebServiceInterpretationURL( command, url = url, sub = sub)
   } else {
-    urlLocal <- MakeDSLWebServiceURL(command, scheme = scheme, hostname = hostname, port = port, path = path )
+    urlLocal <- MakeDSLWebServiceURL(command = command, scheme = scheme, hostname = hostname, port = port, path = path, query = query )
   }
 
   # Attempt to get a response

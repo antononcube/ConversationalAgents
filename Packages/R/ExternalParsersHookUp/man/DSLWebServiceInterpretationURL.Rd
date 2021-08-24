@@ -5,13 +5,16 @@
 \title{DSL interpretation URL}
 \usage{
 DSLWebServiceInterpretationURL(
-  command,
+  command = NULL,
+  query = NULL,
   url = "http://accendodata.net:5040/translate/",
   sub = NULL
 )
 }
 \arguments{
 \item{command}{The command to be interpreted.}
+
+\item{query}{A character vector with named elements.}
 
 \item{url}{The web service URL.}
 

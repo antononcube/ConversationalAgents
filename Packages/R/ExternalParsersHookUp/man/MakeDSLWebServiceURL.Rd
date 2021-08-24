@@ -5,11 +5,12 @@
 \title{Make DSL web service URL}
 \usage{
 MakeDSLWebServiceURL(
-  command,
+  command = NULL,
   scheme = "http",
   hostname = "accendodata.net",
   port = "5040",
-  path = "translate/"
+  path = "translate/",
+  query = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ MakeDSLWebServiceURL(
 \item{port}{Port, string or integer.}
 
 \item{path}{Path, string.}
+
+\item{query}{A list with named elements of URL query specs.}
 }
 \value{
 A URL string.

@@ -10,6 +10,7 @@ InterpretByDSLWebService(
   hostname = "accendodata.net",
   port = "5040",
   path = "translate/",
+  query = NULL,
   url = NULL,
   sub = NULL
 )
@@ -24,6 +25,8 @@ InterpretByDSLWebService(
 \item{port}{Port, string or integer.}
 
 \item{path}{Path, string.}
+
+\item{query}{A list with named elements of URL query specs.}
 
 \item{url}{URL, string.
 If NULL then the URL is composed with the arguments \code{scheme, hostname, port, path}.}
