@@ -1,5 +1,7 @@
 # Head Huntress Gemma
 
+## Introduction
+
 This project has documents and diagrams for design and implementation
 of a conversational agent named “Head Huntress Gemma” aimed at facilitating 
 of job-related recruiting activities. (And more generally, matchmaking activities.)
@@ -17,6 +19,8 @@ Here is a diagram of the components of Head Huntress Gemma:
 
 [![HeadHuntressGemma](./Diagrams/Head-Huntress-Gemma-design.jpg)](./Diagrams/Head-Huntress-Gemma-design.jpg)
 
+------
+
 ## Similarities with other conversational agents
  
 Gemma is very similar to the conversational agents 
@@ -24,6 +28,8 @@ Gemma is very similar to the conversational agents
 and
 [Glukoza](../Glukoza)
 in both component design and grammar design and elements.
+
+------
 
 ## Name selection
 
@@ -43,7 +49,7 @@ Several other names are considered. They are listed below together with some dis
   Too generic.
   
 - Talent Scout Assistant  
-  Sounds good, but abbreviates to TSA. (Which is the same a "Transportation Security Administration.")
+  Sounds good, but abbreviates to TSA. (Which is the same as "Transportation Security Administration.")
   
 - Matchmaker Melina   
   With this name we go to the more general perspective of "matchmaking of minds."
@@ -51,7 +57,8 @@ Several other names are considered. They are listed below together with some dis
 - Matchmaker Martina  
   Similar to the one above, but with "Martina" we allude to "mart".
 
-  
+------
+
 ## References
 
 [AAv1] Anton Antonov, 
