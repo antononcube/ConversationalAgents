@@ -62,12 +62,18 @@ The chain of four commands above:
 1. Parses and interprets the natural language commands
    - And produces, say, JSON or XML records that have executable code.
 2. Gets the commodities files from some default location
-3. Uses *some* XML parsing package in *some* programming language to make the long form data frame
-4. Makes a data package with the long form data frame
+   - Might ask for credentials.  
+3. Uses *some* JSON parsing package in *some* programming language to make the long form data frame
+4. Makes a data package with the long form data frame 
+   - Python and R data packages are regular packages.
+   - WL data package can be a resource function or resource object.
 5. Uploads the data package in some repository
-6. Creates a notebook and populates with command(s) loading the data package
-7. Opens the notebook in some notebook interpreter.
-   - For Jupyter notebooks, it can be Web browser or VSCode.
+   - Local packages installation folder or a private cloud.
+7. Creates a notebook and populates with command(s) loading the data package
+8. Opens the notebook in some notebook interpreter.
+   - Jupyter notebooks can be opened in a Web browser or VSCode.
+   - R notebooks, in IntelliJ or RStudio
+   - WL/Mathematica notebooks, in Mathematica
    
 Of course the command `data-acquire` might/should ask for credentials.
 
