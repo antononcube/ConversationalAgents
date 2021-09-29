@@ -52,11 +52,12 @@ dsl translate -c "get a sample of 3000 JSON commodity files from AWS;
                   parse them into long form data frame; 
                   make a data package for them; 
                   open a notebook with that data package loaded" | 
-dsl data-acquirer | 
-dsl work-env
+dsl data-acquire | 
+dsl data-wrangle |
+dsl make-notebook
 ```
 
-The chain of three commands above:
+The chain of four commands above:
 
 1. Parses and interprets the natural language commands
    - And produces, say, JSON or XML records that have executable code.
@@ -68,6 +69,9 @@ The chain of three commands above:
 7. Opens the notebook in some notebook interpreter.
    - For Jupyter notebooks, it can be Web browser or VSCode.
    
+Of course the command `data-acquire` might/should ask for credentials.
+
+Similarly, all commands can take user spec, e.g. `-u joedoe32`. 
 
 ------ 
 
