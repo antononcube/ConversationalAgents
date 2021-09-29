@@ -128,6 +128,8 @@ ToFoodPreparationWorkflowCode::usage = "Translates a natural language commands i
 
 ToDataAcquisitionWorkflowCode::usage = "Translates a natural language commands into a Data Acquisition Workflow code.";
 
+ToRecruitingWorkflowCode::usage = "Translates a natural language commands into a Recruiting Workflow code.";
+
 ToQRMonWLCommand::usage = "Translates a natural language commands into a QRMon-WL pipeline. Obsolete.";
 
 ToSMRMonWLCommand::usage = "Translates a natural language commands into a SMRMon-WL pipeline. Obsolete.";
@@ -360,7 +362,8 @@ aRakuModules = <|
   "DataQuery" -> "DSL::English::DataQueryWorkflows",
   "SearchEngineQuery" -> "DSL::English::SearchEngineQueries",
   "FoodPreparation" -> "DSL::English::FoodPreparationWorkflows",
-  "DataAcquisition" -> "DSL::English::DataAcquisitionWorkflows"
+  "DataAcquisition" -> "DSL::English::DataAcquisitionWorkflows",
+  "Recruiting" -> "DSL::English::RecruitingWorkflows"
 |>;
 aRakuModules = Join[ aRakuModules, AssociationThread[Values[aRakuModules], Values[aRakuModules]] ];
 
@@ -384,7 +387,9 @@ aRakuFunctions = <|
   "DSL::English::FoodPreparationWorkflows" -> "ToFoodPreparationWorkflowCode",
   "DataAcquirer" -> "ToDataAcquisitionWorkflowCode",
   "DataAcquisition" -> "ToDataAcquisitionWorkflowCode",
-  "DSL::English::DataAcquisitionWorkflows" -> "ToDataAcquisitionWorkflowCode"
+  "DSL::English::DataAcquisitionWorkflows" -> "ToDataAcquisitionWorkflowCode",
+  "Recruiting" -> "ToRecruitingWorkflowCode",
+  "DSL::English::RecruitingWorkflows" -> "ToRecruitingWorkflowCode"
 |>;
 
 ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
@@ -639,6 +644,22 @@ ToDataAcquisitionWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
     ToMonadicCommand[ command, "DSL::English::DataAcquisitionWorkflows", opts];
 
 ToDataAcquisitionWorkflowCode[___] := $Failed;
+
+
+(*===========================================================*)
+(* ToRecruitingWorkflowCode                                  *)
+(*===========================================================*)
+
+Clear[ToRecruitingWorkflowCode];
+
+SyntaxInformation[ToRecruitingWorkflowCode] = { "ArgumentsPattern" -> { _, OptionsPattern[] } };
+
+Options[ToRecruitingWorkflowCode] = Options[ToMonadicCommand];
+
+ToRecruitingWorkflowCode[ command_String, opts : OptionsPattern[] ] :=
+    ToMonadicCommand[ command, "DSL::English::RecruitingWorkflows", opts];
+
+ToRecruitingWorkflowCode[___] := $Failed;
 
 
 (*===========================================================*)
