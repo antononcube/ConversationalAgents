@@ -42,6 +42,35 @@ See also the Raku package:
 
 ------ 
 
+## CLI interface
+
+We can have a Command Line Interface (CLI) with which we can specify
+a chain (UNIX-like pipeline) of commands:
+
+```shell
+dsl translate -c "get a sample of 3000 JSON commodity files from AWS; 
+                  parse them into long form data frame; 
+                  make a data package for them; 
+                  open a notebook with that data package loaded" | 
+dsl data-acquirer | 
+dsl work-env
+```
+
+The chain of three commands above:
+
+1. Parses and interprets the natural language commands
+   - And produces, say, JSON or XML records that have executable code.
+2. Gets the commodities files from some default location
+3. Uses *some* XML parsing package in *some* programming language to make the long form data frame
+4. Makes a data package with the long form data frame
+5. Uploads the data package in some repository
+6. Creates a notebook and populates with command(s) loading the data package
+7. Opens the notebook in some notebook interpreter.
+   - For Jupyter notebooks, it can be Web browser or VSCode.
+   
+
+------ 
+
 ## References
 
 [AAr1] Anton Antonov,
