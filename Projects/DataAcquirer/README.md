@@ -27,19 +27,6 @@ The following diagram shows one way of using DataAcquirer:
 
 [![](./Diagrams/Data-Acquisition-Workflows-components-interaction.png)](./Diagrams/Data-Acquisition-Workflows-components-interaction.pdf)
 
-
------- 
-
-## Similarities with Sous Chef Susana 
- 
-DataAcquirer is very similar to the conversational agent 
-[Sous Chef Susana](../SousChefSusana)
-in both component design and grammar design and elements.
-
-See also the Raku package:
-[DSL::English::FoodPreparationWorkflows](https://github.com/antononcube/Raku-DSL-English-FoodPreparationWorkflows),
-[AAr3].
-
 ------ 
 
 ## CLI interface
@@ -79,6 +66,38 @@ Of course the command `data-acquire` might/should ask for credentials.
 
 Similarly, all commands can take user spec, e.g. `-u joedoe32`. 
 
+An alternative representation of the workflow above:
+
+```shell
+dsl interpret -c "get a sample of 3000 JSON commodity files from AWS" |
+dsl interpret -c "parse JSON files collection" | 
+dsl interpret -c "transform into long form data frame" | 
+dsl interpret -c "make a data package" |
+dsl interpret -c "open a notebook with that data package loaded" 
+```
+
+Here is a diagram that shows the interaction between workflow steps and 
+DAW components:
+
+[![CLIWorkflow](./Diagrams/DAW-CLI-workflow-execution-example.png)](./Diagrams/DAW-CLI-workflow-execution-example.pdf)
+
+(The 
+[NLP Template Engine](https://github.com/antononcube/NLP-Template-Engine)
+has its own repository, [AAr4].)
+
+
+------ 
+
+## Similarities with Sous Chef Susana
+
+DataAcquirer is very similar to the conversational agent
+[Sous Chef Susana](../SousChefSusana)
+in both component design and grammar design and elements.
+
+See also the Raku package:
+[DSL::English::FoodPreparationWorkflows](https://github.com/antononcube/Raku-DSL-English-FoodPreparationWorkflows),
+[AAr3].
+
 ------ 
 
 ## References
@@ -95,5 +114,10 @@ Similarly, all commands can take user spec, e.g. `-u joedoe32`.
 
 [AAr3] Anton Antonov,
 [DSL::English::FoodPreparationWorkflows Raku package](https://github.com/antononcube/Raku-DSL-English-FoodPreparationWorkflows), 
+(2021),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAr4] Anton Antonov,
+[NLP Template Engine](https://github.com/antononcube/NLP-Template-Engine),
 (2021),
 [GitHub/antononcube](https://github.com/antononcube).
