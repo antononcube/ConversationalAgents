@@ -40,7 +40,7 @@ Below is the Mathematica code for parsing the EBNF.
     res // LeafCount
     (* 1985 *)
 
-    stopWords = ReadList["~/Some/Path/stop_words", String];
+    stopWords = Complement[#, DeleteStopwords[#]] &@DictionaryLookup["*"];
 
     pCONTACTNAME[xs$_] :=
      ParseApply[ToExpression["ContactName[#]&"],
