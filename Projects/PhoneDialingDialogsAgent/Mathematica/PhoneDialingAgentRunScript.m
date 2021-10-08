@@ -134,7 +134,7 @@ If[parsingByAddressBook,
           ParsePredicate[StringMatchQ[#1, LetterCharacter ..] && ! MemberQ[stopWords, #1] &]]][xs$];
 ];
 
-SeedRandom[2356]
+SeedRandom[2356];
 contactScoreInds = RandomSample[Range[1, Length[addressLines]]];
 contactScores = Table[PDF[GeometricDistribution[0.2], i] // N, {i, Length[contactScoreInds]}];
 
