@@ -160,7 +160,7 @@ FiniteStateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
     ];
 
 (*-----------------------------------------------------------*)
-FiniteStateMachine[objID_]["Run"[initId_String, maxIterations_Integer : 40]] :=
+FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
     Block[{obj = FiniteStateMachine[objID], stateID, state, k = 0},
 
       If[! KeyExistsQ[obj["States"], initId],
@@ -169,7 +169,7 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxIterations_Integer : 40]] :=
 
       state = obj["States"][initId];
 
-      While[k < maxIterations,
+      While[k < maxLoops,
         k++;
         Echo[Row[{"State:", state}], "Run:"];
         Echo[Row[{"Action:", state["Action"]}], "Run:"];
@@ -195,12 +195,12 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxIterations_Integer : 40]] :=
 FiniteStateMachine[objID_]["ChooseTransition"[args___]] :=
     Echo[Row[{Style["Wrong arguments:", Red], args}], "ChooseTransition:"];
 
-FiniteStateMachine[objID_]["ChooseTransition"[transitions_List]] :=
+FiniteStateMachine[objID_]["ChooseTransition"[transitions_List, maxLoops_Integer : 40]] :=
     Block[{n, k = 0},
 
       Echo[MapIndexed[Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &, transitions], "ChooseTransition:"];
 
-      While[k < 10,
+      While[k < maxLoops,
         k++;
 
         n = Input[];
