@@ -22,8 +22,8 @@
 
 (* Created by the Wolfram Language Plugin for IntelliJ, see http://wlplugin.halirutan.de/ *)
 
-(* :Title: FiniteStateMachine *)
-(* :Context: FiniteStateMachine` *)
+(* :Title: OOPFiniteStateMachine *)
+(* :Context: OOPFiniteStateMachine` *)
 (* :Author: Anton Antonov *)
 (* :Date: 2021-10-09 *)
 
@@ -43,7 +43,7 @@
 ## Usage example
 
 ```mathematica
-machine = StateMachine[3432];
+machine = FiniteStateMachine[3432];
 
 machine["AddState"["ready", Echo["Please deposit coins."] &]];
 machine["AddState"["waiting", Echo["Please select a product."] &]];
@@ -86,9 +86,14 @@ machine["States"]
 machine["Run"["ready"]]
 ```
 
+## Re-use
+
+New sub-classes of `FiniteStateMachine` should provide their own implementations of the method
+"ChooseTransition", i.e. the for the pattern `FiniteStateMachine[objID_]["ChooseTransition"[___]]`.
+
 *)
 
-(*BeginPackage["FiniteStateMachine`"];*)
+(*BeginPackage["OOPFiniteStateMachine`"];*)
 (* Exported symbols added here with SymbolName::usage *)
 
 (*Begin["`Private`"];*)
@@ -119,58 +124,31 @@ NewTransition[] := NewTransition[None, None];
 
 
 (*==========================================================*)
-(* StateMachine                                              *)
+(* FiniteStateMachine                                       *)
 (*==========================================================*)
 
-ClearAll[StateMachine];
+ClearAll[FiniteStateMachine];
 
-StateMachine[objID_]["States"] = <||>;
-
-(*-----------------------------------------------------------*)
-StateMachine[objID_]["ChooseTransition"[args___]] :=
-    Echo[Row[{Style["Wrong args", Red], args}], "ChooseTransition:"];
-
-StateMachine[objID_]["ChooseTransition"[transitions_List]] :=
-    Block[{n, k = 0},
-      Echo[MapIndexed[
-        Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &,
-        transitions], "ChooseTransition:"];
-      While[k < 10,
-        k++;
-        n = Input[];
-        Echo["Selection of input: " <> ToString[n], "ChooseTransition:" ];
-        (*Pause[2];
-        n=RandomChoice[Range[Length[transitions]]];
-        Echo["Random selection of input: "<>ToString[n],"ChooseTransition:" ];*)
-
-        If[IntegerQ[ToExpression[n]],
-          Echo[Row[{Style["Chosen :", Blue], transitions[[n]]}], "ChooseTransition:"];
-          Return[transitions[[n]]],
-          (*ELSE*)
-
-          Echo["Invalid input; try again. (One of" <> ToString[Range[Length[transitions]]] <> ").", "ChooseTransition:"]
-        ];
-      ]
-    ];
+FiniteStateMachine[objID_]["States"] = <||>;
 
 (*-----------------------------------------------------------*)
-StateMachine[objID_]["AddState"[id_String, action_]] :=
+FiniteStateMachine[objID_]["AddState"[id_String, action_]] :=
     AppendTo[
-      StateMachine[objID]["States"],
+      FiniteStateMachine[objID]["States"],
       id -> NewState@<|"ID" -> id, "Action" -> action, "ImplicitNext" -> None, "ExplicitNext" -> {}|>
     ];
 
 (*-----------------------------------------------------------*)
-StateMachine[objID_]["AddTransition"[from_String, to_String]] :=
-    Block[{obj = StateMachine[objID]},
+FiniteStateMachine[objID_]["AddTransition"[from_String, to_String]] :=
+    Block[{obj = FiniteStateMachine[objID]},
       AppendTo[
         obj["States"],
         obj["States"][from]["ID"] -> Append[obj["States"][from], "ImplicitNext" -> to]
       ]
     ];
 
-StateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
-    Block[{obj = StateMachine[objID]},
+FiniteStateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
+    Block[{obj = FiniteStateMachine[objID]},
       AppendTo[
         obj["States"],
         obj["States"][from]["ID"] ->
@@ -182,11 +160,11 @@ StateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
     ];
 
 (*-----------------------------------------------------------*)
-StateMachine[objID_]["Run"[initId_String, maxIterations_Integer : 40]] :=
-    Block[{obj = StateMachine[objID], stateID, state, k = 0},
+FiniteStateMachine[objID_]["Run"[initId_String, maxIterations_Integer : 40]] :=
+    Block[{obj = FiniteStateMachine[objID], stateID, state, k = 0},
 
       If[! KeyExistsQ[obj["States"], initId],
-        Echo["Unknown initial state: " <> initId, "StateMachine[\"Run\"]:"]
+        Echo["Unknown initial state: " <> initId, "FiniteStateMachine[\"Run\"]:"]
       ];
 
       state = obj["States"][initId];
@@ -210,6 +188,35 @@ StateMachine[objID_]["Run"[initId_String, maxIterations_Integer : 40]] :=
           True,
           Return[]
         ]
+      ]
+    ];
+
+(*-----------------------------------------------------------*)
+FiniteStateMachine[objID_]["ChooseTransition"[args___]] :=
+    Echo[Row[{Style["Wrong arguments:", Red], args}], "ChooseTransition:"];
+
+FiniteStateMachine[objID_]["ChooseTransition"[transitions_List]] :=
+    Block[{n, k = 0},
+
+      Echo[MapIndexed[Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &, transitions], "ChooseTransition:"];
+
+      While[k < 10,
+        k++;
+
+        n = Input[];
+        Echo["Selection of input: " <> ToString[n], "ChooseTransition:" ];
+
+        (*Pause[2];
+        n=RandomChoice[Range[Length[transitions]]];
+        Echo["Random selection of input: "<>ToString[n],"ChooseTransition:" ];*)
+
+        If[IntegerQ[ToExpression[n]],
+          Echo[Row[{Style["Chosen :", Blue], transitions[[n]]}], "ChooseTransition:"];
+          Return[transitions[[n]]],
+          (*ELSE*)
+
+          Echo["Invalid input; try again. (One of" <> ToString[Range[Length[transitions]]] <> ").", "ChooseTransition:"]
+        ];
       ]
     ];
 
