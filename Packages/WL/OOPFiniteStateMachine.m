@@ -201,19 +201,19 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
       While[k < maxLoops,
         k++;
 
-        Echo[Row[{"State:", state}], "Run:"];
-        Echo[Row[{"Action:", state["Action"]}], "Run:"];
+        ECHOLOGGING[Row[{"State:", state}], "Run:"];
+        ECHOLOGGING[Row[{"Action:", state["Action"]}], "Run:"];
 
         state["Action"][obj];
 
         Which[
           KeyExistsQ[state, "ImplicitNext"] && !TrueQ[state["ImplicitNext"] === None],
-          Echo[Row[{"ImplicitNext:", state["ImplicitNext"]}], "Run:"];
+          ECHOLOGGING[Row[{"ImplicitNext:", state["ImplicitNext"]}], "Run:"];
           stateID = state["ImplicitNext"];
           state = obj["States"][stateID],
 
           KeyExistsQ[state, "ExplicitNext"] && ListQ[state["ExplicitNext"]] && Length[state["ExplicitNext"]] > 0,
-          Echo[Row[{"ExplicitNext:", state["ExplicitNext"]}], "Run:"];
+          ECHOLOGGING[Row[{"ExplicitNext:", state["ExplicitNext"]}], "Run:"];
           stateID = obj["ChooseTransition"[state["ID"]]]["To"];
           state = obj["States"][stateID],
 
@@ -242,7 +242,7 @@ FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, maxLoops_Integer :
 
       transitions = obj["States"][stateID]["ExplicitNext"];
 
-      Echo[MapIndexed[Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &, transitions], "ChooseTransition:"];
+      ECHOLOGGING[MapIndexed[Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &, transitions], "ChooseTransition:"];
 
       While[k < maxLoops,
         k++;
@@ -255,7 +255,7 @@ FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, maxLoops_Integer :
         Echo["Random selection of input: "<>ToString[n],"ChooseTransition:" ];*)
 
         If[IntegerQ[ToExpression[n]],
-          Echo[Row[{Style["Chosen :", Blue], transitions[[n]]}], "ChooseTransition:"];
+          ECHOLOGGING[Row[{Style["Chosen :", Blue], transitions[[n]]}], "ChooseTransition:"];
           Return[transitions[[n]]],
           (*ELSE*)
 
