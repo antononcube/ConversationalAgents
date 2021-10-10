@@ -1,0 +1,112 @@
+"Package","Item","Title","RowsCount","ColumnsCount","NumericColumnsCount","CharacterColumnsCount"
+"Statistics","AirlinePassengerMiles","Airline Passenger Miles",24,1,1,0
+"Statistics","AirplaneGlass","Airplane Glass",31,1,1,0
+"Statistics","AnimalWeights","Animal Weights",28,3,2,1
+"Statistics","AnorexiaTreatment","Anorexia Treatment",72,3,2,1
+"Statistics","AnscombeRegressionLines","Anscombe Regression Lines",11,8,8,0
+"Statistics","AustraliaAIDS","Australia AIDS",2843,7,3,4
+"Statistics","AustraliaRainfall","Australia Rainfall",47,1,1,0
+"Statistics","Baboon","Baboon",152,2,2,0
+"Statistics","BatchChemicalProcessYields","BatchChemicalProcessYields",70,1,1,0
+"Statistics","BeaverBodyTemperatures","Beaver Body Temperatures",114,4,4,0
+"Statistics","BelgianCalls","Belgian Calls",24,2,2,0
+"Statistics","BiochemicalOxygenDemand","Biochemical Oxygen Demand",6,2,2,0
+"Statistics","BirthWeightRisk","Birth Weight Risk",189,11,11,0
+"Statistics","BlackCherryTrees","Black Cherry Trees",31,3,3,0
+"Statistics","BoforsSteel","Bofors Steel",389,1,1,0
+"Statistics","BoilingAlps","Boiling Alps",17,2,2,0
+"Statistics","BoneMarrowLeukemia","Bone Marrow Leukemia",137,22,22,0
+"Statistics","BoneMarrowTransplants","Bone Marrow Transplants",101,3,3,0
+"Statistics","BostonHomes","Boston Homes",506,14,14,0
+"Statistics","BuffaloSnow","Buffalo Snow",63,1,1,0
+"Statistics","Cabbages","Cabbages",60,4,2,2
+"Statistics","CarStoppingDistances","Car Stopping Distances",50,2,2,0
+"Statistics","CementHeat","Cement Heat",13,5,5,0
+"Statistics","CeramicStrength","Ceramic Strength",480,1,1,0
+"Statistics","ChanningHouse","Channing House",462,5,5,0
+"Statistics","ChemicalProcessConcentrations","ChemicalProcessConcentrations",197,1,1,0
+"Statistics","ChemicalProcessTemperatures","ChemicalProcessTemperatures",226,1,1,0
+"Statistics","ChemicalProcessViscosityReadings","ChemicalProcessViscosityReadings",310,1,1,0
+"Statistics","ChickenWeight","Chicken Weight",71,2,1,1
+"Statistics","CopperLevels","Copper Levels",24,1,1,0
+"Statistics","CosmeticDeterioration","Cosmetic Deterioration",95,3,3,0
+"Statistics","CPUPerformance","CPU Performance",209,10,8,2
+"Statistics","CrabMeasures","Crab Measures",200,8,6,2
+"Statistics","Cushings","Cushings",27,4,2,2
+"Statistics","CyrtoideaeLength","Cyrtoideae Length",100,1,1,0
+"Statistics","DenmarkMelanoma","Denmark Melanoma",205,7,7,0
+"Statistics","DNaseAssay","DNase Assay",176,3,2,1
+"Statistics","EarthquakeWaitingTimes","Earthquake Waiting Times",62,1,1,0
+"Statistics","EconomicFluctuation","Economic Fluctuation",16,7,7,0
+"Statistics","EmployeeAttitude","Employee Attitude",30,7,7,0
+"Statistics","EsophagealCancer","Esophageal Cancer",88,5,2,3
+"Statistics","FatigueLifeFailures","Fatigue Life Failures",22,1,1,0
+"Statistics","FemaleHeightsAndWeights","Female Heights And Weights",15,2,2,0
+"Statistics","FiberStrength","Fiber Strength",3000,1,1,0
+"Statistics","FisherCats","Fisher's Cats",144,3,2,1
+"Statistics","FisherIris","Fisher Iris",150,5,4,1
+"Statistics","FlyAsh","Fly Ash",211,1,1,0
+"Statistics","Formaldehyde","Formaldehyde",6,2,2,0
+"Statistics","GAGUrineLevels","GAG Urine Levels",314,2,2,0
+"Statistics","GalaxyVelocity","Galaxy Velocity",82,1,1,0
+"Statistics","GasFurnaceData","GasFurnaceData",296,2,2,0
+"Statistics","GilgaiSoil","Gilgai Soil",365,9,9,0
+"Statistics","GreatBritanAutoDeaths","Great Britan Auto Deaths",192,1,1,0
+"Statistics","GuineaPigToothGrowth","Guinea Pig Tooth Growth",60,3,2,1
+"Statistics","Hodgkins","Hodgkins",43,6,6,0
+"Statistics","IBMStockClosingPrices","IBMStockClosingPrices",369,1,1,0
+"Statistics","IndomethicinPharmacokinetics","Indomethicin Pharmacokinetics",66,3,2,1
+"Statistics","InternationalAirlinePassengers","InternationalAirlinePassengers",12,13,13,0
+"Statistics","KaleDDT","Kale DDT",15,1,1,0
+"Statistics","KidneyInfection","Kidney Infection",119,3,3,0
+"Statistics","KidneyTransplant","Kidney Transplant",863,5,5,0
+"Statistics","LakeMeadLevels","Lake Mead Levels",75,13,13,0
+"Statistics","LarynxCancer","Larynx Cancer",90,5,5,0
+"Statistics","LifeCycleSavings","Life Cycle Savings",50,5,5,0
+"Statistics","LoblollyTreeGrowth","Loblolly Tree Growth",83,3,2,1
+"Statistics","LosAngelesOzoneReadings","LosAngelesOzoneReadings",18,13,13,0
+"Statistics","MahanadiRiverFlow","Mahanadi River Flow",22,1,1,0
+"Statistics","MarkTwainAuthorship","Mark Twain Authorship",13,3,3,0
+"Statistics","MercuryVaporPressure","Mercury Vapor Pressure",19,2,2,0
+"Statistics","MinkFurSales","MinkFurSales",62,1,1,0
+"Statistics","MotorFailures","Motor Failures",40,3,3,0
+"Statistics","NewcombLightSpeed","Newcomb Light Speed",66,1,1,0
+"Statistics","NickelContent","Nickel Content",31,1,1,0
+"Statistics","OldFaithful","Old Faithful",272,2,2,0
+"Statistics","OrangeTreeGrowth","Orange Tree Growth",35,3,2,1
+"Statistics","OtitisMedia","Otitis Media",220,5,1,4
+"Statistics","OzoneConcentrations","Ozone Concentrations",284,3,1,2
+"Statistics","PlantGrowth","Plant Growth",30,2,1,1
+"Statistics","Psychiatric","Psychiatric",26,4,4,0
+"Statistics","PuromycinReactionVelocity","Puromycin Reaction Velocity",23,3,2,1
+"Statistics","QuarterlyRevenue","Quarterly Revenue",39,5,5,0
+"Statistics","RainfallSeeding","Rainfall Seeding",52,2,1,1
+"Statistics","RiverLengths","River Lengths",141,1,1,0
+"Statistics","ScientificDiscoveries","Scientific Discoveries",100,1,1,0
+"Statistics","ScottishHillRaces","Scottish Hill Races",35,4,3,1
+"Statistics","SingerHeights","Singer Heights",235,2,1,1
+"Statistics","SoporificDrugs","Soporific Drugs",20,3,1,2
+"Statistics","SP500","Standard and Poor's 500",2780,1,1,0
+"Statistics","SpeedOfLight","Speed Of Light",100,3,1,2
+"Statistics","StacklossPlant","Stackloss Plant",21,4,4,0
+"Statistics","SwissBankNotes","Swiss Bank Notes",200,7,7,0
+"Statistics","SwissFertility","Swiss Fertility",47,6,6,0
+"Statistics","Terrorism","Terrorism",9101,1,1,0
+"Statistics","TimeToAIDS","Time to AIDS",295,3,3,0
+"Statistics","TopOilFields2001","Top Oil Fields 2001",116,3,1,2
+"Statistics","UgandaVolcanoes","Uganda Volcanoes",120,2,2,0
+"Statistics","UKLungDiseaseDeaths","UK Lung-Disease Deaths",72,1,1,0
+"Statistics","UKUnemployment","UKUnemployment",60,4,4,0
+"Statistics","UniversitySalaries","University Salaries",25438,4,2,2
+"Statistics","USAccidentalDeaths","US Accidental Deaths",72,1,1,0
+"Statistics","USArrests","US Arrests",50,5,4,1
+"Statistics","USCars1993","US Cars 1993",93,26,19,7
+"Statistics","USCityTemperature","US City Temperature",360,4,1,3
+"Statistics","USEarthquakes","US Earthquakes",3567,7,7,0
+"Statistics","USHogPrices","USHogPrices",82,2,2,0
+"Statistics","USHurricaneLoss","US Hurricane Loss",30,4,3,1
+"Statistics","USLifeTable2003","US Life Table 2003",101,8,8,0
+"Statistics","USStateIncome","US State Income",50,2,1,1
+"Statistics","WarpBreaks","Warp Breaks",54,3,1,2
+"Statistics","WesternUgandaBorder","Western Uganda Border",396,2,2,0
+"Statistics","WolfSunspotNumbers","WolfSunspotNumbers",100,1,1,0
