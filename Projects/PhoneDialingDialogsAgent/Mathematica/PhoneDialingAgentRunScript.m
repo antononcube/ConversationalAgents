@@ -51,7 +51,7 @@
 (* Parameters *)
 
 localCodeQ = False;
-parsingByAddressBook = True;
+parsingByAddressBookQ = True;
 
 localDirectoryName = "/Some/Directory/";
 
@@ -70,7 +70,7 @@ If[localCodeQ,
 
 (*RecordsSummary[addressLines]*)
 
-Clear[IsOccupationQ, IsContactNameQ, IsCompanyNameQ]
+Clear[IsOccupationQ, IsContactNameQ, IsCompanyNameQ];
 isOccupationRules =
     Append[Thread[ToLowerCase@Union[addressLines[[All, 3]]] -> True], _String -> False];
 IsOccupationQ[nm_String] := nm /. isOccupationRules;
@@ -94,7 +94,7 @@ IsCompanyNameQ[nm_String] :=
   (*res*)
 (*]*)
 
-If[localCodeQ,
+If[TrueQ[localCodeQ],
   Get[localDirectoryName <> "PhoneCallingDialogsGrammarRules.m"],
   Get[gitHubDirectoryName <> "PhoneCallingDialogsGrammarRules.m"]
 ];
@@ -109,7 +109,7 @@ If[TrueQ[StringQ[stopWordsFileName] && StringLength[stopWordsFileName] > 0],
 ];
 Print["Length[stopWords] = ", Length[stopWords]];
 
-If[parsingByAddressBook,
+If[parsingByAddressBookQ,
   pCONTACTNAME[xs$_] :=
       ParseApply[ToExpression["ContactName[#]&"], ParsePredicate[IsContactNameQ]][xs$];
   pCONTACTOCCUPATION[xs$_] :=
