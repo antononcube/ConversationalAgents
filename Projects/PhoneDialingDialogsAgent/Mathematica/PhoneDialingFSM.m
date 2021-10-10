@@ -63,36 +63,47 @@ PCEParsedToRuleRules = {ContactName[p_] :> ("name" -> p),
   Occupation[p_] :> ("occupation" -> p), FromCompany[p_] :> ("org" -> p),
   Age[p_] :> ("age" -> p)};
 
-Clear[PCESM]
+Clear[PCESM];
 
 PCESM["WaitingForARequest", contextArg_, input_String] :=
     Block[{p, inputContext, posScores, nFilters, context = contextArg, contact},
 
+      (* Check was "global" command was entered. E.g. "start over". *)
       p = ParseShortest[pCALLGLOBAL][ToTokens[ToLowerCase[input]]];
       Which[
+        (* Cancel / start over request*)
         Length[p] > 0 && MemberQ[Flatten[p], Global["cancel"]],
         Return[{"WaitingForARequest", {"StartOver"},
-          Append[DeleteCases[context, "filters" -> _], "filters" -> {}],
-          "Starting over.", ""}],
+          Append[DeleteCases[context, "filters" -> _], "filters" -> {}], "Starting over.", ""}],
 
+        (* Priority list request *)
         Length[p] > 0 && MemberQ[Flatten[p], Global["priority"]],
         Return[{"PrioritizedList", {}, context, "", ""}],
 
+        (* Other global commands *)
         Length[p] > 0 && !Developer`EmptyQ[Cases[p, Global[___], Infinity]],
         Return[{"WaitingForARequest", {}, context, "", "No implemented reaction for the given service input."}]
       ];
 
+      (* Main command *)
       p = ParseShortest[pCALLCONTACT][ToTokens[ToLowerCase[input]]]; Print[p];
 
+      (* If it cannot be parsed, show message *)
       If[
         p === {} || p[[1, 1]] =!= {},
         Return[{"WaitingForARequest", {""}, context, "Unrecognized input.", ""}]
       ];
 
+      (* Get filter rules *)
       inputContext = Flatten[p] /. PCEParsedToRuleRules;
+
+      (* Filter contacts *)
       {posScores, nFilters} = PCESMFilterContactScores[inputContext];
+
+      (* Update the filters in the context *)
       context = Append[DeleteCases[context, "filters" -> _], "filters" -> inputContext];
 
+      (* Switch to the next state *)
       PCESM["ListOfContactsForAQuery", context, input]
     ];
 
@@ -140,8 +151,7 @@ PCESM["ListOfContactsForAQuery", contextArg_, input_String] :=
             Apply[StringJoin, Riffle[addressLines[[posScores[[1, 1]], All]], " "]] <> " ..."},
         Length[posScores] > 1,
         {"WaitingForAFilter", {"NonUniqueContact"}, context,
-          "There are " <> ToString[Length[posScores]] <>
-              " contacts for this request.", addressLines[[posScores[[All, 1]], All]]},
+          "There are " <> ToString[Length[posScores]] <> " contacts for this request.", addressLines[[posScores[[All, 1]], All]]},
         True,
         {"WaitingForARequest", {""}, context, "No contacts satisfy the request!", ""}
       ]
@@ -151,6 +161,7 @@ PCESM["WaitingForAFilter", contextArg_, input_String] :=
     Block[{p, fspec, t, context = contextArg,
       fContext = "filters" /. contextArg /. "filters" -> {}, pos, posScores, nFilters},
 
+      (* Check was "global" command was entered. E.g. "start over". *)
       p = ParseShortest[pCALLGLOBAL][ToTokens[ToLowerCase[input]]];
 
       Which[
@@ -162,18 +173,22 @@ PCESM["WaitingForAFilter", contextArg_, input_String] :=
         Return[{"PrioritizedList", {}, context, "", ""}]
       ];
 
+      (* Main command processing *)
       p = ParseJust[pCALLFILTER][ToTokens[ToLowerCase[input]]];
 
+      (* Special cases handling *)
       Which[
+        (* Cannot parse as filtering command*)
         p === {} || p[[1, 1]] =!= {},
 
         Return[{"WaitingForAFilter", {""}, context, "Unrecognized input.", ""}],
 
+        (* List position command was entered. E.g. "take the third one". *)
         Length[Cases[Flatten[p], ListPosition[_]]] > 0,
 
         pos = Cases[Flatten[p], ListPosition[n_] :> n][[1]] /.
             Join[Thread[{ "first" , "second" , "third", "fourth", "fifth", "sixth",
-              "seventh", "eigth", "ninth" , "tenth"} -> Range[1, 10]]
+              "seventh", "eighth", "ninth" , "tenth"} -> Range[1, 10]]
               , {"last" -> -1, "former" -> -2, "latter" -> -1}];
 
         Which[
@@ -181,10 +196,7 @@ PCESM["WaitingForAFilter", contextArg_, input_String] :=
         (*{posScores,nFilters}=PCESMFilterContacts[fContext];*)
 
           Return[{"DialPhoneNumber", {"UniqueContactObtained", ("ids" /. context)[[pos]]}, context, "",
-            "Calling " <>
-                Apply[StringJoin,
-                  Riffle[addressLines[[("ids" /. context)[[pos]], All]], " "]] <>
-                " ..."}],
+            "Calling " <> Apply[StringJoin, Riffle[addressLines[[("ids" /. context)[[pos]], All]], " "]] <> " ..."}],
           NumberQ[pos],
 
           Return[{"WaitingForARequest", {""}, context, "The number is out of range!", ""}],
@@ -195,6 +207,7 @@ PCESM["WaitingForAFilter", contextArg_, input_String] :=
         ]
       ];
 
+      (* Process "regularly" expected filtering input. *)
       p = SortBy[p, Length[#[[2]]] &][[1]];
       fspec = Flatten[p];
 
