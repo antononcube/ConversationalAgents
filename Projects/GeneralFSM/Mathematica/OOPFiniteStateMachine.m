@@ -225,6 +225,10 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
 
 (*-----------------------------------------------------------*)
 (*
+Arguments: A state ID
+Return: A transition object
+*)
+(*
 Note that this internals of this function could be made to not depend on the class attributes
 by passing the transitions as an argument.
 That is not flexible enough though -- we might to overload (use multiple dispatch)
