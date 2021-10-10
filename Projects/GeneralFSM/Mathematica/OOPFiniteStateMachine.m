@@ -109,7 +109,8 @@ NewState[id_, action_, implicitNext_, explicitNext_] :=
     <|"ID" -> id,
       "Action" -> action,
       "ImplicitNext" -> implicitNext,
-      "ExplicitNext" -> explicitNext|>;
+      "ExplicitNext" -> explicitNext,
+      "Type" -> "State"|>;
 NewState[asc_?AssociationQ] := KeyTake[Join[NewState[], asc], Keys@NewState[]];
 NewState[id_] := NewState[id, None, None, None];
 NewState[] := NewState[None];
@@ -120,7 +121,7 @@ NewState[] := NewState[None];
 (*==========================================================*)
 
 Clear[NewTransition];
-NewTransition[id_, state_] := <|"ID" -> id, "To" -> state|>;
+NewTransition[id_, state_] := <|"ID" -> id, "To" -> state, "Type" -> "Transition"|>;
 NewTransition[asc_?AssociationQ] := KeyTake[Join[NewTransition[], asc], Keys@NewTransition[]];
 NewTransition[] := NewTransition[None, None];
 
@@ -179,18 +180,21 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
 
       While[k < maxLoops,
         k++;
+
         Echo[Row[{"State:", state}], "Run:"];
         Echo[Row[{"Action:", state["Action"]}], "Run:"];
+
         state["Action"][obj];
+
         Which[
           KeyExistsQ[state, "ImplicitNext"] && !TrueQ[state["ImplicitNext"] === None],
-          Echo[Row[{"ImplicitNext:", state["ExplicitNext"]}], "Run:"];
+          Echo[Row[{"ImplicitNext:", state["ImplicitNext"]}], "Run:"];
           stateID = state["ImplicitNext"];
           state = obj["States"][stateID],
 
           KeyExistsQ[state, "ExplicitNext"] && ListQ[state["ExplicitNext"]] && Length[state["ExplicitNext"]] > 0,
           Echo[Row[{"ExplicitNext:", state["ExplicitNext"]}], "Run:"];
-          stateID = obj["ChooseTransition"[state["ExplicitNext"]]]["To"];
+          stateID = obj["ChooseTransition"[state["ID"]]]["To"];
           state = obj["States"][stateID],
 
           True,
@@ -201,13 +205,18 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
 
 (*-----------------------------------------------------------*)
 (*
-Note that this internals of this function do not depend on the class attributes.
+Note that this internals of this function could be made to not depend on the class attributes
+by passing the transitions as an argument.
+That is not flexible enough though -- we might to overload (use multiple dispatch)
+on "ChooseTransition" for different state IDs.
 *)
 FiniteStateMachine[objID_]["ChooseTransition"[args___]] :=
     Echo[Row[{Style["Wrong arguments:", Red], args}], "ChooseTransition:"];
 
-FiniteStateMachine[objID_]["ChooseTransition"[transitions_List, maxLoops_Integer : 40]] :=
-    Block[{n, k = 0},
+FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, maxLoops_Integer : 40]] :=
+    Block[{obj = $OOPFSMHEAD[objID], transitions, n, k = 0},
+
+      transitions = obj["States"][stateID]["ExplicitNext"];
 
       Echo[MapIndexed[Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &, transitions], "ChooseTransition:"];
 
