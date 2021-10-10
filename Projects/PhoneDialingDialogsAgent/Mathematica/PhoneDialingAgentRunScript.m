@@ -63,7 +63,7 @@ stopWordsFileName = "";
 
 (* Code *)
 
-If[localCodeQ,
+If[TrueQ[localCodeQ],
   Get[localDirectoryName <> "AddressBookByMovieRecords.m"],
   Import[gitHubDirectoryName <> "AddressBookByMovieRecords.m"]
 ];
@@ -138,12 +138,12 @@ SeedRandom[2356];
 contactScoreInds = RandomSample[Range[1, Length[addressLines]]];
 contactScores = Table[PDF[GeometricDistribution[0.2], i] // N, {i, Length[contactScoreInds]}];
 
-If[localCodeQ,
+If[TrueQ[localCodeQ],
   Get[localDirectoryName <> "PhoneDialingFSM.m"],
   Import[gitHubDirectoryName <> "PhoneDialingFSM.m"]
 ];
 
-If[localCodeQ,
+If[TrueQ[localCodeQ],
   Get[localDirectoryName <> "PhoneDialingFSMInterface.m"],
   Import[gitHubDirectoryName <> "PhoneDialingFSMInterface.m"]
-]
+];
