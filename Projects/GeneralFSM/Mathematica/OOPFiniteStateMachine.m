@@ -166,6 +166,26 @@ FiniteStateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
     ];
 
 (*-----------------------------------------------------------*)
+FiniteStateMachine[objID_]["Graph"[opts : OptionsPattern[]]] :=
+    Block[{ obj = FiniteStateMachine[objID], lsEdges},
+
+      lsEdges =
+          Flatten @
+              KeyValueMap[
+                Function[{k, v}, DirectedEdge[k, #["To"], #["ID"]] & /@ v],
+                Select[Map[#["ExplicitNext"] &, obj["States"]], Length[#] > 0 &]
+              ];
+
+      Graph[lsEdges,
+        FilterRules[{opts}, Options[Graph]],
+        GraphLayout -> "CircularEmbedding",
+        VertexLabels -> Automatic,
+        VertexLabelStyle -> Directive[Blue, Bold, Large],
+        EdgeShapeFunction -> GraphElementData[{"FilledArrow", "ArrowSize" -> Automatic}],
+        EdgeLabels -> Automatic, EdgeLabelStyle -> Directive[Red, Italic, Larger]]
+    ];
+
+(*-----------------------------------------------------------*)
 (*
 This function can be overridden by the descendants -- see the use of $OOPFSMHEAD.
 *)
