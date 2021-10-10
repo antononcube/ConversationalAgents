@@ -102,41 +102,39 @@ phbObj = PhoneBookFSM["PhoneBook"];
 (* States *)
 
 phbObj["AddState"["WaitForRequest", (Echo["Please enter contact request.", "WaitForRequest:"]; #["Dataset"] = dsPhoneBook) &]];
-
-phbObj["AddState"["ListOfContacts", Echo["Listing contacts...", "ListOfContacts[Action]:"] &]];
-
+phbObj["AddState"["ListOfContacts",  Echo["Listing contacts...", "ListOfContacts[Action]:"] &]];
 phbObj["AddState"["PrioritizedList", Echo["Prioritized dataset...", "PrioritizedList:"] &]];
-
-phbObj["AddState"["WaitForFilter", Echo["Enter a filter...", "WaitForFilter[Action]:"] &]];
-
+phbObj["AddState"["WaitForFilter",   Echo["Enter a filter...", "WaitForFilter[Action]:"] &]];
 phbObj["AddState"["DialPhoneNumber", Echo[Row[{"Dial phone number:", Spacer[3], #["Dataset"][[1]]}], "DialPhoneNumber:"] &]];
-
-phbObj["AddState"["Help", Echo[Row[{"Here is help:", "..."}], "Help:"] &]];
-
-phbObj["AddState"["Exit", Echo[Style["Shutting down...", Bold], "Exit:"] &]];
+phbObj["AddState"["Help",            Echo[Row[{"Here is help:", "..."}], "Help:"] &]];
+phbObj["AddState"["Exit",            Echo[Style["Shutting down...", Bold], "Exit:"] &]];
 
 (*-----------------------------------------------------------*)
 (*Transitions*)
 
-phbObj["AddTransition"["WaitForRequest", "contactSpec", "ListOfContacts"]];
-phbObj["AddTransition"["WaitForRequest", "startOver", "WaitForRequest"]];
-phbObj["AddTransition"["WaitForRequest", "priority", "PrioritizedList"]];
-phbObj["AddTransition"["PrioritizedList", "priorityListGiven", "WaitForRequest"]];
-phbObj["AddTransition"["ListOfContacts", "manyContacts", "WaitForFilter"]];
-phbObj["AddTransition"["ListOfContacts", "noContacts", "WaitForRequest"]];
-phbObj["AddTransition"["ListOfContacts", "uniqueContactObtained", "DialPhoneNumber"]];
-phbObj["AddTransition"["DialPhoneNumber", "hungUp", "WaitForRequest"]];
-phbObj["AddTransition"["WaitForFilter", "startOver", "WaitForRequest"]];
-phbObj["AddTransition"["WaitForFilter", "filterInput", "ListOfContacts"]];
-phbObj["AddTransition"["WaitForFilter", "priority", "PrioritizedList"]];
-phbObj["AddTransition"["WaitForFilter", "unrecognized", "WaitForFilter"]];
+phbObj["AddTransition"["WaitForRequest",  "contactSpec",           "ListOfContacts"]];
+phbObj["AddTransition"["WaitForRequest",  "startOver",             "WaitForRequest"]];
+phbObj["AddTransition"["WaitForRequest",  "priority",              "PrioritizedList"]];
+phbObj["AddTransition"["WaitForRequest",  "help",                  "Help"]];
+phbObj["AddTransition"["WaitForRequest",  "quit",                  "Exit"]];
 
-phbObj["AddTransition"["Help", "helpGiven", "WaitForRequest"]];
-phbObj["AddTransition"["WaitForRequest", "help", "Help"]];
-phbObj["AddTransition"["WaitForFilter", "help", "Help"]];
+phbObj["AddTransition"["PrioritizedList", "priorityListGiven",     "WaitForRequest"]];
 
-phbObj["AddTransition"["WaitForRequest", "quit", "Exit"]];
-phbObj["AddTransition"["WaitForFilter", "quit", "Exit"]];
+phbObj["AddTransition"["ListOfContacts",  "manyContacts",          "WaitForFilter"]];
+phbObj["AddTransition"["ListOfContacts",  "noContacts",            "WaitForRequest"]];
+phbObj["AddTransition"["ListOfContacts",  "uniqueContactObtained", "DialPhoneNumber"]];
+
+phbObj["AddTransition"["DialPhoneNumber", "hungUp",                "WaitForRequest"]];
+
+phbObj["AddTransition"["WaitForFilter",   "startOver",             "WaitForRequest"]];
+phbObj["AddTransition"["WaitForFilter",   "filterInput",           "ListOfContacts"]];
+phbObj["AddTransition"["WaitForFilter",   "priority",              "PrioritizedList"]];
+phbObj["AddTransition"["WaitForFilter",   "unrecognized",          "WaitForFilter"]];
+phbObj["AddTransition"["WaitForFilter",   "help",                  "Help"]];
+phbObj["AddTransition"["WaitForFilter",   "quit",                  "Exit"]];
+
+phbObj["AddTransition"["Help",            "helpGiven",             "WaitForRequest"]];
+
 
 (*-----------------------------------------------------------*)
 (*Make state transition graph*)
