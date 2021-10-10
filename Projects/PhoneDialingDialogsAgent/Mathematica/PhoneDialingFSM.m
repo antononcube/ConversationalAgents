@@ -59,9 +59,12 @@ messages =
       "FilterInput", "UniqueContactObtained", "Help"}
 
 
-PCEParsedToRuleRules = {ContactName[p_] :> ("name" -> p),
-  Occupation[p_] :> ("occupation" -> p), FromCompany[p_] :> ("org" -> p),
-  Age[p_] :> ("age" -> p)};
+PCEParsedToRuleRules = {
+  ContactName[p_] :> ("name" -> p),
+  Occupation[p_] :> ("occupation" -> p),
+  FromCompany[p_] :> ("org" -> p),
+  Age[p_] :> ("age" -> p)
+};
 
 Clear[PCESM];
 
@@ -107,7 +110,7 @@ PCESM["WaitingForARequest", contextArg_, input_String] :=
       PCESM["ListOfContactsForAQuery", context, input]
     ];
 
-Clear[ContactsByFilter]
+Clear[ContactsByFilter];
 nameToIndexRules = {"name" -> 1, "org" -> 2, "occupation" -> 3, "age" -> All};
 ContactsByFilter[frule_Rule] :=
     Block[{lhs = frule[[1]], rhs = frule[[2]]},
@@ -124,7 +127,7 @@ PCESMFilterContactScores[context_] :=
       {SortBy[Tally[Flatten[pos]], -#[[2]] &], nFilters}
     ];
 
-Clear[PCESMFilterContacts]
+Clear[PCESMFilterContacts];
 PCESMFilterContacts[context_] :=
     Block[{posScores, nFilters},
       {posScores, nFilters} = PCESMFilterContactScores["filters" /. context];
@@ -199,7 +202,7 @@ PCESM["WaitingForAFilter", contextArg_, input_String] :=
             "Calling " <> Apply[StringJoin, Riffle[addressLines[[("ids" /. context)[[pos]], All]], " "]] <> " ..."}],
           NumberQ[pos],
 
-          Return[{"WaitingForARequest", {""}, context, "The number is out of range!", ""}],
+          Return[{"WaitingForARequest", {""}, context, "The specified position is out of range!", ""}],
 
           True,
 
