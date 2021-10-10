@@ -181,7 +181,7 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
         k++;
         Echo[Row[{"State:", state}], "Run:"];
         Echo[Row[{"Action:", state["Action"]}], "Run:"];
-        state["Action"];
+        state["Action"][obj];
         Which[
           KeyExistsQ[state, "ImplicitNext"] && !TrueQ[state["ImplicitNext"] === None],
           Echo[Row[{"ImplicitNext:", state["ExplicitNext"]}], "Run:"];
