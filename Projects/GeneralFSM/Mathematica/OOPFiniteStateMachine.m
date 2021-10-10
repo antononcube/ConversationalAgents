@@ -98,6 +98,8 @@ New sub-classes of `FiniteStateMachine` should provide their own implementations
 
 (*Begin["`Private`"];*)
 
+$OOPFSMHEAD = FiniteStateMachine;
+
 (*==========================================================*)
 (* State                                                    *)
 (*==========================================================*)
@@ -132,6 +134,7 @@ ClearAll[FiniteStateMachine];
 FiniteStateMachine[objID_]["States"] = <||>;
 
 (*-----------------------------------------------------------*)
+(* Cannot be overridden *)
 FiniteStateMachine[objID_]["AddState"[id_String, action_]] :=
     AppendTo[
       FiniteStateMachine[objID]["States"],
@@ -139,6 +142,7 @@ FiniteStateMachine[objID_]["AddState"[id_String, action_]] :=
     ];
 
 (*-----------------------------------------------------------*)
+(* Cannot be overridden *)
 FiniteStateMachine[objID_]["AddTransition"[from_String, to_String]] :=
     Block[{obj = FiniteStateMachine[objID]},
       AppendTo[
@@ -147,6 +151,7 @@ FiniteStateMachine[objID_]["AddTransition"[from_String, to_String]] :=
       ]
     ];
 
+(* Cannot be overridden *)
 FiniteStateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
     Block[{obj = FiniteStateMachine[objID]},
       AppendTo[
@@ -160,8 +165,11 @@ FiniteStateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
     ];
 
 (*-----------------------------------------------------------*)
+(*
+This function can be overridden by the descendants -- see the use of $OOPFSMHEAD.
+*)
 FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
-    Block[{obj = FiniteStateMachine[objID], stateID, state, k = 0},
+    Block[{obj = $OOPFSMHEAD[objID], stateID, state, k = 0},
 
       If[! KeyExistsQ[obj["States"], initId],
         Echo["Unknown initial state: " <> initId, "FiniteStateMachine[\"Run\"]:"]
@@ -192,6 +200,9 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
     ];
 
 (*-----------------------------------------------------------*)
+(*
+Note that this internals of this function do not depend on the class attributes.
+*)
 FiniteStateMachine[objID_]["ChooseTransition"[args___]] :=
     Echo[Row[{Style["Wrong arguments:", Red], args}], "ChooseTransition:"];
 
