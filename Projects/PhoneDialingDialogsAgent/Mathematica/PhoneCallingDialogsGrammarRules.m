@@ -59,6 +59,7 @@ Below is the Mathematica code for parsing the EBNF.
 *)
 
 callingContacts = "
+<call-command> = <call-contact> | <call-filter> ;
 <call-contact> = <call-global> | <call-preamble> &> <contact-spec> | ( 'put' | 'get' ) &> <contact-spec> <& ( 'on' , 'the' , 'phone' ) ;
 <call-preamble> = 'call' | 'dial' | 'i' , 'wanna' , 'talk' , 'to' | 'get' ;
 <contact-spec> = [ 'the' | 'a' | 'an' ] &> ( <contact-occupation> , [ <call-from-company> ] ) | <contact-name> | { <contact-name> } | ( 'someone'  | [ 'a' ] , 'person' ) &>  <call-from-company> ;
