@@ -249,14 +249,21 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
           Return[]
         ];
 
-        ECHOLOGGING[Row[{"loop end inputSequence:", Spacer[3], inputSequence}], "Run:"];
-        ECHOLOGGING[Row[{"loop end state:", Spacer[3], state}], "Run:"];
-        ECHOLOGGING[Row[{"loop end HasImplicitNextQ[state]:", Spacer[3], HasImplicitNextQ[state]}], "Run:"];
+        ECHOLOGGING[Row[{"loop cycle end inputSequence:", Spacer[3], inputSequence}], "Run:"];
+        ECHOLOGGING[Row[{"loop cycle end state:", Spacer[3], state}], "Run:"];
+        ECHOLOGGING[Row[{"loop cycle HasImplicitNextQ[state]:", Spacer[3], HasImplicitNextQ[state]}], "Run:"];
       ];
 
       (* If inputs were specified using the last obtained state go through the implicit states *)
       If[ ListQ[inputSequence],
-        obj["Run"[stateID, None, maxLoops]]
+        ECHOLOGGING["Post loop implicit states run...", "Run:"];
+        state["Action"][obj];
+        While[ HasImplicitNextQ[state],
+          stateID = state["ImplicitNext"];
+          state = obj["States"][stateID];
+          state["Action"][obj];
+          ECHOLOGGING[Row[{"Post loop implicit state run:", Spacer[3], stateID}], "Run:"];
+        ]
       ];
     ];
 
