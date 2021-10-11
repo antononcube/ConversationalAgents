@@ -116,7 +116,7 @@ daObj["AddTransition"["Help", "helpGiven", "WaitForRequest"]];
 (*-----------------------------------------------------------*)
 (*Make state transition graph*)
 
-Echo[ daObj["Graph"[ImageSize -> 900, EdgeLabelStyle -> Directive[Red, Italic, Bold, 16]]], "OOPDataAcquisitionDialogsAgent:"]
+Echo[ daObj["Graph"[ImageSize -> 900, EdgeLabelStyle -> Directive[Red, Italic, Bold, 16]]], "OOPDataAcquisitionDialogsAgent:"];
 
 (*==========================================================*)
 (* Finite state machine code                                *)
