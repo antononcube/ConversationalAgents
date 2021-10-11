@@ -166,18 +166,33 @@ FiniteStateMachine[objID_]["AddTransition"[from_String, id_, to_String]] :=
     ];
 
 (*-----------------------------------------------------------*)
+FiniteStateMachine[objID_]["GraphEdges"[]] :=
+    Block[{ obj = FiniteStateMachine[objID], lsExplicit, lsImplicit},
+
+      lsExplicit =
+          Flatten @
+          KeyValueMap[
+            Function[{k, v}, DirectedEdge[k, #["To"], #["ID"]] & /@ v],
+            Select[Map[#["ExplicitNext"] &, obj["States"]], Length[#] > 0 &]
+          ];
+
+      lsImplicit =
+          Flatten @
+              KeyValueMap[
+                DirectedEdge[#1, #2]&,
+                Select[Map[#["ImplicitNext"] &, obj["States"]], !TrueQ[# === None]&]
+              ];
+
+      Join[lsExplicit, lsImplicit]
+    ];
+
 FiniteStateMachine[objID_]["Graph"[opts : OptionsPattern[]]] :=
     Block[{ obj = FiniteStateMachine[objID], lsEdges},
 
-      lsEdges =
-          Flatten @
-              KeyValueMap[
-                Function[{k, v}, DirectedEdge[k, #["To"], #["ID"]] & /@ v],
-                Select[Map[#["ExplicitNext"] &, obj["States"]], Length[#] > 0 &]
-              ];
+      lsEdges = obj["GraphEdges"[]];
 
       Graph[lsEdges,
-        FilterRules[{opts}, Options[Graph]],
+        Evaluate[Sequence @@ FilterRules[{opts}, Options[Graph]]],
         GraphLayout -> "CircularEmbedding",
         VertexLabels -> Automatic,
         VertexLabelStyle -> Directive[Blue, Bold, Large],
@@ -229,32 +244,39 @@ Arguments: A state ID
 Return: A transition object
 *)
 (*
-Note that this internals of this function could be made to not depend on the class attributes
+1. Note that this internals of this function could be made to not depend on the class attributes
 by passing the transitions as an argument.
-That is not flexible enough though -- we might to overload (use multiple dispatch)
+2. That is not flexible enough though -- we might want to overload (use multiple dispatch)
 on "ChooseTransition" for different state IDs.
+3. The argument input can be omitted; if given then using InputString[] is not necessary.
 *)
 FiniteStateMachine[objID_]["ChooseTransition"[args___]] :=
     Echo[Row[{Style["Wrong arguments:", Red], args}], "ChooseTransition:"];
 
-FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, maxLoops_Integer : 40]] :=
-    Block[{obj = $OOPFSMHEAD[objID], transitions, n, k = 0},
+FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, input_ : Automatic, maxLoops_Integer : 40]] :=
+    Block[{obj = $OOPFSMHEAD[objID], transitions, inputLocal, n, k = 0},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
 
-      ECHOLOGGING[MapIndexed[Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &, transitions], "ChooseTransition:"];
+      Echo[MapIndexed[Row[{"[", Style[#2[[1]], Bold, Blue], "] ", Spacer[3], #1["ID"]}] &, transitions], "ChooseTransition:"];
 
       While[k < maxLoops,
         k++;
 
-        n = Input[];
-        Echo["Selection of input: " <> ToString[n], "ChooseTransition:" ];
+        If[ MemberQ[{Automatic, Input, InputString}, input],
+          inputLocal = InputString[],
+          (* ELSE *)
+          inputLocal = input
+        ];
+
+        Echo["Selection of input: " <> inputLocal, "ChooseTransition:" ];
+        n = ToExpression[inputLocal];
 
         (*Pause[2];
         n=RandomChoice[Range[Length[transitions]]];
         Echo["Random selection of input: "<>ToString[n],"ChooseTransition:" ];*)
 
-        If[IntegerQ[ToExpression[n]],
+        If[IntegerQ[n],
           ECHOLOGGING[Row[{Style["Chosen :", Blue], transitions[[n]]}], "ChooseTransition:"];
           Return[transitions[[n]]],
           (*ELSE*)
