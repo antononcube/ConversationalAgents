@@ -171,10 +171,10 @@ FiniteStateMachine[objID_]["GraphEdges"[]] :=
 
       lsExplicit =
           Flatten @
-          KeyValueMap[
-            Function[{k, v}, DirectedEdge[k, #["To"], #["ID"]] & /@ v],
-            Select[Map[#["ExplicitNext"] &, obj["States"]], Length[#] > 0 &]
-          ];
+              KeyValueMap[
+                Function[{k, v}, DirectedEdge[k, #["To"], #["ID"]] & /@ v],
+                Select[Map[#["ExplicitNext"] &, obj["States"]], Length[#] > 0 &]
+              ];
 
       lsImplicit =
           Flatten @
@@ -204,8 +204,11 @@ FiniteStateMachine[objID_]["Graph"[opts : OptionsPattern[]]] :=
 (*
 This function can be overridden by the descendants -- see the use of $OOPFSMHEAD.
 *)
-FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
-    Block[{obj = $OOPFSMHEAD[objID], stateID, state, k = 0},
+Clear[HasImplicitNextQ];
+HasImplicitNextQ[state_?AssociationQ] := KeyExistsQ[state, "ImplicitNext"] && !TrueQ[state["ImplicitNext"] === None];
+
+FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40]] :=
+    Block[{obj = $OOPFSMHEAD[objID], stateID, state, k = 0, inputSequence = inputs},
 
       If[! KeyExistsQ[obj["States"], initId],
         Echo["Unknown initial state: " <> initId, "FiniteStateMachine[\"Run\"]:"]
@@ -213,29 +216,48 @@ FiniteStateMachine[objID_]["Run"[initId_String, maxLoops_Integer : 40]] :=
 
       state = obj["States"][initId];
 
-      While[k < maxLoops,
+      While[k < maxLoops && (!ListQ[inputSequence] || Length[inputSequence] > 0),
         k++;
 
         ECHOLOGGING[Row[{"State:", state}], "Run:"];
         ECHOLOGGING[Row[{"Action:", state["Action"]}], "Run:"];
 
+        (* Execute the action *)
         state["Action"][obj];
 
         Which[
-          KeyExistsQ[state, "ImplicitNext"] && !TrueQ[state["ImplicitNext"] === None],
+          (* Switch with implicit state *)
+          HasImplicitNextQ[state],
           ECHOLOGGING[Row[{"ImplicitNext:", state["ImplicitNext"]}], "Run:"];
           stateID = state["ImplicitNext"];
           state = obj["States"][stateID],
 
+          (* Switch with explicit state *)
           KeyExistsQ[state, "ExplicitNext"] && ListQ[state["ExplicitNext"]] && Length[state["ExplicitNext"]] > 0,
           ECHOLOGGING[Row[{"ExplicitNext:", state["ExplicitNext"]}], "Run:"];
-          stateID = obj["ChooseTransition"[state["ID"]]]["To"];
+          If[ ListQ[inputSequence],
+            (* Input sequence is specified *)
+            stateID = obj["ChooseTransition"[state["ID"], First @ inputSequence]]["To"],
+            (*ELSE*)
+            (* User input is expected *)
+            stateID = obj["ChooseTransition"[state["ID"], Automatic]]["To"]
+          ];
+          inputSequence = Rest[inputSequence];
           state = obj["States"][stateID],
 
           True,
           Return[]
-        ]
-      ]
+        ];
+
+        ECHOLOGGING[Row[{"loop end inputSequence:", Spacer[3], inputSequence}], "Run:"];
+        ECHOLOGGING[Row[{"loop end state:", Spacer[3], state}], "Run:"];
+        ECHOLOGGING[Row[{"loop end HasImplicitNextQ[state]:", Spacer[3], HasImplicitNextQ[state]}], "Run:"];
+      ];
+
+      (* If inputs were specified using the last obtained state go through the implicit states *)
+      If[ ListQ[inputSequence],
+        obj["Run"[stateID, None, maxLoops]]
+      ];
     ];
 
 (*-----------------------------------------------------------*)
