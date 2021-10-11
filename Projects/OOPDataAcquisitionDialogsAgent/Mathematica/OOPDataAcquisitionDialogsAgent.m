@@ -128,7 +128,7 @@ Echo[ daObj["Graph"[ImageSize -> 900, EdgeLabelStyle -> Directive[Red, Italic, B
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForRequest", maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], transitions, input, pres},
 
-      transitions = DataAcquisitionFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
       input = InputString[];
@@ -191,7 +191,7 @@ aParsedToPred = {
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], k = 0, transitions, input, pres, dsNew},
 
-      transitions = DataAcquisitionFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
       ECHOLOGGING[Row[{"Using the contact spec:", Spacer[3], obj["ItemSpec"]}], "ListOfContacts:"];
@@ -236,7 +236,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", maxLoops_
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], k = 0, transitions, input, pres, pos},
 
-      transitions = DataAcquisitionFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
       input = InputString[];
@@ -299,7 +299,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoop
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], transitions},
 
-      transitions = DataAcquisitionFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       Echo[Style[transitions, Purple], stateID <> ":"];
 
       Echo[RandomSample[obj["Dataset"]], "PrioritizedList:"];
@@ -312,7 +312,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLo
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "AcquireItem", maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], transitions, aRec, spec},
 
-      transitions = DataAcquisitionFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
       If[ Length[Dimensions[obj["Dataset"]]] == 1,

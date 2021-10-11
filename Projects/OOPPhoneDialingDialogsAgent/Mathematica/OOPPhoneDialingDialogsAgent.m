@@ -279,7 +279,7 @@ PhoneBookFSM[objID_]["ChooseTransition"[stateID : "ListOfContacts", maxLoops_Int
 PhoneBookFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoops_Integer : 5]] :=
     Block[{obj = PhoneBookFSM[objID], k = 0, transitions, input, pres, pos},
 
-      transitions = PhoneBookFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
       input = InputString[];
@@ -342,7 +342,7 @@ PhoneBookFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoops_Inte
 PhoneBookFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLoops_Integer : 5]] :=
     Block[{obj = PhoneBookFSM[objID], transitions},
 
-      transitions = PhoneBookFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       Echo[Style[transitions, Purple], stateID <> ":"];
 
       Echo[RandomSample[obj["Dataset"]], "PrioritizedList:"];
@@ -355,7 +355,7 @@ PhoneBookFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLoops_In
 PhoneBookFSM[objID_]["ChooseTransition"[stateID : "DialPhoneNumber", maxLoops_Integer : 5]] :=
     Block[{obj = PhoneBookFSM[objID], k = 0, transitions, input},
 
-      transitions = PhoneBookFSM[objID]["States"][stateID]["ExplicitNext"];
+      transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
       Echo[Row[{"Talking to:", obj["Dataset"]}], "DialPhoneNumber:"];
