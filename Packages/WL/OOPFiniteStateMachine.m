@@ -237,12 +237,13 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
           ECHOLOGGING[Row[{"ExplicitNext:", state["ExplicitNext"]}], "Run:"];
           If[ ListQ[inputSequence],
             (* Input sequence is specified *)
-            stateID = obj["ChooseTransition"[state["ID"], First @ inputSequence]]["To"],
+            stateID = obj["ChooseTransition"[state["ID"], First @ inputSequence]]["To"];
+            ECHOLOGGING[Row[{Style["inputSequence:", Red, Bold], inputSequence}], "Run:"];
+            inputSequence = Rest[inputSequence],
             (*ELSE*)
             (* User input is expected *)
             stateID = obj["ChooseTransition"[state["ID"], Automatic]]["To"]
           ];
-          inputSequence = Rest[inputSequence];
           state = obj["States"][stateID],
 
           True,
