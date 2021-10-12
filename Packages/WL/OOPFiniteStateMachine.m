@@ -211,7 +211,7 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
     Block[{obj = $OOPFSMHEAD[objID], stateID, state, k = 0, inputSequence = inputs},
 
       If[! KeyExistsQ[obj["States"], initId],
-        Echo["Unknown initial state: " <> initId, "FiniteStateMachine[\"Run\"]:"]
+        Echo["Unknown initial state: " <> initId, "Run:"]
       ];
 
       state = obj["States"][initId];
