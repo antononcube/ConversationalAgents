@@ -48,7 +48,7 @@ If[ Length[DownValues[$OOPFSMHEAD]] == 0,
 
 If[ Length[DownValues[DataAcquisitionDialogsGrammar`pDADCOMMAND]] == 0,
   Echo["DataAcquisitionDialogsGrammar.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/PhoneDialingDialogsAgent/Mathematica/DataAcquisitionDialogsGrammar.m"];
+  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/OOPDataAcquisitionDialogsAgent/Mathematica/DataAcquisitionDialogsGrammar.m"]
 ];
 
 
@@ -125,13 +125,17 @@ Echo[ daObj["Graph"[ImageSize -> 900, EdgeLabelStyle -> Directive[Red, Italic, B
 (*-----------------------------------------------------------*)
 (*WaitForRequest*)
 
-DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForRequest", maxLoops_Integer : 5]] :=
+DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForRequest", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], transitions, input, pres},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
-      input = InputString[];
+      If[ MemberQ[{Automatic, Input, InputString}, inputArg],
+        input = InputString[],
+        (* ELSE *)
+        input = inputArg
+      ];
 
       (*Check was "global" command was entered.E.g."start over".*)
 
@@ -183,13 +187,13 @@ aParsedToPred = {
   DADTitle[p_] :> (Quiet[StringMatchQ[#Title, ___ ~~ p ~~ ___, IgnoreCase -> True]]),
   DADPackage[p_] :> (Quiet[StringMatchQ[#Package, ___ ~~ p ~~ ___, IgnoreCase -> True]]),
   DADFromPackage[p_] :> (Quiet[StringMatchQ[#Package, ___ ~~ p ~~ ___, IgnoreCase -> True]]),
-  DADNRow[p_] :> (#NumberOfRows == p),
-  DADNCol[p_] :> (#NumberOfColumns == p)
+  DADNRow[p_] :> (#RowsCount == p),
+  DADNCol[p_] :> (#ColumnsCount == p)
 };
 
 
-DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", maxLoops_Integer : 5]] :=
-    Block[{obj = DataAcquisitionFSM[objID], k = 0, transitions, input, pres, dsNew},
+DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
+    Block[{obj = DataAcquisitionFSM[objID], k = 0, transitions, dsNew},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
@@ -233,13 +237,17 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", maxLoops_
 (*-----------------------------------------------------------*)
 (*WaitForFilter*)
 
-DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoops_Integer : 5]] :=
+DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], k = 0, transitions, input, pres, pos},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
-      input = InputString[];
+      If[ MemberQ[{Automatic, Input, InputString}, inputArg],
+        input = InputString[],
+        (* ELSE *)
+        input = inputArg
+      ];
 
       (*Check was "global" command was entered.E.g."start over".*)
       pres = ParseShortest[pDADGLOBAL][ToTokens[ToLowerCase[input]]];
@@ -296,7 +304,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoop
 (*-----------------------------------------------------------*)
 (*PrioritizedList*)
 
-DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLoops_Integer : 5]] :=
+DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], transitions},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
@@ -309,7 +317,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLo
 (*-----------------------------------------------------------*)
 (*AcquireItem*)
 
-DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "AcquireItem", maxLoops_Integer : 5]] :=
+DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "AcquireItem", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = DataAcquisitionFSM[objID], transitions, aRec, spec},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
