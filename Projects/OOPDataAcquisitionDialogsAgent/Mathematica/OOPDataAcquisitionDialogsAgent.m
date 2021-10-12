@@ -46,6 +46,8 @@ If[ Length[DownValues[$OOPFSMHEAD]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/OOPFiniteStateMachine.m"];
 ];
 
+Import["/Volumes/Macintosh HD 1/Users/antonov/ConversationalAgents/Packages/WL/OOPFiniteStateMachine.m"];
+
 If[ Length[DownValues[DataAcquisitionDialogsGrammar`pDADCOMMAND]] == 0,
   Echo["DataAcquisitionDialogsGrammar.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/OOPDataAcquisitionDialogsAgent/Mathematica/DataAcquisitionDialogsGrammar.m"]
@@ -53,7 +55,7 @@ If[ Length[DownValues[DataAcquisitionDialogsGrammar`pDADCOMMAND]] == 0,
 
 
 (*==========================================================*)
-(* Get metdata dataset                                   *)
+(* Get metadata dataset                                   *)
 (*==========================================================*)
 
 Echo["Ingesting address book CSV file.", "OOPDataAcquisitionDialogsAgent:"];
@@ -73,7 +75,7 @@ DataAcquisitionFSM[d_][s_] := Block[{$OOPFSMHEAD = DataAcquisitionFSM}, FiniteSt
 
 DataAcquisitionFSM[objID_]["ChooseTransition"[args___]] := Echo[Row[{Style["Wrong arguments:", Red], args}], "ChooseTransition:"];
 
-daObj = DataAcquisitionFSM["PhoneBook"];
+daObj = DataAcquisitionFSM["DataAcquisitionDialogs"];
 
 (*-----------------------------------------------------------*)
 (* States *)
@@ -330,11 +332,10 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "AcquireItem", inputArg_
       ];
       spec = {aRec["Package"], aRec["Item"]};
 
-
       Echo[Row[{"Acquiring:", spec}], "AcquireItem:"];
 
       daDataObject = ExampleData[spec];
-      Echo[Row[{"Assigned:", Spacer[3], spec, Spacer[3], "to daDataObject ."}], "AcquireItem:"];
+      Echo[Row[{ Style["Assigned:", Italic, Bold], Spacer[3], spec, Spacer[3], "to:", Spacer[5], Style["daDataObject", Bold, FontFamily->"Courier"], Spacer[3], "."}], "AcquireItem:"];
 
       Return[First@Select[transitions, #ID == "startOver" || #To == "WaitForRequest" &]]
     ];
