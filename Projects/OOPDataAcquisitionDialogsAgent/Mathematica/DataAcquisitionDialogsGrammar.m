@@ -67,6 +67,12 @@ BeginPackage["DataAcquisitionDialogsGrammar`"];
 
 pDADCOMMAND::usage = "Parses natural language commands for data acquisition dialogs.";
 
+pDADREQUESTCOMMAND::usage = "Parses natural language commands for data acquisition dialogs. (Request commands.)";
+
+pDADGLOBAL::usage = "Parses natural language commands for data acquisition dialogs. (Global commands.)";
+
+pDADFILTER::usage = "Parses natural language commands for data acquisition dialogs. (Filter commands.)";
+
 DADCommandsSubGrammars::usage = "Gives an association of the EBNF sub-grammars for parsing natural language commands \
 specifying data acquisition dialogs.";
 
@@ -81,7 +87,7 @@ ebnfDADCommand = "
 <dad-command> = <dad-request-command> | <dad-filter> ;
 <dad-request-command> = <dad-global> | <dad-preamble> &> <dataset-spec> | ( 'find' | 'put' | 'get' | 'obtain' ) &> <dataset-spec> <& ( ( 'on' | 'in' | 'to' ) , 'the' , <dad-environment> ) ;
 <dad-preamble> = 'procure' | 'obtain' | 'i' , ( 'wanna' | 'want' , 'to' ) , ( 'investigate' | 'work' ) , 'with' | 'get' | 'find' ;
-<dataset-spec> = [ 'the' | 'a' | 'an' ] &> ( <dad-package> , [ <dad-from-package> ] ) | <dad-title> | { <dad-title> } | ( 'some'  | [ 'a' ] , <dataset-phrase> ) &> <dad-from-package> ;
+<dataset-spec> = [ 'the' | 'a' | 'an' ] &> ( <dad-package> , [ <dad-from-package> ] ) | <dad-title> | { <dad-title> } | ( [ 'some'  |  'a' ] , <dataset-phrase> ) &> <dad-from-package> ;
 <dad-title> = '_LetterString' <@ DADTitle[#]& ;
 <dad-package> = '_LetterString' <@ DADPackage[#]& ;
 <dad-from-package> = ( 'from' | 'of' ) &> '_LetterString' <@ DADFromPackage[#]& ;
