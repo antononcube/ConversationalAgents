@@ -282,8 +282,8 @@ on "ChooseTransition" for different state IDs.
 FiniteStateMachine[objID_]["ChooseTransition"[args___]] :=
     Echo[Row[{Style["Wrong arguments:", Red], args}], "ChooseTransition:"];
 
-FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, input_ : Automatic, maxLoops_Integer : 40]] :=
-    Block[{obj = $OOPFSMHEAD[objID], transitions, inputLocal, n, k = 0},
+FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, inputArg_ : Automatic, maxLoops_Integer : 40]] :=
+    Block[{obj = $OOPFSMHEAD[objID], transitions, input, n, k = 0},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
 
@@ -292,14 +292,14 @@ FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, input_ : Automatic
       While[k < maxLoops,
         k++;
 
-        If[ MemberQ[{Automatic, Input, InputString}, input],
-          inputLocal = InputString[],
+        If[ MemberQ[{Automatic, Input, InputString}, inputArg],
+          input = InputString[],
           (* ELSE *)
-          inputLocal = input
+          input = inputArg
         ];
 
-        Echo["Selection of input: " <> inputLocal, "ChooseTransition:" ];
-        n = ToExpression[inputLocal];
+        Echo["Selection of input: " <> input, "ChooseTransition:" ];
+        n = ToExpression[input];
 
         (*Pause[2];
         n=RandomChoice[Range[Length[transitions]]];
