@@ -88,6 +88,8 @@ daObj["AddState"["AcquireItem", Echo[Row[{"Acquire dataset:", Spacer[3], #["Data
 daObj["AddState"["Help", Echo[Row[{"Here is help:", "..."}], "Help:"] &]];
 daObj["AddState"["Exit", Echo[Style["Shutting down...", Bold], "Exit:"] &]];
 
+(*daObj["AddState"["ParseWithRaku", Echo["Parse with Raku...", "ParseWithRaku[Action]:"] &]];*)
+
 (*-----------------------------------------------------------*)
 (*Transitions*)
 
@@ -114,6 +116,8 @@ daObj["AddTransition"["WaitForFilter", "quit", "Exit"]];
 
 daObj["AddTransition"["Help", "helpGiven", "WaitForRequest"]];
 
+(*daObj["AddTransition"["WaitForFilter", "tryRaku", "ParseWithRaku"]];*)
+(*daObj["AddTransition"["ParseWithRaku", "unrecognized", "WaitForFilter"]];*)
 
 (*-----------------------------------------------------------*)
 (*Make state transition graph*)
@@ -195,21 +199,32 @@ aParsedToPred = {
 
 
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
-    Block[{obj = DataAcquisitionFSM[objID], k = 0, transitions, dsNew},
+    Block[{fsmObj = DataAcquisitionFSM[objID], k = 0, transitions, dsNew},
 
-      transitions = obj["States"][stateID]["ExplicitNext"];
+      transitions = fsmObj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
-      ECHOLOGGING[Row[{"Using the contact spec:", Spacer[3], obj["ItemSpec"]}], "ListOfContacts:"];
+      ECHOLOGGING[Row[{"Using the contact spec:", Spacer[3], fsmObj["ItemSpec"]}], "ListOfContacts:"];
 
       (* Get new dataset *)
       dsNew =
-          If[IntegerQ[obj["ItemSpec"]] || VectorQ[obj["ItemSpec"], IntegerQ],
-            obj["Dataset"][obj["ItemSpec"]],
-            (*ELSE*)
+          Which[
+            (* Integer position *)
+            IntegerQ[fsmObj["ItemSpec"]] || VectorQ[fsmObj["ItemSpec"], IntegerQ],
+            fsmObj["Dataset"][fsmObj["ItemSpec"]],
 
-            With[{pred = Apply[And, obj["ItemSpec"] /. aParsedToPred]},
-              obj["Dataset"][Select[pred &]]
+            (* Raku parser result *)
+            TrueQ[ Head[fsmObj["ItemSpec"]] === Hold ],
+            Block[{obj = fsmObj["Dataset"], res},
+              (* The Raku parser-interpreter uses the pipeline value "obj". *)
+              res = ReleaseHold[fsmObj["ItemSpec"]];
+              If[ TrueQ[Head[res] === Dataset], res, {}]
+            ],
+
+            (* WL parser result *)
+            True,
+            With[{pred = Apply[And, fsmObj["ItemSpec"] /. aParsedToPred]},
+              fsmObj["Dataset"][Select[pred &]]
             ]
           ];
 
@@ -219,19 +234,19 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", inputArg_
         (*No contacts*)
         Length[dsNew] == 0,
         Echo[
-          Row[{Style["No results with the contact specification.", Red, Italic], Spacer[3], obj["ItemSpec"]}],
+          Row[{Style["No results with the contact specification.", Red, Italic], Spacer[3], fsmObj["ItemSpec"]}],
           "ListOfContacts:"
         ];
         Return[First@Select[transitions, #ID == "startOver" || #To == "WaitForRequest" &]],
 
         (*Just one contact*)
         Length[dsNew] == 1,
-        obj["Dataset"] = dsNew;
+        fsmObj["Dataset"] = dsNew;
         Return[First@Select[transitions, #ID == "uniqueItemObtained" || #To == "AcquireItem" &]],
 
         (*Many contacts*)
         Length[dsNew] > 1,
-        obj["Dataset"] = dsNew;
+        fsmObj["Dataset"] = dsNew;
         Return[First@Select[transitions, #ID == "manyItems" || #To == "WaitForFilter" &]]
       ]
     ];
@@ -240,7 +255,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ListOfItems", inputArg_
 (*WaitForFilter*)
 
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
-    Block[{obj = DataAcquisitionFSM[objID], k = 0, transitions, input, pres, pos},
+    Block[{obj = DataAcquisitionFSM[objID], transitions, input, pres, pos},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
@@ -263,12 +278,18 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", inputAr
       (*Main command processing*)
       pres = ParseJust[pDADFILTER][ToTokens[ToLowerCase[input]]];
 
+      (*Cannot parse as filtering command and Raku connection is present *)
+      If[ (pres === {} || pres[[1, 1]] =!= {}) && Length[DownValues[StartRakuProcess]] > 0,
+        Echo[Style["Switch to Raku parsers.", Red, Italic], stateID <> ":"];
+        pres = obj["ChooseTransition"["ParseWithRaku", input, maxLoops]];
+        Echo[Row[{Style["Raku parsers result.", Red, Italic], pres}], stateID <> ":"];
+      ];
+
       (*Special cases handling*)
       Which[
         (*Cannot parse as filtering command*)
-
-        pres === {} || pres[[1, 1]] =!= {},
-        Echo[Style["Unrecognized input.", Red, Italic], "WaitForFilter:"];
+        (pres === {} || pres[[1, 1]] =!= {}) && !TrueQ[Head[pres] === Hold],
+        Echo[Style["1. Unrecognized input.", Red, Italic], stateID <> ":"];
         Return[First@Select[transitions, #ID == "unrecognized" || #To == "WaitForFilter" &]],
 
         (*List position command was entered.E.g."take the third one".*)
@@ -290,17 +311,50 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", inputAr
           Return[First@Select[transitions, #ID == "unrecognized" || #To == "WaitForFilter" &]],
 
           True,
-          Echo[Style["Unrecognized input.", Red, Italic], "WaitForFilter:"];
+          Echo[Style["2. Unrecognized input.", Red, Italic], "WaitForFilter:"];
           Return[First@Select[transitions, #ID == "unrecognized" || #To == "WaitForFilter" &]]
         ]
       ];
 
       (*Process "regularly" expected filtering input.*)
-      pres = SortBy[pres, Length[#[[2]]] &][[1]];
+      (*If the result was obtained with Raku, it is expected to be an expression with head Hold.*)
+      If[ ListQ[pres],
+        pres = SortBy[pres, Length[#[[2]]] &][[1]]
+      ];
 
       (*Switch to the next state*)
       obj["ItemSpec"] = Flatten[pres];
       Return[First@Select[transitions, #ID == "itemSpec" || #To == "ListOfItems" &]]
+    ];
+
+(*-----------------------------------------------------------*)
+(*WaitForFilterWithRaku*)
+
+DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "ParseWithRaku", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
+    Block[{obj = DataAcquisitionFSM[objID], transitions, input, pres},
+
+      (*      transitions = obj["States"][stateID]["ExplicitNext"];*)
+      (*      ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];*)
+
+      If[ MemberQ[{Automatic, Input, InputString}, inputArg],
+        Return[First@Select[transitions, #ID == "unrecognized" || #To == "WaitForFilter" &]],
+        (*ELSE*)
+        input = inputArg
+      ];
+
+      (*Parser with Raku.*)
+      pres = Quiet[ToDataQueryWorkflowCode[input, "Execute" -> False]];
+
+      ECHOLOGGING[Row[{"Raku parsing results:", pres}], stateID <> ":"];
+
+      (*Global request handling delegation*)
+      If[StringQ[pres] && StringMatchQ[pres, ___ ~~ "#ERROR" ~~ ___],
+        Echo["Could not parse it with Raku.", stateID <> ":"];
+        Return[$Failed]
+      ];
+
+      (*Switch to the next state*)
+      Flatten[pres]
     ];
 
 (*-----------------------------------------------------------*)
@@ -335,7 +389,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "AcquireItem", inputArg_
       Echo[Row[{"Acquiring:", spec}], "AcquireItem:"];
 
       daDataObject = ExampleData[spec];
-      Echo[Row[{ Style["Assigned:", Italic, Bold], Spacer[3], spec, Spacer[3], "to:", Spacer[5], Style["daDataObject", Bold, FontFamily->"Courier"], Spacer[3], "."}], "AcquireItem:"];
+      Echo[Row[{ Style["Assigned:", Italic, Bold], Spacer[3], spec, Spacer[3], "to:", Spacer[5], Style["daDataObject", Bold, FontFamily -> "Courier"], Spacer[3], "."}], "AcquireItem:"];
 
       Return[First@Select[transitions, #ID == "startOver" || #To == "WaitForRequest" &]]
     ];
