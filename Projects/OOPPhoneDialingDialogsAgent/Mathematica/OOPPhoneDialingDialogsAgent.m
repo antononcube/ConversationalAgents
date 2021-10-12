@@ -41,7 +41,7 @@ If[ Length[SubValues[FunctionalParsers`ParseAlternativeComposition]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"];
 ];
 
-If[ Length[DownValues[$OOPFSMHEAD]] == 0,
+If[ Length[DownValues[$OOPFSMHEAD]] == 0 && Length[OwnValues[$OOPFSMHEAD]] == 0,
   Echo["OOPFiniteStateMachine.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/OOPFiniteStateMachine.m"];
 ];
@@ -169,13 +169,17 @@ Echo[ phbObj["Graph"[ImageSize -> 900, EdgeLabelStyle -> Directive[Red, Italic, 
 (*-----------------------------------------------------------*)
 (*WaitForRequest*)
 
-PhoneBookFSM[objID_]["ChooseTransition"[stateID : "WaitForRequest", maxLoops_Integer : 5]] :=
+PhoneBookFSM[objID_]["ChooseTransition"[stateID : "WaitForRequest", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = PhoneBookFSM[objID], transitions, input, pres},
 
       transitions = PhoneBookFSM[objID]["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
-      input = InputString[];
+      If[ MemberQ[{Automatic, Input, InputString}, inputArg],
+        input = InputString[],
+        (* ELSE *)
+        input = inputArg
+      ];
 
       (*Check was "global" command was entered.E.g."start over".*)
 
@@ -231,8 +235,8 @@ aParsedToPred = {
 };
 
 
-PhoneBookFSM[objID_]["ChooseTransition"[stateID : "ListOfContacts", maxLoops_Integer : 5]] :=
-    Block[{obj = PhoneBookFSM[objID], k = 0, transitions, input, pres, dsNew},
+PhoneBookFSM[objID_]["ChooseTransition"[stateID : "ListOfContacts", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
+    Block[{obj = PhoneBookFSM[objID], k = 0, transitions, dsNew},
 
       transitions = PhoneBookFSM[objID]["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
@@ -276,13 +280,17 @@ PhoneBookFSM[objID_]["ChooseTransition"[stateID : "ListOfContacts", maxLoops_Int
 (*-----------------------------------------------------------*)
 (*WaitForFilter*)
 
-PhoneBookFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoops_Integer : 5]] :=
+PhoneBookFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = PhoneBookFSM[objID], k = 0, transitions, input, pres, pos},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
 
-      input = InputString[];
+      If[ MemberQ[{Automatic, Input, InputString}, inputArg],
+        input = InputString[],
+        (* ELSE *)
+        input = inputArg
+      ];
 
       (*Check was "global" command was entered.E.g."start over".*)
       pres = ParseShortest[pCALLGLOBAL][ToTokens[ToLowerCase[input]]];
@@ -339,7 +347,7 @@ PhoneBookFSM[objID_]["ChooseTransition"[stateID : "WaitForFilter", maxLoops_Inte
 (*-----------------------------------------------------------*)
 (*PrioritizedList*)
 
-PhoneBookFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLoops_Integer : 5]] :=
+PhoneBookFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = PhoneBookFSM[objID], transitions},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
@@ -352,7 +360,7 @@ PhoneBookFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", maxLoops_In
 (*-----------------------------------------------------------*)
 (*DialPhoneNumber*)
 
-PhoneBookFSM[objID_]["ChooseTransition"[stateID : "DialPhoneNumber", maxLoops_Integer : 5]] :=
+PhoneBookFSM[objID_]["ChooseTransition"[stateID : "DialPhoneNumber", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
     Block[{obj = PhoneBookFSM[objID], k = 0, transitions, input},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
@@ -360,18 +368,28 @@ PhoneBookFSM[objID_]["ChooseTransition"[stateID : "DialPhoneNumber", maxLoops_In
 
       Echo[Row[{"Talking to:", obj["Dataset"]}], "DialPhoneNumber:"];
 
-      While[k < maxLoops, k++;
+      While[k < maxLoops,
+        k++;
 
-      input = InputString[];
+        If[ MemberQ[{Automatic, Input, InputString}, inputArg],
+          input = InputString[],
+          (* ELSE *)
+          input = inputArg;
+          (*not looping when input is given*)
+          k = maxLoops
+        ];
 
-      If[
-        MemberQ[{"quit", "hung up"}, ToLowerCase[input]],
-        Return[First@Select[transitions, #ID == "startOver" || #To == "WaitForRequest" &]],
-        (*ELSE*)
+        ECHOLOGGING[Row[{Style["input:", Red, Bold], input}], "DialPhoneNumber:"];
 
-        Echo[Row[{"Continue talking:", Spacer[3], ResourceFunction["RandomFortune"][]}], "DialPhoneNumber:"]
+        If[
+          MemberQ[{"quit", "hung up"}, ToLowerCase[input]],
+          Return[First@Select[transitions, #ID == "startOver" || #To == "WaitForRequest" &]],
+          (*ELSE*)
+
+          Echo[Row[{"Continue talking:", Spacer[3], ResourceFunction["RandomFortune"][]}], "DialPhoneNumber:"]
+        ];
       ];
-      ]
+      Return[First@Select[transitions, #ID == "startOver" || #To == "WaitForRequest" &]]
     ];
 
 (*Begin["`Private`"];*)
