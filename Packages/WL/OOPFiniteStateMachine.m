@@ -132,7 +132,9 @@ NewTransition[] := NewTransition[None, None];
 
 ClearAll[FiniteStateMachine];
 
-FiniteStateMachine[objID_]["States"] = <||>;
+FiniteStateMachine[objID_]["States"] := <||>;
+
+FiniteStateMachine[objID_]["CurrentState"] := None;
 
 (*-----------------------------------------------------------*)
 (* Cannot be overridden *)
@@ -207,6 +209,11 @@ This function can be overridden by the descendants -- see the use of $OOPFSMHEAD
 Clear[HasImplicitNextQ];
 HasImplicitNextQ[state_?AssociationQ] := KeyExistsQ[state, "ImplicitNext"] && !TrueQ[state["ImplicitNext"] === None];
 
+FiniteStateMachine[objID_]["Run"[inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40]] :=
+    Block[{obj = $OOPFSMHEAD[objID]},
+      FiniteStateMachine[objID]["Run"[obj["CurrentState"], inputs, maxLoops]]
+    ];
+
 FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40]] :=
     Block[{obj = $OOPFSMHEAD[objID], stateID, state, k = 0, inputSequence = inputs},
 
@@ -247,6 +254,8 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
           state = obj["States"][stateID],
 
           True,
+          (* Assign current state for reuse *)
+          obj["CurrentState"] = state["ID"];
           Return[]
         ];
 
@@ -266,6 +275,9 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
           ECHOLOGGING[Row[{"Post loop implicit state run:", Spacer[3], stateID}], "Run:"];
         ]
       ];
+
+      (* Assign current state for reuse *)
+      obj["CurrentState"] = state["ID"];
     ];
 
 (*-----------------------------------------------------------*)
