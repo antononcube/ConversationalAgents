@@ -134,6 +134,8 @@ nbDSLStyle =
         FontColor -> GrayLevel[0.4], Background -> RGBColor[1, 1, 0.97]
       ],
 
+      Cell[StyleData["DSLInputExecute", "SlideShow"], FontSize -> 20],
+
       Cell[StyleData["DSLInputParse"], CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "RakuInputExecute"}, Evaluatable -> True,
@@ -144,6 +146,8 @@ nbDSLStyle =
         FontWeight -> Bold, Magnification -> 1.15` Inherited,
         FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 1, 1]
       ],
+
+      Cell[StyleData["DSLInputParse", "SlideShow"], FontSize -> 20],
 
       Cell[StyleData["RakuInputExecute"],
         CellFrame -> True,
@@ -159,7 +163,7 @@ nbDSLStyle =
         FontColor -> GrayLevel[0.4], Background -> RGBColor[0.976471, 0.964706, 0.960784, 1]
       ],
 
-      Cell[StyleData["RakuInputExecute", "SlideShow"], FontSize->20],
+      Cell[StyleData["RakuInputExecute", "SlideShow"], FontSize -> 20],
 
       Cell[StyleData["Code"],
         MenuSortingValue -> 10000,
