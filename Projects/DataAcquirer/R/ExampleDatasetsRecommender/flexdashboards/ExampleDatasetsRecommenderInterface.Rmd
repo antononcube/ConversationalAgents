@@ -115,7 +115,7 @@ tagTypeWeights <-
 Recommendations
 =======================================================================
 
-Row {data-height=800}
+Row {data-height=480}
 -----------------------------------------------------------------------
 
 ### Tags
@@ -232,7 +232,7 @@ Extracted words and topics:
 lsFreeProf <- reactive({ c( lsFreeWordsProf(), lsFreeTopicsProf() ) })
 DT::renderDataTable(
   expr = data.frame( Word = names(lsFreeProf()), Score =  lsFreeProf() ),
-  options = list(scrollX = "300px", scrollY = "300px", scroller = TRUE)
+  options = list(scrollX = TRUE, scrollY = TRUE, scroller = TRUE)
 )
 ```
 
@@ -270,7 +270,7 @@ dfRecommendations <-
 
 DT::renderDataTable(
   dfRecommendations(),
-  options = list(scrollX = "300px", scrollY = "300px", scroller = TRUE)
+  options = list(scrollX = TRUE, scrollY = TRUE, scroller = TRUE)
 ) 
 ```
 
@@ -279,7 +279,7 @@ DT::renderDataTable(
 Profiles
 =======================================================================
 
-Row {data-height=800}
+Row {data-height=480}
 -----------------------------------------------------------------------
 
 ### Items
@@ -417,7 +417,7 @@ Extracted words and topics:
 lsProfileFreeProf <- reactive({ c( lsProfileFreeWordsProf(), lsProfileFreeTopicsProf() ) })
 DT::renderDataTable(
   expr = data.frame( Word = names(lsProfileFreeProf()), Score =  lsProfileFreeProf() ),
-  options = list(scrollX = "300px", scrollY = "300px", scroller = TRUE)
+  options = list(scrollX = TRUE, scrollY = TRUE, scroller = TRUE)
 )
 ```
 
@@ -480,7 +480,7 @@ DT::renderDataTable({
     }
   }
 },
-options = list(scrollX = "300px", scrollY = "300px", scroller = TRUE)
+options = list(scrollX = TRUE, scrollY = TRUE, scroller = TRUE)
 ) 
 ```
 
