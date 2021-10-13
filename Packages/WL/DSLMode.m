@@ -159,6 +159,8 @@ nbDSLStyle =
         FontColor -> GrayLevel[0.4], Background -> RGBColor[0.976471, 0.964706, 0.960784, 1]
       ],
 
+      Cell[StyleData["RakuInputExecute", "SlideShow"], FontSize->20],
+
       Cell[StyleData["Code"],
         MenuSortingValue -> 10000,
         MenuCommandKey :> None
