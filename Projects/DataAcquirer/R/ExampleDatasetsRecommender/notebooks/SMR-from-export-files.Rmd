@@ -5,7 +5,16 @@ date: 2021-07-21
 output: html_notebook
 params:
   smrDirName: "~/MathFiles/Data Acquisition Workflows/ProcessedData"
+  saveRDataQ: FALSE
 ---
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
 
 ```{r setup}
 library(d3heatmap)
@@ -176,16 +185,20 @@ dfRecs
 # Save
 
 ```{r}
-base::save( list = c("smrWLDatasets"), file = file.path("../flexdashboards", "smrWLDatasets.RData") )
-base::save( list = c("lsaWLDatasetsWordsAndPhrases"), file = file.path("../flexdashboards", "lsaWLDatasetsWordsAndPhrases.RData") )
-base::save( list = c("dfWLExampleData"), file = file.path("../flexdashboards", "dfWLExampleData.RData") )
+if ( params$saveRDataQ ) {
+  base::save( list = c("smrWLDatasets"), file = file.path("../flexdashboards", "smrWLDatasets.RData") )
+  base::save( list = c("lsaWLDatasetsWordsAndPhrases"), file = file.path("../flexdashboards", "lsaWLDatasetsWordsAndPhrases.RData") )
+  base::save( list = c("dfWLExampleData"), file = file.path("../flexdashboards", "dfWLExampleData.RData") )
+}
 ```
 
 
 ```{r}
-base::save( list = c("smrRDatasets"), file = file.path("../flexdashboards", "smrRDatasets.RData") )
-base::save( list = c("lsaRDatasetsWordsAndPhrases"), file = file.path("../flexdashboards", "lsaRDatasetsWordsAndPhrases.RData") )
-base::save( list = c("dfRExampleData"), file = file.path("../flexdashboards", "dfRExampleData.RData") )
+if ( params$saveRDataQ ) {
+  base::save( list = c("smrRDatasets"), file = file.path("../flexdashboards", "smrRDatasets.RData") )
+  base::save( list = c("lsaRDatasetsWordsAndPhrases"), file = file.path("../flexdashboards", "lsaRDatasetsWordsAndPhrases.RData") )
+  base::save( list = c("dfRExampleData"), file = file.path("../flexdashboards", "dfRExampleData.RData") )
+}
 ```
 
 
