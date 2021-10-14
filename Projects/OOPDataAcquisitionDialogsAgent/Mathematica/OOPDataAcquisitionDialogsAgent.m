@@ -53,6 +53,10 @@ If[ Length[DownValues[DataAcquisitionDialogsGrammar`pDADCOMMAND]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/OOPDataAcquisitionDialogsAgent/Mathematica/DataAcquisitionDialogsGrammar.m"]
 ];
 
+If[ Length[DownValues[MakeDataResourceNotebook]] == 0,
+  Echo["DataAcquisitionDialogsGrammar.m", "Importing from GitHub:"];
+  Import["https://raw.githubusercontent.com/antononcube/Data-Acquisition-Engine-project/main/Packages/WL/MakeDataResourseNotebook.m"]
+];
 
 (*==========================================================*)
 (* Get metadata dataset                                   *)
@@ -372,7 +376,7 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "PrioritizedList", input
 (*AcquireItem*)
 
 DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "AcquireItem", inputArg_ : Automatic, maxLoops_Integer : 5]] :=
-    Block[{obj = DataAcquisitionFSM[objID], transitions, aRec, spec},
+    Block[{obj = DataAcquisitionFSM[objID], transitions, aRec, spec, dateTime, fileName},
 
       transitions = obj["States"][stateID]["ExplicitNext"];
       ECHOLOGGING[Style[transitions, Purple], stateID <> ":"];
@@ -388,6 +392,17 @@ DataAcquisitionFSM[objID_]["ChooseTransition"[stateID : "AcquireItem", inputArg_
 
       daDataObject = ExampleData[spec];
       Echo[Row[{ Style["Assigned:", Italic, Bold], Spacer[3], spec, Spacer[3], "to:", Spacer[5], Style["daDataObject", Bold, FontFamily -> "Courier"], Spacer[3], "."}], "AcquireItem:"];
+
+      dateTime = DateString[Now, "ISODateTime"];
+      fileName = MakeDataResourceNotebook[
+        NotebookDirectory[],
+        aRec["Item"],
+        daDataObject,
+        StringReplace[dateTime, ":" -> "."],
+        Lookup[aRec, "Description", "New data resource function created on " <> dateTime]
+      ];
+
+      Echo[Row[{ Style["Created data resource notebook:", Italic, Bold], Spacer[3], fileName }], "AcquireItem:"];
 
       Return[First@Select[transitions, #ID == "startOver" || #To == "WaitForRequest" &]]
     ];
