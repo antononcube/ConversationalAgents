@@ -46,8 +46,6 @@ If[ Length[DownValues[$OOPFSMHEAD]] == 0,
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/OOPFiniteStateMachine.m"];
 ];
 
-Import["/Volumes/Macintosh HD 1/Users/antonov/ConversationalAgents/Packages/WL/OOPFiniteStateMachine.m"];
-
 If[ Length[DownValues[DataAcquisitionDialogsGrammar`pDADCOMMAND]] == 0,
   Echo["DataAcquisitionDialogsGrammar.m", "Importing from GitHub:"];
   Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/OOPDataAcquisitionDialogsAgent/Mathematica/DataAcquisitionDialogsGrammar.m"]
