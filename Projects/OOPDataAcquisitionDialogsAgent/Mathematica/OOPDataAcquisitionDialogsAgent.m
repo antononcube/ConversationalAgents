@@ -60,7 +60,7 @@ If[ Length[DownValues[MakeDataResourceNotebook]] == 0,
 (* Get metadata dataset                                   *)
 (*==========================================================*)
 
-Echo["Ingesting address book CSV file.", "OOPDataAcquisitionDialogsAgent:"];
+Echo["Ingesting datasets metadata CSV file.", "OOPDataAcquisitionDialogsAgent:"];
 dsDatasetMetadata = ResourceFunction["ImportCSVToDataset"]["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Projects/OOPDataAcquisitionDialogsAgent/Data/dsDatasetMetadata.csv"];
 
 
