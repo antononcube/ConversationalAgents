@@ -82,6 +82,8 @@ $RakuProcess::usage = "Raku process.";
 
 KillRakuProcess::usage = "Kill the process assigned to $RakuProcess";
 
+KillRakuSockets::usage = "Kill the Raku (ZMQ) sockets found by the Shell command: 'ps -ax | grep -i \"raku.*zmq\"'.";
+
 StartRakuProcess::usage = "Start Raku with a ZMQ sockets and assign the process to $RakuProcess";
 
 RakuMode::usage = "Restyle notebooks to use the Raku external execution theme.";
@@ -303,6 +305,24 @@ KillRakuProcess[] :=
       If[ TrueQ[ Head[$RakuProcess] === ProcessObject], KillProcess[$RakuProcess] ];
       $RakuZMQSocket = Null;
       $RakuProcess = Null;
+    ];
+
+
+Clear[KillRakuSockets];
+
+KillRakuSockets::nscks = "No Raku sockets found.";
+
+KillRakuSockets[] :=
+    Block[{aRes, lsIDs},
+      aRes = Quiet @ ExternalEvaluate[<|"System" -> "Shell", "ReturnType" -> "Association"|>, "ps -ax | grep -i \"raku.*zmq\""];
+
+      lsIDs = StringCases[aRes["StandardOutput"], StartOfLine ~~ (DigitCharacter ..)];
+
+      If[ Length[lsIDs] == 1,
+        Message[KillRakuSockets::nscks],
+        (*ELSE*)
+        ExternalEvaluate["Shell", "kill -9 " <> StringRiffle[Most@lsIDs, " "]]
+      ]
     ];
 
 
