@@ -145,5 +145,5 @@ If[TrueQ[localCodeQ],
 
 If[TrueQ[localCodeQ],
   Get[localDirectoryName <> "PhoneDialingFSMInterface.m"],
-  Import[gitHubDirectoryName <> "PhoneDialingFSMInterface.m"]
+  Print @ Import[gitHubDirectoryName <> "PhoneDialingFSMInterface.m"]
 ];
