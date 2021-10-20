@@ -255,7 +255,7 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
       ];
 
       If[ TrueQ[ Head[RakuMode`$RakuProcess] === ProcessObject ],
-
+        (*Print["Using RakuProcess:", RakuMode`$RakuProcess];*)
         (* Hoping that every time loading is not too slow. *)
         pres =
             RakuMode`RakuInputExecute[
@@ -279,6 +279,7 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
         ]
         ,
         (*ELSE*)
+        (*Print["NOT Using RakuProcess"];*)
         pres =
             RakuCommand`RakuCommand[
               StringJoin["say ToDSLCode(\"", StringReplace[command, "\"" -> "\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
@@ -421,17 +422,29 @@ ToMonadicCommand[command_, monadName_String, opts : OptionsPattern[] ] :=
       ];
 
       If[ TrueQ[ Head[RakuMode`$RakuProcess] === ProcessObject ],
-        pres =
-            RakuMode`RakuInputExecute[
-              StringJoin["use " <> aRakuModules[monadName] <> "; say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"]
-            ],
+        PRINT["Using RakuProcess:",
+          RakuMode`$RakuProcess,
+          Spacer[5],
+          AbsoluteTiming[
+            pres =
+                RakuMode`RakuInputExecute[
+                  StringJoin["use " <> aRakuModules[monadName] <> "; say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"]
+                ];
+          ]
+        ],
 
         (*ELSE*)
-        pres =
-            RakuCommand`RakuCommand[
-              StringJoin["say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"],
-              "",
-              aRakuModules[monadName]]
+        PRINT["NOT Using RakuProcess",
+          Spacer[5],
+          AbsoluteTiming[
+            pres =
+                RakuCommand`RakuCommand[
+                  StringJoin["say " <> aRakuFunctions[monadName] <> "(\"", command, "\", \"", target, "\")"],
+                  "",
+                  aRakuModules[monadName]
+                ];
+          ]
+        ]
       ];
 
       pres = StringReplace[pres, "==>" -> "\[DoubleLongRightArrow]"];
@@ -524,7 +537,7 @@ ToSMRMonWLCommand[ command_, execute_ : True, opts : OptionsPattern[] ] :=
 
 
 (*===========================================================*)
-(* ToLatentSemanticAnalysisWorkflowCode                                              *)
+(* ToLatentSemanticAnalysisWorkflowCode                      *)
 (*===========================================================*)
 
 Clear[ToLatentSemanticAnalysisWorkflowCode];
