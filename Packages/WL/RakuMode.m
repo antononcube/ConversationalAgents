@@ -316,7 +316,7 @@ KillRakuSockets[] :=
     Block[{aRes, lsIDs},
       aRes = Quiet @ ExternalEvaluate[<|"System" -> "Shell", "ReturnType" -> "Association"|>, "ps -ax | grep -i \"raku.*zmq\""];
 
-      lsIDs = StringCases[aRes["StandardOutput"], StartOfLine ~~ (DigitCharacter ..)];
+      lsIDs = StringCases[aRes["StandardOutput"], StartOfLine ~~ id:(DigitCharacter ..) ~~ WhitespaceCharacter :> id];
 
       If[ Length[lsIDs] == 1,
         Message[KillRakuSockets::nscks],
