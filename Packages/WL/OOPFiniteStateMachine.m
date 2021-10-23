@@ -203,6 +203,28 @@ FiniteStateMachine[objID_]["Graph"[opts : OptionsPattern[]]] :=
     ];
 
 (*-----------------------------------------------------------*)
+(* Helper function does the state transition have Input or InputString. *)
+
+Clear[InputInvokers];
+InputInvokers[obj_] :=
+    Block[{lsSVals, pos},
+      lsSVals = SubValues[Evaluate[Head@obj]];
+      pos = Position[SubValues[Evaluate[Head@obj]], "ChooseTransition"[_[_, _String], ___], Infinity];
+      Association @ Map[ Part[lsSVals, Sequence @@ #][[1,2]] -> Not[FreeQ[lsSVals[[ First @ # ]], InputString | Input]]&, pos ]
+    ];
+
+Clear[InvokesInputQ];
+InvokesInputQ[obj_, stateID_String] :=
+    Block[{lsSVals, pos},
+      lsSVals = SubValues[Evaluate[Head@obj]];
+      pos = Position[SubValues[Evaluate[Head@obj]], "ChooseTransition"[_[_, stateID], ___], Infinity];
+      If[Length[pos] == 0,
+        False,
+        ! FreeQ[lsSVals[[pos[[1, 1]]]], InputString | Input]
+      ]
+    ];
+
+(*-----------------------------------------------------------*)
 (*
 This function can be overridden by the descendants -- see the use of $OOPFSMHEAD.
 *)
@@ -226,6 +248,7 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
       While[k < maxLoops && (!ListQ[inputSequence] || Length[inputSequence] > 0),
         k++;
 
+        ECHOLOGGING[Row[{Style["State ID:", Bold], Spacer[5], state["ID"]}],"Run:"];
         ECHOLOGGING[Row[{"State:", state}], "Run:"];
         ECHOLOGGING[Row[{"Action:", state["Action"]}], "Run:"];
 
@@ -241,11 +264,14 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
 
           (* Switch with explicit state *)
           KeyExistsQ[state, "ExplicitNext"] && ListQ[state["ExplicitNext"]] && Length[state["ExplicitNext"]] > 0,
-          ECHOLOGGING[Row[{"ExplicitNext:", state["ExplicitNext"]}], "Run:"];
+          ECHOLOGGING[Row[{"ExplicitNext:", Spacer[5], state["ExplicitNext"]}], "Run:"];
+          ECHOLOGGING[Row[{Style["inputSequence:", Red, Bold], Spacer[5], inputSequence}], "Run:"];
+          ECHOLOGGING[Row[{"InvokesInputQ:", Spacer[5], InvokesInputQ[obj, state["ID"]]}], "Run:"];
+          (*  && InvokesInputQ[obj, state["ID"]],*)
           If[ ListQ[inputSequence],
             (* Input sequence is specified *)
             stateID = obj["ChooseTransition"[state["ID"], First @ inputSequence]]["To"];
-            ECHOLOGGING[Row[{Style["inputSequence:", Red, Bold], inputSequence}], "Run:"];
+            ECHOLOGGING[Row[{Style["new state ID:", Bold], Spacer[5], stateID}],"Run:"];
             inputSequence = Rest[inputSequence],
             (*ELSE*)
             (* User input is expected *)
