@@ -188,6 +188,7 @@ FiniteStateMachine[objID_]["GraphEdges"[]] :=
       Join[lsExplicit, lsImplicit]
     ];
 
+(*-----------------------------------------------------------*)
 FiniteStateMachine[objID_]["Graph"[opts : OptionsPattern[]]] :=
     Block[{ obj = FiniteStateMachine[objID], lsEdges},
 
@@ -332,7 +333,7 @@ FiniteStateMachine[objID_]["Run"[___]] :=
     Block[{},
       Echo[
         "The expected signatures are: Run[initId_String, inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40] " <>
-          "or Run[inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40].", "Run:"];
+            "or Run[inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40].", "Run:"];
       $Failed
     ];
 
@@ -383,6 +384,58 @@ FiniteStateMachine[objID_]["ChooseTransition"[stateID_String, inputArg_ : Automa
         ];
       ]
     ];
+
+
+(*-----------------------------------------------------------*)
+Clear[MakeFiniteStateMachine];
+
+MakeFiniteStateMachine::args := "The first argument is expected to be an object identifier or Automatic. \
+The second argument is expected to be a list of graph directed edges \
+over string identifiers of states. \
+The third, optional, argument is expected to be association of state identifiers to actions.";
+
+MakeFiniteStateMachine[objID_, gr_Graph, stateActions : (Association[(_String -> _)..] | Automatic) : Automatic ] :=
+    MakeFiniteStateMachine[objID, EdgeList[gr], stateActions];
+
+MakeFiniteStateMachine[gr_Graph, stateActions : (Association[(_String -> _)..] | Automatic) : Automatic] :=
+    MakeFiniteStateMachine[Automatic, EdgeList[gr], stateActions];
+
+MakeFiniteStateMachine[edges : {DirectedEdge[_String, _String, ___]..}, stateActions : (Association[(_String -> _)..] | Automatic) : Automatic] :=
+    MakeFiniteStateMachine[Automatic, edges, stateActions];
+
+MakeFiniteStateMachine[Automatic, edges : {DirectedEdge[_String, _String, ___]..}, stateActions : (Association[(_String -> _)..] | Automatic) : Automatic] :=
+    MakeFiniteStateMachine[Unique[], edges, stateActions];
+
+MakeFiniteStateMachine[objID_, edgesArg : {DirectedEdge[_String, _String, ___]..}, stateActions : (Association[(_String -> _)..] | Automatic) : Automatic] :=
+    Block[{edges = edgesArg, lsStates, aStateToAction, fsmObj = $OOPFSMHEAD[objID]},
+
+      lsStates = Union @ Flatten @ Map[ {#[[1]], #[[2]]}&, edges];
+
+      If[ AssociationQ[stateActions],
+        lsStates = Join[lsStates, Keys[stateActions]]
+      ];
+
+      aStateToAction = AssociationThread[lsStates, With[{st=#}, Echo["Entering state \"" <> st <> "\"...", st <> "[Action]:"]& ]& /@ lsStates];
+
+      If[ AssociationQ[stateActions],
+        aStateToAction = Join[aStateToAction, stateActions]
+      ];
+
+      (*Make FSM object*)
+      fsmObj["States"] := <||>;
+      fsmObj["CurrenState"] := None;
+
+      (*Add states*)
+      KeyValueMap[ fsmObj["AddState"[#1, #2]]&, aStateToAction];
+
+      (*Add transitions *)
+      edges = Map[If[ Length[#]==2, #, {#[[1]], #[[3]], #[[2]]}]&, edges];
+      Map[ fsmObj["AddTransition"[Sequence @@ #]]&, edges];
+
+      (*Result*)
+      fsmObj
+    ];
+
 
 (*End[]; *)(* `Private` *)
 
