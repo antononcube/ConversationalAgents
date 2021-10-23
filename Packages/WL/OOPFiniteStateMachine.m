@@ -203,14 +203,14 @@ FiniteStateMachine[objID_]["Graph"[opts : OptionsPattern[]]] :=
     ];
 
 (*-----------------------------------------------------------*)
-(* Helper function does the state transition have Input or InputString. *)
+(* Helper functions does the state transition have Input or InputString. *)
 
 Clear[InputInvokers];
 InputInvokers[obj_] :=
     Block[{lsSVals, pos},
       lsSVals = SubValues[Evaluate[Head@obj]];
       pos = Position[SubValues[Evaluate[Head@obj]], "ChooseTransition"[_[_, _String], ___], Infinity];
-      Association @ Map[ Part[lsSVals, Sequence @@ #][[1,2]] -> Not[FreeQ[lsSVals[[ First @ # ]], InputString | Input]]&, pos ]
+      Association @ Map[ Part[lsSVals, Sequence @@ #][[1, 2]] -> Not[FreeQ[lsSVals[[ First @ # ]], InputString | Input]]&, pos ]
     ];
 
 Clear[InvokesInputQ];
@@ -222,6 +222,28 @@ InvokesInputQ[obj_, stateID_String] :=
         False,
         ! FreeQ[lsSVals[[pos[[1, 1]]]], InputString | Input]
       ]
+    ];
+
+(*-----------------------------------------------------------*)
+FiniteStateMachine[objID_]["RunSequence"[inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40]] :=
+    Block[{obj = $OOPFSMHEAD[objID]},
+      FiniteStateMachine[objID]["RunSequence"[obj["CurrentState"], inputs, maxLoops]]
+    ];
+
+FiniteStateMachine[objID_]["RunSequence"[initId_String, inputs : {_String ..}, maxLoops_Integer : 40]] :=
+    Block[{obj = $OOPFSMHEAD[objID], aStateIDToInputInvokerQ},
+
+      aStateIDToInputInvokerQ = InputInvokers[obj];
+
+      obj["CurrentState"] = initId;
+
+      Map[(
+        obj["Run"[obj["CurrentState"], {#}, maxLoops]];
+        While[! aStateIDToInputInvokerQ[obj["CurrentState"]],
+          obj["Run"[{""}]]
+        ])&,
+        inputs
+      ];
     ];
 
 (*-----------------------------------------------------------*)
@@ -248,7 +270,7 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
       While[k < maxLoops && (!ListQ[inputSequence] || Length[inputSequence] > 0),
         k++;
 
-        ECHOLOGGING[Row[{Style["State ID:", Bold], Spacer[5], state["ID"]}],"Run:"];
+        ECHOLOGGING[Row[{Style["State ID:", Bold], Spacer[5], state["ID"]}], "Run:"];
         ECHOLOGGING[Row[{"State:", state}], "Run:"];
         ECHOLOGGING[Row[{"Action:", state["Action"]}], "Run:"];
 
@@ -271,7 +293,7 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
           If[ ListQ[inputSequence],
             (* Input sequence is specified *)
             stateID = obj["ChooseTransition"[state["ID"], First @ inputSequence]]["To"];
-            ECHOLOGGING[Row[{Style["new state ID:", Bold], Spacer[5], stateID}],"Run:"];
+            ECHOLOGGING[Row[{Style["new state ID:", Bold], Spacer[5], stateID}], "Run:"];
             inputSequence = Rest[inputSequence],
             (*ELSE*)
             (* User input is expected *)
@@ -304,6 +326,14 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
 
       (* Assign current state for reuse *)
       obj["CurrentState"] = state["ID"];
+    ];
+
+FiniteStateMachine[objID_]["Run"[___]] :=
+    Block[{},
+      Echo[
+        "The expected signatures are: Run[initId_String, inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40] " <>
+          "or Run[inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40].", "Run:"];
+      $Failed
     ];
 
 (*-----------------------------------------------------------*)
