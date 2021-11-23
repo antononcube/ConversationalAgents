@@ -24,7 +24,7 @@ Open a Raku IDE or type `raku` in the command line program. Try this Raku code:
 use DSL::English::FirstMateDonna;
 
 say ToFirstMateWorkflowCode(
-    "which airplane can i send off in the next two hours?
+    "which airplanes can I send off in the next two hours?
      why did you recommend that?",
     "WL-FirstMate");
 ``` 
@@ -34,7 +34,7 @@ Here is a more complicated, statistics pipeline specification:
 ```raku
 say ToFirstMateWorkflowCode(
     "how many people traveled with us last month;
-     what is the breakdown of destinations over sources;
+     what is the breakdown of destinations over departures;
      for which destinations fuel is consumed the most;
      plot the results;", "WL-FirstMate")
 ```
@@ -43,8 +43,8 @@ Here is a recommendations (by collaborative filtering) specification:
 
 ```raku
 say ToFirstMateWorkflowCode(
-    "what flight companies like ours scheduled last week;
-     which of those I can schedule this month;
+    "what flights companies like ours scheduled last week;
+     which of those can I schedule this month;
      show me the required teams and planes;", "WL-FirstMate")
 ```
 
