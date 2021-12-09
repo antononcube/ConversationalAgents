@@ -192,15 +192,20 @@ nbRakuStyle =
       Cell[StyleData["RakuInputExecute"],
         CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
-        StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
+        StyleKeyMapping -> {"Tab" -> "Input"},
+        Evaluatable -> True,
         CellEvaluationFunction -> (RakuInputExecute[#1, Options[RakuMode'RakuInputExecute]]&),
         CellFrameColor -> GrayLevel[0.85],
         (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
         CellFrameLabels -> {{Cell[BoxData[rbCameliaHex16]], None}, {None, None}},
         AutoQuoteCharacters -> {},
-        FormatType -> InputForm, FontFamily -> "Courier",
-        FontWeight -> Bold, Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4], Background -> RGBColor[0.976471, 0.964706, 0.960784, 1]
+        FormatType -> InputForm,
+        FontFamily -> "Courier",
+        FontWeight -> Bold,
+        Magnification -> 1.15` Inherited,
+        FontColor -> GrayLevel[0.4],
+        Background -> RGBColor[0.976471, 0.964706, 0.960784, 1],
+        IgnoreSpellCheck -> True
       ],
 
       Cell[StyleData["RakuInputExecute", "SlideShow"], FontSize -> 20],
@@ -224,7 +229,7 @@ nbRakuStyle =
 Clear[RakuInputExecute];
 Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "", "Process" -> Automatic, Epilog -> Identity};
 RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
-    Block[{proc, ff, epilogFunc=OptionValue[RakuInputExecute, Epilog]},
+    Block[{proc, ff, epilogFunc = OptionValue[RakuInputExecute, Epilog]},
 
       proc = OptionValue[RakuInputExecute, "Process"];
       If[ TrueQ[proc === Automatic], proc = $RakuProcess];
