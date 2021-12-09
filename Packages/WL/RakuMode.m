@@ -203,7 +203,7 @@ nbRakuStyle =
         FontColor -> GrayLevel[0.4], Background -> RGBColor[0.976471, 0.964706, 0.960784, 1]
       ],
 
-      Cell[StyleData["RakuInputExecute", "SlideShow"], FontSize->20],
+      Cell[StyleData["RakuInputExecute", "SlideShow"], FontSize -> 20],
 
       Cell[StyleData["Code"],
         MenuSortingValue -> 10000,
@@ -222,9 +222,9 @@ nbRakuStyle =
 (***********************************************************)
 
 Clear[RakuInputExecute];
-Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "", "Process" -> Automatic};
+Options[RakuInputExecute] = {"ModuleDirectory" -> "", "ModuleName" -> "", "Process" -> Automatic, Epilog -> Identity};
 RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
-    Block[{proc, ff},
+    Block[{proc, ff, epilogFunc=OptionValue[RakuInputExecute, Epilog]},
 
       proc = OptionValue[RakuInputExecute, "Process"];
       If[ TrueQ[proc === Automatic], proc = $RakuProcess];
@@ -233,9 +233,9 @@ RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
         ff = FullForm[boxData];
         ff = ToExpression@StringReplace[ToString[ff], "\\\\" -> "\\"];
         BinaryWrite[$RakuZMQSocket, StringToByteArray[ff, $SystemCharacterEncoding]];
-        ByteArrayToString[SocketReadMessage[$RakuZMQSocket]],
+        epilogFunc @ ByteArrayToString[SocketReadMessage[$RakuZMQSocket]],
         (* ELSE *)
-        RakuCommand`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]]
+        epilogFunc @ RakuCommand`RakuCommand[boxData, OptionValue[RakuInputExecute, "ModuleDirectory"], OptionValue[RakuInputExecute, "ModuleName"]]
       ]
     ];
 
@@ -316,7 +316,7 @@ KillRakuSockets[] :=
     Block[{aRes, lsIDs},
       aRes = Quiet @ ExternalEvaluate[<|"System" -> "Shell", "ReturnType" -> "Association"|>, "ps -ax | grep -i \"raku.*zmq\""];
 
-      lsIDs = StringCases[aRes["StandardOutput"], StartOfLine ~~ id:(DigitCharacter ..) ~~ WhitespaceCharacter :> id];
+      lsIDs = StringCases[aRes["StandardOutput"], StartOfLine ~~ id : (DigitCharacter ..) ~~ WhitespaceCharacter :> id];
 
       If[ Length[lsIDs] == 1,
         Message[KillRakuSockets::nscks],
