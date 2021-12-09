@@ -80,7 +80,7 @@ ToRakuCode[Rule[a_, b_]] := ToRakuCode[a] <> "=>" <> ToRakuCode[b];
 
 ToRakuCode[i_Integer] := ToString[i];
 
-ToRakuCode[n_?NumericQ] := ToString[N[n]];
+ToRakuCode[n_?NumericQ] := StringReplace[ToString[N[n]], "." ~~ EndOfString -> ".0"];
 
 ToRakuCode[s_String] := "'" <> s <> "'";
 
