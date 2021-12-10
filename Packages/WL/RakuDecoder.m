@@ -77,34 +77,36 @@ Clear[FromRakuCode];
 Options[FromRakuCode] = {
   "ListOfAssociationsToDataset" -> True,
   "AssociationOfAssociationsToDataset" -> True,
-  "SameDatasetColumnNames" -> True};
+  "SameDatasetColumnNames" -> True,
+  DisplayFunction -> Dataset};
 
-FromRakuCode[x_] := x;
+FromRakuCode[x_, opts : OptionsPattern[]] := x;
 
-FromRakuCode[x_String] :=
-    Block[{res, ladQ, aadQ, sdcnQ, lsAllColNames, aDefault, res2},
+FromRakuCode[x_String, opts : OptionsPattern[]] :=
+    Block[{res, ladQ, aadQ, sdcnQ, dFunc, lsAllColNames, aDefault, res2},
 
       ladQ = TrueQ[OptionValue[FromRakuCode, "ListOfAssociationsToDataset"]];
       aadQ = TrueQ[OptionValue[FromRakuCode, "AssociationOfAssociationsToDataset"]];
       sdcnQ = TrueQ[OptionValue[FromRakuCode, "SameDatasetColumnNames"]];
+      dFunc = OptionValue[FromRakuCode, DisplayFunction];
 
       res = ToExpression[x];
       res = First[res];
       Which[
 
         ladQ && MatchQ[res, List[_Association ..]] && Apply[Equal, Length /@ res],
-        res = Dataset[KeySort /@ res],
+        res = dFunc[KeySort /@ res],
 
         aadQ && MatchQ[res, Association[(_ -> _Association) ..]],
         Which[
           Apply[Equal, Length /@ Values[res]],
-          res = Dataset[KeySort /@ res],
+          res = dFunc[KeySort /@ res],
 
           sdcnQ,
           lsAllColNames = Union[Flatten[Keys /@ Values[res]]];
           aDefault = AssociationThread[lsAllColNames, Missing[]];
           res2 = Map[Join[aDefault, #] &, res];
-          res = Dataset[res2],
+          res = dFunc[res2],
 
           True,
           res
