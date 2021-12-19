@@ -51,7 +51,7 @@ NULL
 #' If NULL then only the \code{url} is used.
 #' @family DSLWebService
 #' @export
-DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
+DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "http://accendodata.net:5040/translate", sub = NULL ) {
 
   if( is.character(sub) ) {
     res <- paste0(url, sub, "/")
@@ -66,7 +66,7 @@ DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "
   }
 
   if( is.character(command) ) {
-    url2$params <- URLencode(command)
+    url2$query <- list("command"=URLencode(command))
   }
 
   if( !( is.null(query) || ( is.character(query) || is.list(query) ) && !is.null(names(query)) && !is.null(names(query))) ) {
@@ -75,7 +75,7 @@ DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "
 
   if( !is.null(query) ) {
     query <- setNames( as.list(query), names(query) )
-    url2$query <- query
+    url2$query <- c(url2$query, query)
   }
 
   httr::build_url(url2)
@@ -91,7 +91,7 @@ DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "
 #' If NULL then only the \code{url} is used.
 #' @family DSLWebService
 #' @export
-DSLWebServiceInterpretation <- function(command, query = NULL, url = "http://accendodata.net:5040/translate/", sub = NULL ) {
+DSLWebServiceInterpretation <- function(command, query = NULL, url = "http://accendodata.net:5040/translate", sub = NULL ) {
   jsonlite::fromJSON(DSLWebServiceInterpretationURL(command, query = query, url = url, sub = sub))
 }
 
@@ -109,7 +109,7 @@ DSLWebServiceInterpretation <- function(command, query = NULL, url = "http://acc
 #' @return A URL string.
 #' @family DSLWebService
 #' @export
-MakeDSLWebServiceURL <- function(command = NULL, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", query = NULL ) {
+MakeDSLWebServiceURL <- function(command = NULL, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate", query = NULL ) {
 
   if( !is.null(command) ) {
     command <- URLencode(command)
@@ -141,7 +141,7 @@ MakeDSLWebServiceURL <- function(command = NULL, scheme = "http", hostname = "ac
 #' @return Returns a list of the form \code{list( Success = <logical>, Response = <httr::GET result>, Content = <content>)}.
 #' @family DSLWebService
 #' @export
-InterpretByDSLWebService <- function(command, query = NULL, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate/", url = NULL, sub = NULL ) {
+InterpretByDSLWebService <- function(command, query = NULL, scheme = "http", hostname = "accendodata.net", port = "5040", path = "translate", url = NULL, sub = NULL ) {
 
   # Make the URL
   if ( is.character(url) ) {
