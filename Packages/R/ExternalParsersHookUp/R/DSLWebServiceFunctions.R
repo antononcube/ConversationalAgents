@@ -66,7 +66,7 @@ DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "
   }
 
   if( is.character(command) ) {
-    url2$query <- list("command"=URLencode(command))
+    url2$query <- list("command" = command)
   }
 
   if( !( is.null(query) || ( is.character(query) || is.list(query) ) && !is.null(names(query)) && !is.null(names(query))) ) {
@@ -75,7 +75,7 @@ DSLWebServiceInterpretationURL <- function(command = NULL, query = NULL, url = "
 
   if( !is.null(query) ) {
     query <- setNames( as.list(query), names(query) )
-    url2$query <- c(url2$query, query)
+    url2$query <- c(query, url2$query)
   }
 
   httr::build_url(url2)
