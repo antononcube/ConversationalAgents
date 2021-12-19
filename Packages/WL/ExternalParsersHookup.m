@@ -681,14 +681,23 @@ ToRecruitingWorkflowCode[___] := $Failed;
 
 Clear[DSLWebServiceInterpretationURL, DSLWebServiceInterpretation];
 
-Options[DSLWebServiceInterpretationURL] = {"URL" -> "http://accendodata.net:5040/translate/", "Sub" -> None};
+Options[DSLWebServiceInterpretationURL] = {"URL" -> "http://accendodata.net:5040/translate/", "Sub" -> None, "Language" -> Automatic};
 DSLWebServiceInterpretationURL[command_String, opts : OptionsPattern[]] :=
-    If[StringQ[OptionValue[DSLWebServiceInterpretationURL, "Sub"]],
+    Block[{lang},
 
-      OptionValue[DSLWebServiceInterpretationURL, "URL"] <> OptionValue[DSLWebServiceInterpretationURL, "Sub"] <> "/" <> "'" <> URLEncode[command] <> "'",
-      (*ELSE*)
+      lang = OptionValue[DSLWebServiceInterpretationURL, "Language"];
+      If[ !StringQ[lang], lang = "WL"];
 
-      OptionValue[DSLWebServiceInterpretationURL, "URL"] <> "'" <> URLEncode[command] <> "'"
+      If[StringQ[OptionValue[DSLWebServiceInterpretationURL, "Sub"]],
+
+        OptionValue[DSLWebServiceInterpretationURL, "URL"] <>
+            OptionValue[DSLWebServiceInterpretationURL, "Sub"] <>
+                "?command='" <> URLEncode[command] <> "'" <> "&lang=" <> URLEncode[lang],
+        (*ELSE*)
+
+        OptionValue[DSLWebServiceInterpretationURL, "URL"] <>
+            "?command='" <> URLEncode[command] <> "'" <> "&lang=" <> URLEncode[lang]
+      ]
     ];
 
 DSLWebServiceInterpretation::wlcop = "The value of the option \"WLCode\" is expected to be one of Automatic, False, or True";
