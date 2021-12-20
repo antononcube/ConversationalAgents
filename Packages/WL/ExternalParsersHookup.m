@@ -154,6 +154,10 @@ CellPrintPython::usage = "CellPrintPython[s_String]";
 
 CellPrintAndRunPython::usage = "CellPrintAndRunPython[s_String]";
 
+CellPrintRaku::usage = "CellPrintRaku[s_String]";
+
+CellPrintAndRunRaku::usage = "CellPrintAndRunRaku[s_String]";
+
 DSLWebServiceInterpretationURL::usage = "Give DSL web service URL of a DSL command.";
 
 DSLWebServiceInterpretation::usage = "Get the DSL web service interpretation of DSL command.";
@@ -209,11 +213,21 @@ CellPrintAndRunPython[s_String] := (
   SelectionEvaluateCreateCell[EvaluationNotebook[]]
 );
 
+Clear[CellPrintRaku];
+CellPrintRaku[s_String] :=
+    NotebookWrite[EvaluationNotebook[], Cell[s, "RakuInputExecute"]];
+
+Clear[CellPrintAndRunRaku];
+CellPrintAndRunRaku[s_String] := (
+  NotebookWrite[EvaluationNotebook[], Cell[s, "RakuInputExecute"], All];
+  SelectionEvaluateCreateCell[EvaluationNotebook[]]
+);
+
 aTargetLanguageToCellPrintFunc =
-    <| "R" -> CellPrintR, "Python" -> CellPrintPython, "Julia" -> CellPrintJulia, "WL" -> CellPrintWL |>;
+    <| "R" -> CellPrintR, "Python" -> CellPrintPython, "Julia" -> CellPrintJulia, "WL" -> CellPrintWL, "Raku" -> CellPrintRaku|>;
 
 aTargetLanguageToCellPrintAndRunFunc =
-    <| "R" -> CellPrintAndRunR, "Python" -> CellPrintAndRunPython, "Julia" -> CellPrintAndRunJulia, "WL" -> CellPrintAndRunWL |>;
+    <| "R" -> CellPrintAndRunR, "Python" -> CellPrintAndRunPython, "Julia" -> CellPrintAndRunJulia, "WL" -> CellPrintAndRunWL, "Raku" -> CellPrintAndRunRaku |>;
 
 (*===========================================================*)
 (* ToDSLCode                                                 *)
