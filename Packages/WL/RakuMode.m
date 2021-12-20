@@ -194,7 +194,7 @@ nbRakuStyle =
         CellMargins -> {{66, 10}, {5, 10}},
         StyleKeyMapping -> {"Tab" -> "Input"},
         Evaluatable -> True,
-        CellEvaluationFunction -> (RakuInputExecute[#1, Options[RakuMode'RakuInputExecute]]&),
+        CellEvaluationFunction -> (RakuMode`RakuInputExecute[#1, Options[RakuMode`RakuInputExecute]]&),
         CellFrameColor -> GrayLevel[0.85],
         (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
         CellFrameLabels -> {{Cell[BoxData[rbCameliaHex16]], None}, {None, None}},
