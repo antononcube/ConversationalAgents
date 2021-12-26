@@ -58,7 +58,28 @@
 (* :Mathematica Version: 12.1 *)
 (* :Copyright: (c) 2021 Anton Antonov *)
 (* :Keywords: Raku, Perl6, style, options, notebook, WL *)
-(* :Discussion: *)
+(* :Discussion:
+
+I took the Camelia images from https://github.com/MadcapJake/metamorphosis .
+
+Here is the Mathematica code I ingested and manipulated them with:
+
+```mathematica
+imgPerl6Hex = Import["https://raw.githubusercontent.com/uzluisf/metamorphosis/master/hex_camelia/perl6-color-logo1.png"];
+imgPerl6Hex1 = ImageTake[imgPerl6Hex, {115, -220}, {130, -130}];
+imgPerl6Hex2 = ImageCrop[RemoveBackground[imgPerl6Hex1]];
+```
+
+```mathematica
+imgPerl6Hex3 = ImageRotate[ColorConvert[ImageResize[imgPerl6Hex2, {Automatic, 16}], "Grayscale"], -Pi/6]
+```
+
+```mathematica
+imgPerl6Hex4 = ImageRotate[ColorConvert[ImageResize[imgPerl6Hex2, {Automatic, 24}], "Grayscale"], -Pi/6]
+```
+The assignments to the private variables `rbCameliaHex16` and `rbCameliaHex24` were made by copying and pasting
+the content of the output cells of the images `imgPerl6Hex3` and `imgPerl6Hex4` respectively.
+*)
 
 
 (***********************************************************)
@@ -118,15 +139,14 @@ EyMhMn/lzZ35i4Ofxvq6gItbIkhv0o76v/ri1TCxTywoacYDXzuhE0/qMTM+
 KlEdyVtXZMVSccXL9C0ZcRhknyqK/ZGboiaIgvi6q2d9utGvjJL9c9TWjkfJ
 dGPwyMGoXcv1crOz6fYbZYzyAg==
     "], {{0, 18.75}, {21., 0}}, {0, 255},
-    ColorFunction -> GrayLevel,
-    ImageResolution -> {96, 96}],
-    BoxForm`ImageTag[
-      "Byte", ColorSpace -> "Grayscale", Interleaving -> False, Magnification -> Automatic, MetaInformation ->
-        Association["Comments" -> Association["Software" -> "www.inkscape.org"]]],
-    Selectable -> False],
-  DefaultBaseStyle -> "ImageGraphics",
-  ImageSizeRaw -> {21., 18.75},
-  PlotRange -> {{0, 21.}, {0, 18.75}}
+    ColorFunction->GrayLevel,
+    ImageResolution->{96, 96}],
+    BoxForm`ImageTag["Byte", ColorSpace -> "Grayscale", Interleaving -> True,
+      MetaInformation -> <|"Comments" -> <|"Software" -> "www.inkscape.org"|>|>],
+    Selectable->False],
+  DefaultBaseStyle->"ImageGraphics",
+  ImageSizeRaw->{21., 18.75},
+  PlotRange->{{0, 21.}, {0, 18.75}}
 ];
 
 rbCameliaHex24 = GraphicsBox[
@@ -162,15 +182,14 @@ DnhazTWjEakSOw4fOW/remXy51hQNJzJ9lUFDfhouD8JHgXaLms6PSVeSF6k
 fifhwcRqYbI4st94mUKm5jAs+yclpbl3MZ+mR85lP9B02zZOx2FYtd871zQn
 taxv2uZcOz1/keoXTzc6Nnxqz4zoac7gRJp5Yoj6NP0DdKhBTA==
     "], {{0, 28.5}, {30.75, 0}}, {0, 255},
-    ColorFunction -> GrayLevel,
-    ImageResolution -> {96, 96}],
-    BoxForm`ImageTag[
-      "Byte", ColorSpace -> "Grayscale", Interleaving -> False, Magnification -> Automatic, MetaInformation ->
-        Association["Comments" -> Association["Software" -> "www.inkscape.org"]]],
-    Selectable -> False],
-  DefaultBaseStyle -> "ImageGraphics",
-  ImageSizeRaw -> {30.75, 28.5},
-  PlotRange -> {{0, 30.75}, {0, 28.5}}
+    ColorFunction->GrayLevel,
+    ImageResolution->{96, 96}],
+    BoxForm`ImageTag["Byte", ColorSpace -> "Grayscale", Interleaving -> True,
+      MetaInformation -> <|"Comments" -> <|"Software" -> "www.inkscape.org"|>|>],
+    Selectable->False],
+  DefaultBaseStyle->"ImageGraphics",
+  ImageSizeRaw->{30.75, 28.5},
+  PlotRange->{{0, 30.75}, {0, 28.5}}
 ];
 
 
