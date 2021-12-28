@@ -12,6 +12,8 @@
 (* :Keywords: *)
 (* :Discussion:
 
+## First derivations
+
 I took the Camelia images from https://github.com/MadcapJake/metamorphosis .
 
 Here is the Mathematica code I ingested and manipulated them with:
@@ -32,6 +34,30 @@ imgPerl6Hex4 = ImageRotate[ColorConvert[ImageResize[imgPerl6Hex2, {Automatic, 24
 The assignments to the private variables `rbCameliaHex16` and `rbCameliaHex24` were made by copying and pasting
 the content of the output cells of the images `imgPerl6Hex3` and `imgPerl6Hex4` respectively.
 
+## Second derivations
+
+The previous steps produced blurred "prefix" icons for the Raku cells. Hence I following steps.
+
+1. Vectorize the image:
+
+```mathematica
+imGr = ImageGraphics[RemoveBackground@Binarize[ImageResize[imgPerl6Hex1, 600], .8], 2, Method -> "MarchingSquares", MinColorDistance -> 0.02];
+```
+
+2. Get rid of the background:
+
+```mathematica
+imGr1 = Graphics[imGr[[1, 1]]]
+```
+
+3. Apply `FilledCurve` to each curve separately:
+```
+imGr2 = Graphics@Replace[imGr1,FilledCurve[x__] :> Map[FilledCurve[#] &, x], Infinity];
+```
+
+And copied and pasted `imGr2 // FullForm` in the definition of `HexCamelia` below.
+
+Note that `HexCamelia` has parameterized colors -- that is made convenient by Step 3.
 *)
 
 BeginPackage["HexCameliaIcons`"];
