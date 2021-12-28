@@ -224,13 +224,13 @@ g2bc9E1DgJ/R89BML0amJ8Cn5B1FJLeyWzgQ1O+/Sid4W+WKk1GJBHjNkmwt
 2+vNK87NLcrdnZNTVFBc4M11d65MgBL5/IFgxOcPBYMTgfB8eCYQioRmfPP+
 cMAXDoQn/eFQ2Of3BdJfyKy0YjmjhSD+gOM//UK/UBL6P3XAtuU=
     "], {{0, 200.}, {226., 0}}, {0, 255},
-    ColorFunction->GrayLevel,
-    ImageResolution->72.],
+    ColorFunction -> GrayLevel,
+    ImageResolution -> 72.],
     BoxForm`ImageTag["Byte", ColorSpace -> "Grayscale", Interleaving -> None],
-    Selectable->False],
-  DefaultBaseStyle->"ImageGraphics",
-  ImageSizeRaw->{22., 19.},
-  PlotRange->{{0, 226.}, {0, 200.}}
+    Selectable -> False],
+  DefaultBaseStyle -> "ImageGraphics",
+  ImageSizeRaw -> {22., 19.},
+  PlotRange -> {{0, 226.}, {0, 200.}}
 ];
 
 
@@ -258,12 +258,19 @@ nbRakuStyle =
         CellFrameColor -> GrayLevel[0.85],
         (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
         CellFrameLabels -> {{Cell[BoxData[rbCameliaHex24]], None}, {None, None}},
+        StyleHints -> <|
+          "CodeFont" -> "Source Code Pro",
+          "GroupOpener" -> "Inline",
+          "OperatorRenderings" -> <|"|->" -> "\[Function]", "->" -> "\[Rule]", ":>" -> "\[RuleDelayed]", "<=" -> "\[LessEqual]", ">=" -> "\[GreaterEqual]", "!=" -> "\[NotEqual]", "==" -> "\[Equal]", "<->" -> "\[TwoWayRule]", "[[" -> "\[LeftDoubleBracket]", "]]" -> "\[RightDoubleBracket]", "<|" -> "\[LeftAssociation]", "|>" -> "\[RightAssociation]"|>
+        |>,
+        CellLabelTemplate -> <|"In" -> "In[`1`]`2`:=", "InExpired" -> "In[\:f759\:f363]`2`:=", "Out" -> "Out[`1`]`2`=", "OutExpired" -> "Out[\:f759\:f363]`2`="|>,
         AutoQuoteCharacters -> {},
         FormatType -> InputForm,
-        FontFamily -> "Courier",
-        FontWeight -> Bold,
-        Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4],
+        FontFamily -> Dynamic[AbsoluteCurrentValue[EvaluationCell[], {StyleHints, "CodeFont"}]],
+        FontWeight -> "Plain",
+        Magnification -> 1.0 * Inherited,
+        FontColor -> GrayLevel[0.05],
+        FontOpacity -> 1.,
         Background -> RGBColor[0.976471, 0.964706, 0.960784, 1],
         IgnoreSpellCheck -> True
       ],
