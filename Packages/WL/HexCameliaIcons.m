@@ -10,7 +10,29 @@
 (* :Mathematica Version: 13.0 *)
 (* :Copyright: (c) 2021 Anton Antonov *)
 (* :Keywords: *)
-(* :Discussion: *)
+(* :Discussion:
+
+I took the Camelia images from https://github.com/MadcapJake/metamorphosis .
+
+Here is the Mathematica code I ingested and manipulated them with:
+
+```mathematica
+imgPerl6Hex = Import["https://raw.githubusercontent.com/uzluisf/metamorphosis/master/hex_camelia/perl6-color-logo1.png"];
+imgPerl6Hex1 = ImageTake[imgPerl6Hex, {115, -220}, {130, -130}];
+imgPerl6Hex2 = ImageCrop[RemoveBackground[imgPerl6Hex1]];
+```
+
+```mathematica
+imgPerl6Hex3 = ImageRotate[ColorConvert[ImageResize[imgPerl6Hex2, {Automatic, 16}], "Grayscale"], -Pi/6]
+```
+
+```mathematica
+imgPerl6Hex4 = ImageRotate[ColorConvert[ImageResize[imgPerl6Hex2, {Automatic, 24}], "Grayscale"], -Pi/6]
+```
+The assignments to the private variables `rbCameliaHex16` and `rbCameliaHex24` were made by copying and pasting
+the content of the output cells of the images `imgPerl6Hex3` and `imgPerl6Hex4` respectively.
+
+*)
 
 BeginPackage["HexCameliaIcons`"];
 (* Exported symbols added here with SymbolName::usage *)
