@@ -59,26 +59,9 @@
 (* :Copyright: (c) 2021 Anton Antonov *)
 (* :Keywords: Raku, Perl6, style, options, notebook, WL *)
 (* :Discussion:
+See the explanations in the package HexCameliaIcons.m:
 
-I took the Camelia images from https://github.com/MadcapJake/metamorphosis .
 
-Here is the Mathematica code I ingested and manipulated them with:
-
-```mathematica
-imgPerl6Hex = Import["https://raw.githubusercontent.com/uzluisf/metamorphosis/master/hex_camelia/perl6-color-logo1.png"];
-imgPerl6Hex1 = ImageTake[imgPerl6Hex, {115, -220}, {130, -130}];
-imgPerl6Hex2 = ImageCrop[RemoveBackground[imgPerl6Hex1]];
-```
-
-```mathematica
-imgPerl6Hex3 = ImageRotate[ColorConvert[ImageResize[imgPerl6Hex2, {Automatic, 16}], "Grayscale"], -Pi/6]
-```
-
-```mathematica
-imgPerl6Hex4 = ImageRotate[ColorConvert[ImageResize[imgPerl6Hex2, {Automatic, 24}], "Grayscale"], -Pi/6]
-```
-The assignments to the private variables `rbCameliaHex16` and `rbCameliaHex24` were made by copying and pasting
-the content of the output cells of the images `imgPerl6Hex3` and `imgPerl6Hex4` respectively.
 *)
 
 
@@ -116,80 +99,31 @@ DeleteCells::usage = "Delete cells of a specified style.";
 Begin["`Private`"];
 
 (***********************************************************)
-(* Icons                                                   *)
+(* Icon                                                    *)
 (***********************************************************)
-
-rbCameliaHex16 = GraphicsBox[
-  TagBox[RasterBox[CompressedData["
-1:eJyVk+9LU1EYx8/VYdGrKImC3vTCPyEINmIRGEYRaaJvFU164RQVNEGiIrer
-+3HvhmbqrQ1swiY2V6PIQjQMUoZx2xA1agYiuut+ZUnuuqfnzFGx5qbP4Rzu
-PZzP85zn+zznTHVD6c08QkjzYVxKq1ovNDVV3S47ij/lmuZbdZramhJNS21d
-bdO56nzcPIXzNE6KpJuUYS+3BQuCBTGyeuKg3NAnHVhCLLzi+pb3T5mBk3Vg
-BBYM4K0M5YUyJZLBeneMwCU4OhM6sHkjRGJyUxyYKJMaetCBrySEOmVXaqqd
-w9slmR0az7Klg3dtEYVEpKxsjJhjbIozJNBDzOV0OSOKIA6JwbhMOAO1rgiT
-b0Vuqwl4VOb5mLC4qJorX1KtFK4UBhVhRYj4L4UYb2U6F8yP5IUZp4eLc3Hk
-XoxqOn6yqKtt1jb7nbhGkt8zOuj78tL8LxUlolpUOz0G1NHtEbSC9tr24CqP
-6rCwdP7jDazqFi9zeH8WVk/GUhTlfCp9gpf1CRY8z6z3y+TWJcs8D/Sc+xEf
-MyBHc+dlI0y2TbZRnSQSJX6lQTbIVEnh81xJMRRDOdQvPhVdPmFT2Fw4+1jk
-UjUyYn2ChyglMRLjV2rRF624Hsw/Brsr5PrASMC1YIehXx/uuvpZ0CfQKyVl
-Mwz5SDKeRN439KwZKZkwweS96esVcs3GSGAYbPJMx0zH6BN212syXu/OX2Wi
-ZO2YDlUwb5u3H4DjrckxPmyP2+MD4G0ZtVKKcrxsSjyU02sxrhV8LNgn+gMS
-EyMhMn/lzZ35i4Ofxvq6gItbIkhv0o76v/ri1TCxTywoacYDXzuhE0/qMTM+
-7vA4PG7rctFU+179FsZsN5gN5Ng/vcrHu0FUh7GrYnv26a5SNC6L2VL1aVV9
-KlEdyVtXZMVSccXL9C0ZcRhknyqK/ZGboiaIgvi6q2d9utGvjJL9c9TWjkfJ
-dGPwyMGoXcv1crOz6fYbZYzyAg==
-    "], {{0, 18.75}, {21., 0}}, {0, 255},
-    ColorFunction->GrayLevel,
-    ImageResolution->{96, 96}],
-    BoxForm`ImageTag["Byte", ColorSpace -> "Grayscale", Interleaving -> True,
-      MetaInformation -> <|"Comments" -> <|"Software" -> "www.inkscape.org"|>|>],
-    Selectable->False],
-  DefaultBaseStyle->"ImageGraphics",
-  ImageSizeRaw->{21., 18.75},
-  PlotRange->{{0, 21.}, {0, 18.75}}
-];
 
 rbCameliaHex24 = GraphicsBox[
   TagBox[RasterBox[CompressedData["
-1:eJytlW1MU1ccxumtQUl8mU63L3vJZtz0w+KHfZhzyZxfpmSJcTjMKrpNAijL
-xIlO51tidNO59r61hVaoCkhpoU5gGKQKq0iFOaCzUiyFRQGRyn1pYVCB9t5z
-d3pLXenQyctzcpu0vfd3n/85z/+cN5J3J6QhMTExe+fAj4TtB9ZmZm4/uOkF
-+CUxY2/6jozUlPiMfak7UjNXJUvhj2/BawW8go88Tcwz/puKGCkrYRB2Jonz
-Hiz1SLuXsXEzwzPdMNSYyoqqL17UX79UmNs+faIKoEAh4AFUwP0KQc3WHKPm
-T4d3hidAxBBQoGJtMg/CSKbG0woqAROIyAHw0fI8agE7RaYGYAIeTeTVlDWT
-nkdLmEmnSisoQZRDkakQDOYHb7IicXJUzTDK/4cnkDzOZ/XV7Wdg3ZNj9rxa
-Vkg8JkE0EedRTks71jGzIOsJ83mo3hibjBzExBUeGzwOyFH0sZquzKHmuBe6
-F0CfQSrkwllFmGc1cvAO6cPXKjXKAXKschzgoNh8Fbt+uO5Iz9vUgp6X3IvY
-2L65bAyLeJBHi72z+uZ7Y6l5E/PEOiReyV/vnmtEw9UCJdcaf/vjusPWfTcO
-NaRfP2j7rHdJ72IqzrW6UmNW/JpnPl2hqz5RkfN0IivpXH7ttLo/xCMEc3bN
-V2ilxikfUfVjo+q+s382J7oX0bNNZlW/ApBDckCMyHlyUF/tiJ+AB0fn62a0
-sIH0QRqsOLe7a+UpU/LDkx0ab9AvDn4WKnT0Qts27SOUU/oJsbtgEoCcu6Km
-FrKSaCIdc/UHJYP5IY8POqw7UvrdLsdm7oBLd0c5DJ/mCU7b05RsPYQOwpT9
-mzPYA+daHOtYhJaOd+h8T3dXvFN0WFTv+OjotaShLfyXg8ddagrlcQ4VFH59
-tT2h5DLBjcsXUABTefeycPeHHZafU7Fj2YGdc+vrgh9T78v4bZxM+MZ93pLv
-ONue59TdK7S51lgzVANEZG6hA21nU5JHEumwOSGnAwVjtQClz3LMuj6le6v/
-C34LyOwsqilrL+241HbxXvmtprTGRDwwjgj7SgH0v0fwYBbLCvBBnHtyHzBa
-GmUnKzaDrUDGK2uNjFEw+PXA8PcVa8dyQxURICI7Ibi7AO1QZG765jfszO4h
-n7wZrl/ArK5L/NYlCxxuy7ebhCJg5PR8WVvzzro0cjhIiPSIChp+/Ep7JI8W
-/VKiEFM41n98/h9347Waz325VaYBAzAGirhipqak60VdK8GNd4gJSkErRPUg
-QsU1J2X34tzY3g1X9qeRKnXt5ly98WbxUDF1wW+gSp32TeYTxGi0Q0zQRPFC
-YmdfPYUNwdXh4IoH5NyZ+/V7hpDWDxzpd1Jse+xpzXudG5wrlQN4KF/BemDW
-SIDxaqAFE3d37X7dnfybWb15tiz3+UaDxb2EhntCy0bLEcvRa6d/O36FKK4g
-AkESpHhRn4rBfSovMZgzMjEvJPuGzhWu1fffafuwayk8W6Tulw0WrB8bxkfw
-xwSHi/OHgyymzHD705u7bFvqdzfJnsULyQP3DA9MAI2wklspmk7UT3BkRLKg
-R5/lqHuxF2HivBJm9v8Tgwrt1nSs632dHfcTkacFjwF1X5Uc/isNvvX5eCIT
-DnhazTWjEakSOw4fOW/remXy51hQNJzJ9lUFDfhouD8JHgXaLms6PSVeSF6k
-fifhwcRqYbI4st94mUKm5jAs+yclpbl3MZ+mR85lP9B02zZOx2FYtd871zQn
-taxv2uZcOz1/keoXTzc6Nnxqz4zoac7gRJp5Yoj6NP0DdKhBTA==
-    "], {{0, 28.5}, {30.75, 0}}, {0, 255},
-    ColorFunction->GrayLevel,
-    ImageResolution->{96, 96}],
-    BoxForm`ImageTag["Byte", ColorSpace -> "Grayscale", Interleaving -> True,
-      MetaInformation -> <|"Comments" -> <|"Software" -> "www.inkscape.org"|>|>],
-    Selectable->False],
-  DefaultBaseStyle->"ImageGraphics",
-  ImageSizeRaw->{30.75, 28.5},
-  PlotRange->{{0, 30.75}, {0, 28.5}}
+1:eJxlUs1PE0EUbzx59Gjiyf/CEwkHo4STNXryArE0Xrak7e7sV7czb5f4Qe1F
+D3LAr0CNVRsbtGiIVMUQhRgNxUI0QqIBaf0CjdBadp+zXWLc9Ze8yZu8+b2Z
+9/vN/t5YuG9XKBRK7OZLuId0xuM9ytE9fHNMSJyKCpGTXUIyEo3ED/S6x/by
+2McD0cH660pl/tVXngXg/M72S6IUu2gHSzY+JRYAWGSG5z4OblhpysGMs7/8
+LR2nIINbokBKAdoP6oEBtTZ9NHuHxVRZKG633DZteHeZBqNMGx67h3bTT8MX
+MjA9+3mqPHF/Zr356croyOjVcfeM03p7xjDFhUyfLhFxyRlKqIqiioto2/gk
+CYyMzHWeOM8GtMt1jc8Ipn6h5eC6mWY0tSQe7EqaqhGfLRJoTzKNWCDA5Juz
+HUe6w7ncjWsTKxprCzCwsaryLG2+ix4+RCZLD4urJU8BIB+/AZcJxDvTHcfv
+lsYKUx90Txo5h/hYMrkS8oKkjOdv579c35GN1tFpZpV0iiae1Z4vVudWKsTt
+QkF64D5+3hocPH2pgY1H5XI5k6LAi6nMZlurxlZjaxvtfIxIksGMc8u12tpP
+n9cZwwTgaupr/1rGyTa+9GaVb3E3nICnQxr/CBS+//d9bFwWRYkIkwGrPbyv
+VN9UW385fwDg3Pmk
+    "], {{0, 24.}, {27., 0}}, {0, 255},
+    ColorFunction -> GrayLevel,
+    ImageResolution -> 72.],
+    BoxForm`ImageTag["Byte", ColorSpace -> "Grayscale", Interleaving -> None],
+    Selectable -> False],
+  DefaultBaseStyle -> "ImageGraphics",
+  ImageSizeRaw -> {27., 24.},
+  PlotRange -> {{0, 27.}, {0, 24.}}
 ];
 
 
@@ -216,7 +150,7 @@ nbRakuStyle =
         CellEvaluationFunction -> (RakuMode`RakuInputExecute[#1, Options[RakuMode`RakuInputExecute]]&),
         CellFrameColor -> GrayLevel[0.85],
         (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
-        CellFrameLabels -> {{Cell[BoxData[rbCameliaHex16]], None}, {None, None}},
+        CellFrameLabels -> {{Cell[BoxData[rbCameliaHexVec]], None}, {None, None}},
         AutoQuoteCharacters -> {},
         FormatType -> InputForm,
         FontFamily -> "Courier",
