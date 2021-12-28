@@ -137,7 +137,7 @@ nbRakuStyle =
         Magnification -> 1.0 * Inherited,
         FontColor -> GrayLevel[0.05],
         FontOpacity -> 1.,
-        Background -> RGBColor[0.976471, 0.964706, 0.960784, 1],
+        Background -> RGBColor[0.99, 0.975, 0.975, 1],
         IgnoreSpellCheck -> True
       ],
 
