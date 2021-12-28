@@ -59,8 +59,10 @@
 (* :Copyright: (c) 2021 Anton Antonov *)
 (* :Keywords: Raku, Perl6, style, options, notebook, WL *)
 (* :Discussion:
-See the explanations in the package HexCameliaIcons.m:
 
+For the icon derivation see the explanations in the package "HexCameliaIcons.m":
+
+  https://github.com/antononcube/ConversationalAgents/blob/master/Packages/WL/HexCameliaIcons.m
 
 *)
 
@@ -150,7 +152,7 @@ nbRakuStyle =
         CellEvaluationFunction -> (RakuMode`RakuInputExecute[#1, Options[RakuMode`RakuInputExecute]]&),
         CellFrameColor -> GrayLevel[0.85],
         (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
-        CellFrameLabels -> {{Cell[BoxData[rbCameliaHexVec]], None}, {None, None}},
+        CellFrameLabels -> {{Cell[BoxData[rbCameliaHex24]], None}, {None, None}},
         AutoQuoteCharacters -> {},
         FormatType -> InputForm,
         FontFamily -> "Courier",
