@@ -427,7 +427,7 @@ cMAXDoQn/eFQ2Of3BdJfyKy0YjmjhSD+gOM//UK/UBL6P3XAtuU=
     BoxForm`ImageTag["Byte", ColorSpace -> "Grayscale", Interleaving -> None],
     Selectable -> False],
   DefaultBaseStyle -> "ImageGraphics",
-  ImageSizeRaw -> {22., 19.},
+  ImageSizeRaw -> {27., 24.},
   PlotRange -> {{0, 226.}, {0, 200.}}
 ];
 
