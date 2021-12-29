@@ -247,7 +247,8 @@ Options[ToDSLCode] = {
 };
 
 ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
-    Module[{command = commandArg, userID, method, pres, pres2, lsERRLines, errPrefix, lsExpectedMethods, aRes, lang},
+    Module[{command = commandArg, userID, method, pres, pres2, lsERRLines, errPrefix, lsExpectedMethods,
+      aRes, setupCode, lang},
 
       userID = OptionValue[ ToDSLCode, "UserIdentifier" ];
       If[ TrueQ[ userID === Automatic ], userID = $DSLUserIdentifier ];
@@ -255,14 +256,17 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
 
       method = OptionValue[ ToDSLCode, Method ];
       If[ TrueQ[ method === Automatic], method = "PrintAndEvaluate"];
+      If[ StringQ[method],
+        method = ToLowerCase[method]
+      ];
 
-      lsExpectedMethods = {"Automatic", "Print", "Evaluate", "PrintAndEvaluate", "Execute", "PrintAndExecute"};
-      If[ !MemberQ[ ToLowerCase @ lsExpectedMethods, ToLowerCase @ method ],
-        Message[ToDSLCode::nmeth, Prepend[ ToString[lsExpectedMethods], Automatic] ];
+      lsExpectedMethods = {Identity, Automatic, "Automatic", "Print", "Evaluate", "PrintAndEvaluate", "Execute", "PrintAndExecute"};
+      If[ !MemberQ[ Map[ If[ StringQ[#], ToLowerCase[#], #]&, lsExpectedMethods], method ],
+        Message[ToDSLCode::nmeth, ToString @ lsExpectedMethods];
         Return[$Failed]
       ];
 
-      method = ToLowerCase[method];
+
 
       If[ StringQ[userID] && StringLength[userID] > 0,
         command = "USER ID " <> userID <> " ;" <> command;
@@ -310,7 +314,7 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
 
       aRes["CODE"] = StringReplace[aRes["CODE"] , "==>" -> "\[DoubleLongRightArrow]"];
 
-      lang = StringSplit[aRes["DSLTARGET"], "-"][[1]];
+      lang = StringSplit[aRes["DSLTARGET"], {"-", "::"}][[1]];
 
       If[ KeyExistsQ[aRes, "STDERR"] && StringLength[aRes["STDERR"]] > 0,
         Echo[aRes["STDERR"], "stderr:"]
@@ -322,21 +326,27 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
 
       $DSLUserIdentifier = aRes["USERID"];
 
+      setupCode = Lookup[aRes, "SETUPCODE", ""];
+      If[ StringLength[setupCode] > 0, setupCode = StringTrim[setupCode] <> "\n\n"];
+
       Which[
+        MemberQ[{Identity, Automatic}, method],
+        aRes,
+
         MemberQ[ ToLowerCase @ { "Print" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintFunc, lang],
-        aTargetLanguageToCellPrintFunc[lang][aRes["CODE"]],
+        aTargetLanguageToCellPrintFunc[lang][setupCode <> aRes["CODE"]],
 
         MemberQ[ ToLowerCase @ { "PrintAndExecute", "PrintAndEvaluate" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintAndRunFunc, lang],
-        aTargetLanguageToCellPrintAndRunFunc[lang][aRes["CODE"]],
+        aTargetLanguageToCellPrintAndRunFunc[lang][setupCode <> aRes["CODE"]],
 
         MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] && lang == "WL",
         ToExpression[aRes["CODE"]],
 
         MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintAndRunFunc, lang],
-        ExternalEvaluate[lang, aRes["CODE"]],
+        ExternalEvaluate[lang, setupCode <> aRes["CODE"]],
 
         True,
         aRes
@@ -706,7 +716,7 @@ DSLWebServiceInterpretationURL[command_String, opts : OptionsPattern[]] :=
 
         OptionValue[DSLWebServiceInterpretationURL, "URL"] <>
             OptionValue[DSLWebServiceInterpretationURL, "Sub"] <>
-                "?command='" <> URLEncode[command] <> "'" <> "&lang=" <> URLEncode[lang],
+            "?command='" <> URLEncode[command] <> "'" <> "&lang=" <> URLEncode[lang],
         (*ELSE*)
 
         OptionValue[DSLWebServiceInterpretationURL, "URL"] <>
