@@ -152,15 +152,26 @@ nbDSLStyle =
       Cell[StyleData["RakuInputExecute"],
         CellFrame -> True,
         CellMargins -> {{66, 10}, {5, 10}},
-        StyleKeyMapping -> {"Tab" -> "Input"}, Evaluatable -> True,
-        CellEvaluationFunction -> (RakuMode`RakuInputExecute[#1, Options[RakuMode'RakuInputExecute]]&),
+        StyleKeyMapping -> {"Tab" -> "Input"},
+        Evaluatable -> True,
+        CellEvaluationFunction -> (RakuMode`RakuInputExecute[#1, Options[RakuMode`RakuInputExecute]]&),
         CellFrameColor -> GrayLevel[0.85],
         (* CellFrameLabels -> {{Cell[BoxData[StyleBox["Raku", FontWeight -> "Bold"]]], None}, {None, None}}, *)
-        CellFrameLabels -> {{Cell[BoxData[RakuMode`Private`rbCameliaHex16]], None}, {None, None}},
+        CellFrameLabels -> {{Cell[BoxData[RakuMode`Private`rbCameliaHex24]], None}, {None, None}},
+        StyleHints -> <|
+          "CodeFont" -> "Source Code Pro",
+          "GroupOpener" -> "Inline",
+          "OperatorRenderings" -> <|"|->" -> "\[Function]", "->" -> "\[Rule]", ":>" -> "\[RuleDelayed]", "<=" -> "\[LessEqual]", ">=" -> "\[GreaterEqual]", "!=" -> "\[NotEqual]", "==" -> "\[Equal]", "<->" -> "\[TwoWayRule]", "[[" -> "\[LeftDoubleBracket]", "]]" -> "\[RightDoubleBracket]", "<|" -> "\[LeftAssociation]", "|>" -> "\[RightAssociation]"|>
+        |>,
+        CellLabelTemplate -> <|"In" -> "In[`1`]`2`:=", "InExpired" -> "In[\:f759\:f363]`2`:=", "Out" -> "Out[`1`]`2`=", "OutExpired" -> "Out[\:f759\:f363]`2`="|>,
         AutoQuoteCharacters -> {},
-        FormatType -> InputForm, FontFamily -> "Courier",
-        FontWeight -> Bold, Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4], Background -> RGBColor[0.976471, 0.964706, 0.960784, 1],
+        FormatType -> InputForm,
+        FontFamily -> Dynamic[AbsoluteCurrentValue[EvaluationCell[], {StyleHints, "CodeFont"}]],
+        FontWeight -> "Plain",
+        Magnification -> 1.0 * Inherited,
+        FontColor -> GrayLevel[0.05],
+        FontOpacity -> 1.,
+        Background -> RGBColor[0.99, 0.975, 0.975, 1],
         IgnoreSpellCheck -> True
       ],
 
