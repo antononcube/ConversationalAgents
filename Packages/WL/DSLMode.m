@@ -168,7 +168,7 @@ nbDSLStyle =
         FormatType -> InputForm,
         FontFamily -> Dynamic[AbsoluteCurrentValue[EvaluationCell[], {StyleHints, "CodeFont"}]],
         FontWeight -> "Plain",
-        Magnification -> 1.0 * Inherited,
+        Magnification -> 1.15 * Inherited,
         FontColor -> GrayLevel[0.05],
         FontOpacity -> 1.,
         Background -> RGBColor[0.99, 0.975, 0.975, 1],
