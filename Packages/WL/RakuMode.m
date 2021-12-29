@@ -169,7 +169,10 @@ RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
 
       If[ TrueQ[ Head[proc] === ProcessObject ] && ProcessStatus[proc] == "Running",
         ff = FullForm[boxData];
-        ff = ToExpression@StringReplace[ToString[ff], "\\\\" -> "\\"];
+        (* ToExpression is needed to convert Mathematica symbols like \[OpenCurlyQuote] into UTF-8 characters. *)
+        (* Note that ToExpression is run here on strings only. *)
+        (* Quiet is needed to suppress certain messages ToExpression might issue for Raku code like '\v' or '\s'. *)
+        ff = Quiet @ ToExpression @ StringReplace[ToString[ff], "\\\\" -> "\\"];
         BinaryWrite[$RakuZMQSocket, StringToByteArray[ff, $SystemCharacterEncoding]];
         epilogFunc @ ByteArrayToString[SocketReadMessage[$RakuZMQSocket]],
         (* ELSE *)
