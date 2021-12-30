@@ -344,6 +344,9 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
         MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] && lang == "WL",
         ToExpression[aRes["CODE"]],
 
+        MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] && lang == "Raku",
+        RakuMode`RakuInputExecute[setupCode <> aRes["CODE"]],
+
         MemberQ[ ToLowerCase @ { "Execute", "Evaluate" }, method] &&
             KeyExistsQ[aTargetLanguageToCellPrintAndRunFunc, lang],
         ExternalEvaluate[lang, setupCode <> aRes["CODE"]],
