@@ -134,7 +134,7 @@ ClearAll[FiniteStateMachine];
 
 FiniteStateMachine[objID_]["States"] := <||>;
 
-FiniteStateMachine[objID_]["CurrentState"] := None;
+FiniteStateMachine[objID_]["CurrentStateID"] := None;
 
 (*-----------------------------------------------------------*)
 (* Cannot be overridden *)
@@ -228,7 +228,7 @@ InvokesInputQ[obj_, stateID_String] :=
 (*-----------------------------------------------------------*)
 FiniteStateMachine[objID_]["RunSequence"[inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40]] :=
     Block[{obj = $OOPFSMHEAD[objID]},
-      FiniteStateMachine[objID]["RunSequence"[obj["CurrentState"], inputs, maxLoops]]
+      FiniteStateMachine[objID]["RunSequence"[obj["CurrentStateID"], inputs, maxLoops]]
     ];
 
 FiniteStateMachine[objID_]["RunSequence"[initId_String, inputs : {_String ..}, maxLoops_Integer : 40]] :=
@@ -236,11 +236,11 @@ FiniteStateMachine[objID_]["RunSequence"[initId_String, inputs : {_String ..}, m
 
       aStateIDToInputInvokerQ = InputInvokers[obj];
 
-      obj["CurrentState"] = initId;
+      obj["CurrentStateID"] = initId;
 
       Map[(
-        obj["Run"[obj["CurrentState"], {#}, maxLoops]];
-        While[! aStateIDToInputInvokerQ[obj["CurrentState"]],
+        obj["Run"[obj["CurrentStateID"], {#}, maxLoops]];
+        While[! aStateIDToInputInvokerQ[obj["CurrentStateID"]],
           obj["Run"[{""}]]
         ])&,
         inputs
@@ -256,7 +256,7 @@ HasImplicitNextQ[state_?AssociationQ] := KeyExistsQ[state, "ImplicitNext"] && !T
 
 FiniteStateMachine[objID_]["Run"[inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40]] :=
     Block[{obj = $OOPFSMHEAD[objID]},
-      FiniteStateMachine[objID]["Run"[obj["CurrentState"], inputs, maxLoops]]
+      FiniteStateMachine[objID]["Run"[obj["CurrentStateID"], inputs, maxLoops]]
     ];
 
 FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) : None, maxLoops_Integer : 40]] :=
@@ -298,13 +298,14 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
             inputSequence = Rest[inputSequence],
             (*ELSE*)
             (* User input is expected *)
-            stateID = obj["ChooseTransition"[state["ID"], Automatic]]["To"]
+            stateID = obj["ChooseTransition"[state["ID"], Automatic]]["To"];
+            ECHOLOGGING[Row[{Style["new state ID from entered transition:", Bold], Spacer[5], stateID}], "Run:"];
           ];
           state = obj["States"][stateID],
 
           True,
           (* Assign current state for reuse *)
-          obj["CurrentState"] = state["ID"];
+          obj["CurrentStateID"] = state["ID"];
           Return[]
         ];
 
@@ -326,7 +327,7 @@ FiniteStateMachine[objID_]["Run"[initId_String, inputs : (None | {_String ..} ) 
       ];
 
       (* Assign current state for reuse *)
-      obj["CurrentState"] = state["ID"];
+      obj["CurrentStateID"] = state["ID"];
     ];
 
 FiniteStateMachine[objID_]["Run"[___]] :=
