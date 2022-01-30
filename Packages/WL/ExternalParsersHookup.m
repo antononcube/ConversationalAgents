@@ -279,9 +279,9 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
             RakuMode`RakuInputExecute[
               StringJoin[
                 "use DSL::Shared::Utilities::ComprehensiveTranslation;",
-                "say ToDSLCode(\"",
+                "say ToDSLCode('",
                 command,
-                "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"]
+                "', language => 'English', format => 'JSON', guessGrammar => True, defaultTargetsSpec => 'WL' )"]
             ];
 
         (* The line prefix is "#ERROR: " is defined in RakuMode.m . *)
@@ -300,7 +300,7 @@ ToDSLCode[commandArg_, opts : OptionsPattern[] ] :=
         (*Print["NOT Using RakuProcess"];*)
         pres =
             RakuCommand`RakuCommand[
-              StringJoin["say ToDSLCode(\"", StringReplace[command, "\"" -> "\\\""], "\", language => \"English\", format => \"JSON\", guessGrammar => True, defaultTargetsSpec => 'WL' )"],
+              StringJoin["say ToDSLCode('", StringReplace[command, "\"" -> "\\\""], "', language => 'English', format => 'JSON', guessGrammar => True, defaultTargetsSpec => 'WL' )"],
               "",
               "DSL::Shared::Utilities::ComprehensiveTranslation"];
 
