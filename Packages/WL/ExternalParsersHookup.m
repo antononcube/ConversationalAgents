@@ -708,7 +708,7 @@ ToRecruitingWorkflowCode[___] := $Failed;
 
 Clear[DSLWebServiceInterpretationURL, DSLWebServiceInterpretation];
 
-Options[DSLWebServiceInterpretationURL] = {"URL" -> "http://accendodata.net:5040/translate/", "Sub" -> None, "Language" -> Automatic};
+Options[DSLWebServiceInterpretationURL] = {"URL" -> "http://accendodata.net:5040/translate", "Sub" -> None, "Language" -> Automatic};
 DSLWebServiceInterpretationURL[command_String, opts : OptionsPattern[]] :=
     Block[{lang},
 
