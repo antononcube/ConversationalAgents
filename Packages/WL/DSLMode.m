@@ -180,7 +180,39 @@ nbDSLStyle =
       Cell[StyleData["Code"],
         MenuSortingValue -> 10000,
         MenuCommandKey :> None
-      ]
+      ],
+
+      (* Original *)
+      (*      Cell[StyleData["Input", "SlideShow"],*)
+      (*        CellMargins->{{*)
+      (*          0.135 FrontEnd`AbsoluteCurrentValue[{WindowSize, 1}], 0.01*)
+      (*              FrontEnd`AbsoluteCurrentValue[{WindowSize, 1}]}, {8, 15}},*)
+      (*        LinebreakAdjustments->{1, 2., 12., 1., 1.},*)
+      (*        FontSize->20],*)
+      Cell[StyleData["Text", "SlideShow"], CellMargins->{{66, 10}, {5, 8}}],
+      Cell[StyleData["Item", "SlideShow"], CellMargins->{{81, 10}, {4, 8}}],
+      Cell[StyleData["ItemParagraph", "SlideShow"], CellMargins->{{81, 10}, {4, 1}}],
+      Cell[StyleData["Subitem", "SlideShow"], CellMargins->{{105, 12}, {4, 4}}],
+      Cell[StyleData["Subsubitem", "SlideShow"], CellMargins->{{129, 12}, {4, 4}}],
+      Cell[StyleData["SubsubitemParagraph", "SlideShow"], CellMargins->{{129, 12}, {4, 4}}],
+
+      Cell[StyleData["ItemNumbered", "SlideShow"], CellMargins->{{81, 10}, {4, 8}}],
+      Cell[StyleData["SubitemNumbered", "SlideShow"], CellMargins->{{105, 12}, {4, 4}}],
+      Cell[StyleData["SubsubitemNumbered", "SlideShow"], CellMargins->{{129, 12}, {4, 4}}],
+
+      Cell[StyleData["Section", "SlideShow"],  CellMargins->{{27, Inherited}, {8, 18}}],
+      Cell[StyleData["Subsection", "SlideShow"], CellMargins->{{50.34765625, 3.}, {8., 20.}}],
+      Cell[StyleData["Subsubsection", "SlideShow"], CellMargins->{{66, Inherited}, {8, 12}}],
+
+      Cell[StyleData["Input", "SlideShow"], CellMargins->{{66, 10}, {5, 8}}],
+
+      Cell[StyleData["Output", "SlideShow"], CellMargins->{{66, 10}, {5, 8}}],
+
+      Cell[StyleData["Echo", "SlideShow"], CellMargins->{{66, 10}, {5, 8}}],
+
+      Cell[StyleData["ExternalLanguage", "SlideShow"], CellMargins->{{66, 10}, {5, 8}}],
+
+      Cell[StyleData["Code", "SlideShow"], CellMargins->{{66, 10}, {5, 8}}]
     },
       WindowSize -> {857, 887},
       WindowMargins -> {{373, Automatic}, {Automatic, 219}},
