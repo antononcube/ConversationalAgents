@@ -4,7 +4,12 @@
 \alias{ToDataQueryWorkflowCode}
 \title{Interpret data query workflow natural language commands.}
 \usage{
-ToDataQueryWorkflowCode(command, parse = TRUE, target = "tidyverse")
+ToDataQueryWorkflowCode(
+  command,
+  parse = TRUE,
+  target = "tidyverse",
+  rakuLocation = "/Applications/Rakudo/bin/raku"
+)
 }
 \arguments{
 \item{command}{A string with a command or a list of commands separated with ";".}
@@ -13,6 +18,8 @@ ToDataQueryWorkflowCode(command, parse = TRUE, target = "tidyverse")
 
 \item{target}{Target of the interpretation.
 One of "base", "data.table", "SMRMon", "sqldf", "tidyverse".}
+
+\item{rakuLocation}{Location of (path to) raku.}
 }
 \value{
 A string or an R expression

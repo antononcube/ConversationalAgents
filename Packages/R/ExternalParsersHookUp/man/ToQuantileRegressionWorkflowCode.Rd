@@ -4,12 +4,18 @@
 \alias{ToQuantileRegressionWorkflowCode}
 \title{Interpret Quantile regression workflow natural language commands.}
 \usage{
-ToQuantileRegressionWorkflowCode(command, parse = TRUE)
+ToQuantileRegressionWorkflowCode(
+  command,
+  parse = TRUE,
+  rakuLocation = "/Applications/Rakudo/bin/raku"
+)
 }
 \arguments{
 \item{command}{A string with a command or a list of commands separated with ";".}
 
 \item{parse}{A Boolean should the result be parsed as an R expression.}
+
+\item{rakuLocation}{Location of (path to) raku.}
 }
 \value{
 A string or an R expression

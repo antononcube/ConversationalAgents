@@ -9,7 +9,7 @@ MakeDSLWebServiceURL(
   scheme = "http",
   hostname = "accendodata.net",
   port = "5040",
-  path = "translate/",
+  path = "translate",
   query = NULL
 )
 }

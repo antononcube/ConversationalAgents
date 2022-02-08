@@ -10,7 +10,7 @@ InterpretByDSLWebService(
   scheme = "http",
   hostname = "accendodata.net",
   port = "5040",
-  path = "translate/",
+  path = "translate",
   url = NULL,
   sub = NULL
 )

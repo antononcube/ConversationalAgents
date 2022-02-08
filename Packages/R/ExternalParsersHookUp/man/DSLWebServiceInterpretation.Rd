@@ -7,7 +7,7 @@
 DSLWebServiceInterpretation(
   command,
   query = NULL,
-  url = "http://accendodata.net:5040/translate/",
+  url = "http://accendodata.net:5040/translate",
   sub = NULL
 )
 }

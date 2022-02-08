@@ -4,7 +4,12 @@
 \alias{ToSearchEngineQueryCode}
 \title{Interpret search engine query commands.}
 \usage{
-ToSearchEngineQueryCode(command, parse = TRUE, target = "tidyverse")
+ToSearchEngineQueryCode(
+  command,
+  parse = TRUE,
+  target = "tidyverse",
+  rakuLocation = "/Applications/Rakudo/bin/raku"
+)
 }
 \arguments{
 \item{command}{A string with a command or a list of commands separated with ";".}
@@ -13,6 +18,8 @@ ToSearchEngineQueryCode(command, parse = TRUE, target = "tidyverse")
 
 \item{target}{Target of the interpretation.
 One of "base", "data.table", "SMRMon", "sqldf", "tidyverse".}
+
+\item{rakuLocation}{Location of (path to) raku.}
 }
 \value{
 A string or an R expression
