@@ -49,11 +49,12 @@ NULL
 #' @param parse A Boolean should the result be parsed as an R expression.
 #' @param target Target of the interpretation.
 #' One of "base", "data.table", "SMRMon", "sqldf", "tidyverse".
+#' @param rakuLocation Location of (path to) raku.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-ToSearchEngineQueryCode <- function(command, parse = TRUE, target = "tidyverse" ) {
+ToSearchEngineQueryCode <- function(command, parse = TRUE, target = "tidyverse", rakuLocation = "/Applications/Rakudo/bin/raku") {
 
   command <- gsub( '`', '\\\\`', command)
   command <- gsub( "\'", "\\\\'", command)
@@ -65,7 +66,8 @@ ToSearchEngineQueryCode <- function(command, parse = TRUE, target = "tidyverse" 
 
   pres <- RakuCommand( command = paste0( "say ToSearchEngineQueryCode('", command, "', '", target, "')" ),
                        moduleDirectory = "",
-                       moduleName = "DSL::English::SearchEngineQueries" )
+                       moduleName = "DSL::English::SearchEngineQueries",
+                       rakuLocation = rakuLocation )
 
   messageInds <- grep( "^Possible", pres )
 
@@ -89,11 +91,12 @@ ToSearchEngineQueryCode <- function(command, parse = TRUE, target = "tidyverse" 
 #' @param parse A Boolean should the result be parsed as an R expression.
 #' @param target Target of the interpretation.
 #' One of "base", "data.table", "SMRMon", "sqldf", "tidyverse".
+#' @param rakuLocation Location of (path to) raku.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-ToDataQueryWorkflowCode <- function(command, parse = TRUE, target = "tidyverse" ) {
+ToDataQueryWorkflowCode <- function(command, parse = TRUE, target = "tidyverse", rakuLocation = "/Applications/Rakudo/bin/raku") {
 
   command <- gsub( '`', '\\\\`', command)
   command <- gsub( "\'", "\\\\'", command)
@@ -105,7 +108,8 @@ ToDataQueryWorkflowCode <- function(command, parse = TRUE, target = "tidyverse" 
 
   pres <- RakuCommand( command = paste0( "say ToDataQueryWorkflowCode('", command, "', '", target, "')" ),
                        moduleDirectory = "",
-                       moduleName = "DSL::English::DataQueryWorkflows" )
+                       moduleName = "DSL::English::DataQueryWorkflows",
+                       rakuLocation = rakuLocation )
 
   messageInds <- grep( "^Possible", pres )
 
@@ -127,15 +131,17 @@ ToDataQueryWorkflowCode <- function(command, parse = TRUE, target = "tidyverse" 
 #' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A Boolean should the result be parsed as an R expression.
+#' @param rakuLocation Location of (path to) raku.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-ToRecommenderWorkflowCode <- function(command, parse=TRUE) {
+ToRecommenderWorkflowCode <- function(command, parse = TRUE, rakuLocation = "/Applications/Rakudo/bin/raku") {
 
   pres <- RakuCommand( command = paste0( "say ToRecommenderWorkflowCode('", command, "')"),
                        moduleDirectory = "",
-                       moduleName = "DSL::English::RecommenderWorkflows" )
+                       moduleName = "DSL::English::RecommenderWorkflows",
+                       rakuLocation = rakuLocation )
 
   messageInds <- grep( "^Possible", pres )
 
@@ -157,15 +163,17 @@ ToRecommenderWorkflowCode <- function(command, parse=TRUE) {
 #' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A Boolean should the result be parsed as an R expression.
+#' @param rakuLocation Location of (path to) raku.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-ToQuantileRegressionWorkflowCode <- function(command, parse=TRUE) {
+ToQuantileRegressionWorkflowCode <- function(command, parse = TRUE, rakuLocation = "/Applications/Rakudo/bin/raku") {
 
   pres <- RakuCommand( command = paste0( "say ToQuantileRegressionWorkflowCode('", command, "')"),
                        moduleDirectory = "",
-                       moduleName = "DSL::English::QuantileRegressionWorkflows" )
+                       moduleName = "DSL::English::QuantileRegressionWorkflows",
+                       rakuLocation = rakuLocation )
 
   messageInds <- grep( "^Possible", pres )
 
@@ -187,15 +195,17 @@ ToQuantileRegressionWorkflowCode <- function(command, parse=TRUE) {
 #' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A Boolean should the result be parsed as an R expression.
+#' @param rakuLocation Location of (path to) raku.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-ToLatentSemanticAnalysisWorkflowCode <- function(command, parse=TRUE) {
+ToLatentSemanticAnalysisWorkflowCode <- function(command, parse = TRUE, rakuLocation = "/Applications/Rakudo/bin/raku") {
 
   pres <- RakuCommand( command = paste0( "say ToLatentSemanticAnalysisWorkflowCode('", command, "')"),
                        moduleDirectory = "",
-                       moduleName = "DSL::English::LatentSemanticAnalysisWorkflows" )
+                       moduleName = "DSL::English::LatentSemanticAnalysisWorkflows",
+                       rakuLocation = rakuLocation )
 
   messageInds <- grep( "^Possible", pres )
 
@@ -218,15 +228,17 @@ ToLatentSemanticAnalysisWorkflowCode <- function(command, parse=TRUE) {
 #' interpretation of a natural language command or a list spoken commands separated with ";".
 #' @param command A string with a command or a list of commands separated with ";".
 #' @param parse A Boolean should the result be parsed as an R expression.
+#' @param rakuLocation Location of (path to) raku.
 #' @details Produces a character vector or an expression depending on \code{parse}.
 #' @return A string or an R expression
 #' @family Spoken dplyr
 #' @export
-ToEpidemiologyModelingWorkflowCode <- function(command, parse=TRUE) {
+ToEpidemiologyModelingWorkflowCode <- function(command, parse = TRUE, rakuLocation = "/Applications/Rakudo/bin/raku") {
 
   pres <- RakuCommand( command = paste0( "say ToEpidemiologyModelingWorkflowCode('", command, "')"),
                        moduleDirectory = "",
-                       moduleName = "DSL::English::EpidemiologyModelingWorkflows" )
+                       moduleName = "DSL::English::EpidemiologyModelingWorkflows",
+                       rakuLocation = rakuLocation )
 
   messageInds <- grep( "^Possible", pres )
 
