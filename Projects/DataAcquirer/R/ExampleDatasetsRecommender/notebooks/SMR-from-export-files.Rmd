@@ -6,6 +6,7 @@ output: html_notebook
 params:
   smrDirName: "~/MathFiles/Data Acquisition Workflows/ProcessedData"
   saveRDataQ: FALSE
+  exportQ: FALSE
 ---
 
 <style type="text/css">
@@ -17,7 +18,7 @@ params:
 </style>
 
 ```{r setup}
-library(d3heatmap)
+#library(d3heatmap)
 library(magrittr)
 library(tidyverse)
 library(Matrix)
@@ -28,6 +29,7 @@ library(OutlierIdentifiers)
 library(SparseMatrixRecommenderInterfacesNoDT)
 library(ParetoPrincipleAdherence)
 library(jsonlite)
+library(skimr)
 ```
 
 # Ingest data
@@ -43,16 +45,16 @@ dfWLLSATopicWordMatrix <- read.csv( file = file.path( params$smrDirName, "WLExam
 
 dfWLExampleData <- read.csv( file = file.path( params$smrDirName, "dfWLExampleData.csv") )
 
-aWLDescriptions <- jsonlite::read_json( path = file.path( params$smrDirName, "aWLExampleData-Descriptions.json") )
+aWLDescriptions <- jsonlite::read_json( path = file.path( params$smrDirName, "WLExampleData-aDescriptions.json") )
 aWLDescriptions <- setNames(as.character(aWLDescriptions), names(aWLDescriptions))
 ```
 
 ```{r}
-Summary(dfWLSMRMatrix)
+summary(as.data.frame(unclass(dfWLSMRMatrix), stringsAsFactors = T))
 ```
 
 ```{r}
-Summary(dfWLExampleData)
+summary(as.data.frame(unclass(dfWLExampleData), stringsAsFactors = T))
 ```
 
 ## R Datasets
@@ -66,20 +68,21 @@ dfRLSATopicWordMatrix <- read.csv( file = file.path( params$smrDirName, "RExampl
 
 dfRExampleData <- read.csv( file = file.path( params$smrDirName, "dfRExampleData.csv") )
 
-aRDescriptions <- jsonlite::read_json( path = file.path( params$smrDirName, "aRExampleData-Descriptions.json") )
+aRDescriptions <- jsonlite::read_json( path = file.path( params$smrDirName, "RExampleData-aDescriptions.json") )
 aRDescriptions <- setNames(as.character(aRDescriptions), names(aRDescriptions))
 ```
 
 ```{r}
-Summary(dfRSMRMatrix)
+summary(as.data.frame(unclass(dfRSMRMatrix), stringsAsFactors = T))
 ```
 
 ```{r}
-Summary(dfRExampleData)
+summary(as.data.frame(unclass(dfRExampleData), stringsAsFactors = T))
 ```
 
 
 -------
+
 # LSA objects creation
 
 ##  WL datasets
@@ -198,6 +201,16 @@ if ( params$saveRDataQ ) {
   base::save( list = c("smrRDatasets"), file = file.path("../flexdashboards", "smrRDatasets.RData") )
   base::save( list = c("lsaRDatasetsWordsAndPhrases"), file = file.path("../flexdashboards", "lsaRDatasetsWordsAndPhrases.RData") )
   base::save( list = c("dfRExampleData"), file = file.path("../flexdashboards", "dfRExampleData.RData") )
+}
+```
+
+------
+
+# Export
+
+```{r}
+if( params$exportQ ) {
+  smrWLDatasets %>% SMRExportToDirectory( directoryPath = "../output/", dataNamePrefix = "WLExampleData")
 }
 ```
 
