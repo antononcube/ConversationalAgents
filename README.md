@@ -114,3 +114,18 @@ obj = LSAMonEchoStatisticalThesaurus( lsaObj = obj, words = c("sing", "left", "h
 
 Note that the Python code above shows how to interpret the R and WL monadic pipelines above
 into sequences of imperative commands.
+
+------
+
+## Support & appreciation
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/antonov70)
+
+😅 ☕️ 😀
+
+------
+
+Anton Antonov
+11.01.2017 Florida, USA
+05.02.2020 Florida, USA (update)
+29.10.2022 Florida, USA (update)
