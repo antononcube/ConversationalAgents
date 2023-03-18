@@ -68,7 +68,7 @@
 
 BeginPackage["RakuDecoder`"];
 
-FromRakuCode::usage = "Convert to Raku expression serialized to WL into a WL expression.";
+FromRakuCode::usage = "Convert a Raku expression serialized to WL into a WL expression.";
 
 Begin["`Private`"];
 
