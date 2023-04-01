@@ -73,16 +73,37 @@ For the icon derivation see the explanations in the package "HexCameliaIcons.m":
 
 BeginPackage["OpenAIMode`"];
 
-
 OpenAIMode::usage = "Restyle notebooks to use the OpenAI external execution theme.";
 
-OpenAIInputExecute::usage = "Execution function for the cell style \"OpenAIInputExecute\".";
+OpenAIInputExecute::usage = "Umbrella execution function for OpenAILink functions. \
+Used OpenAIInputExecuteToText and OpenAIInputExecuteToImage.";
+
+OpenAIInputExecuteToText::usage = "Execution function for the cell style \"OpenAIInputExecuteToText\".";
+
+OpenAIInputExecuteToImage::usage = "Execution function for the cell style \"OpenAIInputExecuteToImage\".";
+
+(* OpenAICellPrompt::usage = "Controls the display of functionality hint on top or bottom of OpenAI cells.";*)
 
 DeleteCells::usage = "Delete cells of a specified style.";
 
 Begin["`Private`"];
 
 Needs["ChristopherWolfram`OpenAILink`"];
+
+cellPromptQ = False;
+cellPromptTopQ = True;
+
+Clear[OpenAICellPrompt];
+
+OpenAICellPrompt[] := OpenAICellPrompt[True, Top];
+
+OpenAICellPrompt[should : (True | False)] := OpenAICellPrompt[should, Top];
+
+OpenAICellPrompt[should : (True | False), location : (Bottom | Top)] :=
+    Block[{},
+      cellPromptQ = TrueQ[should];
+      cellPromptTopQ = If[ TrueQ[location] === Bottom, False, True];
+    ];
 
 (***********************************************************)
 (* Input execution                                         *)
@@ -106,11 +127,11 @@ nnOpenAIStyle =
         Evaluatable -> True,
         CellEvaluationFunction -> (OpenAIMode`OpenAIInputExecuteToText[ToString[#1], Options[OpenAIMode`OpenAIInputExecuteToText]] &),
         CellFrameColor -> GrayLevel[0.92],
-        CellFrameLabels -> {{"OpenAI", None}, {None, None}},
+        CellFrameLabels -> {{Cell[BoxData[rbOpenAI]], None}, {None, None}},
         AutoQuoteCharacters -> {}, FormatType -> InputForm,
         MenuCommandKey :> "8", FontFamily -> "Courier",
         FontWeight -> Bold, Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4], Background -> RGBColor[1, 1, 0.97]
+        FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 1, 0.95]
       ],
 
       Cell[StyleData["OpenAIInputExecuteToText", "SlideShow"], FontSize -> 20],
@@ -120,10 +141,10 @@ nnOpenAIStyle =
         StyleKeyMapping -> {"Tab" -> "OpenAIInputExecuteToText"}, Evaluatable -> True,
         CellEvaluationFunction -> (OpenAIMode`OpenAIInputExecuteToImage[ToString[#1], Options[OpenAIMode`OpenAIInputExecuteToImage]] &),
         CellFrameColor -> GrayLevel[0.97],
-        CellFrameLabels -> {{Cell[BoxData[StyleBox["OpenAI", FontSlant -> "Italic"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
+        CellFrameLabels -> {{Cell[BoxData[rbOpenAI]], None}, {None, None}},
         FormatType -> InputForm, FontFamily -> "Courier",
         FontWeight -> Bold, Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 1, 1]
+        FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 0.97, 1]
       ],
 
       Cell[StyleData["OpenAIInputExecuteToImage", "SlideShow"], FontSize -> 20],
@@ -194,7 +215,9 @@ OpenAIInputExecuteToImage[boxData_String, opts : OptionsPattern[]] :=
 (***********************************************************)
 
 Clear[OpenAIMode] ;
-OpenAIMode[True] = OpenAIMode[];
+Options[OpenAIMode] := {"CellPrompt" -> False, "CellPromptLocation" -> Top};
+
+OpenAIMode[True] := OpenAIMode[];
 
 OpenAIMode[] := OpenAIMode[EvaluationNotebook[]];
 
@@ -202,6 +225,8 @@ OpenAIMode[nb_NotebookObject, True] := OpenAIMode[nb];
 
 OpenAIMode[nb_NotebookObject] :=
     Block[{},
+      (*It does not seem to have effect*)
+      (*OpenAICellPrompt[OptionValue[OpenAIMode, "CellPrompt"], OptionValue[OpenAIMode, "CellPromptLocation"]];*)
       SetOptions[nb, StyleDefinitions -> BinaryDeserialize[BinarySerialize[nnOpenAIStyle]]]
     ];
 
@@ -216,7 +241,7 @@ OpenAIMode[nb_NotebookObject, False] := SetOptions[nb, StyleDefinitions -> "Defa
 
 rbOpenAI =
     GraphicsBox[
-  TagBox[RasterBox[CompressedData["
+      TagBox[RasterBox[CompressedData["
 1:eJztnE2uJUcVhJ89YhvsgilDpmYFtmSYGckgIXYP7XbTr9+9dSvznPjLqvwk
 kBB9T0Z8UUK2BPzxp3/88Lfv397e/vmH//3TDz/++8+//vrjf/766V/85Zd/
 /fz3n3/900+f/u237z//47vNZrPZbDabzWaz2Ww2m4V5+x13jo2Qt5e4022I
@@ -329,12 +354,12 @@ beHGuKf/hNvBrXGPv+c3s9e/O3v+m7Pnvzl7/puz5785e/27s+e/OXv+u7PX
 vzl7/ruz1787e/2bs+e/O3v9u7PXvzt7/buz1789e/y7s9e/PXv827PH3+zt
 N3v7zclH4E63EbJH32w2m81ms9lsNpvNZnMF/guq/PNq
     "], {{0, 512.}, {512., 0}}, {0, 1},
-    ColorFunction->GrayLevel],
-    BoxForm`ImageTag["Bit", ColorSpace -> Automatic, Interleaving -> None],
-    Selectable->False],
-  DefaultBaseStyle->"ImageGraphics",
-  ImageSizeRaw->{22., 22.},
-  PlotRange->{{0, 512.}, {0, 512.}}];
+        ColorFunction -> GrayLevel],
+        BoxForm`ImageTag["Bit", ColorSpace -> Automatic, Interleaving -> None],
+        Selectable -> False],
+      DefaultBaseStyle -> "ImageGraphics",
+      ImageSizeRaw -> {22., 22.},
+      PlotRange -> {{0, 512.}, {0, 512.}}];
 
 
 
