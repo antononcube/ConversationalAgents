@@ -203,10 +203,12 @@ OpenAIInputExecute[boxData_String, opts : OptionsPattern[]] :=
 (***********************************************************)
 
 Clear[OpenAIInputExecuteToText];
+Options[OpenAIInputExecuteToText] = Options[ChristopherWolfram`OpenAILink`OpenAITextComplete];
 OpenAIInputExecuteToText[boxData_String, opts : OptionsPattern[]] :=
     OpenAIInputExecute[boxData, Function -> ChristopherWolfram`OpenAILink`OpenAITextComplete, opts];
 
 Clear[OpenAIInputExecuteToImage];
+Options[OpenAIInputExecuteToImage] = Options[ChristopherWolfram`OpenAILink`OpenAIGenerateImage];
 OpenAIInputExecuteToImage[boxData_String, opts : OptionsPattern[]] :=
     OpenAIInputExecute[boxData, Function -> ChristopherWolfram`OpenAILink`OpenAIGenerateImage, opts];
 
