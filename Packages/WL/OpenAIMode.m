@@ -166,15 +166,15 @@ nnOpenAIStyle =
 (***********************************************************)
 
 Clear[FullFunctionName];
-FullFunctionName[func_Symbol] :=
+FullFunctionName[func_] :=
     Which[
-      MemberQ[{OpenAITextComplete, "OpenAITextComplete"}, func],
+      MemberQ[{OpenAITextComplete, "OpenAITextComplete", ChristopherWolfram`OpenAILink`OpenAITextComplete}, func],
       ChristopherWolfram`OpenAILink`OpenAITextComplete,
 
-      MemberQ[{OpenAIGenerateImage, "OpenAIGenerateImage"}, func],
-      ChristopherWolfram`OpenAILink`OpenAIGenerateImage
+      MemberQ[{OpenAIGenerateImage, "OpenAIGenerateImage", ChristopherWolfram`OpenAILink`OpenAIGenerateImage}, func],
+      ChristopherWolfram`OpenAILink`OpenAIGenerateImage,
 
-      _,
+      True,
       ChristopherWolfram`OpenAILink`OpenAITextComplete
     ];
 
@@ -194,7 +194,7 @@ Options[OpenAIInputExecute] = {
 
 OpenAIInputExecute[boxData_String, opts : OptionsPattern[]] :=
     Block[{epilogFunc = OptionValue[OpenAIInputExecute, Epilog],
-      func = OptionValue[OpenAIInputExecute, Function]},
+      func = FullFunctionName @ OptionValue[OpenAIInputExecute, Function]},
       epilogFunc @ func[boxData, FilterRules[{opts}, Options[func]]]
     ];
 
