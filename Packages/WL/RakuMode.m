@@ -94,6 +94,8 @@ StartRakuProcess::usage = "Start Raku with a ZMQ sockets and assign the process 
 
 RakuMode::usage = "Restyle notebooks to use the Raku external execution theme.";
 
+RakuModeNotebookStyle::usage = "The RakuMode notebook style.";
+
 RakuInputExecute::usage = "Execution function for the cell style \"RakuInputExecute\".";
 
 DeleteCells::usage = "Delete cells of a specified style.";
@@ -180,6 +182,12 @@ RakuInputExecute[boxData_String, opts : OptionsPattern[]] :=
       ]
     ];
 
+(***********************************************************)
+(* Notebook style                                          *)
+(***********************************************************)
+
+Clear[RakuModeNotebookStyle];
+RakuModeNotebookStyle[] := nbRakuStyle;
 
 (***********************************************************)
 (* RakuMode function                                       *)
