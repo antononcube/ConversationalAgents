@@ -32,7 +32,7 @@
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     Written by Anton Antonov,
-    antononcube @ gmail . com,
+    ʇǝu˙oǝʇsod@ǝqnɔuouoʇuɐ,
     Windermere, Florida, USA.
 *)
 
@@ -129,9 +129,12 @@ nbDSLStyle =
         CellFrameColor -> GrayLevel[0.92],
         CellFrameLabels -> {{"DSL", None}, {None, None}},
         AutoQuoteCharacters -> {}, FormatType -> InputForm,
-        MenuCommandKey :> "8", FontFamily -> "Courier",
-        FontWeight -> Bold, Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4], Background -> RGBColor[1, 1, 0.97]
+        MenuCommandKey :> "8",
+        FontFamily -> Dynamic[AbsoluteCurrentValue[EvaluationCell[], {StyleHints, "CodeFont"}]],
+        FontWeight -> "Plain",
+        Magnification -> 1.15 * Inherited,
+        FontColor -> GrayLevel[0.05],
+        Background -> RGBColor[1, 1, 0.98]
       ],
 
       Cell[StyleData["DSLInputExecute", "SlideShow"], FontSize -> 20],
@@ -142,9 +145,12 @@ nbDSLStyle =
         CellEvaluationFunction -> (DSLMode`DSLInputParse[ToString[#1], Options[DSLMode`DSLInputParse]] &),
         CellFrameColor -> GrayLevel[0.97],
         CellFrameLabels -> {{Cell[BoxData[StyleBox["DSL", FontSlant -> "Italic"]]], None}, {None, None}}, AutoQuoteCharacters -> {},
-        FormatType -> InputForm, FontFamily -> "Courier",
-        FontWeight -> Bold, Magnification -> 1.15` Inherited,
-        FontColor -> GrayLevel[0.4], Background -> RGBColor[0.97, 1, 1]
+        FormatType -> InputForm,
+        FontFamily -> Dynamic[AbsoluteCurrentValue[EvaluationCell[], {StyleHints, "CodeFont"}]],
+        FontWeight -> "Plain",
+        Magnification -> 1.15 * Inherited,
+        FontColor -> GrayLevel[0.05],
+        Background -> RGBColor[0.98, 1, 1]
       ],
 
       Cell[StyleData["DSLInputParse", "SlideShow"], FontSize -> 20],
