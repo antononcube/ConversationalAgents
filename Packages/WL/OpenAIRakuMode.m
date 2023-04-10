@@ -112,7 +112,7 @@ nbOpenAIRakuStyle =
 
         Cell[StyleData["Input"],
           StyleKeyMapping -> {
-            "?" -> "OpenAIInputExecuteToText",
+            "!" -> "OpenAIInputExecuteToText",
             "|" -> "RakuInputExecute",
             "=" -> "WolframAlphaShort",
             ">" -> "ExternalLanguage",
