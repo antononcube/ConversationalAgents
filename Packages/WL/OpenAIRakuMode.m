@@ -52,7 +52,7 @@
 (* :Title: OpenAIRakuMode *)
 (* :Context: OpenAIRakuMode` *)
 (* :Author: Anton Antonov *)
-(* :Date: 2021-05-28 *)
+(* :Date: 2023-04-09 *)
 
 (* :Package Version: 1.0 *)
 (* :Mathematica Version: 13.2 *)
@@ -60,25 +60,15 @@
 (* :Keywords: OpenAI, ChatGPT, Raku, Perl6, style, options, notebook, WL *)
 (* :Discussion:
 
+See paclets
+
+- OpenAIMode, https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/OpenAIMode/
+- RakuMode, https://resources.wolframcloud.com/PacletRepository/resources/AntonAntonov/RakuMode/
 
 *)
 
-
-(***********************************************************)
-(* Load packages                                           *)
-(***********************************************************)
-
-If[ Length[DownValues[RakuCommand`RakuCommand]] == 0,
-  Echo["RakuCommand.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/RakuCommand.m"];
-];
-
-If[ Length[DownValues[RakuMode`StartRakuProcess]] == 0,
-  Echo["RakuMode.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/RakuMode.m"];
-];
-
 Needs["AntonAntonov`OpenAIMode`"];
+Needs["AntonAntonov`RakuMode`"];
 
 (***********************************************************)
 (* Package definitions                                     *)
@@ -95,7 +85,7 @@ CellPrintAndRunRaku::usage = "CellPrintAndRunRaku[s_String]";
 Begin["`Private`"];
 
 Needs["AntonAntonov`OpenAIMode`"];
-Needs["OpenAIRakuMode`"];
+Needs["AntonAntonov`RakuMode`"];
 
 (***********************************************************)
 (* Input execution                                         *)
@@ -104,7 +94,7 @@ Needs["OpenAIRakuMode`"];
 nbOpenAIRakuStyle =
     With[{
       nbOpenAIMode = Sequence @@ Cases[AntonAntonov`OpenAIMode`OpenAIModeNotebookStyle[], Cell[StyleData[x_String], ___] /; StringStartsQ[x, "OpenAI"], Infinity],
-      nbRakuMode = Sequence @@ Cases[RakuMode`RakuModeNotebookStyle[], Cell[StyleData[x_String], ___] /; StringStartsQ[x, "Raku"], Infinity]
+      nbRakuMode = Sequence @@ Cases[AntonAntonov`RakuMode`RakuModeNotebookStyle[], Cell[StyleData[x_String], ___] /; StringStartsQ[x, "Raku"], Infinity]
     },
 
       Notebook[{
@@ -155,10 +145,6 @@ OpenAIRakuMode[nb_NotebookObject, True] := OpenAIRakuMode[nb];
 
 OpenAIRakuMode[nb_NotebookObject] :=
     Block[{},
-      If[ Length[DownValues[RakuCommand`RakuCommand]] == 0,
-        Echo["RakuCommand.m", "Importing from GitHub:"];
-        Import["https://raw.githubusercontent.com/antononcube/ConversationalAgents/master/Packages/WL/RakuCommand.m"];
-      ];
       SetOptions[nb, StyleDefinitions -> BinaryDeserialize[BinarySerialize[nbOpenAIRakuStyle]]]
     ];
 
