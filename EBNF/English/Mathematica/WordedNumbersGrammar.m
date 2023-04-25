@@ -56,11 +56,9 @@
 
 *)
 
-If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0 ||
-    Length[DownValues[AntonAntonov`FunctionalParsers`ParseToEBNFTokens]] == 0,
+If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
   Echo["FunctionalParsers.m", "Importing from GitHub:"];
-  (* Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"] *)
-  PacletInstall["AntonAntonov/FunctionalParsers"];
+  Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
 ];
 
 
