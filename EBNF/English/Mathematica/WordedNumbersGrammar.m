@@ -56,9 +56,11 @@
 
 *)
 
-If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0,
+If[Length[DownValues[FunctionalParsers`ParseToEBNFTokens]] == 0 ||
+    Length[DownValues[AntonAntonov`FunctionalParsers`ParseToEBNFTokens]] == 0,
   Echo["FunctionalParsers.m", "Importing from GitHub:"];
-  Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"]
+  (* Import["https://raw.githubusercontent.com/antononcube/MathematicaForPrediction/master/FunctionalParsers.m"] *)
+  PacletInstall["AntonAntonov/FunctionalParsers"];
 ];
 
 
@@ -143,13 +145,13 @@ Clear[WordedNumbersSubGrammars];
 
 Options[WordedNumbersSubGrammars] = { "Normalize" -> False };
 
-WordedNumbersSubGrammars[opts:OptionsPattern[]] :=
+WordedNumbersSubGrammars[opts : OptionsPattern[]] :=
     Block[{ normalizeQ = TrueQ[OptionValue[WordedNumbersSubGrammars, "Normalize"]], res},
 
       res =
           Association[
             Map[
-              StringReplace[#, "WordedNumbersGrammar`Private`"->"" ] -> ToExpression[#] &,
+              StringReplace[#, "WordedNumbersGrammar`Private`" -> "" ] -> ToExpression[#] &,
               Names["WordedNumbersGrammar`Private`ebnf*"]
             ]
           ];
@@ -162,7 +164,7 @@ Clear[WordedNumbersGrammar];
 
 Options[WordedNumbersGrammar] = Options[WordedNumbersSubGrammars];
 
-WordedNumbersGrammar[opts:OptionsPattern[]] :=
+WordedNumbersGrammar[opts : OptionsPattern[]] :=
     Block[{ normalizeQ = TrueQ[OptionValue[WordedNumbersGrammar, "Normalize"]], res},
 
       res = WordedNumbersSubGrammars[ opts ];
