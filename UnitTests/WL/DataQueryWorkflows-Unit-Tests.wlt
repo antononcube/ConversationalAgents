@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
    	Written by Anton Antonov,
-	  antononcube@gmail.com,
+	  ʇǝu˙oǝʇsod@ǝqnɔuouoʇuɐ,
 	  Windermere, Florida, USA.
 *)
 
@@ -320,7 +320,7 @@ VerificationTest[
   ,
   True
   ,
-  TestID -> "Mutate-1"
+  TestID -> "Mutate-assign-pairs-1"
 ];
 
 
@@ -334,7 +334,7 @@ VerificationTest[
   ,
   True
   ,
-  TestID -> "Mutate-2"
+  TestID -> "Mutate-as-pairs-1"
 ];
 
 
@@ -675,6 +675,19 @@ VerificationTest[
 (* To wide form                                            *)
 (***********************************************************)
 
+VerificationTest[
+  res1 = ToDataQueryWorkflowCode["use dfTitanic; to wider form with identifier column id", "Execute" -> True];
+  ReleaseHold @
+      Hold[
+        obj = dfTitanic;
+        obj = ToLongForm[obj, "IdentifierColumns" -> {"id"}]
+      ];
+  res1 == obj
+  ,
+  True
+  ,
+  TestID -> "To-long-form-1"
+];
 
 
 EndTestSection[]

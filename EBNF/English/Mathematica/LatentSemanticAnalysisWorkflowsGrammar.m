@@ -15,9 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-	Written by Anton Antonov,
-	antononcube @@@ gmail ... com,
-	Windermere, Florida, USA.
+    Written by Anton Antonov,
+    ʇǝu˙oǝʇsod@ǝqnɔuouoʇuɐ,
+    Windermere, Florida, USA.
 *)
 
 (* Version 0.3 *)
