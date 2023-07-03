@@ -74,7 +74,7 @@ ebnfCommand = "
                       ( [ 'one' | 'element' ] , [ <list-phrase> ] ) <@ ListPositionSpec ;
     <position-index> = 'Range[0,1000]' <@ ListPositionIndex ;
     <position-word> =  <position-ordinal> | <position-reference> <@ ListPositionWord ;
-    <position-reference> = 'head' | 'rest' | 'last' | 'one' , 'before' , [ 'the' ] , 'last' | 'former' | 'later' <@ ListPositionReference ;
+    <position-reference> = 'head' | 'rest' | 'last' | 'one' , 'before' , [ 'the' ] , 'last' | 'former' | 'latter' <@ ListPositionReference ;
     <position-ordinal> = 'first' | 'second' | 'third' | 'fourth' | 'fifth' | 'sixth' | 'seventh' | 'eight' | 'ninth' | 'tenth' |
                          '1st' | '2nd' | '3rd' | '4th' | '5th' | '6th' | '7th' | '8th' | '9th' | '10th' |
                           ( <position-index> <& ( 'st' | 'nd' | 'rd' | 'th' ) ) <@ ListPositionOrdinal ;
