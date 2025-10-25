@@ -29,8 +29,8 @@ There are two related projects:
 hosted by [sgizm (Sezin Yaman)](https://github.com/sgizm)
 - Raku parser-interpreter ["DSL::English::FoodPreparationWorkflows"](https://github.com/antononcube/Raku-DSL-English-FoodPreparationWorkflows), [AAp1]
   - That parser-interpreter, in turn, uses the Raku packages:
-    - ["DSL::Entity::Foods"](https://github.com/antononcube/Raku-DSL-Entity-Foods)
-    - ["DSL::Entity::Geographics"](https://github.com/antononcube/Raku-DSL-Entity-Geographics)
+    - ["DSL::Entity::Foods"](https://github.com/antononcube/Raku-DSL-Entity-Foods), [AAp2]
+    - ["DSL::Entity::Geographics"](https://github.com/antononcube/Raku-DSL-Entity-Geographics), [AAp3]
   - Via those packages phrases like "Greek salad" can be parsed.
 
 ----
@@ -45,7 +45,28 @@ in both component design and grammar design and elements.
 
 ## References
 
+### Articles
+
 [Wk1] Wikipedia, [Sous-chef](https://en.wikipedia.org/wiki/Sous-chef).
+
+### Packages
+
+[AAp1] Anton Antonov,
+[DSL::English::FoodPreparationWorkflows, Raku package](https://github.com/antononcube/Raku-DSL-English-FoodPreparationWorkflows),
+(2021-2022),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp2] Anton Antonov,
+[DSL::Entity::Foods, Raku package](https://github.com/antononcube/Raku-DSL-Entity-Foods),
+(2021-2023),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp3] Anton Antonov,
+[DSL::Entity::Geogrpahics, Raku package](https://github.com/antononcube/Raku-DSL-Entity-Geographics),
+(2021-2024),
+[GitHub/antononcube](https://github.com/antononcube).
+
+### Videos
 
 [AAv1] Anton Antonov, 
 ["Voice-Grammar-Compute-Communicate: Take Control of Your Health Data"](https://www.youtube.com/watch?v=_rI1RxkeAcA),
