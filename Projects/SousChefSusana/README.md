@@ -1,5 +1,7 @@
 # Sous-chef Susana
 
+## In brief
+
 This project has documents and diagrams for design and implementation
 of a conversational agent named “Sous-chef-Susana” aimed at facilitating 
 of food preparation (cooking) activities. (See [Wk1].) 
@@ -17,11 +19,29 @@ Here is a diagram of the components of Sous Chef Susana:
 
 [![SousChefSusana](./Diagrams/Sous-Chef-Susana-design-small.jpg)](./Diagrams/Sous-Chef-Susana-design.jpg)
 
+----
+
+## Related projects
+
+There are two related projects:
+
+- A dedicated one [SousChefSusana](https://github.com/sgizm/SousChefSusana) 
+hosted by [sgizm (Sezin Yaman)](https://github.com/sgizm)
+- Raku parser-interpreter ["DSL::English::FoodPreparationWorkflows"](https://github.com/antononcube/Raku-DSL-English-FoodPreparationWorkflows), [AAp1]
+  - That parser-interpreter, in turn, uses the Raku packages:
+    - ["DSL::Entity::Foods"](https://github.com/antononcube/Raku-DSL-Entity-Foods)
+    - ["DSL::Entity::Geographics"](https://github.com/antononcube/Raku-DSL-Entity-Geographics)
+  - Via those packages phrases like "Greek salad" can be parsed.
+
+----
+
 ## Similarities with Glukoza
  
-Susana is very similar to the conversational agent 
+Sous Chef Susana is very similar to the conversational agent 
 [Glukoza](../Glukoza)
 in both component design and grammar design and elements.
+
+----
 
 ## References
 
